@@ -1,32 +1,32 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Building2, Home, Landmark } from "lucide-react";
+import { Building2, HardHat, Landmark } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import AnimatedSection from "@/components/ui/AnimatedSection";
 
 const services = [
   {
-    title: "Residential Construction",
+    title: "Structural Engineering",
     description:
-      "Custom homes and residential complexes built to the highest standards of quality and craftsmanship.",
-    icon: Home,
+      "Delivering durable, modern structural frameworks with innovative approaches and time-tested engineering principles.",
+    icon: Building2,
     link: "/services",
     color: "bg-secondary/10 text-secondary",
   },
   {
-    title: "Commercial Buildings",
+    title: "Project Management",
     description:
-      "State-of-the-art commercial spaces designed for functionality, efficiency, and lasting value.",
-    icon: Building2,
+      "End-to-end execution with transparent timelines, clear communication, and meticulous attention to detail.",
+    icon: HardHat,
     link: "/services",
     color: "bg-primary/10 text-primary",
   },
   {
-    title: "Infrastructure Projects",
+    title: "Urban Design Consulting",
     description:
-      "Critical infrastructure built with precision, safety, and longevity in mind for communities and cities.",
+      "Smart planning for smart cities, creating sustainable, functional, and aesthetically pleasing urban environments.",
     icon: Landmark,
     link: "/services",
     color: "bg-accent/10 text-accent",

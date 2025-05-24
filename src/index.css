@@ -25,8 +25,8 @@
     --muted: 220 14% 96%;
     --muted-foreground: 220 10% 40%;
 
-    /* #FF6A00 - orange */
-    --accent: 25 100% 50%;
+    /* #F7931E - brand orange */
+    --accent: 30 93% 55%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
@@ -75,8 +75,8 @@
     --muted: 210 77% 15%;
     --muted-foreground: 210 40% 80%;
 
-    /* #FF6A00 - orange slightly muted in dark mode */
-    --accent: 25 90% 45%;
+    /* #F7931E - brand orange slightly muted in dark mode */
+    --accent: 30 85% 50%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 30.6%;

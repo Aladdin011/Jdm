@@ -190,7 +190,13 @@ export default function Projects() {
                         )}
                       >
                         <img
-                          src={img}
+                          src={
+                            index === 0
+                              ? "/images/project1.jpg"
+                              : index === 1
+                                ? "/images/project2.jpg"
+                                : "/images/project3.jpg"
+                          }
                           alt={`${selectedProject.title} image ${index + 1}`}
                           className="w-full h-full object-cover"
                         />

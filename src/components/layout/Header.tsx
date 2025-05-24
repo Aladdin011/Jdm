@@ -53,7 +53,7 @@ export default function Header() {
           className="text-2xl font-bold text-primary dark:text-white flex items-center gap-2"
         >
           <div className="w-10 h-10 bg-accent rounded flex items-center justify-center">
-            <span className="text-white font-bold">SC</span>
+            <span className="text-white font-bold">JD</span>
           </div>
           <span
             className={cn(
@@ -62,7 +62,7 @@ export default function Header() {
                 : "text-white dark:text-white",
             )}
           >
-            Skyline Construction
+            JD Marc Constructions
           </span>
         </Link>
 

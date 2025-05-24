@@ -22,13 +22,13 @@ export default function Footer() {
           <div className="space-y-4">
             <Link to="/" className="text-2xl font-bold flex items-center gap-2">
               <div className="w-10 h-10 bg-accent rounded flex items-center justify-center">
-                <span className="text-white font-bold">SC</span>
+                <span className="text-white font-bold">JD</span>
               </div>
-              <span>Skyline Construction</span>
+              <span>JD Marc Constructions</span>
             </Link>
             <p className="text-gray-300">
-              Building tomorrow's skylines with precision, innovation, and
-              dedication since 2005.
+              Engineering the future with precision, sustainability, and
+              forward-thinking design.
             </p>
             <div className="flex space-x-4">
               <a
@@ -177,29 +177,27 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin className="text-accent mt-1 flex-shrink-0" size={18} />
                 <span className="text-gray-300">
-                  123 Construction Way
+                  Abuja
                   <br />
-                  Building District
-                  <br />
-                  New York, NY 10001
+                  Nigeria
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="text-accent flex-shrink-0" size={18} />
                 <a
-                  href="tel:+1234567890"
+                  href="tel:+2348030000000"
                   className="text-gray-300 hover:text-accent transition-colors"
                 >
-                  (123) 456-7890
+                  +234 803 000 0000
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="text-accent flex-shrink-0" size={18} />
                 <a
-                  href="mailto:info@skylineconstruction.com"
+                  href="mailto:info@jdmarcconstructions.com"
                   className="text-gray-300 hover:text-accent transition-colors"
                 >
-                  info@skylineconstruction.com
+                  info@jdmarcconstructions.com
                 </a>
               </li>
             </ul>
@@ -228,7 +226,7 @@ export default function Footer() {
         {/* Copyright */}
         <div className="border-t border-gray-700 pt-6 text-center text-gray-400 text-sm">
           <p>
-            &copy; {currentYear} Skyline Construction Ltd. All rights reserved.
+            &copy; {currentYear} JD Marc Constructions. All rights reserved.
           </p>
         </div>
       </div>

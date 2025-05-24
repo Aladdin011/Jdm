@@ -37,12 +37,13 @@ export default function About() {
         <div className="container mx-auto px-4">
           <AnimatedSection className="max-w-3xl">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              About Skyline Construction
+              About JD Marc Constructions
             </h1>
             <p className="text-xl text-white/80 mb-8">
-              Building excellence since 2005. We combine expertise, innovation,
-              and integrity to deliver exceptional construction projects across
-              residential, commercial, and infrastructure sectors.
+              At JD Marc Constructions, we are redefining urban development with
+              precision, sustainability, and forward-thinking design. With a
+              legacy of delivering landmark projects, our team of engineers and
+              visionaries is committed to shaping tomorrow's cities.
             </p>
           </AnimatedSection>
         </div>
@@ -51,33 +52,32 @@ export default function About() {
       {/* Company Story */}
       <SplitSection
         title="Our Story"
-        subtitle="Building Excellence Since 2005"
+        subtitle="Engineering Excellence"
         content={
           <div className="space-y-4">
             <p>
-              Skyline Construction was founded in 2005 with a clear vision: to
-              create a construction company that combines technical excellence
-              with exceptional client service. What began as a small residential
-              builder has grown into a comprehensive construction firm serving
-              diverse sectors.
+              JD Marc Constructions was founded with a vision to transform urban
+              landscapes through innovative engineering and sustainable
+              construction practices. Our approach combines cutting-edge
+              technology with time-tested construction principles to deliver
+              projects that stand the test of time.
             </p>
             <p>
               Throughout our journey, we've remained committed to our founding
               principles of quality, integrity, and innovation. These values
               have guided our growth and earned us a reputation for excellence
-              in the construction industry.
+              in the construction industry across Nigeria and beyond.
             </p>
             <p>
-              Today, Skyline Construction employs over 200 professionals across
-              multiple offices, serving clients with projects ranging from
-              custom homes to major commercial developments and critical
-              infrastructure. While we've grown in size and capability, our
-              commitment to personalized service and exceptional results remains
-              unchanged.
+              Today, JD Marc Constructions employs a diverse team of engineers,
+              architects, and construction professionals who bring unique
+              perspectives and specialized expertise to every project. From
+              concept to completion, we approach each endeavor with the same
+              commitment to excellence and client satisfaction.
             </p>
           </div>
         }
-        image="/images/about-company.jpg"
+        image="/images/about1.jpg"
         imageAlt="Skyline Construction team on a job site"
       />
 

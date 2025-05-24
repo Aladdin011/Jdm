@@ -23,7 +23,7 @@ export default function Hero() {
   // Preload the hero image
   useEffect(() => {
     const img = new Image();
-    img.src = "/images/hero-construction.jpg";
+    img.src = "/images/hero.jpg";
   }, []);
 
   return (
@@ -37,7 +37,7 @@ export default function Hero() {
         <div
           className="absolute inset-0 bg-center bg-cover"
           style={{
-            backgroundImage: "url('/images/hero-construction.jpg')",
+            backgroundImage: "url('/images/hero.jpg')",
           }}
         />
       </motion.div>
@@ -51,10 +51,13 @@ export default function Hero() {
           className="text-center max-w-4xl"
         >
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight">
-            Building Tomorrow's Skylines
+            Engineering the Future: <br />
+            <span className="text-[#F7931E]">
+              Building Next-Gen Urban Solutions
+            </span>
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto text-white/90">
-            Residential, Commercial, & Industrial Projects Since 2005
+            Residential, Commercial, & Infrastructure Projects
           </p>
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button className="bg-accent hover:bg-accent/90 text-white py-6 px-8 rounded-md text-lg shadow-lg hover:shadow-xl transition-all duration-300">
