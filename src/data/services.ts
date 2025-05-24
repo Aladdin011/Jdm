@@ -1,7 +1,7 @@
 import {
   Building2,
   Home,
-  Buildings,
+  Landmark,
   PenTool,
   Wrench,
   HardHat,
@@ -49,7 +49,7 @@ export const services = [
       "Critical infrastructure built with precision, safety, and longevity in mind.",
     fullDescription:
       "Our infrastructure division specializes in building the critical systems that communities rely on. From roads and bridges to utilities and public works, we bring decades of experience to every infrastructure project. Our team excels at managing complex logistics, navigating regulatory requirements, and delivering durable solutions that serve the public for decades to come.",
-    icon: Buildings,
+    icon: Landmark,
     image: "/images/service-infrastructure.jpg",
     features: [
       "Roads, highways, and bridges",

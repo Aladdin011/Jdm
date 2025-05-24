@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Building2, Home, Buildings } from "lucide-react";
+import { Building2, Home, Landmark } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import AnimatedSection from "@/components/ui/AnimatedSection";
@@ -27,7 +27,7 @@ const services = [
     title: "Infrastructure Projects",
     description:
       "Critical infrastructure built with precision, safety, and longevity in mind for communities and cities.",
-    icon: Buildings,
+    icon: Landmark,
     link: "/services",
     color: "bg-accent/10 text-accent",
   },
