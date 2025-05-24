@@ -56,9 +56,6 @@ export default function Hero() {
               Building Next-Gen Urban Solutions
             </span>
           </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto text-white/90">
-            Residential, Commercial, & Infrastructure Projects
-          </p>
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button className="bg-accent hover:bg-accent/90 text-white py-6 px-8 rounded-md text-lg shadow-lg hover:shadow-xl transition-all duration-300">
               Request a Quote

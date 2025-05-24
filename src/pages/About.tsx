@@ -52,28 +52,37 @@ export default function About() {
       {/* Company Story */}
       <SplitSection
         title="Our Story"
-        subtitle="Engineering Excellence"
+        subtitle="Global Expertise, UK Roots"
         content={
           <div className="space-y-4">
             <p>
-              JD Marc Constructions was founded with a vision to transform urban
-              landscapes through innovative engineering and sustainable
-              construction practices. Our approach combines cutting-edge
-              technology with time-tested construction principles to deliver
-              projects that stand the test of time.
+              JD Marc Constructions began with a clear mission: to connect
+              UK-based service excellence with the vast opportunities of
+              emerging markets. Today, we've evolved into a fully international
+              construction and development company — driving innovation,
+              infrastructure, and strategic transformation across continents.
             </p>
+            <h3 className="text-lg font-bold mt-6 mb-2">
+              Building Global Partnerships That Drive Progress
+            </h3>
             <p>
-              Throughout our journey, we've remained committed to our founding
-              principles of quality, integrity, and innovation. These values
-              have guided our growth and earned us a reputation for excellence
-              in the construction industry across Nigeria and beyond.
+              With a foundation in the UK and a reach that now spans beyond
+              borders, we partner with transportation firms, technology
+              providers, investors, urban planners, and logistics experts
+              worldwide. Our deep market insight and forward-thinking strategy
+              empower our partners to navigate regulatory complexities,
+              diversify from saturated regions, and unlock high-value
+              opportunities in untapped global markets.
             </p>
+            <h3 className="text-lg font-bold mt-6 mb-2">
+              Infrastructure That Shapes Economies
+            </h3>
             <p>
-              Today, JD Marc Constructions employs a diverse team of engineers,
-              architects, and construction professionals who bring unique
-              perspectives and specialized expertise to every project. From
-              concept to completion, we approach each endeavor with the same
-              commitment to excellence and client satisfaction.
+              JD Marc doesn't just build — we advise, strategize, and enable.
+              Working closely with governments and institutions in developing
+              regions, we structure impactful infrastructure projects that
+              attract global financing, foster long-term development, and
+              deliver sustainable results.
             </p>
           </div>
         }
