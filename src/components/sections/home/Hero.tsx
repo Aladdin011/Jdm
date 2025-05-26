@@ -49,6 +49,17 @@ export default function Hero() {
         />
       </motion.div>
 
+      {/* Responsive Image */}
+      <img
+        loading="lazy"
+        srcSet="https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2Fa99cd57b1b98496ca25fa02ed32b5108?width=100 100w, https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2Fa99cd57b1b98496ca25fa02ed32b5108?width=200 200w, https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2Fa99cd57b1b98496ca25fa02ed32b5108?width=400 400w, https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2Fa99cd57b1b98496ca25fa02ed32b5108?width=800 800w, https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2Fa99cd57b1b98496ca25fa02ed32b5108?width=1200 1200w, https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2Fa99cd57b1b98496ca25fa02ed32b5108?width=1600 1600w, https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2Fa99cd57b1b98496ca25fa02ed32b5108?width=2000 2000w, https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2Fa99cd57b1b98496ca25fa02ed32b5108"
+        className="w-full mt-5 min-h-5 min-w-5 overflow-hidden object-cover object-center"
+        style={{
+          aspectRatio: "0.67",
+        }}
+        alt="JD Marc Constructions Hero Image"
+      />
+
       {/* Main Content */}
       <div className="relative z-20 h-full flex flex-col items-center justify-center container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
