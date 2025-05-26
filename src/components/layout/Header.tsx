@@ -50,20 +50,26 @@ export default function Header() {
       <div className="container mx-auto px-4 flex items-center justify-between">
         <Link
           to="/"
-          className="text-2xl font-bold text-primary dark:text-white flex items-center gap-2"
+          className="text-2xl font-bold text-primary dark:text-white flex items-center gap-3"
         >
-          <div className="w-10 h-10 bg-accent rounded flex items-center justify-center">
-            <span className="text-white font-bold">JD</span>
+          {/* JD MARC Logo */}
+          <div className="flex items-center gap-2">
+            <img
+              src="https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2Fa99cd57b1b98496ca25fa02ed32b5108"
+              alt="JD MARC Logo"
+              className="h-10 w-auto object-contain"
+            />
+            <span
+              className={cn(
+                "font-bold text-xl",
+                scrolled
+                  ? "text-primary dark:text-white"
+                  : "text-white dark:text-white",
+              )}
+            >
+              CONSTRUCTIONS
+            </span>
           </div>
-          <span
-            className={cn(
-              scrolled
-                ? "text-primary dark:text-white"
-                : "text-white dark:text-white",
-            )}
-          >
-            JD Marc Constructions
-          </span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -91,8 +97,17 @@ export default function Header() {
         {/* CTA Button */}
         <Button
           className={cn(
-            "hidden md:flex bg-accent hover:bg-accent/90 text-white rounded transition-all duration-300 transform hover:scale-105 hover:shadow-md",
+            "hidden md:flex text-white rounded transition-all duration-300 transform hover:scale-105 hover:shadow-md",
           )}
+          style={{
+            backgroundColor: "#A7967E",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "#C2CCC5";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "#A7967E";
+          }}
         >
           Request a Quote
         </Button>
@@ -132,7 +147,18 @@ export default function Header() {
                   {item.name}
                 </Link>
               ))}
-              <Button className="bg-accent hover:bg-accent/90 text-white rounded w-full">
+              <Button
+                className="text-white rounded w-full"
+                style={{
+                  backgroundColor: "#A7967E",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#C2CCC5";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "#A7967E";
+                }}
+              >
                 Request a Quote
               </Button>
             </div>
