@@ -48,20 +48,20 @@ export default function Header() {
       )}
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
-        <Link
-          to="/"
-          className="text-2xl font-bold text-primary dark:text-white flex items-center gap-3"
-        >
+        <Link to="/" className="flex items-center gap-3">
           {/* JD MARC Logo */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center">
             <img
-              src="https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2Fa99cd57b1b98496ca25fa02ed32b5108"
-              alt="JD MARC Logo"
-              className="h-10 w-auto object-contain"
+              src="/images/jd-marc-logo.png"
+              alt="JD MARC Constructions"
+              className="h-12 w-auto object-contain"
+              style={{
+                filter: scrolled ? "none" : "brightness(0) invert(1)",
+              }}
             />
             <span
               className={cn(
-                "font-bold text-xl",
+                "ml-2 font-bold text-lg tracking-wide",
                 scrolled
                   ? "text-primary dark:text-white"
                   : "text-white dark:text-white",
@@ -114,7 +114,10 @@ export default function Header() {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden text-primary dark:text-white"
+          className={cn(
+            "md:hidden",
+            scrolled ? "text-primary dark:text-white" : "text-white",
+          )}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
         >
