@@ -12,7 +12,6 @@ export default function Hero() {
 
   // Parallax effect for background
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   const scrollToNextSection = () => {
     const nextSection = document.getElementById("services-section");
@@ -20,12 +19,6 @@ export default function Hero() {
       nextSection.scrollIntoView({ behavior: "smooth" });
     }
   };
-
-  // Preload the hero image
-  useEffect(() => {
-    const img = new Image();
-    img.src = "/images/download.jpg";
-  }, []);
 
   return (
     <div ref={heroRef} className="relative h-screen w-full overflow-hidden">
@@ -40,11 +33,12 @@ export default function Hero() {
           style={{ backgroundColor: "rgba(20, 46, 84, 0.8)" }}
         />
 
-        {/* Background Image */}
+        {/* Background Image using Builder.io URL */}
         <div
           className="absolute inset-0 bg-center bg-cover bg-no-repeat"
           style={{
-            backgroundImage: "url('/images/download.jpg')",
+            backgroundImage:
+              "url('https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2Fa99cd57b1b98496ca25fa02ed32b5108')",
           }}
         />
       </motion.div>
