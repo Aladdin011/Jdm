@@ -4,6 +4,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
+import { AuthProvider } from "./contexts/AuthContext";
+import PrivateRoute from "./components/auth/PrivateRoute";
 import PageTransition from "./components/ui/PageTransition";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -14,6 +16,7 @@ import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -91,9 +94,21 @@ function AnimatedRoutes() {
         <Route
           path="/dashboard"
           element={
-            <PageTransition>
-              <Dashboard />
-            </PageTransition>
+            <PrivateRoute>
+              <PageTransition>
+                <Dashboard />
+              </PageTransition>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <PrivateRoute requireAdmin={true}>
+              <PageTransition>
+                <Admin />
+              </PageTransition>
+            </PrivateRoute>
           }
         />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
@@ -115,9 +130,11 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <AnimatedRoutes />
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <AnimatedRoutes />
+        </BrowserRouter>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
