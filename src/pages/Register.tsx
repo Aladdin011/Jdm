@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -46,7 +47,10 @@ export default function Register() {
     confirmPassword: "",
   });
   const [passwordMatch, setPasswordMatch] = useState<boolean | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const { register, isLoading } = useAuth();
+  const navigate = useNavigate();
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -64,16 +68,20 @@ export default function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!passwordMatch) return;
+    setError("");
 
-    setIsLoading(true);
+    if (!passwordMatch) {
+      setError("Passwords do not match");
+      return;
+    }
 
-    // Simulate registration process
-    setTimeout(() => {
-      setIsLoading(false);
-      // Navigate to dashboard
-      window.location.href = "/dashboard";
-    }, 2000);
+    const result = await register(formData);
+
+    if (result.success) {
+      navigate("/dashboard");
+    } else {
+      setError(result.error || "Registration failed");
+    }
   };
 
   return (
@@ -92,11 +100,30 @@ export default function Register() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <img
-                src="/images/jd-marc-logo.png"
-                alt="JD MARC"
-                className="h-12 w-auto mx-auto mb-4 filter brightness-0 invert"
-              />
+              {/* JD MARC Logo */}
+              <div className="mb-4">
+                <div className="flex items-center justify-center">
+                  <div
+                    className="text-3xl font-bold mr-2"
+                    style={{
+                      color: "#4A90E2",
+                      textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
+                    }}
+                  >
+                    JD
+                  </div>
+                  <div
+                    className="text-xl font-bold"
+                    style={{
+                      color: "#EAE6DF",
+                      textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+                    }}
+                  >
+                    MARC
+                  </div>
+                </div>
+              </div>
+
               <CardTitle
                 className="text-3xl font-bold"
                 style={{ color: "#EAE6DF" }}
@@ -115,6 +142,17 @@ export default function Register() {
 
           <CardContent className="p-8">
             <form onSubmit={handleSubmit} className="space-y-8">
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-3 bg-red-50 border border-red-200 rounded-md flex items-center gap-2"
+                >
+                  <AlertCircle className="h-4 w-4 text-red-500" />
+                  <span className="text-red-700 text-sm">{error}</span>
+                </motion.div>
+              )}
+
               {/* Personal Information */}
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
