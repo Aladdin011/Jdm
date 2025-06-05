@@ -100,9 +100,12 @@ export default function Register() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              {/* JD MARC Logo */}
+              {/* JD MARC Logo - Clickable to Homepage */}
               <div className="mb-4">
-                <div className="flex items-center justify-center">
+                <Link
+                  to="/"
+                  className="flex items-center justify-center hover:opacity-80 transition-opacity duration-300 cursor-pointer"
+                >
                   <div
                     className="text-3xl font-bold mr-2"
                     style={{
@@ -121,7 +124,7 @@ export default function Register() {
                   >
                     MARC
                   </div>
-                </div>
+                </Link>
               </div>
 
               <CardTitle
