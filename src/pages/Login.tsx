@@ -56,11 +56,30 @@ export default function Login() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-            <img
-              src="/images/jd-marc-logo.png"
-              alt="JD MARC"
-              className="h-16 w-auto mb-8 filter brightness-0 invert"
-            />
+            {/* JD MARC Logo - Using text-based logo as fallback */}
+            <div className="mb-8">
+              <div className="flex items-center">
+                <div
+                  className="text-4xl font-bold mr-3"
+                  style={{
+                    color: "#4A90E2",
+                    textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
+                  }}
+                >
+                  JD
+                </div>
+                <div
+                  className="text-2xl font-bold"
+                  style={{
+                    color: "#EAE6DF",
+                    textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+                  }}
+                >
+                  MARC
+                </div>
+              </div>
+            </div>
+
             <h1
               className="text-4xl font-bold mb-4"
               style={{ color: "#EAE6DF" }}
