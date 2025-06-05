@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25,15 +27,17 @@ import {
   AlertTriangle,
   DollarSign,
   MapPin,
+  Shield,
 } from "lucide-react";
 
 export default function Dashboard() {
-  const [user] = useState({
-    name: "John Doe",
-    role: "Project Manager",
-    avatar:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
-  });
+  const { user, logout, isAdmin } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   const stats = [
     {
@@ -127,11 +131,6 @@ export default function Dashboard() {
     },
   ];
 
-  const handleLogout = () => {
-    // Handle logout logic
-    window.location.href = "/login";
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#EAE6DF] to-[#C2CCC5]">
       {/* Top Navigation */}
@@ -144,16 +143,15 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <div className="flex items-center">
-              <img
-                src="/images/jd-marc-logo.png"
-                alt="JD MARC"
-                className="h-8 w-auto"
-              />
+            <Link to="/" className="flex items-center">
+              <div className="flex items-center mr-2">
+                <div className="text-2xl font-bold mr-1 text-[#4A90E2]">JD</div>
+                <div className="text-xl font-bold text-[#142E54]">MARC</div>
+              </div>
               <span className="ml-2 text-xl font-bold text-[#142E54]">
                 CONSTRUCTIONS
               </span>
-            </div>
+            </Link>
 
             {/* Search */}
             <div className="flex-1 max-w-md mx-8">
@@ -184,6 +182,20 @@ export default function Dashboard() {
                 New Project
               </Button>
 
+              {isAdmin && (
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="border-[#142E54] text-[#142E54] hover:bg-[#142E54] hover:text-white"
+                >
+                  <Link to="/admin">
+                    <Shield className="h-4 w-4 mr-1" />
+                    Admin Panel
+                  </Link>
+                </Button>
+              )}
+
               <Button variant="ghost" size="sm" className="text-[#142E54]">
                 <Bell className="h-4 w-4" />
               </Button>
@@ -194,16 +206,18 @@ export default function Dashboard() {
 
               {/* User Profile */}
               <div className="flex items-center space-x-2">
-                <img
-                  src={user.avatar}
-                  alt={user.name}
-                  className="h-8 w-8 rounded-full"
-                />
+                <div className="w-8 h-8 rounded-full bg-[#A7967E] flex items-center justify-center text-white font-bold">
+                  {user?.firstName?.[0]}
+                  {user?.lastName?.[0]}
+                </div>
                 <div className="hidden md:block">
                   <p className="text-sm font-medium text-[#142E54]">
-                    {user.name}
+                    {user?.firstName} {user?.lastName}
                   </p>
-                  <p className="text-xs text-[#A7967E]">{user.role}</p>
+                  <div className="flex items-center gap-1">
+                    <p className="text-xs text-[#A7967E]">{user?.role}</p>
+                    {isAdmin && <Shield className="h-3 w-3 text-[#142E54]" />}
+                  </div>
                 </div>
               </div>
 
@@ -230,7 +244,7 @@ export default function Dashboard() {
           className="mb-8"
         >
           <h1 className="text-3xl font-bold text-[#142E54] mb-2">
-            Welcome back, {user.name}!
+            Welcome back, {user?.firstName}!
           </h1>
           <p className="text-[#A7967E]">
             Here's what's happening with your construction projects today.
