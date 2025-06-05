@@ -55,19 +55,29 @@ export default function Header() {
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3">
-          {/* JD MARC Logo */}
+          {/* JD MARC Logo - Text-based version */}
           <div className="flex items-center">
-            <img
-              src="/images/jd-marc-logo.png"
-              alt="JD MARC Constructions"
-              className="h-12 w-auto object-contain"
-              style={{
-                filter: scrolled ? "none" : "brightness(0) invert(1)",
-              }}
-            />
+            <div className="flex items-center mr-2">
+              <div
+                className={cn(
+                  "text-2xl font-bold mr-1",
+                  scrolled ? "text-[#4A90E2]" : "text-[#4A90E2]",
+                )}
+              >
+                JD
+              </div>
+              <div
+                className={cn(
+                  "text-xl font-bold",
+                  scrolled ? "text-primary" : "text-white",
+                )}
+              >
+                MARC
+              </div>
+            </div>
             <span
               className={cn(
-                "ml-2 font-bold text-lg tracking-wide",
+                "font-bold text-lg tracking-wide",
                 scrolled
                   ? "text-primary dark:text-white"
                   : "text-white dark:text-white",
