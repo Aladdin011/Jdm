@@ -1,153 +1,106 @@
 export const teamMembers = [
   {
     id: 1,
-    name: "Robert Anderson",
-    title: "Founder & CEO",
-    image: "/images/team-robert.jpg",
-    bio: "Robert founded Skyline Construction in 2005 with a vision to create a company focused on quality, innovation, and client satisfaction. With over 30 years of industry experience, he has led the company through consistent growth while maintaining its core values and commitment to excellence.",
+    name: "Jude Onwudebe",
+    title: "Chief Executive Officer",
+    image: "/images/team-jude.jpg",
+    bio: "20+ years of construction and real estate experience. MSc Finance & Management (Sussex), BSc Economics. Co-founder of JD Marc and Xtranet Properties, leading the company's strategic vision for Pan-African infrastructure development.",
   },
   {
     id: 2,
-    name: "Sarah Martinez",
-    title: "Chief Operations Officer",
-    image: "/images/team-sarah.jpg",
-    bio: "Sarah oversees all operational aspects of Skyline Construction, ensuring projects are delivered on time, within budget, and to the highest quality standards. Her background in civil engineering and project management brings technical expertise and strategic thinking to the executive team.",
+    name: "Engr. Donatus Oduopara",
+    title: "Chief Technical Director",
+    image: "/images/team-donatus.jpg",
+    bio: "B.Eng (FUTO), MBA (Lagos Business School). Expert in civil structures, BIM, and international collaboration across Greece, South Africa, Sweden, and Turkey. Spearheads JD Marc's technical innovation and engineering excellence.",
   },
   {
     id: 3,
-    name: "David Kim",
-    title: "Chief Architect",
-    image: "/images/team-david.jpg",
-    bio: "David leads our design department with a passion for creating spaces that are both beautiful and functional. His award-winning designs combine aesthetic vision with practical considerations, resulting in buildings that exceed client expectations while addressing real-world needs.",
-  },
-  {
-    id: 4,
-    name: "Jennifer Thompson",
-    title: "Director of Residential Construction",
-    image: "/images/team-jennifer.jpg",
-    bio: "Jennifer specializes in residential projects, from custom luxury homes to multi-family developments. Her attention to detail and understanding of residential living spaces ensures that every home we build is crafted to the highest standards of quality and comfort.",
-  },
-  {
-    id: 5,
-    name: "Michael Rodriguez",
-    title: "Director of Commercial Construction",
-    image: "/images/team-michael.jpg",
-    bio: "Michael brings extensive experience in commercial construction to Skyline. His expertise in managing large-scale projects, from office buildings to retail centers, has been instrumental in expanding our commercial portfolio and establishing our reputation in this sector.",
-  },
-  {
-    id: 6,
-    name: "Lisa Chen",
-    title: "Director of Infrastructure Projects",
-    image: "/images/team-lisa.jpg",
-    bio: "Lisa leads our infrastructure division with specialized knowledge in civil engineering and public works projects. Her background includes work on major bridges, highways, and municipal facilities, giving her unique insight into the complexities of infrastructure construction.",
-  },
-  {
-    id: 7,
-    name: "James Wilson",
-    title: "Chief Financial Officer",
+    name: "James Abel",
+    title: "Project Director",
     image: "/images/team-james.jpg",
-    bio: "James oversees the financial health and strategic growth of Skyline Construction. His background in construction finance and business development helps ensure the company remains financially strong while pursuing new opportunities and markets.",
-  },
-  {
-    id: 8,
-    name: "Emily Johnson",
-    title: "Sustainability Director",
-    image: "/images/team-emily.jpg",
-    bio: "Emily champions sustainable building practices across all Skyline projects. With certifications in LEED and other green building standards, she ensures our construction methods and materials meet the highest environmental standards while delivering long-term value.",
+    bio: "MSc in Project Management (University of South Wales). Expertise in highway engineering, civil works, and transport systems. Oversees major infrastructure projects and ensures delivery excellence across all JD Marc operations.",
   },
 ];
 
 export const companyValues = [
   {
     id: 1,
-    title: "Quality Excellence",
+    title: "Innovation & Excellence",
     description:
-      "We never compromise on quality. Every project, regardless of size, receives the same commitment to excellence in materials, craftsmanship, and execution.",
-    icon: "award",
-  },
-  {
-    id: 2,
-    title: "Client Partnership",
-    description:
-      "We view every client relationship as a partnership. By understanding your goals and vision, we deliver results that exceed expectations.",
-    icon: "handshake",
-  },
-  {
-    id: 3,
-    title: "Safety First",
-    description:
-      "The safety of our team, clients, and the public is our highest priority. We maintain rigorous safety protocols that exceed industry standards.",
-    icon: "shield",
-  },
-  {
-    id: 4,
-    title: "Sustainability",
-    description:
-      "We're committed to environmentally responsible construction. From material selection to energy systems, we build with the future in mind.",
-    icon: "leaf",
-  },
-  {
-    id: 5,
-    title: "Innovation",
-    description:
-      "We continuously explore new technologies, materials, and methods to improve our processes and deliver better results.",
+      "Embracing technology to deliver superior results that set new standards in African construction.",
     icon: "lightbulb",
   },
   {
-    id: 6,
-    title: "Integrity",
+    id: 2,
+    title: "Integrity & Accountability",
     description:
-      "Honesty and transparency guide every aspect of our business. We do what we say, stand behind our work, and take responsibility for our actions.",
-    icon: "check-circle",
+      "Acting with honesty and responsibility in all projects, maintaining transparency with all stakeholders.",
+    icon: "shield",
+  },
+  {
+    id: 3,
+    title: "Impact & Sustainability",
+    description:
+      "Delivering solutions that improve lives and safeguard the environment for future generations.",
+    icon: "leaf",
+  },
+  {
+    id: 4,
+    title: "Collaboration",
+    description:
+      "Working with governments, communities, and international partners to drive meaningful results.",
+    icon: "handshake",
   },
 ];
 
 export const companyMilestones = [
   {
-    year: 2005,
+    year: 2007,
     title: "Company Founded",
     description:
-      "Skyline Construction was established with a focus on quality residential construction.",
-  },
-  {
-    year: 2008,
-    title: "First Commercial Project",
-    description:
-      "Expanded into commercial construction with the completion of our first office building.",
+      "JD Marc Construction was established in Nigeria with a vision to deliver quality infrastructure across Africa.",
   },
   {
     year: 2010,
-    title: "100 Projects Milestone",
-    description: "Celebrated the completion of our 100th construction project.",
+    title: "First Major Infrastructure Project",
+    description:
+      "Completed our first major road construction project, establishing our reputation for quality delivery.",
   },
   {
     year: 2013,
-    title: "Infrastructure Division",
+    title: "100 Projects Milestone",
     description:
-      "Launched our infrastructure division to serve public sector and civil engineering needs.",
+      "Celebrated the completion of our 100th construction project across Nigeria.",
   },
   {
     year: 2015,
-    title: "Sustainability Commitment",
+    title: "International Expansion",
     description:
-      "Implemented comprehensive sustainability standards across all projects.",
+      "Opened our London office, expanding our global reach and technical capabilities.",
   },
   {
     year: 2018,
-    title: "Regional Expansion",
-    description: "Opened new offices to serve clients across multiple states.",
+    title: "Smart Cities Division",
+    description:
+      "Launched our urban planning and smart cities division, incorporating BIM and GIS technologies.",
   },
   {
     year: 2020,
-    title: "ISO Certification",
+    title: "US Office Opening",
     description:
-      "Achieved ISO 9001 certification for our quality management systems.",
+      "Established our New York office to strengthen international partnerships and procurement.",
   },
   {
     year: 2022,
-    title: "Innovation Lab",
+    title: "Sustainability Commitment",
     description:
-      "Established our Construction Innovation Lab to research and develop new building techniques.",
+      "Implemented comprehensive sustainability standards across all projects and operations.",
+  },
+  {
+    year: 2024,
+    title: "Pan-African Leader",
+    description:
+      "Recognized as a leading Pan-African construction company with projects across multiple countries.",
   },
 ];
 
@@ -166,14 +119,54 @@ export const certifications = [
   },
   {
     id: 3,
-    name: "OSHA Safety Excellence",
-    description: "Occupational Safety and Health Administration",
-    icon: "shield",
+    name: "Nigerian Institute of Building",
+    description: "Professional Engineering Certification",
+    icon: "building",
   },
   {
     id: 4,
-    name: "AGC Certified Builder",
-    description: "Associated General Contractors of America",
-    icon: "building",
+    name: "International Standards",
+    description: "Compliance with Global Construction Standards",
+    icon: "shield",
+  },
+];
+
+// New departments for admin structure
+export const departments = [
+  {
+    id: 1,
+    name: "Secretariat/Admin",
+    description: "Administrative support and secretarial services",
+    hodRole: "Head of Administration",
+  },
+  {
+    id: 2,
+    name: "Business Development",
+    description: "Strategic growth and partnership development",
+    hodRole: "Head of Business Development",
+  },
+  {
+    id: 3,
+    name: "Project",
+    description: "Project management and execution oversight",
+    hodRole: "Head of Projects",
+  },
+  {
+    id: 4,
+    name: "Account",
+    description: "Financial management and accounting services",
+    hodRole: "Head of Finance",
+  },
+  {
+    id: 5,
+    name: "Human Resources (HR)",
+    description: "Personnel management and organizational development",
+    hodRole: "Head of Human Resources",
+  },
+  {
+    id: 6,
+    name: "Digital Marketing",
+    description: "Digital marketing and communications strategy",
+    hodRole: "Head of Digital Marketing",
   },
 ];
