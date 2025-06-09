@@ -195,9 +195,9 @@ export default function Contact() {
                         Message Sent Successfully!
                       </h3>
                       <p className="text-lg">
-                        Thank you for contacting JD Marc Construction. Our team
-                        will review your project details and get back to you
-                        within 24 hours.
+                        Thank you for contacting JD Marc. Our team will review
+                        your project details and get back to you within 24
+                        hours.
                       </p>
                     </div>
                   </motion.div>
