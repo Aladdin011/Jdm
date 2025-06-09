@@ -22,20 +22,27 @@ export default function Hero() {
 
   return (
     <div ref={heroRef} className="relative h-screen w-full overflow-hidden">
-      {/* Background with Parallax Effect */}
+      {/* Enhanced Background with Gradient Overlay */}
       <motion.div
         style={{ y }}
         className="absolute inset-0 w-full h-[120%] -top-[10%]"
       >
-        {/* Dark Blue Overlay */}
-        <div
-          className="absolute inset-0 z-10"
-          style={{ backgroundColor: "rgba(20, 46, 84, 0.8)" }}
-        />
+        {/* Darker overlay for better text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/50 z-10" />
 
-        {/* Background Image using Builder.io URL */}
-        <div
-          className="absolute inset-0 bg-center bg-cover bg-no-repeat"
+        {/* Background image with slow ken burns effect */}
+        <motion.div
+          animate={{
+            scale: [1, 1.05],
+            translateX: [0, -5],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            repeatType: "reverse",
+            ease: "linear",
+          }}
+          className="absolute inset-0 bg-center bg-cover"
           style={{
             backgroundImage:
               "url('https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2Fa99cd57b1b98496ca25fa02ed32b5108')",
@@ -43,113 +50,91 @@ export default function Hero() {
         />
       </motion.div>
 
-      {/* Main Content */}
-      <div className="relative z-20 h-full flex flex-col items-center justify-center container mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Content */}
+      <div className="relative z-20 h-full flex flex-col items-center justify-center text-white container mx-auto px-4">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
-          className="text-center max-w-5xl mx-auto"
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-center max-w-5xl"
         >
-          {/* Main Headline */}
+          {/* Updated heading with African focus */}
           <motion.h1
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight"
-            style={{ color: "#EAE6DF" }}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
           >
-            Engineering the Future:
+            <motion.span
+              className="text-white"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1, delay: 0.3 }}
+            >
+              Building Africa's Future Cities
+            </motion.span>
           </motion.h1>
 
-          {/* Subheading */}
-          <motion.h2
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-8 sm:mb-10 md:mb-12 leading-tight"
-            style={{ color: "#A7967E" }}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.7 }}
-          >
-            Building Next-Gen Urban Solutions
-          </motion.h2>
-
-          {/* Call-to-Action Button */}
+          {/* New comprehensive description */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1 }}
+            className="text-lg md:text-xl lg:text-2xl mb-8 max-w-4xl mx-auto text-white/90 space-y-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.6 }}
           >
-            <Button
-              className="text-lg sm:text-xl px-8 sm:px-10 py-4 sm:py-5 rounded-lg shadow-2xl font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-3xl focus:outline-none focus:ring-4 focus:ring-opacity-50"
-              style={{
-                backgroundColor: "#A7967E",
-                color: "#142E54",
-                borderRadius: "12px",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#C2CCC5";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#A7967E";
-              }}
-              onClick={() => {
-                // Add your quote request logic here
-                console.log("Request a quote clicked");
-              }}
-            >
-              Request a Quote
+            <p>
+              JD Marc is a proudly Nigerian construction company providing
+              innovative construction and infrastructure delivery across Nigeria
+              and beyond. Since 2007, we have delivered landmark projects in
+              roadworks, buildings, power, urban planning and smart city
+              solutions.
+            </p>
+            <p className="text-base md:text-lg lg:text-xl">
+              With offices in Abuja, London and New York, JD Marc brings global
+              expertise to solve local challenges – building smarter, greener,
+              and more resilient African cities.
+            </p>
+          </motion.div>
+
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.9 }}
+          >
+            <Button className="bg-accent hover:bg-accent/90 text-white py-6 px-8 rounded-md text-lg shadow-lg hover:shadow-xl transition-all duration-300">
+              Explore Our Projects
             </Button>
           </motion.div>
         </motion.div>
 
-        {/* Scroll Indicator */}
+        {/* Enhanced Scroll Indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5, duration: 1 }}
-          className="absolute bottom-8 sm:bottom-10 left-1/2 transform -translate-x-1/2 cursor-pointer"
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer"
           onClick={scrollToNextSection}
         >
           <motion.div
-            animate={{ y: [0, 12, 0] }}
-            transition={{
-              repeat: Infinity,
-              duration: 2,
-              ease: "easeInOut",
-            }}
+            animate={{ y: [0, 10, 0] }}
+            transition={{ repeat: Infinity, duration: 1.5 }}
             className="flex flex-col items-center"
           >
             <motion.span
-              className="text-sm mb-2 font-medium"
-              style={{ color: "#EAE6DF" }}
-              animate={{ opacity: [0.7, 1, 0.7] }}
-              transition={{
-                repeat: Infinity,
-                duration: 2,
-                ease: "easeInOut",
-              }}
+              className="text-white/60 text-sm mb-2"
+              animate={{ opacity: [0.6, 1, 0.6] }}
+              transition={{ repeat: Infinity, duration: 2 }}
             >
-              Scroll to explore
+              Discover More
             </motion.span>
             <ChevronDown
-              size={28}
-              className="transition-colors duration-300"
-              style={{ color: "#A7967E" }}
+              size={32}
+              className="text-white/70 hover:text-white transition-colors"
             />
           </motion.div>
         </motion.div>
-      </div>
-
-      {/* Accessibility Enhancements */}
-      <div className="sr-only">
-        <h1>
-          JD Marc Constructions - Engineering the Future: Building Next-Gen
-          Urban Solutions
-        </h1>
-        <p>
-          Premium construction and engineering services. Request a quote to get
-          started.
-        </p>
       </div>
     </div>
   );
