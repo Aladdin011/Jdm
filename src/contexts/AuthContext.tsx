@@ -15,7 +15,11 @@ interface User {
   company?: string;
   phone?: string;
   location?: string;
+  department?: string;
+  isActive: boolean;
+  lastLogin?: string;
   createdAt: string;
+  updatedAt: string;
 }
 
 interface AuthContextType {
@@ -24,14 +28,18 @@ interface AuthContextType {
   login: (
     email: string,
     password: string,
-  ) => Promise<{ success: boolean; error?: string }>;
+  ) => Promise<{ success: boolean; error?: string; user?: User }>;
   register: (
     userData: RegisterData,
-  ) => Promise<{ success: boolean; error?: string }>;
+  ) => Promise<{ success: boolean; error?: string; user?: User }>;
   logout: () => void;
+  updateUser: (
+    userData: Partial<User>,
+  ) => Promise<{ success: boolean; error?: string }>;
   isLoading: boolean;
   isAuthenticated: boolean;
   isAdmin: boolean;
+  refreshToken: () => Promise<boolean>;
 }
 
 interface RegisterData {
@@ -40,9 +48,17 @@ interface RegisterData {
   email: string;
   phone: string;
   company?: string;
-  role?: string;
+  department?: string;
   location?: string;
   password: string;
+  confirmPassword: string;
+}
+
+interface ApiResponse<T = any> {
+  success: boolean;
+  data?: T;
+  message?: string;
+  error?: string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -53,6 +69,47 @@ export const useAuth = () => {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
+};
+
+// API Configuration
+const API_BASE_URL =
+  process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+
+// API Helper Functions
+const apiCall = async <T = any,>(
+  endpoint: string,
+  options: RequestInit = {},
+): Promise<ApiResponse<T>> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      headers: {
+        "Content-Type": "application/json",
+        ...options.headers,
+      },
+      ...options,
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: data.message || data.error || "An error occurred",
+      };
+    }
+
+    return {
+      success: true,
+      data: data.data || data,
+      message: data.message,
+    };
+  } catch (error) {
+    console.error("API Error:", error);
+    return {
+      success: false,
+      error: "Network error. Please check your connection and try again.",
+    };
+  }
 };
 
 interface AuthProviderProps {
@@ -66,129 +123,136 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Initialize auth state from localStorage
   useEffect(() => {
-    const storedToken = localStorage.getItem("jdmarc_token");
-    const storedUser = localStorage.getItem("jdmarc_user");
+    const initializeAuth = async () => {
+      const storedToken = localStorage.getItem("jdmarc_token");
+      const storedUser = localStorage.getItem("jdmarc_user");
 
-    if (storedToken && storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setToken(storedToken);
-        setUser(parsedUser);
-      } catch (error) {
-        console.error("Error parsing stored user data:", error);
-        localStorage.removeItem("jdmarc_token");
-        localStorage.removeItem("jdmarc_user");
+      if (storedToken && storedUser) {
+        try {
+          const parsedUser = JSON.parse(storedUser);
+
+          // Verify token with backend
+          const isValid = await verifyToken(storedToken);
+
+          if (isValid) {
+            setToken(storedToken);
+            setUser(parsedUser);
+          } else {
+            // Token is invalid, clear storage
+            localStorage.removeItem("jdmarc_token");
+            localStorage.removeItem("jdmarc_user");
+          }
+        } catch (error) {
+          console.error("Error parsing stored user data:", error);
+          localStorage.removeItem("jdmarc_token");
+          localStorage.removeItem("jdmarc_user");
+        }
       }
-    }
-    setIsLoading(false);
+      setIsLoading(false);
+    };
+
+    initializeAuth();
   }, []);
+
+  // Verify token with backend
+  const verifyToken = async (tokenToVerify: string): Promise<boolean> => {
+    try {
+      const response = await apiCall("/auth/verify", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${tokenToVerify}`,
+        },
+      });
+
+      return response.success;
+    } catch (error) {
+      return false;
+    }
+  };
 
   const login = async (
     email: string,
     password: string,
-  ): Promise<{ success: boolean; error?: string }> => {
+  ): Promise<{ success: boolean; error?: string; user?: User }> => {
     setIsLoading(true);
 
     try {
-      // Simulate API call - In real implementation, this would be an actual API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await apiCall<{ user: User; token: string }>(
+        "/auth/login",
+        {
+          method: "POST",
+          body: JSON.stringify({ email, password }),
+        },
+      );
 
-      // Mock authentication logic
-      if (
-        email === "admin@jdmarcconstructions.com" &&
-        password === "admin123"
-      ) {
-        const mockUser: User = {
-          id: "1",
-          email: "admin@jdmarcconstructions.com",
-          firstName: "Admin",
-          lastName: "User",
-          role: "admin",
-          company: "JD Marc",
-          phone: "+234 803 000 0000",
-          location: "Abuja, Nigeria",
-          createdAt: new Date().toISOString(),
-        };
+      if (response.success && response.data) {
+        const { user: loginUser, token: loginToken } = response.data;
 
-        const mockToken =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJhZG1pbkBqZG1hcmNjb25zdHJ1Y3Rpb25zLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTYzMjE1MjQwMCwiZXhwIjoxNjMyMjM4ODAwfQ.mock_signature";
+        setUser(loginUser);
+        setToken(loginToken);
 
-        setUser(mockUser);
-        setToken(mockToken);
-
-        localStorage.setItem("jdmarc_token", mockToken);
-        localStorage.setItem("jdmarc_user", JSON.stringify(mockUser));
+        localStorage.setItem("jdmarc_token", loginToken);
+        localStorage.setItem("jdmarc_user", JSON.stringify(loginUser));
 
         setIsLoading(false);
-        return { success: true };
-      } else if (email && password) {
-        // Regular user login
-        const mockUser: User = {
-          id: "2",
-          email: email,
-          firstName: "John",
-          lastName: "Doe",
-          role: "user",
-          company: "Example Company",
-          phone: "+234 803 000 0001",
-          location: "Lagos, Nigeria",
-          createdAt: new Date().toISOString(),
-        };
-
-        const mockToken =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJ1c2VyQGV4YW1wbGUuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE2MzIxNTI0MDAsImV4cCI6MTYzMjIzODgwMH0.mock_signature";
-
-        setUser(mockUser);
-        setToken(mockToken);
-
-        localStorage.setItem("jdmarc_token", mockToken);
-        localStorage.setItem("jdmarc_user", JSON.stringify(mockUser));
-
-        setIsLoading(false);
-        return { success: true };
+        return { success: true, user: loginUser };
       } else {
         setIsLoading(false);
-        return { success: false, error: "Invalid email or password" };
+        return {
+          success: false,
+          error: response.error || "Invalid email or password",
+        };
       }
     } catch (error) {
       setIsLoading(false);
-      return { success: false, error: "Login failed. Please try again." };
+      return {
+        success: false,
+        error: "Login failed. Please try again.",
+      };
     }
   };
 
   const register = async (
     userData: RegisterData,
-  ): Promise<{ success: boolean; error?: string }> => {
+  ): Promise<{ success: boolean; error?: string; user?: User }> => {
     setIsLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      // Validate password confirmation
+      if (userData.password !== userData.confirmPassword) {
+        setIsLoading(false);
+        return {
+          success: false,
+          error: "Passwords do not match",
+        };
+      }
 
-      // Mock registration logic
-      const mockUser: User = {
-        id: Date.now().toString(),
-        email: userData.email,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        role: "user",
-        company: userData.company,
-        phone: userData.phone,
-        location: userData.location,
-        createdAt: new Date().toISOString(),
-      };
+      const response = await apiCall<{ user: User; token: string }>(
+        "/auth/register",
+        {
+          method: "POST",
+          body: JSON.stringify(userData),
+        },
+      );
 
-      const mockToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzIiwiZW1haWwiOiJuZXd1c2VyQGV4YW1wbGUuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE2MzIxNTI0MDAsImV4cCI6MTYzMjIzODgwMH0.mock_signature";
+      if (response.success && response.data) {
+        const { user: newUser, token: newToken } = response.data;
 
-      setUser(mockUser);
-      setToken(mockToken);
+        setUser(newUser);
+        setToken(newToken);
 
-      localStorage.setItem("jdmarc_token", mockToken);
-      localStorage.setItem("jdmarc_user", JSON.stringify(mockUser));
+        localStorage.setItem("jdmarc_token", newToken);
+        localStorage.setItem("jdmarc_user", JSON.stringify(newUser));
 
-      setIsLoading(false);
-      return { success: true };
+        setIsLoading(false);
+        return { success: true, user: newUser };
+      } else {
+        setIsLoading(false);
+        return {
+          success: false,
+          error: response.error || "Registration failed. Please try again.",
+        };
+      }
     } catch (error) {
       setIsLoading(false);
       return {
@@ -198,7 +262,76 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const updateUser = async (
+    userData: Partial<User>,
+  ): Promise<{ success: boolean; error?: string }> => {
+    if (!token) {
+      return { success: false, error: "Not authenticated" };
+    }
+
+    try {
+      const response = await apiCall<User>("/auth/profile", {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (response.success && response.data) {
+        const updatedUser = response.data;
+        setUser(updatedUser);
+        localStorage.setItem("jdmarc_user", JSON.stringify(updatedUser));
+        return { success: true };
+      } else {
+        return {
+          success: false,
+          error: response.error || "Failed to update profile",
+        };
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: "Failed to update profile. Please try again.",
+      };
+    }
+  };
+
+  const refreshToken = async (): Promise<boolean> => {
+    if (!token) return false;
+
+    try {
+      const response = await apiCall<{ token: string }>("/auth/refresh", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.success && response.data) {
+        const newToken = response.data.token;
+        setToken(newToken);
+        localStorage.setItem("jdmarc_token", newToken);
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      return false;
+    }
+  };
+
   const logout = () => {
+    // Call logout endpoint to invalidate token on server
+    if (token) {
+      apiCall("/auth/logout", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).catch(console.error);
+    }
+
     setUser(null);
     setToken(null);
     localStorage.removeItem("jdmarc_token");
@@ -211,10 +344,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     login,
     register,
     logout,
+    updateUser,
     isLoading,
     isAuthenticated: !!token && !!user,
     isAdmin: user?.role === "admin",
+    refreshToken,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+
+// Export types for use in other components
+export type { User, RegisterData };
