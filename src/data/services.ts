@@ -1,81 +1,68 @@
 import {
   Building2,
-  Home,
-  Landmark,
-  PenTool,
+  MapPin,
+  Globe,
   Wrench,
-  HardHat,
+  Lightbulb,
+  Layers,
 } from "lucide-react";
 
 export const services = [
   {
     id: 1,
-    title: "Structural Engineering",
-    shortDescription: "Delivering durable, modern structural frameworks.",
+    title: "Total Construction",
+    shortDescription:
+      "Comprehensive construction solutions from residential to industrial projects.",
     fullDescription:
-      "Our structural engineering team ensures that every project is built on a solid foundation with impeccable integrity. We combine innovative design approaches with time-tested engineering principles to create structures that stand the test of time while accommodating modern needs and aesthetics.",
+      "JD Marc delivers end-to-end construction services across all sectors. From residential and commercial buildings to industrial facilities, we provide turnkey EPC (Engineering, Procurement, and Construction) delivery that meets international standards while addressing Africa's unique infrastructure needs.",
     icon: Building2,
     image: "/images/service1.jpg",
     features: [
-      "Advanced structural analysis",
-      "Seismic-resistant design",
-      "Load-bearing optimization",
-      "Sustainable material selection",
-      "Structural reinforcement solutions",
+      "Residential, commercial, and industrial buildings",
+      "Roads, bridges, and utilities infrastructure",
+      "Turnkey EPC delivery solutions",
+      "Quality assurance and project management",
+      "Sustainable construction practices",
     ],
   },
   {
     id: 2,
-    title: "Project Management",
-    shortDescription: "End-to-end execution with transparent timelines.",
+    title: "Urban Planning & Smart Cities",
+    shortDescription:
+      "Digital city planning and smart infrastructure solutions for modern Africa.",
     fullDescription:
-      "Our project management services provide comprehensive oversight from planning through completion. We maintain clear communication channels, transparent progress reporting, and meticulous attention to both schedule and budget constraints to deliver exceptional results while eliminating surprises.",
-    icon: HardHat,
+      "Leveraging cutting-edge technology including GIS, BIM, and GPR scanning, we design smart, sustainable urban environments. Our urban planning expertise combines international best practices with local African realities to create cities that are resilient, efficient, and environmentally responsible.",
+    icon: MapPin,
     image: "/images/service2.jpg",
     features: [
-      "Timeline development and tracking",
-      "Resource allocation and management",
-      "Budget control and forecasting",
-      "Risk assessment and mitigation",
-      "Stakeholder communication",
+      "GIS + BIM digital city planning",
+      "GPR scanning for underground mapping",
+      "Smart, eco-friendly infrastructure design",
+      "Urban regeneration and development",
+      "Climate-resilient city solutions",
     ],
   },
   {
     id: 3,
-    title: "Urban Design Consulting",
-    shortDescription: "Smart planning for smart cities.",
+    title: "Global Procurement",
+    shortDescription:
+      "International sourcing and logistics for construction materials and equipment.",
     fullDescription:
-      "Our urban design team works at the intersection of architecture, planning, and technology to create spaces that enhance community life. We consider all aspects of urban development from transportation and utilities to aesthetics and environmental impact to create sustainable, livable urban environments.",
-    icon: Landmark,
+      "With our global network spanning Nigeria, UK, and USA, we provide comprehensive procurement services for construction materials and equipment. Our international sourcing capabilities ensure access to the latest technology and materials while maintaining cost-effectiveness for African projects.",
+    icon: Globe,
     image: "/images/service3.jpg",
     features: [
-      "Master planning and development",
-      "Transportation integration",
-      "Public space optimization",
-      "Infrastructure planning",
-      "Smart city technology implementation",
-    ],
-  },
-  {
-    id: 4,
-    title: "Interior Renovation",
-    shortDescription: "Transforming interiors with precision and flair.",
-    fullDescription:
-      "Our interior renovation services breathe new life into existing spaces. Whether modernizing outdated facilities, optimizing functional layouts, or creating entirely new environments within existing structures, our team delivers transformative results that maximize both aesthetic appeal and practical functionality.",
-    icon: Wrench,
-    image: "/images/service2.jpg",
-    features: [
-      "Space planning and optimization",
-      "Material selection and sourcing",
-      "Custom built-in elements",
-      "Lighting design and implementation",
-      "Finish selection and installation",
+      "International sourcing of construction materials",
+      "Equipment logistics and technical imports",
+      "Supply chain optimization",
+      "Quality verification and compliance",
+      "Cost-effective global procurement",
     ],
   },
 ];
 
 export const serviceCategories = [
-  { value: "residential", label: "Residential" },
-  { value: "commercial", label: "Commercial" },
-  { value: "infrastructure", label: "Infrastructure" },
+  { value: "construction", label: "Total Construction" },
+  { value: "urban-planning", label: "Urban Planning" },
+  { value: "procurement", label: "Global Procurement" },
 ];
