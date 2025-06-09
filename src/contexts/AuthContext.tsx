@@ -104,7 +104,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           firstName: "Admin",
           lastName: "User",
           role: "admin",
-          company: "JD Marc Constructions",
+          company: "JD Marc",
           phone: "+234 803 000 0000",
           location: "Abuja, Nigeria",
           createdAt: new Date().toISOString(),
