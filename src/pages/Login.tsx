@@ -128,32 +128,10 @@ export default function Login() {
               >
                 Welcome Back
               </h1>
-              <p className="text-xl mb-6" style={{ color: "#A7967E" }}>
-                Engineering Excellence, Building Tomorrow
-              </p>
               <p className="text-lg opacity-90">
-                Access your construction management dashboard and continue
-                building the future with precision and innovation.
+                Access your Dashboard: Gain confidential insights and
+                unparalleled control.
               </p>
-
-              {/* Demo Credentials */}
-              <div className="mt-8 p-4 bg-white/10 rounded-lg backdrop-blur-sm">
-                <h3
-                  className="text-lg font-semibold mb-3"
-                  style={{ color: "#EAE6DF" }}
-                >
-                  Demo Credentials:
-                </h3>
-                <div className="space-y-2 text-sm">
-                  <p>
-                    <strong>Admin:</strong> admin@jdmarcconstructions.com /
-                    admin123
-                  </p>
-                  <p>
-                    <strong>User:</strong> Any email / any password
-                  </p>
-                </div>
-              </div>
             </motion.div>
           </div>
         </motion.div>
