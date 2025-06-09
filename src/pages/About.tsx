@@ -85,7 +85,7 @@ export default function About() {
           </div>
         }
         image="/images/about1.jpg"
-        imageAlt="JD Marc Construction projects across Africa"
+        imageAlt="JD Marc projects across Africa"
       />
 
       {/* Leadership Team */}
