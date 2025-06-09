@@ -1,5 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useTransform,
+  useScroll,
+} from "framer-motion";
 import { MessageCircle, X, Send } from "lucide-react";
 import ChatMessage, { Message } from "./ChatMessage";
 import TypingIndicator from "./TypingIndicator";
@@ -13,8 +18,13 @@ export default function Chatbot() {
   const [showButton, setShowButton] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
+  const [scrollY, setScrollY] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Track scroll position and viewport for dynamic positioning
+  const { scrollYProgress } = useScroll();
 
   // Notification messages that appear with the button
   const notifications = [
@@ -24,6 +34,30 @@ export default function Chatbot() {
     "👋 Hi! I'm here to help with JD Marc info",
     "⚡ Quick questions? Ask me anything!",
   ];
+
+  // Track scroll position and viewport size
+  useEffect(() => {
+    const updateScrollPosition = () => {
+      setScrollY(window.scrollY);
+      setViewportHeight(window.innerHeight);
+    };
+
+    const handleResize = () => {
+      setViewportHeight(window.innerHeight);
+    };
+
+    // Initial setup
+    updateScrollPosition();
+
+    // Add scroll and resize listeners
+    window.addEventListener("scroll", updateScrollPosition, { passive: true });
+    window.addEventListener("resize", handleResize, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", updateScrollPosition);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   // Show chatbot button after 5 seconds with cycling notifications
   useEffect(() => {
@@ -150,15 +184,34 @@ export default function Chatbot() {
 
   return (
     <>
-      {/* Floating Chat Button with Notification - Always Visible */}
+      {/* Floating Chat Button with Notification - Follows User */}
       <AnimatePresence>
         {showButton && (
-          <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[9999]">
+          <motion.div
+            className="fixed z-[9999]"
+            style={{
+              right: "1rem",
+              // Dynamic positioning based on scroll and viewport
+              top: `${Math.min(
+                Math.max(scrollY + viewportHeight * 0.7, scrollY + 100),
+                scrollY + viewportHeight - 120,
+              )}px`,
+            }}
+            animate={{
+              y: 0,
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 100,
+              damping: 20,
+              mass: 0.8,
+            }}
+          >
             {/* Notification Bubble */}
             <AnimatePresence>
               {showNotification && !isOpen && (
                 <motion.div
-                  className="absolute bottom-16 sm:bottom-20 right-0 mb-2 mr-0 sm:mr-2"
+                  className="absolute -top-16 sm:-top-20 right-0 mb-2 mr-0 sm:mr-2"
                   initial={{ opacity: 0, y: 10, scale: 0.8 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.8 }}
@@ -168,7 +221,7 @@ export default function Chatbot() {
                     <div className="text-sm text-gray-700 font-medium leading-relaxed">
                       {notificationMessage}
                     </div>
-                    {/* Enhanced arrow pointing to button */}
+                    {/* Enhanced arrow pointing down to button */}
                     <div className="absolute -bottom-2 right-4 w-4 h-4 bg-white transform rotate-45 border-r border-b border-gray-200 shadow-sm"></div>
                     {/* Close button for notification */}
                     <button
@@ -256,7 +309,7 @@ export default function Chatbot() {
                 />
               </motion.div>
             )}
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
 
@@ -275,17 +328,21 @@ export default function Chatbot() {
 
             {/* Enhanced Chat Container */}
             <motion.div
-              className="fixed bottom-20 sm:bottom-24 right-4 sm:right-6 w-[calc(100vw-2rem)] max-w-[320px] sm:max-w-[380px] md:max-w-[400px] h-[65vh] sm:h-[60vh] max-h-[550px] bg-white rounded-xl shadow-2xl z-[9999] flex flex-col overflow-hidden border border-gray-200"
+              className="fixed right-4 sm:right-6 w-[calc(100vw-2rem)] max-w-[320px] sm:max-w-[380px] md:max-w-[400px] h-[65vh] sm:h-[60vh] max-h-[550px] bg-white rounded-xl shadow-2xl z-[9999] flex flex-col overflow-hidden border border-gray-200"
               initial={{ opacity: 0, y: 100, scale: 0.8, rotateX: -15 }}
               animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
               exit={{ opacity: 0, y: 100, scale: 0.8, rotateX: -15 }}
               transition={{ type: "spring", duration: 0.4, damping: 25 }}
               style={{
+                // Position chat window dynamically relative to scroll position
+                top: `${Math.min(
+                  Math.max(scrollY + viewportHeight * 0.15, scrollY + 50),
+                  scrollY + viewportHeight - 600,
+                )}px`,
                 filter: "drop-shadow(0 25px 50px rgba(0, 0, 0, 0.15))",
-                transformOrigin: "bottom right",
+                transformOrigin: "top right",
               }}
             >
-              {/* Header */}
               <div className="bg-[#142E54] text-white p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-[#F97316] rounded-full flex items-center justify-center">
