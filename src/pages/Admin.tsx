@@ -80,7 +80,7 @@ export default function Admin() {
         lastName: "Onwudebe",
         role: "admin",
         department: "Managing Director",
-        company: "JD Marc Construction",
+        company: "JD Marc",
         phone: "+234 803 706 5497",
         location: "Abuja, Nigeria",
         createdAt: "2023-01-15T10:00:00Z",
