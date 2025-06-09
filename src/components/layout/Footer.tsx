@@ -26,7 +26,9 @@ export default function Footer() {
                 <div className="text-2xl font-bold mr-1 text-[#4A90E2]">JD</div>
                 <div className="text-xl font-bold text-white">MARC</div>
               </div>
-              <span className="text-lg">CONSTRUCTION</span>
+              <p>
+                <br />
+              </p>
             </Link>
             <p className="text-gray-300">
               Building Africa's future cities with innovative construction and
