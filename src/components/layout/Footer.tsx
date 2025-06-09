@@ -7,6 +7,7 @@ import {
   Mail,
   Phone,
   MapPin,
+  Globe,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,14 +22,15 @@ export default function Footer() {
           {/* Company Info */}
           <div className="space-y-4">
             <Link to="/" className="text-2xl font-bold flex items-center gap-2">
-              <div className="w-10 h-10 bg-accent rounded flex items-center justify-center">
-                <span className="text-white font-bold">JD</span>
+              <div className="flex items-center mr-2">
+                <div className="text-2xl font-bold mr-1 text-[#4A90E2]">JD</div>
+                <div className="text-xl font-bold text-white">MARC</div>
               </div>
-              <span>JD Marc Constructions</span>
+              <span className="text-lg">CONSTRUCTION</span>
             </Link>
             <p className="text-gray-300">
-              Engineering the future with precision, sustainability, and
-              forward-thinking design.
+              Building Africa's future cities with innovative construction and
+              infrastructure solutions since 2007.
             </p>
             <div className="flex space-x-4">
               <a
@@ -130,7 +132,7 @@ export default function Footer() {
                   to="/services"
                   className="text-gray-300 hover:text-accent transition-colors"
                 >
-                  Residential Construction
+                  Total Construction
                 </Link>
               </li>
               <li>
@@ -138,7 +140,7 @@ export default function Footer() {
                   to="/services"
                   className="text-gray-300 hover:text-accent transition-colors"
                 >
-                  Commercial Buildings
+                  Urban Planning & Smart Cities
                 </Link>
               </li>
               <li>
@@ -146,7 +148,7 @@ export default function Footer() {
                   to="/services"
                   className="text-gray-300 hover:text-accent transition-colors"
                 >
-                  Infrastructure Projects
+                  Global Procurement
                 </Link>
               </li>
               <li>
@@ -154,53 +156,129 @@ export default function Footer() {
                   to="/services"
                   className="text-gray-300 hover:text-accent transition-colors"
                 >
-                  Renovations
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/services"
-                  className="text-gray-300 hover:text-accent transition-colors"
-                >
-                  Consulting Services
+                  Infrastructure Development
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Contact Info */}
+          {/* Contact Info - Nigeria HQ */}
           <div>
             <h3 className="text-lg font-bold mb-4 border-b border-gray-700 pb-2">
-              Contact Us
+              Nigeria (HQ)
             </h3>
-            <ul className="space-y-4">
+            <ul className="space-y-3">
               <li className="flex items-start gap-3">
                 <MapPin className="text-accent mt-1 flex-shrink-0" size={18} />
                 <span className="text-gray-300">
-                  Abuja
+                  Plot 107, Ahmadu Bello Way
                   <br />
-                  Nigeria
+                  Abuja, Nigeria
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="text-accent flex-shrink-0" size={18} />
                 <a
-                  href="tel:+2348030000000"
+                  href="tel:+2348037065497"
                   className="text-gray-300 hover:text-accent transition-colors"
                 >
-                  +234 803 000 0000
+                  +234 (0)8037 065497
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="text-accent flex-shrink-0" size={18} />
                 <a
-                  href="mailto:info@jdmarcconstructions.com"
+                  href="mailto:info@jdmarcng.com"
                   className="text-gray-300 hover:text-accent transition-colors"
                 >
-                  info@jdmarcconstructions.com
+                  info@jdmarcng.com
+                </a>
+              </li>
+              <li className="flex items-center gap-3">
+                <Globe className="text-accent flex-shrink-0" size={18} />
+                <a
+                  href="https://www.jdmarcng.com"
+                  className="text-gray-300 hover:text-accent transition-colors"
+                >
+                  www.jdmarcng.com
                 </a>
               </li>
             </ul>
+          </div>
+        </div>
+
+        {/* International Offices */}
+        <div className="border-t border-gray-700 pt-8 pb-6">
+          <h3 className="text-lg font-bold text-center mb-6">
+            International Offices
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* UK Office */}
+            <div className="text-center">
+              <h4 className="font-bold mb-3 text-accent">United Kingdom</h4>
+              <div className="space-y-2 text-sm text-gray-300">
+                <div className="flex items-center justify-center gap-2">
+                  <MapPin size={16} />
+                  <span>71-75 Shelton Street, London WC2H 9RQ</span>
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <Phone size={16} />
+                  <a
+                    href="tel:+447760954844"
+                    className="hover:text-accent transition-colors"
+                  >
+                    +44 (0)7760954844
+                  </a>
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <Mail size={16} />
+                  <a
+                    href="mailto:info@jdmarc.co.uk"
+                    className="hover:text-accent transition-colors"
+                  >
+                    info@jdmarc.co.uk
+                  </a>
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <Globe size={16} />
+                  <a
+                    href="https://www.jdmarc.co.uk"
+                    className="hover:text-accent transition-colors"
+                  >
+                    www.jdmarc.co.uk
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* USA Office */}
+            <div className="text-center">
+              <h4 className="font-bold mb-3 text-accent">United States</h4>
+              <div className="space-y-2 text-sm text-gray-300">
+                <div className="flex items-center justify-center gap-2">
+                  <MapPin size={16} />
+                  <span>125 Park Avenue, New York, NY 10017</span>
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <Phone size={16} />
+                  <a
+                    href="tel:+12124567890"
+                    className="hover:text-accent transition-colors"
+                  >
+                    +1 (212) 456-7890
+                  </a>
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <Mail size={16} />
+                  <a
+                    href="mailto:usa@jdmarc.com"
+                    className="hover:text-accent transition-colors"
+                  >
+                    usa@jdmarc.com
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -208,7 +286,7 @@ export default function Footer() {
         <div className="border-t border-gray-700 pt-8 pb-6">
           <div className="max-w-md mx-auto">
             <h3 className="text-lg font-bold text-center mb-4">
-              Subscribe to Our Newsletter
+              Stay Updated with JD Marc
             </h3>
             <div className="flex gap-2">
               <Input
@@ -226,7 +304,8 @@ export default function Footer() {
         {/* Copyright */}
         <div className="border-t border-gray-700 pt-6 text-center text-gray-400 text-sm">
           <p>
-            &copy; {currentYear} JD Marc Constructions. All rights reserved.
+            &copy; {currentYear} JD Marc Construction. All rights reserved.
+            Building Africa's Future Cities.
           </p>
         </div>
       </div>
