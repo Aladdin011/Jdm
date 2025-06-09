@@ -177,6 +177,75 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsLoading(true);
 
     try {
+      // Check if we're in development mode (no backend available)
+      const isDevelopment = API_BASE_URL.includes("localhost");
+
+      if (isDevelopment) {
+        // Mock authentication for development
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API delay
+
+        // Admin credentials
+        if (email === "admin@jdmarc.com" && password === "admin123") {
+          const mockUser: User = {
+            id: "1",
+            email: "admin@jdmarc.com",
+            firstName: "Admin",
+            lastName: "User",
+            role: "admin",
+            company: "JD Marc",
+            phone: "+234 803 000 0000",
+            location: "Abuja, Nigeria",
+            department: "secretariat-admin",
+            isActive: true,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+
+          const mockToken = "mock_admin_token_" + Date.now();
+
+          setUser(mockUser);
+          setToken(mockToken);
+
+          localStorage.setItem("jdmarc_token", mockToken);
+          localStorage.setItem("jdmarc_user", JSON.stringify(mockUser));
+
+          setIsLoading(false);
+          return { success: true, user: mockUser };
+        }
+        // Regular user credentials
+        else if (email && password) {
+          const mockUser: User = {
+            id: "2",
+            email: email,
+            firstName: "John",
+            lastName: "Doe",
+            role: "user",
+            company: "Example Company",
+            phone: "+234 803 000 0001",
+            location: "Lagos, Nigeria",
+            department: "project-management",
+            isActive: true,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+
+          const mockToken = "mock_user_token_" + Date.now();
+
+          setUser(mockUser);
+          setToken(mockToken);
+
+          localStorage.setItem("jdmarc_token", mockToken);
+          localStorage.setItem("jdmarc_user", JSON.stringify(mockUser));
+
+          setIsLoading(false);
+          return { success: true, user: mockUser };
+        } else {
+          setIsLoading(false);
+          return { success: false, error: "Invalid email or password" };
+        }
+      }
+
+      // Production mode - use real API
       const response = await apiCall<{ user: User; token: string }>(
         "/auth/login",
         {
