@@ -26,6 +26,11 @@ import {
   Phone,
   MapPin,
   Building,
+  Briefcase,
+  UserCheck,
+  DollarSign,
+  Heart,
+  Megaphone,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -38,6 +43,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { departments } from "@/data/team";
 
 interface User {
   id: string;
@@ -45,6 +51,7 @@ interface User {
   firstName: string;
   lastName: string;
   role: "user" | "admin";
+  department?: string;
   company?: string;
   phone?: string;
   location?: string;
@@ -60,19 +67,21 @@ export default function Admin() {
   const [selectedRole, setSelectedRole] = useState<"all" | "user" | "admin">(
     "all",
   );
+  const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
   const [isLoading, setIsLoading] = useState(true);
 
-  // Mock user data
+  // Mock user data with JD Marc departments
   useEffect(() => {
     const mockUsers: User[] = [
       {
         id: "1",
-        email: "admin@jdmarcconstructions.com",
-        firstName: "Admin",
-        lastName: "User",
+        email: "jude.onwudebe@jdmarcng.com",
+        firstName: "Jude",
+        lastName: "Onwudebe",
         role: "admin",
-        company: "JD Marc Constructions",
-        phone: "+234 803 000 0000",
+        department: "Managing Director",
+        company: "JD Marc Construction",
+        phone: "+234 803 706 5497",
         location: "Abuja, Nigeria",
         createdAt: "2023-01-15T10:00:00Z",
         lastActive: "2024-01-15T14:30:00Z",
@@ -80,55 +89,101 @@ export default function Admin() {
       },
       {
         id: "2",
-        email: "john.doe@example.com",
-        firstName: "John",
-        lastName: "Doe",
-        role: "user",
-        company: "ABC Construction Ltd",
+        email: "donatus.oduopara@jdmarcng.com",
+        firstName: "Donatus",
+        lastName: "Oduopara",
+        role: "admin",
+        department: "Project",
+        company: "JD Marc Construction",
         phone: "+234 803 000 0001",
-        location: "Lagos, Nigeria",
-        createdAt: "2023-02-20T09:15:00Z",
+        location: "Abuja, Nigeria",
+        createdAt: "2023-01-15T10:00:00Z",
         lastActive: "2024-01-14T16:45:00Z",
         status: "active",
       },
       {
         id: "3",
-        email: "sarah.wilson@builders.com",
-        firstName: "Sarah",
-        lastName: "Wilson",
-        role: "user",
-        company: "Wilson Builders",
+        email: "james.abel@jdmarcng.com",
+        firstName: "James",
+        lastName: "Abel",
+        role: "admin",
+        department: "Project",
+        company: "JD Marc Construction",
         phone: "+234 803 000 0002",
-        location: "Port Harcourt, Nigeria",
-        createdAt: "2023-03-10T11:30:00Z",
+        location: "Abuja, Nigeria",
+        createdAt: "2023-01-15T10:00:00Z",
         lastActive: "2024-01-13T10:20:00Z",
         status: "active",
       },
       {
         id: "4",
-        email: "mike.johnson@engineering.com",
-        firstName: "Mike",
-        lastName: "Johnson",
-        role: "admin",
-        company: "Johnson Engineering",
+        email: "sarah.admin@jdmarcng.com",
+        firstName: "Sarah",
+        lastName: "Okafor",
+        role: "user",
+        department: "Secretariat/Admin",
+        company: "JD Marc Construction",
         phone: "+234 803 000 0003",
-        location: "Kano, Nigeria",
+        location: "Abuja, Nigeria",
         createdAt: "2023-04-05T08:45:00Z",
         lastActive: "2024-01-12T12:10:00Z",
         status: "active",
       },
       {
         id: "5",
-        email: "inactive.user@example.com",
-        firstName: "Inactive",
-        lastName: "User",
+        email: "michael.business@jdmarcng.com",
+        firstName: "Michael",
+        lastName: "Adebayo",
         role: "user",
-        company: "Old Company",
+        department: "Business Development",
+        company: "JD Marc Construction",
         phone: "+234 803 000 0004",
-        location: "Kaduna, Nigeria",
-        createdAt: "2023-01-01T12:00:00Z",
-        lastActive: "2023-12-01T15:30:00Z",
-        status: "inactive",
+        location: "Lagos, Nigeria",
+        createdAt: "2023-03-01T12:00:00Z",
+        lastActive: "2024-01-11T15:30:00Z",
+        status: "active",
+      },
+      {
+        id: "6",
+        email: "grace.account@jdmarcng.com",
+        firstName: "Grace",
+        lastName: "Nwosu",
+        role: "user",
+        department: "Account",
+        company: "JD Marc Construction",
+        phone: "+234 803 000 0005",
+        location: "Abuja, Nigeria",
+        createdAt: "2023-05-15T09:00:00Z",
+        lastActive: "2024-01-10T11:20:00Z",
+        status: "active",
+      },
+      {
+        id: "7",
+        email: "david.hr@jdmarcng.com",
+        firstName: "David",
+        lastName: "Emeka",
+        role: "user",
+        department: "Human Resources (HR)",
+        company: "JD Marc Construction",
+        phone: "+234 803 000 0006",
+        location: "Abuja, Nigeria",
+        createdAt: "2023-06-10T14:30:00Z",
+        lastActive: "2024-01-09T09:45:00Z",
+        status: "active",
+      },
+      {
+        id: "8",
+        email: "joy.marketing@jdmarcng.com",
+        firstName: "Joy",
+        lastName: "Okoro",
+        role: "user",
+        department: "Digital Marketing",
+        company: "JD Marc Construction",
+        phone: "+234 803 000 0007",
+        location: "Lagos, Nigeria",
+        createdAt: "2023-07-20T16:15:00Z",
+        lastActive: "2024-01-08T13:30:00Z",
+        status: "active",
       },
     ];
 
@@ -143,11 +198,13 @@ export default function Admin() {
       user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.company?.toLowerCase().includes(searchTerm.toLowerCase());
+      user.department?.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesRole = selectedRole === "all" || user.role === selectedRole;
+    const matchesDepartment =
+      selectedDepartment === "all" || user.department === selectedDepartment;
 
-    return matchesSearch && matchesRole;
+    return matchesSearch && matchesRole && matchesDepartment;
   });
 
   const handleDeleteUser = (userId: string) => {
@@ -172,9 +229,30 @@ export default function Admin() {
     });
   };
 
+  const getDepartmentIcon = (department: string) => {
+    switch (department) {
+      case "Secretariat/Admin":
+        return <Settings className="h-4 w-4" />;
+      case "Business Development":
+        return <Briefcase className="h-4 w-4" />;
+      case "Project":
+        return <Building className="h-4 w-4" />;
+      case "Account":
+        return <DollarSign className="h-4 w-4" />;
+      case "Human Resources (HR)":
+        return <Heart className="h-4 w-4" />;
+      case "Digital Marketing":
+        return <Megaphone className="h-4 w-4" />;
+      case "Managing Director":
+        return <Crown className="h-4 w-4" />;
+      default:
+        return <UserCheck className="h-4 w-4" />;
+    }
+  };
+
   const stats = [
     {
-      title: "Total Users",
+      title: "Total Staff",
       value: users.length.toString(),
       icon: Users,
       color: "#A7967E",
@@ -186,24 +264,15 @@ export default function Admin() {
       color: "#142E54",
     },
     {
-      title: "Active Users",
-      value: users.filter((u) => u.status === "active").length.toString(),
-      icon: Activity,
+      title: "Active Departments",
+      value: new Set(users.map((u) => u.department)).size.toString(),
+      icon: Building,
       color: "#C2CCC5",
     },
     {
-      title: "New This Month",
-      value: users
-        .filter((u) => {
-          const userDate = new Date(u.createdAt);
-          const now = new Date();
-          return (
-            userDate.getMonth() === now.getMonth() &&
-            userDate.getFullYear() === now.getFullYear()
-          );
-        })
-        .length.toString(),
-      icon: Plus,
+      title: "Active Users",
+      value: users.filter((u) => u.status === "active").length.toString(),
+      icon: Activity,
       color: "#A7967E",
     },
   ];
@@ -217,7 +286,9 @@ export default function Admin() {
           className="text-center"
         >
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#A7967E] mx-auto mb-4"></div>
-          <p className="text-[#142E54] font-medium">Loading admin panel...</p>
+          <p className="text-[#142E54] font-medium">
+            Loading JD Marc admin panel...
+          </p>
         </motion.div>
       </div>
     );
@@ -236,11 +307,11 @@ export default function Admin() {
             <div>
               <h1 className="text-3xl font-bold text-[#142E54] flex items-center gap-2">
                 <Shield className="h-8 w-8 text-[#A7967E]" />
-                Admin Panel
+                JD Marc Admin Panel
               </h1>
               <p className="text-[#A7967E] mt-1">
-                Welcome back, {currentUser?.firstName}! Manage users and system
-                settings.
+                Welcome back, {currentUser?.firstName}! Manage staff and
+                department operations.
               </p>
             </div>
             <Button
@@ -295,7 +366,49 @@ export default function Admin() {
           ))}
         </motion.div>
 
-        {/* User Management */}
+        {/* Departments Overview */}
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.15 }}
+          className="mb-8"
+        >
+          <Card className="border-0 shadow-lg">
+            <CardHeader>
+              <CardTitle className="text-[#142E54]">
+                Department Structure
+              </CardTitle>
+              <CardDescription>
+                JD Marc Construction organizational departments
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {departments.map((dept) => (
+                  <div
+                    key={dept.id}
+                    className="p-4 border border-[#A7967E]/20 rounded-lg"
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      {getDepartmentIcon(dept.name)}
+                      <h4 className="font-semibold text-[#142E54]">
+                        {dept.name}
+                      </h4>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      {dept.description}
+                    </p>
+                    <p className="text-xs text-accent font-medium">
+                      {dept.hodRole}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Staff Management */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -303,14 +416,14 @@ export default function Admin() {
         >
           <Card className="border-0 shadow-lg">
             <CardHeader>
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                 <div>
                   <CardTitle className="text-[#142E54] flex items-center gap-2">
                     <Users className="h-5 w-5" />
-                    User Management
+                    Staff Management
                   </CardTitle>
                   <CardDescription>
-                    Manage user accounts, roles, and permissions
+                    Manage JD Marc Construction staff accounts and departments
                   </CardDescription>
                 </div>
 
@@ -319,7 +432,7 @@ export default function Admin() {
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#A7967E]" />
                     <Input
-                      placeholder="Search users..."
+                      placeholder="Search staff..."
                       className="pl-10 w-full sm:w-64"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
@@ -337,8 +450,23 @@ export default function Admin() {
                     }
                   >
                     <option value="all">All Roles</option>
-                    <option value="user">Users</option>
-                    <option value="admin">Admins</option>
+                    <option value="user">Staff</option>
+                    <option value="admin">Admin</option>
+                  </select>
+
+                  {/* Department Filter */}
+                  <select
+                    className="px-3 py-2 border border-[#A7967E]/30 rounded-md focus:outline-none focus:border-[#A7967E] focus:ring-1 focus:ring-[#A7967E]"
+                    value={selectedDepartment}
+                    onChange={(e) => setSelectedDepartment(e.target.value)}
+                  >
+                    <option value="all">All Departments</option>
+                    {departments.map((dept) => (
+                      <option key={dept.id} value={dept.name}>
+                        {dept.name}
+                      </option>
+                    ))}
+                    <option value="Managing Director">Managing Director</option>
                   </select>
                 </div>
               </div>
@@ -362,7 +490,7 @@ export default function Admin() {
                             <h4 className="font-semibold text-[#142E54] text-lg">
                               {user.firstName} {user.lastName}
                             </h4>
-                            <div className="flex items-center gap-2 mt-1">
+                            <div className="flex items-center gap-2 mt-1 flex-wrap">
                               <Badge
                                 variant="secondary"
                                 className={`${
@@ -378,6 +506,17 @@ export default function Admin() {
                                 )}
                                 {user.role.toUpperCase()}
                               </Badge>
+                              {user.department && (
+                                <Badge
+                                  variant="outline"
+                                  className="border-[#A7967E] text-[#A7967E]"
+                                >
+                                  {getDepartmentIcon(user.department)}
+                                  <span className="ml-1">
+                                    {user.department}
+                                  </span>
+                                </Badge>
+                              )}
                               <Badge
                                 variant="secondary"
                                 className={`${
@@ -392,7 +531,7 @@ export default function Admin() {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-[#A7967E]">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-sm text-[#A7967E]">
                           <div className="flex items-center gap-2">
                             <Mail className="h-4 w-4" />
                             {user.email}
@@ -401,12 +540,6 @@ export default function Admin() {
                             <div className="flex items-center gap-2">
                               <Phone className="h-4 w-4" />
                               {user.phone}
-                            </div>
-                          )}
-                          {user.company && (
-                            <div className="flex items-center gap-2">
-                              <Building className="h-4 w-4" />
-                              {user.company}
                             </div>
                           )}
                           {user.location && (
@@ -459,7 +592,7 @@ export default function Admin() {
                                   className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
                                 >
                                   <Trash2 className="h-4 w-4 mr-1" />
-                                  Delete
+                                  Remove
                                 </Button>
                               </AlertDialogTrigger>
                               <AlertDialogContent>
@@ -469,9 +602,9 @@ export default function Admin() {
                                   </AlertDialogTitle>
                                   <AlertDialogDescription>
                                     This action cannot be undone. This will
-                                    permanently delete the user account for{" "}
-                                    {user.firstName} {user.lastName} (
-                                    {user.email}).
+                                    permanently remove {user.firstName}{" "}
+                                    {user.lastName} ({user.email}) from the JD
+                                    Marc Construction system.
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
@@ -480,7 +613,7 @@ export default function Admin() {
                                     onClick={() => handleDeleteUser(user.id)}
                                     className="bg-red-500 hover:bg-red-600"
                                   >
-                                    Delete User
+                                    Remove Staff
                                   </AlertDialogAction>
                                 </AlertDialogFooter>
                               </AlertDialogContent>
@@ -496,7 +629,7 @@ export default function Admin() {
                   <div className="text-center py-8">
                     <Users className="h-12 w-12 text-[#A7967E] mx-auto mb-4" />
                     <p className="text-[#A7967E]">
-                      No users found matching your criteria.
+                      No staff found matching your criteria.
                     </p>
                   </div>
                 )}
