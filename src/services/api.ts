@@ -1,6 +1,6 @@
 // API Service for JD Marc Application
 const API_BASE_URL =
-  process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+  import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 export interface ApiResponse<T = any> {
   success: boolean;
