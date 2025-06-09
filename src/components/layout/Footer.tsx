@@ -304,8 +304,8 @@ export default function Footer() {
         {/* Copyright */}
         <div className="border-t border-gray-700 pt-6 text-center text-gray-400 text-sm">
           <p>
-            &copy; {currentYear} JD Marc Construction. All rights reserved.
-            Building Africa's Future Cities.
+            &copy; {currentYear} JD Marc. All rights reserved. Building Africa's
+            Future Cities.
           </p>
         </div>
       </div>
