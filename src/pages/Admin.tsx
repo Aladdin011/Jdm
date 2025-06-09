@@ -423,7 +423,7 @@ export default function Admin() {
                     Staff Management
                   </CardTitle>
                   <CardDescription>
-                    Manage JD Marc Construction staff accounts and departments
+                    Manage JD Marc staff accounts and departments
                   </CardDescription>
                 </div>
 
