@@ -1,10 +1,19 @@
-import { useEffect, useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+} from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const [isExpanded, setIsExpanded] = useState(false);
+
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -18,6 +27,14 @@ export default function Hero() {
     if (nextSection) {
       nextSection.scrollIntoView({ behavior: "smooth" });
     }
+  };
+
+  const handleExploreProjects = () => {
+    navigate("/projects");
+  };
+
+  const toggleExpanded = () => {
+    setIsExpanded(!isExpanded);
   };
 
   return (
@@ -58,9 +75,9 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-center max-w-5xl"
         >
-          {/* Updated heading with African focus */}
+          {/* Updated heading */}
           <motion.h1
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
@@ -75,27 +92,66 @@ export default function Hero() {
             </motion.span>
           </motion.h1>
 
-          {/* New comprehensive description */}
+          {/* Main description with expandable content */}
           <motion.div
-            className="text-lg md:text-xl lg:text-2xl mb-8 max-w-4xl mx-auto text-white/90 space-y-4"
+            className="text-lg md:text-xl lg:text-2xl mb-8 max-w-4xl mx-auto text-white/90"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.6 }}
           >
-            <p>
-              JD Marc is a proudly Nigerian construction company providing
-              innovative construction and infrastructure delivery across Nigeria
-              and beyond. Since 2007, we have delivered landmark projects in
-              roadworks, buildings, power, urban planning and smart city
-              solutions.
+            {/* Default paragraph */}
+            <p className="mb-4">
+              JD Marc is a proudly Nigerian construction company delivering
+              innovative infrastructure across Nigeria and beyond.
             </p>
-            <p className="text-base md:text-lg lg:text-xl">
-              With offices in Abuja, London and New York, JD Marc brings global
-              expertise to solve local challenges – building smarter, greener,
-              and more resilient African cities.
-            </p>
+
+            {/* Read More button */}
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <button
+                onClick={toggleExpanded}
+                className="inline-flex items-center text-[#F7931E] hover:text-[#F7931E]/80 transition-colors duration-300 font-medium"
+              >
+                {isExpanded ? "Read Less" : "Read More"}
+                <motion.div
+                  animate={{ rotate: isExpanded ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="ml-1"
+                >
+                  <ChevronDown size={20} />
+                </motion.div>
+              </button>
+            </div>
+
+            {/* Expandable content */}
+            <AnimatePresence>
+              {isExpanded && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.5, ease: "easeInOut" }}
+                  className="overflow-hidden"
+                >
+                  <motion.p
+                    initial={{ y: -20 }}
+                    animate={{ y: 0 }}
+                    exit={{ y: -20 }}
+                    transition={{ duration: 0.3, delay: 0.2 }}
+                    className="text-base md:text-lg lg:text-xl border-t border-white/20 pt-4"
+                  >
+                    Since 2007, we have delivered landmark projects in
+                    roadworks, buildings, power, urban planning, and smart city
+                    solutions. With offices in Abuja, London, and New York, JD
+                    Marc brings global expertise to solve local challenges –
+                    building smarter, greener, and more resilient African
+                    cities.
+                  </motion.p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
 
+          {/* Updated CTA Button */}
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -103,7 +159,10 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.9 }}
           >
-            <Button className="bg-accent hover:bg-accent/90 text-white py-6 px-8 rounded-md text-lg shadow-lg hover:shadow-xl transition-all duration-300">
+            <Button
+              onClick={handleExploreProjects}
+              className="bg-[#F7931E] hover:bg-[#F7931E]/90 text-white py-6 px-8 rounded-md text-lg shadow-lg hover:shadow-xl transition-all duration-300 font-semibold"
+            >
               Explore Our Projects
             </Button>
           </motion.div>
