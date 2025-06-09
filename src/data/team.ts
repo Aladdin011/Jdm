@@ -58,7 +58,7 @@ export const companyMilestones = [
     year: 2007,
     title: "Company Founded",
     description:
-      "JD Marc Construction was established in Nigeria with a vision to deliver quality infrastructure across Africa.",
+      "JD Marc was established in Nigeria with a vision to deliver quality infrastructure across Africa.",
   },
   {
     year: 2010,
