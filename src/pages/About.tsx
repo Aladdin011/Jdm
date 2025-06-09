@@ -37,7 +37,7 @@ export default function About() {
         <div className="container mx-auto px-4">
           <AnimatedSection className="max-w-4xl">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              About JD Marc Construction
+              About JD Marc
             </h1>
             <p className="text-xl text-white/80 mb-8">
               JD Marc is a Nigerian-grown, Pan-African EPC company focused on
