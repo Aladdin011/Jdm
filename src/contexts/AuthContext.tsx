@@ -157,6 +157,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Verify token with backend
   const verifyToken = async (tokenToVerify: string): Promise<boolean> => {
     try {
+      // Check if we're in development mode (no backend available)
+      const isDevelopment = API_BASE_URL.includes("localhost");
+
+      if (isDevelopment) {
+        // Mock token verification for development
+        // In development, we'll consider any token that starts with "mock_" as valid
+        return tokenToVerify.startsWith("mock_");
+      }
+
+      // Production mode - use real API
       const response = await apiCall("/auth/verify", {
         method: "POST",
         headers: {
