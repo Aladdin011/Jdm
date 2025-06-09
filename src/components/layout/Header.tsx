@@ -55,7 +55,7 @@ export default function Header() {
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3">
-          {/* JD MARC Logo - Text-based version */}
+          {/* JD Marc Logo - Updated branding */}
           <div className="flex items-center">
             <div className="flex items-center mr-2">
               <div
@@ -72,19 +72,9 @@ export default function Header() {
                   scrolled ? "text-primary" : "text-white",
                 )}
               >
-                MARC
+                Marc
               </div>
             </div>
-            <span
-              className={cn(
-                "font-bold text-lg tracking-wide",
-                scrolled
-                  ? "text-primary dark:text-white"
-                  : "text-white dark:text-white",
-              )}
-            >
-              CONSTRUCTIONS
-            </span>
           </div>
         </Link>
 
