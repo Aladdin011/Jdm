@@ -379,7 +379,7 @@ export default function Admin() {
                 Department Structure
               </CardTitle>
               <CardDescription>
-                JD Marc Construction organizational departments
+                JD Marc organizational departments
               </CardDescription>
             </CardHeader>
             <CardContent>
