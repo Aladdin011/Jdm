@@ -13,7 +13,29 @@ import {
 } from "lucide-react";
 import PageTransition from "@/components/ui/PageTransition";
 import LazyLoadImage from "@/components/ui/LazyLoadImage";
-import { blog, BlogPost, BlogCategory } from "@/data/blog";
+import { blogPosts } from "@/data/blog";
+
+// Define types based on the existing data structure
+export interface BlogPost {
+  id: number;
+  title: string;
+  slug: string;
+  date: string;
+  author: string;
+  category: string;
+  excerpt: string;
+  content: string;
+  image: string;
+  featured: boolean;
+  tags?: string[]; // Optional since existing data doesn't have tags
+}
+
+export type BlogCategory =
+  | "Infrastructure Policy"
+  | "Smart Cities & Urban Innovation"
+  | "Behind-the-Scenes Projects"
+  | "Sustainability & Climate Engineering"
+  | "Emerging Trends in Civil Engineering";
 import useAnalytics from "@/hooks/useAnalytics";
 
 export default function Blog() {
@@ -21,21 +43,24 @@ export default function Blog() {
   const [selectedCategory, setSelectedCategory] = useState<
     BlogCategory | "All"
   >("All");
-  const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>(blog);
+  const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>(blogPosts);
   const { trackBusinessEvent } = useAnalytics();
 
   // Filter posts based on search and category
   useEffect(() => {
-    let filtered = blog;
+    let filtered = blogPosts;
 
     if (searchTerm) {
       filtered = filtered.filter(
         (post) =>
           post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
           post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          post.tags.some((tag) =>
-            tag.toLowerCase().includes(searchTerm.toLowerCase()),
-          ),
+          post.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          post.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (post.tags &&
+            post.tags.some((tag) =>
+              tag.toLowerCase().includes(searchTerm.toLowerCase()),
+            )),
       );
     }
 
@@ -49,9 +74,10 @@ export default function Blog() {
   const categories: (BlogCategory | "All")[] = [
     "All",
     "Infrastructure Policy",
-    "Smart Cities & Innovation",
-    "Behind the Scenes",
-    "Sustainability & Climate",
+    "Smart Cities & Urban Innovation",
+    "Behind-the-Scenes Projects",
+    "Sustainability & Climate Engineering",
+    "Emerging Trends in Civil Engineering",
   ];
 
   const handlePostView = (post: BlogPost) => {
@@ -353,17 +379,19 @@ function BlogPostCard({
           {post.excerpt.substring(0, 120)}...
         </p>
 
-        <div className="flex flex-wrap gap-2 mb-4">
-          {post.tags.slice(0, 2).map((tag) => (
-            <span
-              key={tag}
-              className="flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md"
-            >
-              <Tag size={10} />
-              {tag}
-            </span>
-          ))}
-        </div>
+        {post.tags && post.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {post.tags.slice(0, 2).map((tag) => (
+              <span
+                key={tag}
+                className="flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md"
+              >
+                <Tag size={10} />
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1 text-gray-600 text-xs">
