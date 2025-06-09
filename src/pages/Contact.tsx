@@ -391,7 +391,7 @@ export default function Contact() {
                 allowFullScreen
                 aria-hidden="false"
                 tabIndex={0}
-                title="JD Marc Construction Nigeria Office Location"
+                title="JD Marc Nigeria Office Location"
               ></iframe>
             </div>
             <div className="text-center mt-4 text-muted-foreground">
