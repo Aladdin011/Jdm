@@ -35,59 +35,57 @@ export default function About() {
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 bg-primary text-white">
         <div className="container mx-auto px-4">
-          <AnimatedSection className="max-w-3xl">
+          <AnimatedSection className="max-w-4xl">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              About JD Marc Constructions
+              About JD Marc Construction
             </h1>
             <p className="text-xl text-white/80 mb-8">
-              At JD Marc Constructions, we are redefining urban development with
-              precision, sustainability, and forward-thinking design. With a
-              legacy of delivering landmark projects, our team of engineers and
-              visionaries is committed to shaping tomorrow's cities.
+              JD Marc is a Nigerian-grown, Pan-African EPC company focused on
+              delivering total construction and smart city solutions that
+              improve lives and support economic growth. Our experience spans
+              roads, buildings, power systems, and innovative urban solutions
+              tailored to the realities of African cities.
             </p>
           </AnimatedSection>
         </div>
       </section>
 
-      {/* Company Story */}
+      {/* Company Overview */}
       <SplitSection
-        title="Our Story"
-        subtitle="Global Expertise, UK Roots"
+        title="Our Vision & Mission"
+        subtitle="Building Africa's Future"
         content={
-          <div className="space-y-4">
-            <p>
-              JD Marc Constructions began with a clear mission: to connect
-              UK-based service excellence with the vast opportunities of
-              emerging markets. Today, we've evolved into a fully international
-              construction and development company — driving innovation,
-              infrastructure, and strategic transformation across continents.
-            </p>
-            <h3 className="text-lg font-bold mt-6 mb-2">
-              Building Global Partnerships That Drive Progress
-            </h3>
-            <p>
-              With a foundation in the UK and a reach that now spans beyond
-              borders, we partner with transportation firms, technology
-              providers, investors, urban planners, and logistics experts
-              worldwide. Our deep market insight and forward-thinking strategy
-              empower our partners to navigate regulatory complexities,
-              diversify from saturated regions, and unlock high-value
-              opportunities in untapped global markets.
-            </p>
-            <h3 className="text-lg font-bold mt-6 mb-2">
-              Infrastructure That Shapes Economies
-            </h3>
-            <p>
-              JD Marc doesn't just build — we advise, strategize, and enable.
-              Working closely with governments and institutions in developing
-              regions, we structure impactful infrastructure projects that
-              attract global financing, foster long-term development, and
-              deliver sustainable results.
-            </p>
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-2xl font-bold mb-3 text-accent">Vision</h3>
+              <p className="text-lg">
+                To become Africa's most trusted construction partner—delivering
+                quality, innovation, and sustainable solutions that shape
+                smarter cities and resilient communities.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold mb-3 text-accent">Mission</h3>
+              <p className="text-lg">
+                To provide reliable, cost-effective engineering and construction
+                services that meet international standards while solving
+                Africa's pressing infrastructure needs.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold mb-3 text-accent">Our Story</h3>
+              <p>
+                Since 2007, JD Marc has grown from a local Nigerian construction
+                company to a Pan-African leader in infrastructure development.
+                With offices in Abuja, London, and New York, we bring global
+                expertise to solve local challenges across the African
+                continent.
+              </p>
+            </div>
           </div>
         }
         image="/images/about1.jpg"
-        imageAlt="Skyline Construction team on a job site"
+        imageAlt="JD Marc Construction projects across Africa"
       />
 
       {/* Leadership Team */}
@@ -98,21 +96,21 @@ export default function About() {
               Our Leadership Team
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Meet the experienced professionals who guide our company's vision
-              and ensure the successful delivery of every project.
+              Meet the experienced professionals who guide JD Marc's vision for
+              transforming African infrastructure and urban development.
             </p>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {teamMembers.slice(0, 8).map((member, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {teamMembers.map((member, index) => (
               <AnimatedSection
                 key={member.id}
-                delay={index * 0.1}
+                delay={index * 0.2}
                 className="relative"
               >
                 <div
                   className={cn(
-                    "relative h-[400px] w-full rounded-xl perspective-1000",
+                    "relative h-[500px] w-full rounded-xl perspective-1000",
                     flippedCard === member.id ? "z-10" : "",
                   )}
                 >
@@ -125,8 +123,8 @@ export default function About() {
                   >
                     {/* Front of Card */}
                     <div className="absolute inset-0 backface-hidden">
-                      <div className="h-full bg-white dark:bg-gray-700 rounded-xl shadow-md overflow-hidden">
-                        <div className="h-64 overflow-hidden">
+                      <div className="h-full bg-white dark:bg-gray-700 rounded-xl shadow-lg overflow-hidden">
+                        <div className="h-80 overflow-hidden">
                           <img
                             src={member.image}
                             alt={member.name}
@@ -134,19 +132,26 @@ export default function About() {
                           />
                         </div>
                         <div className="p-6">
-                          <h3 className="text-xl font-bold mb-1">
+                          <h3 className="text-xl font-bold mb-2">
                             {member.name}
                           </h3>
-                          <p className="text-accent">{member.title}</p>
+                          <p className="text-accent font-medium">
+                            {member.title}
+                          </p>
+                          <p className="text-sm text-muted-foreground mt-2">
+                            Click to read bio
+                          </p>
                         </div>
                       </div>
                     </div>
 
                     {/* Back of Card */}
-                    <div className="absolute inset-0 backface-hidden bg-white dark:bg-gray-700 rounded-xl shadow-md p-6 [transform:rotateY(180deg)]">
+                    <div className="absolute inset-0 backface-hidden bg-white dark:bg-gray-700 rounded-xl shadow-lg p-6 [transform:rotateY(180deg)]">
                       <h3 className="text-xl font-bold mb-2">{member.name}</h3>
-                      <p className="text-accent mb-4">{member.title}</p>
-                      <p className="text-muted-foreground text-sm">
+                      <p className="text-accent font-medium mb-4">
+                        {member.title}
+                      </p>
+                      <p className="text-muted-foreground text-sm leading-relaxed">
                         {member.bio}
                       </p>
                     </div>
@@ -158,18 +163,21 @@ export default function About() {
         </div>
       </section>
 
-      {/* Our Values */}
+      {/* Core Values */}
       <section className="py-20 bg-white dark:bg-gray-900">
         <div className="container mx-auto px-4">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Values</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Our Core Values
+            </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              These core principles guide our decisions, shape our culture, and
-              define how we approach every project and relationship.
+              These principles guide our decisions, shape our culture, and
+              define how we approach every project and partnership across
+              Africa.
             </p>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {companyValues.map((value, index) => (
               <AnimatedSection
                 key={value.id}
@@ -188,12 +196,65 @@ export default function About() {
         </div>
       </section>
 
-      {/* Certifications */}
+      {/* Global Presence */}
       <section className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <AnimatedSection className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Our Certifications
+              Global Presence, African Focus
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              With offices across three continents, JD Marc brings international
+              expertise to African infrastructure challenges.
+            </p>
+          </AnimatedSection>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                location: "Nigeria (Headquarters)",
+                address: "Plot 107, Ahmadu Bello Way, Abuja",
+                focus: "Operations & Project Management",
+                established: "2007",
+              },
+              {
+                location: "United Kingdom",
+                address: "71-75 Shelton Street, London WC2H 9RQ",
+                focus: "International Partnerships & Technology",
+                established: "2015",
+              },
+              {
+                location: "United States",
+                address: "125 Park Avenue, New York, NY 10017",
+                focus: "Global Procurement & Investment",
+                established: "2020",
+              },
+            ].map((office, index) => (
+              <AnimatedSection
+                key={office.location}
+                delay={index * 0.2}
+                className="bg-white dark:bg-gray-700 rounded-xl p-8 shadow-md"
+              >
+                <h3 className="text-xl font-bold mb-3 text-accent">
+                  {office.location}
+                </h3>
+                <p className="text-muted-foreground mb-4">{office.address}</p>
+                <p className="font-medium mb-2">Focus: {office.focus}</p>
+                <p className="text-sm text-muted-foreground">
+                  Established: {office.established}
+                </p>
+              </AnimatedSection>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Certifications */}
+      <section className="py-20 bg-white dark:bg-gray-900">
+        <div className="container mx-auto px-4">
+          <AnimatedSection className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Certifications & Standards
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               We maintain the highest industry standards through rigorous
@@ -201,12 +262,12 @@ export default function About() {
             </p>
           </AnimatedSection>
 
-          <div className="flex flex-wrap justify-center gap-6">
+          <div className="flex flex-wrap justify-center gap-8">
             {certifications.map((cert, index) => (
               <AnimatedSection
                 key={cert.id}
                 delay={index * 0.15}
-                className="bg-white dark:bg-gray-700 rounded-xl p-6 shadow-md flex flex-col items-center text-center w-64"
+                className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 shadow-md flex flex-col items-center text-center w-64"
               >
                 <div className="w-16 h-16 rounded-full bg-accent/10 text-accent flex items-center justify-center mb-4">
                   {cert.icon === "certificate" && <Award size={32} />}
