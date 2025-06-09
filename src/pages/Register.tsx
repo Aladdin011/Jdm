@@ -131,7 +131,7 @@ export default function Register() {
                 className="text-3xl font-bold"
                 style={{ color: "#EAE6DF" }}
               >
-                Join JD Marc Constructions
+                Join JD Marc
               </CardTitle>
               <CardDescription
                 className="text-lg mt-2"
