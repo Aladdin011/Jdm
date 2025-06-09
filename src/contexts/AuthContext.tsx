@@ -416,6 +416,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (!token) return false;
 
     try {
+      // Check if we're in development mode (no backend available)
+      const isDevelopment = API_BASE_URL.includes("localhost");
+
+      if (isDevelopment) {
+        // Mock token refresh for development
+        if (token.startsWith("mock_")) {
+          // Generate a new mock token
+          const newToken = "mock_refreshed_token_" + Date.now();
+          setToken(newToken);
+          localStorage.setItem("jdmarc_token", newToken);
+          return true;
+        }
+        return false;
+      }
+
+      // Production mode - use real API
       const response = await apiCall<{ token: string }>("/auth/refresh", {
         method: "POST",
         headers: {
@@ -437,15 +453,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const logout = () => {
-    // Call logout endpoint to invalidate token on server
-    if (token) {
-      apiCall("/auth/logout", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }).catch(console.error);
+    // Check if we're in development mode (no backend available)
+    const isDevelopment = API_BASE_URL.includes("localhost");
+
+    if (!isDevelopment) {
+      // Call logout endpoint to invalidate token on server (production only)
+      if (token) {
+        apiCall("/auth/logout", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }).catch(console.error);
+      }
     }
+    // In development mode, we skip the API call to avoid errors
 
     setUser(null);
     setToken(null);
