@@ -417,6 +417,50 @@ export default function Admin() {
           </Card>
         </motion.div>
 
+        {/* Quick Actions */}
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.17 }}
+          className="mb-8"
+        >
+          <Card className="border-0 shadow-lg">
+            <CardHeader>
+              <CardTitle className="text-[#142E54]">
+                Admin Quick Actions
+              </CardTitle>
+              <CardDescription>
+                Common administrative tasks and tools
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Button
+                  onClick={() => (window.location.href = "/admin/users")}
+                  className="h-20 flex flex-col items-center justify-center space-y-2 bg-[#142E54] hover:bg-[#142E54]/90 text-white"
+                >
+                  <Users className="h-6 w-6" />
+                  <span>User Management</span>
+                </Button>
+                <Button
+                  className="h-20 flex flex-col items-center justify-center space-y-2"
+                  variant="outline"
+                >
+                  <Settings className="h-6 w-6" />
+                  <span>System Settings</span>
+                </Button>
+                <Button
+                  className="h-20 flex flex-col items-center justify-center space-y-2"
+                  variant="outline"
+                >
+                  <Activity className="h-6 w-6" />
+                  <span>Activity Logs</span>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
         {/* Staff Management */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
