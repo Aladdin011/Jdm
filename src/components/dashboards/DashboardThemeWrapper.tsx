@@ -208,11 +208,158 @@ export default function DashboardThemeWrapper({
           </div>
         </motion.div>
 
-        {/* Dashboard Content */}
+        {/* Core Dashboard Elements */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
+          className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8"
+        >
+          {/* 👤 Profile Overview */}
+          <Card className="theme-card">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <User className={`h-5 w-5 ${theme.badge.text}`} />
+                👤 Profile Overview
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div>
+                <p className="text-sm text-gray-600">Name</p>
+                <p className="font-semibold theme-text-primary">
+                  {user?.firstName} {user?.lastName}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Email</p>
+                <p className="font-medium text-gray-800">{user?.email}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Department</p>
+                <Badge className={`${theme.badge.bg} ${theme.badge.text}`}>
+                  {departmentName}
+                </Badge>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Last Login</p>
+                <p className="text-sm text-gray-700 flex items-center gap-1">
+                  <Clock className="h-3 w-3" />
+                  {lastLogin}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* 📈 Activity Summary */}
+          <Card className="theme-card">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Activity className={`h-5 w-5 ${theme.badge.text}`} />
+                📈 Activity Summary
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Active Tasks</span>
+                <Badge variant="secondary">{activitySummary.tasks}</Badge>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Projects Assigned</span>
+                <Badge variant="secondary">{activitySummary.projects}</Badge>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Unread Messages</span>
+                <Badge variant="secondary">{activitySummary.messages}</Badge>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Due This Week</span>
+                <Badge className="bg-yellow-100 text-yellow-800">
+                  {activitySummary.upcomingDeadlines}
+                </Badge>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* 📞 Quick Links */}
+          <Card className="theme-card">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Target className={`h-5 w-5 ${theme.badge.text}`} />
+                📞 Quick Actions
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Button
+                onClick={handleStartCall}
+                disabled={isInCall}
+                className={`w-full justify-start ${theme.button.secondary}`}
+                size="sm"
+              >
+                <Video className="h-4 w-4 mr-2" />
+                {isInCall ? "In Call" : "Join Department Meeting"}
+              </Button>
+              <Button
+                onClick={handleUploadDocument}
+                className={`w-full justify-start ${theme.button.secondary}`}
+                size="sm"
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                Upload Document
+              </Button>
+              <Button
+                onClick={handleContactAdmin}
+                className={`w-full justify-start ${theme.button.secondary}`}
+                size="sm"
+              >
+                <MessageSquare className="h-4 w-4 mr-2" />
+                Contact Admin
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* 🚪 Security & Settings */}
+          <Card className="theme-card">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Settings className={`h-5 w-5 ${theme.badge.text}`} />
+                ⚙️ Account Actions
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Button
+                onClick={handleSettings}
+                className={`w-full justify-start ${theme.button.secondary}`}
+                size="sm"
+              >
+                <Settings className="h-4 w-4 mr-2" />
+                Settings & Preferences
+              </Button>
+              <Button
+                onClick={() => navigate("/dashboard")}
+                className={`w-full justify-start ${theme.button.secondary}`}
+                size="sm"
+              >
+                <Activity className="h-4 w-4 mr-2" />
+                View Full Dashboard
+              </Button>
+              <Separator className="my-2" />
+              <Button
+                onClick={handleLogout}
+                className="w-full justify-start bg-red-500 hover:bg-red-600 text-white border-0"
+                size="sm"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                🚪 Secure Logout
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Dashboard Content */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
           className="relative"
           style={
             {
