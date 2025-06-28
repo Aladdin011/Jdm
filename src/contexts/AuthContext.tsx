@@ -230,42 +230,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         };
       }
 
-      // Check if we're in development mode (no backend available)
-      const isDevelopment = API_BASE_URL.includes("localhost");
-
-      if (isDevelopment) {
-        // Mock registration for development
-        await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate API delay
-
-        // Create mock user from registration data
-        const mockUser: User = {
-          id: Date.now().toString(), // Generate unique ID
-          email: userData.email,
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          role: "user", // New registrations default to user role
-          company: userData.company,
-          phone: userData.phone,
-          location: userData.location,
-          department: userData.department,
-          isActive: true,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-
-        const mockToken = "mock_token_" + Date.now();
-
-        setUser(mockUser);
-        setToken(mockToken);
-
-        localStorage.setItem("jdmarc_token", mockToken);
-        localStorage.setItem("jdmarc_user", JSON.stringify(mockUser));
-
-        setIsLoading(false);
-        return { success: true, user: mockUser };
-      }
-
-      // Production mode - use real API
+      // Use real API for registration
       const response = await apiCall<{ user: User; token: string }>(
         "/auth/register",
         {
@@ -293,10 +258,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         };
       }
     } catch (error) {
+      console.error("Registration error:", error);
       setIsLoading(false);
       return {
         success: false,
-        error: "Registration failed. Please try again.",
+        error:
+          "Registration failed. Please check your connection and try again.",
       };
     }
   };
