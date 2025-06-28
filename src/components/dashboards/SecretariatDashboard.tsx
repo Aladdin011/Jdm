@@ -89,38 +89,14 @@ export default function SecretariatDashboard() {
 
   const [searchTerm, setSearchTerm] = useState("");
 
+  const theme = getDepartmentTheme("secretariat-admin");
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-r from-[#142E54] to-[#F97316] rounded-xl p-6 text-white"
-      >
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">
-              Secretariat & Admin Panel
-            </h1>
-            <p className="text-blue-100">
-              Manage users, departments, and system administration
-            </p>
-          </div>
-          <div className="flex items-center gap-4">
-            <Button
-              onClick={handleStartCall}
-              disabled={callState.isInCall}
-              className="bg-white/20 hover:bg-white/30 text-white border border-white/30"
-            >
-              <Video size={16} className="mr-2" />
-              {callState.isInCall ? "In Call" : "Start Team Call"}
-            </Button>
-            <div className="bg-white/10 backdrop-blur-md rounded-lg p-4">
-              <Shield className="h-12 w-12 text-white/80" />
-            </div>
-          </div>
-        </div>
-      </motion.div>
+    <DashboardThemeWrapper
+      title="Secretariat & Admin Panel"
+      description="Manage users, departments, and system administration"
+    >
+      <div className="space-y-6">
 
       {/* Stats Grid */}
       <motion.div
