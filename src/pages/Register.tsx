@@ -317,7 +317,7 @@ export default function Register() {
                     <Building className="h-5 w-5 mr-2 text-[#A7967E]" />
                     Company Information
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <Label
                         htmlFor="company"
@@ -334,42 +334,6 @@ export default function Register() {
                           handleInputChange("company", e.target.value)
                         }
                       />
-                    </div>
-                    <div>
-                      <Label
-                        htmlFor="department"
-                        className="text-[#142E54] font-medium"
-                      >
-                        Department
-                      </Label>
-                      <Select
-                        onValueChange={(value) =>
-                          handleInputChange("department", value)
-                        }
-                      >
-                        <SelectTrigger className="h-12 border-[#A7967E]/30 focus:border-[#A7967E] focus:ring-[#A7967E]">
-                          <SelectValue placeholder="Select your department" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="secretariat-admin">
-                            Secretariat/Admin
-                          </SelectItem>
-                          <SelectItem value="business-development">
-                            Business Development
-                          </SelectItem>
-                          <SelectItem value="project-management">
-                            Project Management
-                          </SelectItem>
-                          <SelectItem value="accounting">Accounting</SelectItem>
-                          <SelectItem value="human-resources">
-                            Human Resources
-                          </SelectItem>
-                          <SelectItem value="digital-marketing">
-                            Digital Marketing
-                          </SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
                     </div>
                     <div>
                       <Label
