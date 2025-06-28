@@ -43,7 +43,6 @@ export default function Register() {
     email: "",
     phone: "",
     company: "",
-    department: "",
     location: "",
     password: "",
     confirmPassword: "",
