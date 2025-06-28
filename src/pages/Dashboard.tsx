@@ -342,6 +342,178 @@ export default function Dashboard() {
                 </div>
               </motion.div>
 
+              {/* Core Dashboard Elements */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.05 }}
+                className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8"
+              >
+                {/* 👤 Profile Overview */}
+                <Card className="border-0 shadow-lg">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      <User className="h-5 w-5 text-[#F97316]" />
+                      👤 Profile Overview
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div>
+                      <p className="text-sm text-gray-600">Name</p>
+                      <p className="font-semibold text-[#142E54]">
+                        {user?.firstName} {user?.lastName}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Email</p>
+                      <p className="font-medium text-gray-800">{user?.email}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Department</p>
+                      <Badge className="bg-gray-100 text-gray-800">
+                        {user?.department
+                          ? user.department
+                              .replace("-", " ")
+                              .replace(/\b\w/g, (l) => l.toUpperCase())
+                          : "General"}
+                      </Badge>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Last Login</p>
+                      <p className="text-sm text-gray-700 flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        {user?.lastLogin
+                          ? new Date(user.lastLogin).toLocaleString()
+                          : "Just now"}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* 📈 Activity Summary */}
+                <Card className="border-0 shadow-lg">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      <Activity className="h-5 w-5 text-[#F97316]" />
+                      📈 Activity Summary
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">
+                        Active Tasks
+                      </span>
+                      <Badge variant="secondary">8</Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">
+                        Projects Assigned
+                      </span>
+                      <Badge variant="secondary">{stats.totalProjects}</Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">
+                        Unread Messages
+                      </span>
+                      <Badge variant="secondary">2</Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">
+                        Due This Week
+                      </span>
+                      <Badge className="bg-yellow-100 text-yellow-800">
+                        {stats.upcomingDeadlines}
+                      </Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* 📞 Quick Links */}
+                <Card className="border-0 shadow-lg">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      <Target className="h-5 w-5 text-[#F97316]" />
+                      📞 Quick Actions
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    <Button
+                      onClick={() =>
+                        alert("Meeting functionality would be implemented here")
+                      }
+                      className="w-full justify-start bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
+                      variant="outline"
+                      size="sm"
+                    >
+                      <Phone className="h-4 w-4 mr-2" />
+                      Join Department Meeting
+                    </Button>
+                    <Button
+                      onClick={handleUploadDocument}
+                      className="w-full justify-start bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+                      variant="outline"
+                      size="sm"
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      Upload Document
+                    </Button>
+                    <Button
+                      onClick={handleContactAdmin}
+                      className="w-full justify-start bg-purple-50 hover:bg-purple-100 text-purple-700 border-purple-200"
+                      variant="outline"
+                      size="sm"
+                    >
+                      <MessageSquare className="h-4 w-4 mr-2" />
+                      Contact Admin
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {/* 🚪 Security & Settings */}
+                <Card className="border-0 shadow-lg">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      <Settings className="h-5 w-5 text-[#F97316]" />
+                      ⚙️ Account Actions
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    <Button
+                      onClick={() =>
+                        alert(
+                          "Settings functionality would be implemented here",
+                        )
+                      }
+                      className="w-full justify-start bg-gray-50 hover:bg-gray-100 text-gray-700 border-gray-200"
+                      variant="outline"
+                      size="sm"
+                    >
+                      <Settings className="h-4 w-4 mr-2" />
+                      Settings & Preferences
+                    </Button>
+                    <Button
+                      onClick={() => window.location.reload()}
+                      className="w-full justify-start bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
+                      variant="outline"
+                      size="sm"
+                    >
+                      <Activity className="h-4 w-4 mr-2" />
+                      Refresh Dashboard
+                    </Button>
+                    <div className="pt-2 border-t">
+                      <Button
+                        onClick={logout}
+                        className="w-full justify-start bg-red-500 hover:bg-red-600 text-white border-0"
+                        size="sm"
+                      >
+                        <LogOut className="h-4 w-4 mr-2" />
+                        🚪 Secure Logout
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
               {/* Stats Grid */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
