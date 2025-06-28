@@ -110,125 +110,23 @@ export default function Dashboard() {
   const loadDashboardData = async () => {
     setIsLoading(true);
     try {
-      // Check if we're in development mode (no backend available)
-      const isDevelopment =
-        window.location.hostname === "localhost" ||
-        window.location.hostname.includes("builder-project") ||
-        window.location.hostname.includes(".fly.dev");
-
-      if (isDevelopment) {
-        // Use mock data for development
-        await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate loading
-
-        const mockProjects: ProjectItem[] = [
-          {
-            id: "1",
-            name: "330KVA Power Upgrade",
-            status: "In Progress",
-            progress: 75,
-            dueDate: "2024-03-15",
-            location: "Onitsha, Anambra",
-            priority: "High",
-            description:
-              "Critical power infrastructure upgrade for industrial complex",
-          },
-          {
-            id: "2",
-            name: "Port Harcourt Airport Hotel Renovation",
-            status: "Review",
-            progress: 90,
-            dueDate: "2024-02-28",
-            location: "Port Harcourt, Rivers",
-            priority: "Medium",
-            description:
-              "Complete renovation of airport hospitality facilities",
-          },
-          {
-            id: "3",
-            name: "Lagos Smart City Pilot Project",
-            status: "Planning",
-            progress: 25,
-            dueDate: "2024-06-30",
-            location: "Lagos, Nigeria",
-            priority: "High",
-            description:
-              "IoT infrastructure and smart city technology implementation",
-          },
-          {
-            id: "4",
-            name: "Cross River Ecotourism Center",
-            status: "Completed",
-            progress: 100,
-            dueDate: "2024-01-15",
-            location: "Calabar, Cross River",
-            priority: "Low",
-            description:
-              "Sustainable tourism facility with renewable energy systems",
-          },
-        ];
-
-        const mockActivities: ActivityItem[] = [
-          {
-            id: "1",
-            type: "project_update",
-            message:
-              "330KVA Power Upgrade: Phase 2 electrical installation completed",
-            timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-            projectId: "1",
-          },
-          {
-            id: "2",
-            type: "document_upload",
-            message: "Hotel Renovation: Final inspection report uploaded",
-            timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
-            projectId: "2",
-          },
-          {
-            id: "3",
-            type: "meeting",
-            message:
-              "Smart City Project: Stakeholder meeting scheduled for next week",
-            timestamp: new Date(
-              Date.now() - 1 * 24 * 60 * 60 * 1000,
-            ).toISOString(),
-            projectId: "3",
-          },
-          {
-            id: "4",
-            type: "deadline",
-            message:
-              "Ecotourism Center: Project successfully completed ahead of schedule",
-            timestamp: new Date(
-              Date.now() - 3 * 24 * 60 * 60 * 1000,
-            ).toISOString(),
-            projectId: "4",
-          },
-          {
-            id: "5",
-            type: "project_update",
-            message:
-              "New project assignment: Rigid Pavement Road Construction approved",
-            timestamp: new Date(
-              Date.now() - 7 * 24 * 60 * 60 * 1000,
-            ).toISOString(),
-          },
-        ];
-
-        setProjects(mockProjects);
-        setActivities(mockActivities);
-        calculateStats(mockProjects);
+      // Use real API for all data
+      const projectsResponse = await projectAPI.getUserProjects();
+      if (projectsResponse.success) {
+        setProjects(projectsResponse.data || []);
+        calculateStats(projectsResponse.data || []);
       } else {
-        // Production mode - use real API
-        const projectsResponse = await projectAPI.getUserProjects();
-        if (projectsResponse.success) {
-          setProjects(projectsResponse.data || []);
-          calculateStats(projectsResponse.data || []);
-        }
+        console.error("Failed to load projects:", projectsResponse.error);
+        setProjects([]);
+        calculateStats([]);
+      }
 
-        const activitiesResponse = await activityAPI.getUserActivity();
-        if (activitiesResponse.success) {
-          setActivities(activitiesResponse.data || []);
-        }
+      const activitiesResponse = await activityAPI.getUserActivity();
+      if (activitiesResponse.success) {
+        setActivities(activitiesResponse.data || []);
+      } else {
+        console.error("Failed to load activities:", activitiesResponse.error);
+        setActivities([]);
       }
     } catch (error) {
       console.error("Error loading dashboard data:", error);
