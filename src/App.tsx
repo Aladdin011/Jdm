@@ -19,6 +19,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
+import UserManagement from "./pages/UserManagement";
 import NotFound from "./pages/NotFound";
 import { initGA } from "./hooks/useAnalytics";
 import VideoCallInterface from "./components/calls/VideoCallInterface";
