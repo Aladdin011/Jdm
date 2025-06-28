@@ -179,153 +179,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsLoading(true);
 
     try {
-      // Check if we're in development mode (no backend available)
-      const isDevelopment = API_BASE_URL.includes("localhost");
-
-      if (isDevelopment) {
-        // Mock authentication for development
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API delay
-
-        // Predefined test users for different departments
-        const testUsers: Record<string, User> = {
-          "admin@jdmarc.com": {
-            id: "1",
-            email: "admin@jdmarc.com",
-            firstName: "Admin",
-            lastName: "User",
-            role: "admin",
-            company: "JD Marc",
-            phone: "+234 803 000 0000",
-            location: "Abuja, Nigeria",
-            department: "secretariat-admin",
-            isActive: true,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          },
-          "business@jdmarc.com": {
-            id: "2",
-            email: "business@jdmarc.com",
-            firstName: "Sarah",
-            lastName: "Johnson",
-            role: "user",
-            company: "JD Marc",
-            phone: "+234 803 000 0001",
-            location: "Lagos, Nigeria",
-            department: "business-development",
-            isActive: true,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          },
-          "project@jdmarc.com": {
-            id: "3",
-            email: "project@jdmarc.com",
-            firstName: "Michael",
-            lastName: "Chen",
-            role: "user",
-            company: "JD Marc",
-            phone: "+234 803 000 0002",
-            location: "Port Harcourt, Nigeria",
-            department: "project-management",
-            isActive: true,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          },
-          "accounts@jdmarc.com": {
-            id: "4",
-            email: "accounts@jdmarc.com",
-            firstName: "Fatima",
-            lastName: "Abdullahi",
-            role: "user",
-            company: "JD Marc",
-            phone: "+234 803 000 0003",
-            location: "Kano, Nigeria",
-            department: "accounting",
-            isActive: true,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          },
-          "hr@jdmarc.com": {
-            id: "5",
-            email: "hr@jdmarc.com",
-            firstName: "David",
-            lastName: "Okafor",
-            role: "user",
-            company: "JD Marc",
-            phone: "+234 803 000 0004",
-            location: "Enugu, Nigeria",
-            department: "human-resources",
-            isActive: true,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          },
-          "test@test.com": {
-            id: "6",
-            email: "test@test.com",
-            firstName: "Test",
-            lastName: "User",
-            role: "user",
-            company: "Test Company",
-            phone: "+234 803 000 0005",
-            location: "Abuja, Nigeria",
-            department: "project-management",
-            isActive: true,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          },
-        };
-
-        // Check for predefined test users first
-        if (
-          testUsers[email] &&
-          (password === "test123" ||
-            (email === "admin@jdmarc.com" && password === "admin123"))
-        ) {
-          const mockUser = testUsers[email];
-          const mockToken = `mock_${mockUser.department}_token_` + Date.now();
-
-          setUser(mockUser);
-          setToken(mockToken);
-
-          localStorage.setItem("jdmarc_token", mockToken);
-          localStorage.setItem("jdmarc_user", JSON.stringify(mockUser));
-
-          setIsLoading(false);
-          return { success: true, user: mockUser };
-        }
-        // Fallback for any other email/password combination
-        else if (email && password) {
-          const mockUser: User = {
-            id: Date.now().toString(),
-            email: email,
-            firstName: "Generic",
-            lastName: "User",
-            role: "user",
-            company: "External Company",
-            phone: "+234 803 000 0000",
-            location: "Lagos, Nigeria",
-            department: "project-management",
-            isActive: true,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          };
-
-          const mockToken = "mock_generic_token_" + Date.now();
-
-          setUser(mockUser);
-          setToken(mockToken);
-
-          localStorage.setItem("jdmarc_token", mockToken);
-          localStorage.setItem("jdmarc_user", JSON.stringify(mockUser));
-
-          setIsLoading(false);
-          return { success: true, user: mockUser };
-        } else {
-          setIsLoading(false);
-          return { success: false, error: "Invalid email or password" };
-        }
-      }
-
-      // Production mode - use real API
+      // Use real API for authentication
       const response = await apiCall<{ user: User; token: string }>(
         "/auth/login",
         {
@@ -353,14 +207,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         };
       }
     } catch (error) {
+      console.error("Login error:", error);
       setIsLoading(false);
       return {
         success: false,
-        error: "Login failed. Please try again.",
+        error: "Login failed. Please check your connection and try again.",
       };
     }
   };
-
   const register = async (
     userData: RegisterData,
   ): Promise<{ success: boolean; error?: string; user?: User }> => {
