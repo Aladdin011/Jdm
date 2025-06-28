@@ -168,7 +168,8 @@ export default function Register() {
                   style={{ color: "#A7967E" }}
                 >
                   Create your account to access our construction management
-                  platform
+                  platform. Department assignment will be handled by
+                  administrators.
                 </CardDescription>
               </motion.div>
             </CardHeader>
