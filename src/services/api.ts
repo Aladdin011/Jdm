@@ -114,6 +114,12 @@ export const userAPI = {
       body: JSON.stringify({ role }),
     }),
 
+  updateUserDepartment: (userId: string, department: string) =>
+    apiCall(`/admin/users/${userId}/department`, {
+      method: "PUT",
+      body: JSON.stringify({ department }),
+    }),
+
   deactivateUser: (userId: string) =>
     apiCall(`/admin/users/${userId}/deactivate`, {
       method: "PUT",
