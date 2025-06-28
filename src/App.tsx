@@ -118,6 +118,16 @@ function AnimatedRoutes() {
             </PrivateRoute>
           }
         />
+        <Route
+          path="/admin/users"
+          element={
+            <PrivateRoute requireAdmin={true}>
+              <PageTransition>
+                <UserManagement />
+              </PageTransition>
+            </PrivateRoute>
+          }
+        />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route
           path="*"
