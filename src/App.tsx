@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { AuthProvider } from "./contexts/AuthContext";
+import { CallProvider } from "./contexts/CallContext";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import PageTransition from "./components/ui/PageTransition";
 import Home from "./pages/Home";
@@ -20,6 +21,9 @@ import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import { initGA } from "./hooks/useAnalytics";
+import VideoCallInterface from "./components/calls/VideoCallInterface";
+import IncomingCallNotification from "./components/calls/IncomingCallNotification";
+import JoinCallBanner from "./components/calls/JoinCallBanner";
 
 const queryClient = new QueryClient();
 
@@ -139,9 +143,15 @@ const App = () => {
         <Toaster />
         <Sonner />
         <AuthProvider>
-          <BrowserRouter>
-            <AnimatedRoutes />
-          </BrowserRouter>
+          <CallProvider>
+            <BrowserRouter>
+              <AnimatedRoutes />
+              {/* Global Call Components */}
+              <VideoCallInterface />
+              <IncomingCallNotification />
+              <JoinCallBanner />
+            </BrowserRouter>
+          </CallProvider>
         </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>

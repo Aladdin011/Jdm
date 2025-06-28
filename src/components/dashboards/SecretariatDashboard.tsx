@@ -31,7 +31,9 @@ import {
   Clock,
   CheckCircle,
   AlertTriangle,
+  Video,
 } from "lucide-react";
+import { useCall } from "@/contexts/CallContext";
 
 interface AdminStats {
   totalUsers: number;
@@ -41,12 +43,17 @@ interface AdminStats {
 }
 
 export default function SecretariatDashboard() {
+  const { startCall, callState } = useCall();
   const [stats, setStats] = useState<AdminStats>({
     totalUsers: 42,
     activeProjects: 8,
     pendingApprovals: 5,
     systemAlerts: 2,
   });
+
+  const handleStartCall = () => {
+    startCall("secretariat-admin");
+  };
 
   const [recentActivities] = useState([
     {
@@ -98,8 +105,18 @@ export default function SecretariatDashboard() {
               Manage users, departments, and system administration
             </p>
           </div>
-          <div className="bg-white/10 backdrop-blur-md rounded-lg p-4">
-            <Shield className="h-12 w-12 text-white/80" />
+          <div className="flex items-center gap-4">
+            <Button
+              onClick={handleStartCall}
+              disabled={callState.isInCall}
+              className="bg-white/20 hover:bg-white/30 text-white border border-white/30"
+            >
+              <Video size={16} className="mr-2" />
+              {callState.isInCall ? "In Call" : "Start Team Call"}
+            </Button>
+            <div className="bg-white/10 backdrop-blur-md rounded-lg p-4">
+              <Shield className="h-12 w-12 text-white/80" />
+            </div>
           </div>
         </div>
       </motion.div>

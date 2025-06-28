@@ -31,7 +31,9 @@ import {
   FileText,
   ArrowUpRight,
   Handshake,
+  Video,
 } from "lucide-react";
+import { useCall } from "@/contexts/CallContext";
 
 interface Lead {
   id: string;
@@ -46,6 +48,7 @@ interface Lead {
 }
 
 export default function BusinessDevelopmentDashboard() {
+  const { startCall, callState } = useCall();
   const [leads] = useState<Lead[]>([
     {
       id: "1",
@@ -125,8 +128,18 @@ export default function BusinessDevelopmentDashboard() {
               Lead tracking, proposals, and partnership management
             </p>
           </div>
-          <div className="bg-white/10 backdrop-blur-md rounded-lg p-4">
-            <TrendingUp className="h-12 w-12 text-white/80" />
+          <div className="flex items-center gap-4">
+            <Button
+              onClick={() => startCall("business-development")}
+              disabled={callState.isInCall}
+              className="bg-white/20 hover:bg-white/30 text-white border border-white/30"
+            >
+              <Video size={16} className="mr-2" />
+              {callState.isInCall ? "In Call" : "Start Team Call"}
+            </Button>
+            <div className="bg-white/10 backdrop-blur-md rounded-lg p-4">
+              <TrendingUp className="h-12 w-12 text-white/80" />
+            </div>
           </div>
         </div>
       </motion.div>
