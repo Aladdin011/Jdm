@@ -194,9 +194,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         // Mock authentication for development
         await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API delay
 
-        // Admin credentials
-        if (email === "admin@jdmarc.com" && password === "admin123") {
-          const mockUser: User = {
+        // Predefined test users for different departments
+        const testUsers: Record<string, User> = {
+          "admin@jdmarc.com": {
             id: "1",
             email: "admin@jdmarc.com",
             firstName: "Admin",
@@ -209,9 +209,87 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             isActive: true,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
-          };
+          },
+          "business@jdmarc.com": {
+            id: "2",
+            email: "business@jdmarc.com",
+            firstName: "Sarah",
+            lastName: "Johnson",
+            role: "user",
+            company: "JD Marc",
+            phone: "+234 803 000 0001",
+            location: "Lagos, Nigeria",
+            department: "business-development",
+            isActive: true,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          },
+          "project@jdmarc.com": {
+            id: "3",
+            email: "project@jdmarc.com",
+            firstName: "Michael",
+            lastName: "Chen",
+            role: "user",
+            company: "JD Marc",
+            phone: "+234 803 000 0002",
+            location: "Port Harcourt, Nigeria",
+            department: "project-management",
+            isActive: true,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          },
+          "accounts@jdmarc.com": {
+            id: "4",
+            email: "accounts@jdmarc.com",
+            firstName: "Fatima",
+            lastName: "Abdullahi",
+            role: "user",
+            company: "JD Marc",
+            phone: "+234 803 000 0003",
+            location: "Kano, Nigeria",
+            department: "accounting",
+            isActive: true,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          },
+          "hr@jdmarc.com": {
+            id: "5",
+            email: "hr@jdmarc.com",
+            firstName: "David",
+            lastName: "Okafor",
+            role: "user",
+            company: "JD Marc",
+            phone: "+234 803 000 0004",
+            location: "Enugu, Nigeria",
+            department: "human-resources",
+            isActive: true,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          },
+          "test@test.com": {
+            id: "6",
+            email: "test@test.com",
+            firstName: "Test",
+            lastName: "User",
+            role: "user",
+            company: "Test Company",
+            phone: "+234 803 000 0005",
+            location: "Abuja, Nigeria",
+            department: "project-management",
+            isActive: true,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          },
+        };
 
-          const mockToken = "mock_admin_token_" + Date.now();
+        // Check for predefined test users first
+        if (
+          testUsers[email] &&
+          (password === "test123" ||
+            (email === "admin@jdmarc.com" && password === "admin123"))
+        ) {
+          const mockUser = testUsers[email];
+          const mockToken = `mock_${mockUser.department}_token_` + Date.now();
 
           setUser(mockUser);
           setToken(mockToken);
@@ -222,16 +300,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setIsLoading(false);
           return { success: true, user: mockUser };
         }
-        // Regular user credentials
+        // Fallback for any other email/password combination
         else if (email && password) {
           const mockUser: User = {
-            id: "2",
+            id: Date.now().toString(),
             email: email,
-            firstName: "John",
-            lastName: "Doe",
+            firstName: "Generic",
+            lastName: "User",
             role: "user",
-            company: "Example Company",
-            phone: "+234 803 000 0001",
+            company: "External Company",
+            phone: "+234 803 000 0000",
             location: "Lagos, Nigeria",
             department: "project-management",
             isActive: true,
@@ -239,7 +317,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             updatedAt: new Date().toISOString(),
           };
 
-          const mockToken = "mock_user_token_" + Date.now();
+          const mockToken = "mock_generic_token_" + Date.now();
 
           setUser(mockUser);
           setToken(mockToken);
