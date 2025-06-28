@@ -27,7 +27,11 @@ import {
   FileText,
   TrendingUp,
   Users,
+  Activity,
+  Target,
+  LogOut,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import PageTransition from "@/components/ui/PageTransition";
 import { projectAPI, activityAPI } from "@/services/api";
 import useAnalytics from "@/hooks/useAnalytics";
