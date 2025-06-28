@@ -9,6 +9,7 @@ import {
   BarChart3,
   Menu,
   X,
+  User,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -120,10 +121,11 @@ export default function Header() {
               </>
             )}
 
-            {/* Authentication Links */}
+            {/* Authentication Links - Role-based */}
             <div className="flex items-center gap-1 ml-6 pl-6 border-l border-white/20">
               {isAuthenticated ? (
                 <>
+                  {/* Dashboard Link - Always show for logged in users */}
                   <Link
                     to="/dashboard"
                     className="flex items-center gap-2 text-white/90 hover:text-white transition-colors px-3 py-2 rounded-lg hover:bg-white/10"
@@ -131,15 +133,27 @@ export default function Header() {
                     <BarChart3 size={16} />
                     <span className="hidden xl:inline">Dashboard</span>
                   </Link>
+
+                  {/* Admin Panel Link - Only for admin users */}
                   {isAdmin && (
                     <Link
                       to="/admin"
-                      className="flex items-center gap-2 text-white/90 hover:text-white transition-colors px-3 py-2 rounded-lg hover:bg-white/10"
+                      className="flex items-center gap-2 bg-[#F97316]/20 text-[#F97316] hover:bg-[#F97316]/30 transition-colors px-3 py-2 rounded-lg border border-[#F97316]/30"
                     >
                       <Settings size={16} />
-                      <span className="hidden xl:inline">Admin</span>
+                      <span className="hidden xl:inline">Admin Panel</span>
                     </Link>
                   )}
+
+                  {/* User Info */}
+                  <div className="hidden lg:flex items-center gap-2 text-white/70 px-3 py-2">
+                    <User size={16} />
+                    <span className="text-sm">
+                      {user?.firstName} ({user?.role})
+                    </span>
+                  </div>
+
+                  {/* Logout Button */}
                   <button
                     onClick={logout}
                     className="flex items-center gap-2 text-white/90 hover:text-white transition-colors px-3 py-2 rounded-lg hover:bg-white/10"
@@ -150,6 +164,7 @@ export default function Header() {
                 </>
               ) : (
                 <>
+                  {/* Login & Register for non-authenticated users */}
                   <Link
                     to="/login"
                     className="flex items-center gap-2 text-white/90 hover:text-white transition-colors px-3 py-2 rounded-lg hover:bg-white/10 border border-white/20"
@@ -216,10 +231,19 @@ export default function Header() {
                 </>
               )}
 
-              {/* Mobile Authentication Links */}
+              {/* Mobile Authentication Links - Role-based */}
               <div className="border-t border-white/20 pt-4 mt-4 space-y-2">
                 {isAuthenticated ? (
                   <>
+                    {/* User Info - Mobile */}
+                    <div className="flex items-center gap-2 text-white/70 py-2 px-3 border-b border-white/10 mb-2">
+                      <User size={16} />
+                      <span className="text-sm">
+                        {user?.firstName} ({user?.role})
+                      </span>
+                    </div>
+
+                    {/* Dashboard Link */}
                     <Link
                       to="/dashboard"
                       onClick={() => setIsMobileMenuOpen(false)}
@@ -228,16 +252,20 @@ export default function Header() {
                       <BarChart3 size={16} />
                       Dashboard
                     </Link>
+
+                    {/* Admin Panel Link - Only for admin users */}
                     {isAdmin && (
                       <Link
                         to="/admin"
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="flex items-center gap-2 text-white/90 hover:text-white transition-colors py-2 px-3 rounded-lg hover:bg-white/10"
+                        className="flex items-center gap-2 bg-[#F97316]/20 text-[#F97316] hover:bg-[#F97316]/30 transition-colors py-2 px-3 rounded-lg border border-[#F97316]/30"
                       >
                         <Settings size={16} />
-                        Admin
+                        Admin Panel
                       </Link>
                     )}
+
+                    {/* Logout Button */}
                     <button
                       onClick={() => {
                         logout();
@@ -251,6 +279,7 @@ export default function Header() {
                   </>
                 ) : (
                   <>
+                    {/* Login & Register for non-authenticated users */}
                     <Link
                       to="/login"
                       onClick={() => setIsMobileMenuOpen(false)}
