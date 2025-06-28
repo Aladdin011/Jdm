@@ -99,30 +99,39 @@ export default function Hero() {
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.6 }}
           >
-            {/* Default paragraph */}
-            <p className="mb-4">
+            {/* Updated subtext */}
+            <p className="mb-6">
               JD Marc is a proudly Nigerian construction company delivering
-              innovative infrastructure across Nigeria and beyond.
+              innovative infrastructure projects across Nigeria and beyond since
+              2007. With offices in Abuja, London, and New York, we deliver
+              smarter, greener, and more resilient urban solutions.
             </p>
 
-            {/* Read More button */}
-            <div className="flex items-center justify-center gap-4 mb-4">
-              <button
+            {/* Read More button with slide-up animation */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.8 }}
+              className="flex items-center justify-center gap-4 mb-4"
+            >
+              <motion.button
                 onClick={toggleExpanded}
-                className="inline-flex items-center text-[#F7931E] hover:text-[#F7931E]/80 transition-colors duration-300 font-medium"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center text-[#F97316] hover:text-[#F97316]/80 transition-colors duration-300 font-medium bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20 hover:border-[#F97316]/50"
               >
                 {isExpanded ? "Read Less" : "Read More"}
                 <motion.div
                   animate={{ rotate: isExpanded ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
-                  className="ml-1"
+                  className="ml-2"
                 >
                   <ChevronDown size={20} />
                 </motion.div>
-              </button>
-            </div>
+              </motion.button>
+            </motion.div>
 
-            {/* Expandable content */}
+            {/* Expandable About section content */}
             <AnimatePresence>
               {isExpanded && (
                 <motion.div
@@ -132,20 +141,33 @@ export default function Hero() {
                   transition={{ duration: 0.5, ease: "easeInOut" }}
                   className="overflow-hidden"
                 >
-                  <motion.p
+                  <motion.div
                     initial={{ y: -20 }}
                     animate={{ y: 0 }}
                     exit={{ y: -20 }}
                     transition={{ duration: 0.3, delay: 0.2 }}
-                    className="text-base md:text-lg lg:text-xl border-t border-white/20 pt-4"
+                    className="text-base md:text-lg border-t border-white/20 pt-6 mt-4 space-y-4"
                   >
-                    Since 2007, we have delivered landmark projects in
-                    roadworks, buildings, power, urban planning, and smart city
-                    solutions. With offices in Abuja, London, and New York, JD
-                    Marc brings global expertise to solve local challenges –
-                    building smarter, greener, and more resilient African
-                    cities.
-                  </motion.p>
+                    <p>
+                      <strong>Our Mission:</strong> To transform Africa's urban
+                      landscape through innovative construction and
+                      infrastructure solutions that are sustainable,
+                      intelligent, and community-focused.
+                    </p>
+                    <p>
+                      <strong>Our Expertise:</strong> From power infrastructure
+                      and smart cities to residential developments and
+                      commercial complexes, we bring international standards to
+                      every project while supporting local communities and
+                      economies.
+                    </p>
+                    <p>
+                      <strong>Global Reach, Local Impact:</strong> Our
+                      Pan-African presence, combined with offices in London and
+                      New York, enables us to deliver world-class projects that
+                      truly understand and serve African needs.
+                    </p>
+                  </motion.div>
                 </motion.div>
               )}
             </AnimatePresence>
