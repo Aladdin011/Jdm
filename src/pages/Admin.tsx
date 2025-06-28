@@ -314,19 +314,28 @@ export default function Admin() {
                 department operations.
               </p>
             </div>
-            <Button
-              className="text-white"
-              style={{ backgroundColor: "#A7967E" }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#C2CCC5";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#A7967E";
-              }}
-            >
-              <Settings className="h-4 w-4 mr-2" />
-              System Settings
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button
+                onClick={() => (window.location.href = "/admin/users")}
+                className="text-white bg-[#142E54] hover:bg-[#142E54]/90"
+              >
+                <Users className="h-4 w-4 mr-2" />
+                User Management
+              </Button>
+              <Button
+                className="text-white"
+                style={{ backgroundColor: "#A7967E" }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#C2CCC5";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "#A7967E";
+                }}
+              >
+                <Settings className="h-4 w-4 mr-2" />
+                System Settings
+              </Button>
+            </div>
           </motion.div>
         </div>
       </div>
