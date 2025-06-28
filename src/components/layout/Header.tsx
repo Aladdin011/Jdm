@@ -10,8 +10,26 @@ import {
   Menu,
   X,
   User,
+  LogOut,
+  ChevronDown,
+  UserCircle,
+  Mail,
+  Phone,
+  Building,
+  MapPin,
+  Shield,
+  Briefcase,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
