@@ -463,6 +463,30 @@ export default function Register() {
                   </div>
                 </motion.div>
 
+                {/* Department Assignment Info */}
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.65 }}
+                  className="bg-blue-50 border border-blue-200 rounded-lg p-4"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 bg-blue-100 rounded-full">
+                      <Building className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-blue-900 mb-1">
+                        Department Assignment
+                      </h4>
+                      <p className="text-sm text-blue-700">
+                        Your department will be assigned by an administrator
+                        after your account is created. You'll receive access to
+                        department-specific tools and dashboards once assigned.
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+
                 {/* Submit Button */}
                 <motion.div
                   initial={{ y: 20, opacity: 0 }}
