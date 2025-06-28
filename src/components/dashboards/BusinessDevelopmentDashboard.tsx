@@ -31,9 +31,10 @@ import {
   FileText,
   ArrowUpRight,
   Handshake,
-  Video,
 } from "lucide-react";
 import { useCall } from "@/contexts/CallContext";
+import DashboardThemeWrapper from "./DashboardThemeWrapper";
+import { getDepartmentTheme } from "@/utils/departmentThemes";
 
 interface Lead {
   id: string;
@@ -49,348 +50,396 @@ interface Lead {
 
 export default function BusinessDevelopmentDashboard() {
   const { startCall, callState } = useCall();
-  const [leads] = useState<Lead[]>([
+  const theme = getDepartmentTheme("business-development");
+
+  const [leads, setLeads] = useState<Lead[]>([
     {
       id: "1",
-      name: "Ahmed Okonkwo",
-      company: "Lagos State Government",
-      email: "ahmed.o@lagos.gov.ng",
-      phone: "+234 803 123 4567",
-      projectType: "Smart City Infrastructure",
-      value: "$2.5M",
-      status: "proposal",
+      name: "Ahmed Ibrahim",
+      company: "Lagos State Construction",
+      email: "ahmed@lagosstate.gov.ng",
+      phone: "+234 803 000 0001",
+      projectType: "Infrastructure Development",
+      value: "₦2.5M",
+      status: "negotiation",
       date: "2024-01-15",
     },
     {
       id: "2",
-      name: "Sarah Johnson",
-      company: "Zenith Bank",
-      email: "sarah.j@zenithbank.com",
-      phone: "+234 805 987 6543",
-      projectType: "Office Complex",
-      value: "$800K",
-      status: "negotiation",
-      date: "2024-01-10",
+      name: "Sarah Okoye",
+      company: "Abuja Municipal Corp",
+      email: "sarah@abujamunicipal.gov.ng",
+      phone: "+234 803 000 0002",
+      projectType: "Smart City Integration",
+      value: "₦8.2M",
+      status: "proposal",
+      date: "2024-01-18",
     },
     {
       id: "3",
-      name: "Michael Adebayo",
-      company: "Federal Housing Authority",
-      email: "m.adebayo@fha.gov.ng",
-      phone: "+234 807 555 1234",
-      projectType: "Residential Development",
-      value: "$1.2M",
+      name: "Michael Chen",
+      company: "Port Harcourt Industries",
+      email: "m.chen@phindustries.com",
+      phone: "+234 803 000 0003",
+      projectType: "Power Grid Upgrade",
+      value: "₦15.7M",
       status: "contacted",
-      date: "2024-01-08",
+      date: "2024-01-20",
     },
   ]);
 
   const [stats] = useState({
-    totalLeads: 23,
+    totalLeads: 12,
     activeProposals: 8,
-    monthlyRevenue: "$4.2M",
-    conversionRate: "32%",
+    monthlyRevenue: "₦45.2M",
+    conversionRate: "68%",
   });
 
-  const [showNewLeadForm, setShowNewLeadForm] = useState(false);
+  const [newLead, setNewLead] = useState({
+    name: "",
+    company: "",
+    email: "",
+    phone: "",
+    projectType: "",
+    value: "",
+  });
+
+  const handleStartCall = () => {
+    startCall("business-development");
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "new":
-        return "bg-blue-100 text-blue-700";
-      case "contacted":
-        return "bg-yellow-100 text-yellow-700";
-      case "proposal":
-        return "bg-purple-100 text-purple-700";
-      case "negotiation":
-        return "bg-orange-100 text-orange-700";
       case "won":
-        return "bg-green-100 text-green-700";
+        return "bg-green-100 text-green-800";
+      case "negotiation":
+        return "bg-blue-100 text-blue-800";
+      case "proposal":
+        return "bg-purple-100 text-purple-800";
+      case "contacted":
+        return "bg-yellow-100 text-yellow-800";
+      case "new":
+        return "bg-gray-100 text-gray-800";
       case "lost":
-        return "bg-red-100 text-red-700";
+        return "bg-red-100 text-red-800";
       default:
-        return "bg-gray-100 text-gray-700";
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const addNewLead = () => {
+    if (newLead.name && newLead.company && newLead.email) {
+      const lead: Lead = {
+        id: Date.now().toString(),
+        ...newLead,
+        status: "new",
+        date: new Date().toISOString().split("T")[0],
+      };
+      setLeads([lead, ...leads]);
+      setNewLead({
+        name: "",
+        company: "",
+        email: "",
+        phone: "",
+        projectType: "",
+        value: "",
+      });
     }
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-r from-[#142E54] to-[#F97316] rounded-xl p-6 text-white"
-      >
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Business Development</h1>
-            <p className="text-blue-100">
-              Lead tracking, proposals, and partnership management
-            </p>
-          </div>
-          <div className="flex items-center gap-4">
-            <Button
-              onClick={() => startCall("business-development")}
-              disabled={callState.isInCall}
-              className="bg-white/20 hover:bg-white/30 text-white border border-white/30"
-            >
-              <Video size={16} className="mr-2" />
-              {callState.isInCall ? "In Call" : "Start Team Call"}
-            </Button>
-            <div className="bg-white/10 backdrop-blur-md rounded-lg p-4">
-              <TrendingUp className="h-12 w-12 text-white/80" />
-            </div>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Stats Grid */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-      >
-        <Card className="border-0 shadow-lg">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Total Leads</p>
-                <p className="text-3xl font-bold text-gray-900">
-                  {stats.totalLeads}
-                </p>
-              </div>
-              <div className="p-3 bg-blue-100 rounded-full">
-                <Users className="h-6 w-6 text-blue-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-lg">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  Active Proposals
-                </p>
-                <p className="text-3xl font-bold text-gray-900">
-                  {stats.activeProposals}
-                </p>
-              </div>
-              <div className="p-3 bg-purple-100 rounded-full">
-                <FileText className="h-6 w-6 text-purple-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-lg">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  Monthly Revenue
-                </p>
-                <p className="text-3xl font-bold text-gray-900">
-                  {stats.monthlyRevenue}
-                </p>
-              </div>
-              <div className="p-3 bg-green-100 rounded-full">
-                <DollarSign className="h-6 w-6 text-green-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-lg">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  Conversion Rate
-                </p>
-                <p className="text-3xl font-bold text-gray-900">
-                  {stats.conversionRate}
-                </p>
-              </div>
-              <div className="p-3 bg-orange-100 rounded-full">
-                <Target className="h-6 w-6 text-orange-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Lead Tracker */}
+    <DashboardThemeWrapper
+      title="Business Development Dashboard"
+      description="Track leads, manage proposals, and drive revenue growth"
+    >
+      <div className="space-y-6">
+        {/* Stats Grid */}
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2 }}
-          className="lg:col-span-2"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
         >
-          <Card className="border-0 shadow-lg">
-            <CardHeader>
+          <Card className="theme-card">
+            <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="flex items-center gap-2">
-                    <Users className="h-5 w-5 text-[#F97316]" />
-                    Lead Tracker
-                  </CardTitle>
-                  <CardDescription>
-                    Track and manage potential clients and projects
-                  </CardDescription>
+                  <p className="text-sm font-medium text-gray-600">
+                    Total Leads
+                  </p>
+                  <p className="text-3xl font-bold theme-text-primary">
+                    {stats.totalLeads}
+                  </p>
                 </div>
-                <Button
-                  onClick={() => setShowNewLeadForm(!showNewLeadForm)}
-                  className="bg-[#F97316] hover:bg-[#F97316]/90"
-                >
-                  <Plus size={16} className="mr-2" />
-                  New Lead
-                </Button>
+                <div className={`p-3 ${theme.badge.bg} rounded-full`}>
+                  <Users className={`h-6 w-6 ${theme.badge.text}`} />
+                </div>
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {leads.map((lead) => (
-                  <div
-                    key={lead.id}
-                    className="border border-gray-200 rounded-lg p-4 hover:border-[#F97316] transition-colors"
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h3 className="font-semibold text-gray-900">
-                          {lead.name}
-                        </h3>
-                        <p className="text-sm text-gray-600">{lead.company}</p>
-                        <p className="text-xs text-gray-500 mt-1">
-                          {lead.projectType}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <Badge
-                          className={`${getStatusColor(lead.status)} mb-2`}
-                        >
-                          {lead.status.charAt(0).toUpperCase() +
-                            lead.status.slice(1)}
-                        </Badge>
-                        <p className="text-lg font-bold text-green-600">
-                          {lead.value}
-                        </p>
-                      </div>
-                    </div>
+            </CardContent>
+          </Card>
 
-                    <div className="flex items-center justify-between text-sm text-gray-600">
-                      <div className="flex items-center gap-4">
+          <Card className="theme-card">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">
+                    Active Proposals
+                  </p>
+                  <p className="text-3xl font-bold theme-text-primary">
+                    {stats.activeProposals}
+                  </p>
+                </div>
+                <div className="p-3 bg-blue-100 rounded-full">
+                  <FileText className="h-6 w-6 text-blue-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="theme-card">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">
+                    Monthly Revenue
+                  </p>
+                  <p className="text-3xl font-bold theme-text-primary">
+                    {stats.monthlyRevenue}
+                  </p>
+                </div>
+                <div className="p-3 bg-green-100 rounded-full">
+                  <DollarSign className="h-6 w-6 text-green-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="theme-card">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">
+                    Conversion Rate
+                  </p>
+                  <p className="text-3xl font-bold theme-text-primary">
+                    {stats.conversionRate}
+                  </p>
+                </div>
+                <div className="p-3 bg-purple-100 rounded-full">
+                  <Target className="h-6 w-6 text-purple-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Lead Management */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1 }}
+            className="lg:col-span-2"
+          >
+            <Card className="theme-card">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Handshake className={`h-5 w-5 ${theme.badge.text}`} />
+                  Active Leads
+                </CardTitle>
+                <CardDescription>
+                  Track and manage your sales pipeline
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {leads.map((lead) => (
+                    <div
+                      key={lead.id}
+                      className="border border-gray-200 rounded-lg p-4 hover:border-emerald-300 transition-colors"
+                    >
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h3 className="font-semibold theme-text-primary">
+                            {lead.name}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            {lead.company}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge className={getStatusColor(lead.status)}>
+                            {lead.status.charAt(0).toUpperCase() +
+                              lead.status.slice(1)}
+                          </Badge>
+                          <span className="text-lg font-bold text-emerald-600">
+                            {lead.value}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-gray-600 mb-3">
                         <div className="flex items-center gap-1">
-                          <Mail size={14} />
+                          <Mail className="h-4 w-4" />
                           {lead.email}
                         </div>
                         <div className="flex items-center gap-1">
-                          <Phone size={14} />
+                          <Phone className="h-4 w-4" />
                           {lead.phone}
                         </div>
+                        <div className="flex items-center gap-1">
+                          <Calendar className="h-4 w-4" />
+                          {new Date(lead.date).toLocaleDateString()}
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <Calendar size={14} />
-                        {new Date(lead.date).toLocaleDateString()}
+
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-700">
+                          {lead.projectType}
+                        </span>
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="outline">
+                            <Mail className="h-4 w-4 mr-1" />
+                            Contact
+                          </Button>
+                          <Button size="sm" className={theme.button.primary}>
+                            <ArrowUpRight className="h-4 w-4 mr-1" />
+                            Details
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* New Project Request Form */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3 }}
-          className="space-y-6"
-        >
-          <Card className="border-0 shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Plus className="h-5 w-5 text-[#F97316]" />
-                New Project Request
-              </CardTitle>
-              <CardDescription>
-                Submit new project opportunities
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Input placeholder="Client Name" />
-              <Input placeholder="Company" />
-              <Input placeholder="Email" type="email" />
-              <Input placeholder="Phone" />
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Project Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="construction">
-                    General Construction
-                  </SelectItem>
-                  <SelectItem value="smart-city">Smart City</SelectItem>
-                  <SelectItem value="residential">Residential</SelectItem>
-                  <SelectItem value="commercial">Commercial</SelectItem>
-                  <SelectItem value="infrastructure">Infrastructure</SelectItem>
-                </SelectContent>
-              </Select>
-              <Input placeholder="Estimated Value" />
-              <Textarea placeholder="Project Description" rows={3} />
-              <Button className="w-full bg-[#F97316] hover:bg-[#F97316]/90">
-                Submit Request
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* Partnership Inquiries */}
-          <Card className="border-0 shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Handshake className="h-5 w-5 text-[#F97316]" />
-                Partnership Inquiries
-              </CardTitle>
-              <CardDescription>
-                Recent partnership opportunities
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="p-3 border border-gray-200 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-medium text-sm">
-                      UK Construction Alliance
-                    </h4>
-                    <ArrowUpRight size={16} className="text-gray-400" />
-                  </div>
-                  <p className="text-xs text-gray-600">
-                    Joint venture opportunity for London projects
-                  </p>
-                  <p className="text-xs text-gray-400 mt-1">2 days ago</p>
+                  ))}
                 </div>
+              </CardContent>
+            </Card>
+          </motion.div>
 
-                <div className="p-3 border border-gray-200 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-medium text-sm">
-                      Nigerian Infrastructure Fund
-                    </h4>
-                    <ArrowUpRight size={16} className="text-gray-400" />
-                  </div>
-                  <p className="text-xs text-gray-600">
-                    Funding partnership for smart city projects
-                  </p>
-                  <p className="text-xs text-gray-400 mt-1">1 week ago</p>
+          {/* Add New Lead */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Card className="theme-card">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Plus className={`h-5 w-5 ${theme.badge.text}`} />
+                  Add New Lead
+                </CardTitle>
+                <CardDescription>
+                  Capture new business opportunities
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Input
+                  placeholder="Contact Name"
+                  value={newLead.name}
+                  onChange={(e) =>
+                    setNewLead({ ...newLead, name: e.target.value })
+                  }
+                />
+                <Input
+                  placeholder="Company Name"
+                  value={newLead.company}
+                  onChange={(e) =>
+                    setNewLead({ ...newLead, company: e.target.value })
+                  }
+                />
+                <Input
+                  type="email"
+                  placeholder="Email Address"
+                  value={newLead.email}
+                  onChange={(e) =>
+                    setNewLead({ ...newLead, email: e.target.value })
+                  }
+                />
+                <Input
+                  placeholder="Phone Number"
+                  value={newLead.phone}
+                  onChange={(e) =>
+                    setNewLead({ ...newLead, phone: e.target.value })
+                  }
+                />
+                <Select
+                  value={newLead.projectType}
+                  onValueChange={(value) =>
+                    setNewLead({ ...newLead, projectType: value })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Project Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="infrastructure">
+                      Infrastructure Development
+                    </SelectItem>
+                    <SelectItem value="smart-city">
+                      Smart City Integration
+                    </SelectItem>
+                    <SelectItem value="power-grid">
+                      Power Grid Upgrade
+                    </SelectItem>
+                    <SelectItem value="residential">
+                      Residential Construction
+                    </SelectItem>
+                    <SelectItem value="commercial">
+                      Commercial Buildings
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                <Input
+                  placeholder="Estimated Value (₦)"
+                  value={newLead.value}
+                  onChange={(e) =>
+                    setNewLead({ ...newLead, value: e.target.value })
+                  }
+                />
+                <Button
+                  onClick={addNewLead}
+                  className={`w-full ${theme.button.primary}`}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Lead
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Quick Stats */}
+            <Card className="theme-card mt-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className={`h-5 w-5 ${theme.badge.text}`} />
+                  Performance Metrics
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">This Month</span>
+                  <span className="font-semibold theme-text-primary">
+                    ₦12.4M
+                  </span>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Pipeline Value</span>
+                  <span className="font-semibold theme-text-primary">
+                    ₦28.9M
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Win Rate</span>
+                  <span className="font-semibold theme-text-accent">68%</span>
+                </div>
+                <div className="pt-2 border-t">
+                  <Button className={`w-full ${theme.button.secondary}`}>
+                    <FileText className="h-4 w-4 mr-2" />
+                    Generate Report
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
       </div>
-    </div>
+    </DashboardThemeWrapper>
   );
 }
