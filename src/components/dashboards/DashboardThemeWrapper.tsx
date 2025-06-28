@@ -1,13 +1,40 @@
-import { ReactNode } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import {
   getDepartmentTheme,
   getDepartmentDisplayName,
 } from "@/utils/departmentThemes";
-import { User, Building, MapPin, Calendar, Video } from "lucide-react";
+import {
+  User,
+  Building,
+  MapPin,
+  Calendar,
+  Video,
+  Activity,
+  MessageSquare,
+  Upload,
+  LogOut,
+  Settings,
+  Phone,
+  Mail,
+  Clock,
+  FileText,
+  Users,
+  Target,
+} from "lucide-react";
 import { useCall } from "@/contexts/CallContext";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
 interface DashboardThemeWrapperProps {
   children: ReactNode;
