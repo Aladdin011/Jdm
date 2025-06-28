@@ -360,11 +360,23 @@ export default function Header() {
                 {isAuthenticated ? (
                   <>
                     {/* User Info - Mobile */}
-                    <div className="flex items-center gap-2 text-white/70 py-2 px-3 border-b border-white/10 mb-2">
-                      <User size={16} />
-                      <span className="text-sm">
-                        {user?.firstName} ({user?.role})
-                      </span>
+                    <div className="bg-white/10 rounded-lg p-3 mb-4">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-10 w-10">
+                          <AvatarFallback className="bg-white/20 text-white font-medium">
+                            {user?.firstName?.[0]}
+                            {user?.lastName?.[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="text-white font-medium">
+                            {user?.firstName} {user?.lastName}
+                          </p>
+                          <p className="text-white/60 text-sm capitalize">
+                            {user?.role} • {user?.department?.replace("-", " ")}
+                          </p>
+                        </div>
+                      </div>
                     </div>
 
                     {/* Dashboard Link */}
@@ -376,6 +388,15 @@ export default function Header() {
                       <BarChart3 size={16} />
                       Dashboard
                     </Link>
+
+                    {/* Profile Settings */}
+                    <button
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="flex items-center gap-2 text-white/90 hover:text-white transition-colors py-2 px-3 rounded-lg hover:bg-white/10 w-full text-left"
+                    >
+                      <UserCircle size={16} />
+                      Profile Settings
+                    </button>
 
                     {/* Admin Panel Link - Only for admin users */}
                     {isAdmin && (
@@ -395,10 +416,10 @@ export default function Header() {
                         logout();
                         setIsMobileMenuOpen(false);
                       }}
-                      className="flex items-center gap-2 text-white/90 hover:text-white transition-colors py-2 px-3 rounded-lg hover:bg-white/10 w-full text-left"
+                      className="flex items-center gap-2 text-red-300 hover:text-red-200 transition-colors py-2 px-3 rounded-lg hover:bg-red-500/20 w-full text-left border-t border-white/10 mt-2 pt-4"
                     >
-                      <UserCheck size={16} />
-                      Logout
+                      <LogOut size={16} />
+                      Sign Out
                     </button>
                   </>
                 ) : (
