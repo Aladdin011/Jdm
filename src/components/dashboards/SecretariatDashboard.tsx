@@ -97,262 +97,266 @@ export default function SecretariatDashboard() {
       description="Manage users, departments, and system administration"
     >
       <div className="space-y-6">
-
-      {/* Stats Grid */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-      >
-        <Card className="border-0 shadow-lg">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Total Users</p>
-                <p className="text-3xl font-bold text-gray-900">
-                  {stats.totalUsers}
-                </p>
-              </div>
-              <div className="p-3 bg-blue-100 rounded-full">
-                <Users className="h-6 w-6 text-blue-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-lg">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  Active Projects
-                </p>
-                <p className="text-3xl font-bold text-gray-900">
-                  {stats.activeProjects}
-                </p>
-              </div>
-              <div className="p-3 bg-green-100 rounded-full">
-                <TrendingUp className="h-6 w-6 text-green-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-lg">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  Pending Approvals
-                </p>
-                <p className="text-3xl font-bold text-gray-900">
-                  {stats.pendingApprovals}
-                </p>
-              </div>
-              <div className="p-3 bg-yellow-100 rounded-full">
-                <Clock className="h-6 w-6 text-yellow-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-lg">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  System Alerts
-                </p>
-                <p className="text-3xl font-bold text-gray-900">
-                  {stats.systemAlerts}
-                </p>
-              </div>
-              <div className="p-3 bg-red-100 rounded-full">
-                <AlertTriangle className="h-6 w-6 text-red-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* User Management */}
+        {/* Stats Grid */}
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
         >
           <Card className="border-0 shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-[#F97316]" />
-                User Management
-              </CardTitle>
-              <CardDescription>
-                Assign departments and manage user roles
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex gap-2">
-                <div className="relative flex-1">
-                  <Search
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                    size={16}
-                  />
-                  <Input
-                    placeholder="Search users..."
-                    className="pl-10"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">
+                    Total Users
+                  </p>
+                  <p className="text-3xl font-bold text-gray-900">
+                    {stats.totalUsers}
+                  </p>
                 </div>
-                <Button className="bg-[#F97316] hover:bg-[#F97316]/90">
-                  <UserPlus size={16} className="mr-2" />
-                  Add User
-                </Button>
+                <div className="p-3 bg-blue-100 rounded-full">
+                  <Users className="h-6 w-6 text-blue-600" />
+                </div>
               </div>
+            </CardContent>
+          </Card>
 
-              {/* Quick Department Assignment */}
-              <div className="space-y-3 border rounded-lg p-4">
-                <h4 className="font-semibold text-gray-900">
-                  Quick Department Assignment
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select User" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="john">John Doe</SelectItem>
-                      <SelectItem value="jane">Jane Smith</SelectItem>
-                      <SelectItem value="mike">Mike Johnson</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Assign Department" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="business-dev">
-                        Business Development
-                      </SelectItem>
-                      <SelectItem value="project-mgmt">
-                        Project Management
-                      </SelectItem>
-                      <SelectItem value="accounting">Accounting</SelectItem>
-                      <SelectItem value="hr">Human Resources</SelectItem>
-                    </SelectContent>
-                  </Select>
+          <Card className="border-0 shadow-lg">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">
+                    Active Projects
+                  </p>
+                  <p className="text-3xl font-bold text-gray-900">
+                    {stats.activeProjects}
+                  </p>
                 </div>
-                <Button className="w-full" variant="outline">
-                  Assign Department
-                </Button>
+                <div className="p-3 bg-green-100 rounded-full">
+                  <TrendingUp className="h-6 w-6 text-green-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-0 shadow-lg">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">
+                    Pending Approvals
+                  </p>
+                  <p className="text-3xl font-bold text-gray-900">
+                    {stats.pendingApprovals}
+                  </p>
+                </div>
+                <div className="p-3 bg-yellow-100 rounded-full">
+                  <Clock className="h-6 w-6 text-yellow-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-0 shadow-lg">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">
+                    System Alerts
+                  </p>
+                  <p className="text-3xl font-bold text-gray-900">
+                    {stats.systemAlerts}
+                  </p>
+                </div>
+                <div className="p-3 bg-red-100 rounded-full">
+                  <AlertTriangle className="h-6 w-6 text-red-600" />
+                </div>
               </div>
             </CardContent>
           </Card>
         </motion.div>
 
-        {/* System Activity */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* User Management */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Card className="border-0 shadow-lg">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="h-5 w-5 text-[#F97316]" />
+                  User Management
+                </CardTitle>
+                <CardDescription>
+                  Assign departments and manage user roles
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <Search
+                      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                      size={16}
+                    />
+                    <Input
+                      placeholder="Search users..."
+                      className="pl-10"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                  <Button className="bg-[#F97316] hover:bg-[#F97316]/90">
+                    <UserPlus size={16} className="mr-2" />
+                    Add User
+                  </Button>
+                </div>
+
+                {/* Quick Department Assignment */}
+                <div className="space-y-3 border rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900">
+                    Quick Department Assignment
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select User" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="john">John Doe</SelectItem>
+                        <SelectItem value="jane">Jane Smith</SelectItem>
+                        <SelectItem value="mike">Mike Johnson</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Assign Department" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="business-dev">
+                          Business Development
+                        </SelectItem>
+                        <SelectItem value="project-mgmt">
+                          Project Management
+                        </SelectItem>
+                        <SelectItem value="accounting">Accounting</SelectItem>
+                        <SelectItem value="hr">Human Resources</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <Button className="w-full" variant="outline">
+                    Assign Department
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* System Activity */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Card className="border-0 shadow-lg">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Activity className="h-5 w-5 text-[#F97316]" />
+                  System Activity
+                </CardTitle>
+                <CardDescription>
+                  Recent activity logs and system events
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {recentActivities.map((activity) => (
+                    <div
+                      key={activity.id}
+                      className="flex items-start gap-3 p-3 border border-gray-200 rounded-lg"
+                    >
+                      <div
+                        className={`p-2 rounded-full ${
+                          activity.type === "user"
+                            ? "bg-blue-100"
+                            : activity.type === "project"
+                              ? "bg-green-100"
+                              : "bg-yellow-100"
+                        }`}
+                      >
+                        {activity.type === "user" ? (
+                          <Users size={16} className="text-blue-600" />
+                        ) : activity.type === "project" ? (
+                          <CheckCircle size={16} className="text-green-600" />
+                        ) : (
+                          <FileText size={16} className="text-yellow-600" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900">
+                          {activity.user}
+                        </p>
+                        <p className="text-xs text-gray-600">
+                          {activity.action}
+                        </p>
+                        <p className="text-xs text-gray-400 mt-1">
+                          {activity.time}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+
+        {/* Admin Actions */}
         <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
         >
           <Card className="border-0 shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Activity className="h-5 w-5 text-[#F97316]" />
-                System Activity
+                <Settings className="h-5 w-5 text-[#F97316]" />
+                Administrative Actions
               </CardTitle>
               <CardDescription>
-                Recent activity logs and system events
+                System management and configuration tools
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {recentActivities.map((activity) => (
-                  <div
-                    key={activity.id}
-                    className="flex items-start gap-3 p-3 border border-gray-200 rounded-lg"
-                  >
-                    <div
-                      className={`p-2 rounded-full ${
-                        activity.type === "user"
-                          ? "bg-blue-100"
-                          : activity.type === "project"
-                            ? "bg-green-100"
-                            : "bg-yellow-100"
-                      }`}
-                    >
-                      {activity.type === "user" ? (
-                        <Users size={16} className="text-blue-600" />
-                      ) : activity.type === "project" ? (
-                        <CheckCircle size={16} className="text-green-600" />
-                      ) : (
-                        <FileText size={16} className="text-yellow-600" />
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900">
-                        {activity.user}
-                      </p>
-                      <p className="text-xs text-gray-600">{activity.action}</p>
-                      <p className="text-xs text-gray-400 mt-1">
-                        {activity.time}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Button
+                  className="h-20 flex flex-col items-center justify-center space-y-2"
+                  variant="outline"
+                >
+                  <Bell className="h-6 w-6" />
+                  <span>Send Notifications</span>
+                </Button>
+                <Button
+                  className="h-20 flex flex-col items-center justify-center space-y-2"
+                  variant="outline"
+                >
+                  <Calendar className="h-6 w-6" />
+                  <span>Schedule Meetings</span>
+                </Button>
+                <Button
+                  className="h-20 flex flex-col items-center justify-center space-y-2"
+                  variant="outline"
+                >
+                  <FileText className="h-6 w-6" />
+                  <span>Generate Reports</span>
+                </Button>
               </div>
             </CardContent>
           </Card>
         </motion.div>
       </div>
-
-      {/* Admin Actions */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-      >
-        <Card className="border-0 shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Settings className="h-5 w-5 text-[#F97316]" />
-              Administrative Actions
-            </CardTitle>
-            <CardDescription>
-              System management and configuration tools
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button
-                className="h-20 flex flex-col items-center justify-center space-y-2"
-                variant="outline"
-              >
-                <Bell className="h-6 w-6" />
-                <span>Send Notifications</span>
-              </Button>
-              <Button
-                className="h-20 flex flex-col items-center justify-center space-y-2"
-                variant="outline"
-              >
-                <Calendar className="h-6 w-6" />
-                <span>Schedule Meetings</span>
-              </Button>
-              <Button
-                className="h-20 flex flex-col items-center justify-center space-y-2"
-                variant="outline"
-              >
-                <FileText className="h-6 w-6" />
-                <span>Generate Reports</span>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-    </div>
+    </DashboardThemeWrapper>
   );
 }
