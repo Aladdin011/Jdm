@@ -31,9 +31,10 @@ import {
   Clock,
   CheckCircle,
   AlertTriangle,
-  Video,
 } from "lucide-react";
 import { useCall } from "@/contexts/CallContext";
+import DashboardThemeWrapper from "./DashboardThemeWrapper";
+import { getDepartmentTheme } from "@/utils/departmentThemes";
 
 interface AdminStats {
   totalUsers: number;
