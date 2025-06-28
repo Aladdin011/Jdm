@@ -163,22 +163,128 @@ export default function Header() {
                     </Link>
                   )}
 
-                  {/* User Info */}
-                  <div className="hidden lg:flex items-center gap-2 text-white/70 px-3 py-2">
-                    <User size={16} />
-                    <span className="text-sm">
-                      {user?.firstName} ({user?.role})
-                    </span>
-                  </div>
+                  {/* User Dropdown Menu */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button className="flex items-center gap-2 text-white/90 hover:text-white transition-colors px-3 py-2 rounded-lg hover:bg-white/10">
+                        <Avatar className="h-8 w-8">
+                          <AvatarFallback className="bg-white/10 text-white text-sm font-medium">
+                            {user?.firstName?.[0]}
+                            {user?.lastName?.[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="hidden lg:flex flex-col items-start">
+                          <span className="text-sm font-medium">
+                            {user?.firstName} {user?.lastName}
+                          </span>
+                          <span className="text-xs text-white/60 capitalize">
+                            {user?.role}
+                          </span>
+                        </div>
+                        <ChevronDown size={16} className="hidden lg:inline" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-80 p-0">
+                      {/* User Info Header */}
+                      <div className="p-4 bg-gradient-to-r from-[#142E54] to-[#F97316] text-white">
+                        <div className="flex items-center gap-3">
+                          <Avatar className="h-12 w-12">
+                            <AvatarFallback className="bg-white/20 text-white text-lg font-bold">
+                              {user?.firstName?.[0]}
+                              {user?.lastName?.[0]}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="font-semibold text-lg">
+                              {user?.firstName} {user?.lastName}
+                            </p>
+                            <div className="flex items-center gap-2">
+                              <Shield size={14} />
+                              <span className="text-sm capitalize opacity-90">
+                                {user?.role} Account
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
-                  {/* Logout Button */}
-                  <button
-                    onClick={logout}
-                    className="flex items-center gap-2 text-white/90 hover:text-white transition-colors px-3 py-2 rounded-lg hover:bg-white/10"
-                  >
-                    <UserCheck size={16} />
-                    <span className="hidden xl:inline">Logout</span>
-                  </button>
+                      {/* User Details */}
+                      <div className="p-4 border-b">
+                        <div className="space-y-2 text-sm">
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <Mail size={14} />
+                            <span>{user?.email}</span>
+                          </div>
+                          {user?.phone && (
+                            <div className="flex items-center gap-2 text-gray-600">
+                              <Phone size={14} />
+                              <span>{user?.phone}</span>
+                            </div>
+                          )}
+                          {user?.company && (
+                            <div className="flex items-center gap-2 text-gray-600">
+                              <Building size={14} />
+                              <span>{user?.company}</span>
+                            </div>
+                          )}
+                          {user?.department && (
+                            <div className="flex items-center gap-2 text-gray-600">
+                              <Briefcase size={14} />
+                              <span className="capitalize">
+                                {user?.department.replace("-", " ")}
+                              </span>
+                            </div>
+                          )}
+                          {user?.location && (
+                            <div className="flex items-center gap-2 text-gray-600">
+                              <MapPin size={14} />
+                              <span>{user?.location}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Menu Items */}
+                      <div className="p-2">
+                        <DropdownMenuItem asChild>
+                          <Link
+                            to="/dashboard"
+                            className="flex items-center gap-2 w-full px-2 py-2"
+                          >
+                            <BarChart3 size={16} />
+                            <span>Dashboard</span>
+                          </Link>
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem className="flex items-center gap-2 px-2 py-2">
+                          <UserCircle size={16} />
+                          <span>Profile Settings</span>
+                        </DropdownMenuItem>
+
+                        {isAdmin && (
+                          <DropdownMenuItem asChild>
+                            <Link
+                              to="/admin"
+                              className="flex items-center gap-2 w-full px-2 py-2"
+                            >
+                              <Settings size={16} />
+                              <span>Admin Panel</span>
+                            </Link>
+                          </DropdownMenuItem>
+                        )}
+
+                        <DropdownMenuSeparator />
+
+                        <DropdownMenuItem
+                          onClick={logout}
+                          className="flex items-center gap-2 px-2 py-2 text-red-600 focus:text-red-600 focus:bg-red-50"
+                        >
+                          <LogOut size={16} />
+                          <span>Sign Out</span>
+                        </DropdownMenuItem>
+                      </div>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </>
               ) : (
                 <>
