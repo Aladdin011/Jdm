@@ -47,15 +47,53 @@ export default function DashboardThemeWrapper({
   title,
   description,
 }: DashboardThemeWrapperProps) {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { startCall, callState } = useCall();
+  const navigate = useNavigate();
   const theme = getDepartmentTheme(user?.department);
   const departmentName = getDepartmentDisplayName(user?.department);
+  const [lastLogin, setLastLogin] = useState<string>("");
+  const [activitySummary, setActivitySummary] = useState({
+    tasks: 5,
+    projects: 3,
+    messages: 2,
+    upcomingDeadlines: 1,
+  });
+
+  useEffect(() => {
+    // Set last login time (mock data for demo)
+    const loginTime =
+      localStorage.getItem("jdmarc_last_login") || new Date().toISOString();
+    setLastLogin(new Date(loginTime).toLocaleString());
+
+    // Save current login time
+    localStorage.setItem("jdmarc_last_login", new Date().toISOString());
+  }, []);
 
   const handleStartCall = () => {
     if (user?.department) {
       startCall(user.department);
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
+  const handleUploadDocument = () => {
+    // Implement document upload
+    alert("Document upload functionality would be implemented here");
+  };
+
+  const handleContactAdmin = () => {
+    // Implement admin contact
+    alert("Contact admin functionality would be implemented here");
+  };
+
+  const handleSettings = () => {
+    // Implement settings
+    alert("Settings functionality would be implemented here");
   };
 
   const isInCall =
