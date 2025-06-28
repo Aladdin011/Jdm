@@ -330,21 +330,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const logout = () => {
-    // Check if we're in development mode (no backend available)
-    const isDevelopment = API_BASE_URL.includes("localhost");
-
-    if (!isDevelopment) {
-      // Call logout endpoint to invalidate token on server (production only)
-      if (token) {
-        apiCall("/auth/logout", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }).catch(console.error);
-      }
+    // Always call logout endpoint to invalidate token on server
+    if (token) {
+      apiCall("/auth/logout", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).catch((error) => {
+        console.error("Logout API call failed:", error);
+        // Continue with logout even if API call fails
+      });
     }
-    // In development mode, we skip the API call to avoid errors
 
     setUser(null);
     setToken(null);
