@@ -48,7 +48,6 @@ interface RegisterData {
   email: string;
   phone: string;
   company?: string;
-  department?: string;
   location?: string;
   password: string;
   confirmPassword: string;
