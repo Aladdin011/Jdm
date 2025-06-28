@@ -317,6 +317,10 @@ export default function Register() {
                     <Building className="h-5 w-5 mr-2 text-[#A7967E]" />
                     Company Information
                   </h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Your department will be assigned by an administrator after
+                    registration.
+                  </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <Label
