@@ -23,7 +23,9 @@ import {
   PieChart,
   Receipt,
   Banknote,
+  Video,
 } from "lucide-react";
+import { useCall } from "@/contexts/CallContext";
 
 interface Invoice {
   id: string;
@@ -46,6 +48,7 @@ interface Expense {
 }
 
 export default function AccountsDashboard() {
+  const { startCall, callState } = useCall();
   const [invoices] = useState<Invoice[]>([
     {
       id: "INV-001",
@@ -154,8 +157,18 @@ export default function AccountsDashboard() {
               Financial tracking, invoicing, and budget management
             </p>
           </div>
-          <div className="bg-white/10 backdrop-blur-md rounded-lg p-4">
-            <DollarSign className="h-12 w-12 text-white/80" />
+          <div className="flex items-center gap-4">
+            <Button
+              onClick={() => startCall("accounting")}
+              disabled={callState.isInCall}
+              className="bg-white/20 hover:bg-white/30 text-white border border-white/30"
+            >
+              <Video size={16} className="mr-2" />
+              {callState.isInCall ? "In Call" : "Start Team Call"}
+            </Button>
+            <div className="bg-white/10 backdrop-blur-md rounded-lg p-4">
+              <DollarSign className="h-12 w-12 text-white/80" />
+            </div>
           </div>
         </div>
       </motion.div>

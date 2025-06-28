@@ -32,7 +32,9 @@ import {
   Award,
   TrendingUp,
   AlertTriangle,
+  Video,
 } from "lucide-react";
+import { useCall } from "@/contexts/CallContext";
 
 interface Employee {
   id: string;
@@ -58,6 +60,7 @@ interface LeaveRequest {
 }
 
 export default function HRDashboard() {
+  const { startCall, callState } = useCall();
   const [employees] = useState<Employee[]>([
     {
       id: "1",
@@ -192,8 +195,18 @@ export default function HRDashboard() {
               Staff management, recruitment, and leave requests
             </p>
           </div>
-          <div className="bg-white/10 backdrop-blur-md rounded-lg p-4">
-            <Users className="h-12 w-12 text-white/80" />
+          <div className="flex items-center gap-4">
+            <Button
+              onClick={() => startCall("human-resources")}
+              disabled={callState.isInCall}
+              className="bg-white/20 hover:bg-white/30 text-white border border-white/30"
+            >
+              <Video size={16} className="mr-2" />
+              {callState.isInCall ? "In Call" : "Start Team Call"}
+            </Button>
+            <div className="bg-white/10 backdrop-blur-md rounded-lg p-4">
+              <Users className="h-12 w-12 text-white/80" />
+            </div>
           </div>
         </div>
       </motion.div>
