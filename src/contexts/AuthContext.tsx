@@ -179,30 +179,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     try {
       // Try API call first, fall back to development mode if it fails
-      try {
-        console.log("Attempting login with API...");
-        const response = await apiCall<{ user: User; token: string }>(
-          "/auth/login",
-          {
-            method: "POST",
-            body: JSON.stringify({ email, password }),
-          },
-        );
+      console.log("Attempting login with API...");
+      const response = await apiCall<{ user: User; token: string }>(
+        "/auth/login",
+        {
+          method: "POST",
+          body: JSON.stringify({ email, password }),
+        },
+      );
 
-        if (response.success && response.data) {
-          const { user: loginUser, token: loginToken } = response.data;
+      if (response.success && response.data) {
+        const { user: loginUser, token: loginToken } = response.data;
 
-          setUser(loginUser);
-          setToken(loginToken);
+        setUser(loginUser);
+        setToken(loginToken);
 
-          localStorage.setItem("jdmarc_token", loginToken);
-          localStorage.setItem("jdmarc_user", JSON.stringify(loginUser));
+        localStorage.setItem("jdmarc_token", loginToken);
+        localStorage.setItem("jdmarc_user", JSON.stringify(loginUser));
 
-          setIsLoading(false);
-          return { success: true, user: loginUser };
-        } else {
-          // API call failed, use development mode
-          console.warn("API login failed, using development mode");
+        setIsLoading(false);
+        return { success: true, user: loginUser };
+      } else {
+        // API call failed, use development mode
+        console.warn("API login failed, using development mode");
         console.warn("Backend unavailable, using development mode for login");
 
         // Mock authentication for development
