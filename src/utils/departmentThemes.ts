@@ -140,6 +140,29 @@ export const departmentThemes: Record<string, DepartmentTheme> = {
     },
   },
 
+  "digital-marketing": {
+    primary: "#DB2777", // Pink
+    secondary: "#EC4899", // Light pink
+    accent: "#F59E0B", // Orange
+    background: "from-pink-50 to-rose-50",
+    card: "border-pink-200 bg-white shadow-pink-100/50",
+    text: {
+      primary: "#DB2777",
+      secondary: "#6B7280",
+      accent: "#F59E0B",
+    },
+    gradient: "from-pink-600 via-rose-600 to-orange-600",
+    badge: {
+      bg: "bg-pink-100",
+      text: "text-pink-800",
+    },
+    button: {
+      primary: "bg-pink-600 hover:bg-pink-700",
+      secondary: "bg-pink-50 hover:bg-pink-100 text-pink-700 border-pink-200",
+      hover: "hover:bg-pink-50",
+    },
+  },
+
   // Default theme for fallback
   default: {
     primary: "#142E54", // JD Marc Navy
