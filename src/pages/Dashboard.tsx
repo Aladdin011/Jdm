@@ -238,7 +238,9 @@ export default function Dashboard() {
                         Welcome back, {user?.firstName}! 👋
                       </h1>
                       <p className="text-blue-100">
-                        Here's what's happening with your projects today
+                        {user?.department
+                          ? "Here's what's happening with your projects today"
+                          : "Your department is yet to be assigned. Please contact your administrator."}
                       </p>
                     </div>
                     <div className="hidden md:block">
