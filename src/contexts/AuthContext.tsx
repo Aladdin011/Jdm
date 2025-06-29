@@ -251,8 +251,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return { success: true, user: newUser };
       } else {
         // If API fails due to backend unavailability, use development mode
-        if (response.error?.includes("Cannot connect") || response.error?.includes("not found")) {
-          console.warn("Backend unavailable, using development mode for registration");
+        if (
+          response.error?.includes("Cannot connect") ||
+          response.error?.includes("not found")
+        ) {
+          console.warn(
+            "Backend unavailable, using development mode for registration",
+          );
 
           // Mock registration for development when backend is unavailable
           await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate API delay
@@ -295,10 +300,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsLoading(false);
       return {
         success: false,
-        error: "Registration failed. Please check your connection and try again.",
+        error:
+          "Registration failed. Please check your connection and try again.",
       };
     }
-  };
   };
 
   const updateUser = async (
