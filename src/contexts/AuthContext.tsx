@@ -178,28 +178,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsLoading(true);
 
     try {
-      // Check if backend is available first by trying a simple request
-      let backendAvailable = false;
+      // Try API call first, fall back to development mode if it fails
       try {
-        // Try to connect to the base URL to see if server is running
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
+        console.log("Attempting login with API...");
+        const response = await apiCall<{ user: User; token: string }>(
+          "/auth/login",
+          {
+            method: "POST",
+            body: JSON.stringify({ email, password }),
+          },
+        );
 
-        const healthCheck = await fetch(API_BASE_URL.replace("/api", ""), {
-          method: "HEAD", // Use HEAD to avoid downloading content
-          signal: controller.signal,
-        });
+        if (response.success && response.data) {
+          const { user: loginUser, token: loginToken } = response.data;
 
-        clearTimeout(timeoutId);
-        // If we get any response (even 404), server is running
-        backendAvailable = true;
-        console.log("Backend server detected, will attempt API calls");
-      } catch (error) {
-        console.log("Backend server not accessible, using development mode");
-        backendAvailable = false;
-      }
+          setUser(loginUser);
+          setToken(loginToken);
 
-      if (!backendAvailable) {
+          localStorage.setItem("jdmarc_token", loginToken);
+          localStorage.setItem("jdmarc_user", JSON.stringify(loginUser));
+
+          setIsLoading(false);
+          return { success: true, user: loginUser };
+        } else {
+          // API call failed, use development mode
+          console.warn("API login failed, using development mode");
         console.warn("Backend unavailable, using development mode for login");
 
         // Mock authentication for development
@@ -301,8 +304,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
 
-        const healthCheck = await fetch(API_BASE_URL.replace("/api", ""), {
-          method: "HEAD", // Use HEAD to avoid downloading content
+        const healthCheck = await fetch(API_BASE_URL.replace('/api', ''), {
+          method: 'HEAD', // Use HEAD to avoid downloading content
           signal: controller.signal,
         });
 
