@@ -39,27 +39,34 @@ export const apiCall = async <T = any>(
 
     const response = await fetch(`${API_BASE_URL}${endpoint}`, fetchOptions);
 
-    // Check if response is ok before trying to parse JSON
+    // Read the response text once
+    let responseText: string;
+    try {
+      responseText = await response.text();
+    } catch (error) {
+      throw new Error("Failed to read response from server");
+    }
+
+    // Parse JSON if possible
+    let data: any;
+    try {
+      data = responseText ? JSON.parse(responseText) : {};
+    } catch (error) {
+      // If JSON parsing fails, treat as plain text response
+      data = { message: responseText };
+    }
+
+    // Check if response is ok after reading the body
     if (!response.ok) {
       // Handle specific error cases
       if (response.status === 404) {
         return {
           success: false,
-          error:
-            "API endpoint not found. Please check if the backend server is running.",
+          error: "API endpoint not found. Please check if the backend server is running.",
         };
       }
 
-      let errorMessage;
-      try {
-        const errorData = await response.json();
-        errorMessage =
-          errorData.message ||
-          errorData.error ||
-          `HTTP ${response.status}: ${response.statusText}`;
-      } catch {
-        errorMessage = `HTTP ${response.status}: ${response.statusText}`;
-      }
+      const errorMessage = data.message || data.error || responseText || `HTTP ${response.status}: ${response.statusText}`;
 
       return {
         success: false,
@@ -67,9 +74,11 @@ export const apiCall = async <T = any>(
       };
     }
 
-    const data = await response.json();
-
     return {
+      success: true,
+      data: data.data || data,
+      message: data.message,
+    };
       success: true,
       data: data.data || data,
       message: data.message,
