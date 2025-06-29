@@ -42,6 +42,7 @@ import BusinessDevelopmentDashboard from "@/components/dashboards/BusinessDevelo
 import ProjectDashboard from "@/components/dashboards/ProjectDashboard";
 import AccountsDashboard from "@/components/dashboards/AccountsDashboard";
 import HRDashboard from "@/components/dashboards/HRDashboard";
+import DigitalMarketingDashboard from "@/components/dashboards/DigitalMarketingDashboard";
 
 interface ProjectItem {
   id: string;
