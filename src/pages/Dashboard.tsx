@@ -682,8 +682,8 @@ export default function Dashboard() {
                             </Button>
                           </div>
                         ) : (
-                        <div className="space-y-4">
-                          {projects.length > 0 ? (
+                          <div className="space-y-4">
+                            {projects.length > 0 ? (
                             projects.map((project) => (
                               <div
                                 key={project.id}
