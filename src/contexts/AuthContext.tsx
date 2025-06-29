@@ -185,8 +185,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
 
-        const healthCheck = await fetch(API_BASE_URL.replace('/api', ''), {
-          method: 'HEAD', // Use HEAD to avoid downloading content
+        const healthCheck = await fetch(API_BASE_URL.replace("/api", ""), {
+          method: "HEAD", // Use HEAD to avoid downloading content
           signal: controller.signal,
         });
 
@@ -301,8 +301,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
 
-        const healthCheck = await fetch(API_BASE_URL.replace('/api', ''), {
-          method: 'HEAD', // Use HEAD to avoid downloading content
+        const healthCheck = await fetch(API_BASE_URL.replace("/api", ""), {
+          method: "HEAD", // Use HEAD to avoid downloading content
           signal: controller.signal,
         });
 
@@ -312,9 +312,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         console.log("Backend server detected, will attempt API calls");
       } catch (error) {
         console.log("Backend server not accessible, using development mode");
-        backendAvailable = false;
-      }
-        console.log("Backend health check failed, using development mode");
         backendAvailable = false;
       }
 
