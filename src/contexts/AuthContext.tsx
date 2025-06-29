@@ -295,7 +295,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         // If API fails due to backend unavailability, use development mode
         if (
           response.error?.includes("Cannot connect") ||
-          response.error?.includes("not found")
+          response.error?.includes("not found") ||
+          response.error?.includes("endpoint not found") ||
+          response.error?.includes("Failed to fetch")
         ) {
           console.warn(
             "Backend unavailable, using development mode for registration",
