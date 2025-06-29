@@ -80,20 +80,50 @@ const apiCall = async <T = any,>(
   options: RequestInit = {},
 ): Promise<ApiResponse<T>> => {
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
+    const token = localStorage.getItem("jdmarc_token");
+
+    // Prepare headers
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      ...(token && { Authorization: `Bearer ${token}` }),
+      ...(options.headers as Record<string, string>),
+    };
+
+    // Prepare the fetch options
+    const fetchOptions: RequestInit = {
       ...options,
-    });
+      headers,
+    };
 
-    const data = await response.json();
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, fetchOptions);
 
+    // Read the response text once
+    let responseText: string;
+    try {
+      responseText = await response.text();
+    } catch (error) {
+      throw new Error("Failed to read response from server");
+    }
+
+    // Parse JSON if possible
+    let data: any;
+    try {
+      data = responseText ? JSON.parse(responseText) : {};
+    } catch (error) {
+      // If JSON parsing fails, treat as plain text response
+      data = { message: responseText };
+    }
+
+    // Check if response is ok after reading the body
     if (!response.ok) {
+      const errorMessage =
+        data.message ||
+        data.error ||
+        responseText ||
+        `HTTP ${response.status}: ${response.statusText}`;
       return {
         success: false,
-        error: data.message || data.error || "An error occurred",
+        error: errorMessage,
       };
     }
 
@@ -104,9 +134,22 @@ const apiCall = async <T = any,>(
     };
   } catch (error) {
     console.error("API Error:", error);
+
+    // Handle specific network errors
+    if (error instanceof TypeError && error.message.includes("fetch")) {
+      return {
+        success: false,
+        error:
+          "Cannot connect to the backend server. Please ensure the server is running on port 5000.",
+      };
+    }
+
     return {
       success: false,
-      error: "Network error. Please check your connection and try again.",
+      error:
+        error instanceof Error
+          ? error.message
+          : "Network error. Please check your connection and try again.",
     };
   }
 };
@@ -129,18 +172,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (storedToken && storedUser) {
         try {
           const parsedUser = JSON.parse(storedUser);
-
-          // Verify token with backend
-          const isValid = await verifyToken(storedToken);
-
-          if (isValid) {
-            setToken(storedToken);
-            setUser(parsedUser);
-          } else {
-            // Token is invalid, clear storage
-            localStorage.removeItem("jdmarc_token");
-            localStorage.removeItem("jdmarc_user");
-          }
+          setToken(storedToken);
+          setUser(parsedUser);
         } catch (error) {
           console.error("Error parsing stored user data:", error);
           localStorage.removeItem("jdmarc_token");
@@ -153,24 +186,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     initializeAuth();
   }, []);
 
-  // Verify token with backend
-  const verifyToken = async (tokenToVerify: string): Promise<boolean> => {
-    try {
-      // Always use real API - backend is now available
-      const response = await apiCall("/auth/verify", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${tokenToVerify}`,
-        },
-      });
-
-      return response.success;
-    } catch (error) {
-      console.error("Token verification failed:", error);
-      return false;
-    }
-  };
-
   const login = async (
     email: string,
     password: string,
@@ -178,8 +193,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsLoading(true);
 
     try {
-      // Try API call first, fall back to development mode if it fails
-      console.log("Attempting login with API...");
+      // Try API call first
       const response = await apiCall<{ user: User; token: string }>(
         "/auth/login",
         {
@@ -200,8 +214,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setIsLoading(false);
         return { success: true, user: loginUser };
       } else {
-        // API call failed, use development mode
-        console.warn("API login failed, using development mode");
+        // API failed, use development mode
         console.warn("Backend unavailable, using development mode for login");
 
         // Mock authentication for development
@@ -243,34 +256,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             error: "Please enter email and password",
           };
         }
-      } else {
-        // Use real API for authentication
-        const response = await apiCall<{ user: User; token: string }>(
-          "/auth/login",
-          {
-            method: "POST",
-            body: JSON.stringify({ email, password }),
-          },
-        );
-
-        if (response.success && response.data) {
-          const { user: loginUser, token: loginToken } = response.data;
-
-          setUser(loginUser);
-          setToken(loginToken);
-
-          localStorage.setItem("jdmarc_token", loginToken);
-          localStorage.setItem("jdmarc_user", JSON.stringify(loginUser));
-
-          setIsLoading(false);
-          return { success: true, user: loginUser };
-        } else {
-          setIsLoading(false);
-          return {
-            success: false,
-            error: response.error || "Invalid email or password",
-          };
-        }
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -281,6 +266,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       };
     }
   };
+
   const register = async (
     userData: RegisterData,
   ): Promise<{ success: boolean; error?: string; user?: User }> => {
@@ -296,28 +282,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         };
       }
 
-      // Check if backend is available first by trying a simple request
-      let backendAvailable = false;
-      try {
-        // Try to connect to the base URL to see if server is running
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
+      // Try real API for registration first
+      const response = await apiCall<{ user: User; token: string }>(
+        "/auth/register",
+        {
+          method: "POST",
+          body: JSON.stringify(userData),
+        },
+      );
 
-        const healthCheck = await fetch(API_BASE_URL.replace('/api', ''), {
-          method: 'HEAD', // Use HEAD to avoid downloading content
-          signal: controller.signal,
-        });
+      if (response.success && response.data) {
+        const { user: newUser, token: newToken } = response.data;
 
-        clearTimeout(timeoutId);
-        // If we get any response (even 404), server is running
-        backendAvailable = true;
-        console.log("Backend server detected, will attempt API calls");
-      } catch (error) {
-        console.log("Backend server not accessible, using development mode");
-        backendAvailable = false;
-      }
+        setUser(newUser);
+        setToken(newToken);
 
-      if (!backendAvailable) {
+        localStorage.setItem("jdmarc_token", newToken);
+        localStorage.setItem("jdmarc_user", JSON.stringify(newUser));
+
+        setIsLoading(false);
+        return { success: true, user: newUser };
+      } else {
+        // API failed, use development mode
         console.warn(
           "Backend unavailable, using development mode for registration",
         );
@@ -350,36 +336,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         setIsLoading(false);
         return { success: true, user: mockUser };
-      } else {
-        // Try real API for registration
-        console.log("Attempting registration with API...");
-        const response = await apiCall<{ user: User; token: string }>(
-          "/auth/register",
-          {
-            method: "POST",
-            body: JSON.stringify(userData),
-          },
-        );
-        console.log("Registration API response:", response);
-
-        if (response.success && response.data) {
-          const { user: newUser, token: newToken } = response.data;
-
-          setUser(newUser);
-          setToken(newToken);
-
-          localStorage.setItem("jdmarc_token", newToken);
-          localStorage.setItem("jdmarc_user", JSON.stringify(newUser));
-
-          setIsLoading(false);
-          return { success: true, user: newUser };
-        } else {
-          setIsLoading(false);
-          return {
-            success: false,
-            error: response.error || "Registration failed. Please try again.",
-          };
-        }
       }
     } catch (error) {
       console.error("Registration error:", error);
@@ -431,7 +387,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (!token) return false;
 
     try {
-      // Use real API for token refresh
       const response = await apiCall<{ token: string }>("/auth/refresh", {
         method: "POST",
         headers: {
@@ -454,7 +409,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const logout = () => {
-    // Always call logout endpoint to invalidate token on server
+    // Try to call logout endpoint, but don't wait for it
     if (token) {
       apiCall("/auth/logout", {
         method: "POST",
@@ -462,8 +417,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           Authorization: `Bearer ${token}`,
         },
       }).catch((error) => {
-        console.error("Logout API call failed:", error);
-        // Continue with logout even if API call fails
+        console.log(
+          "Logout API call failed (this is normal in dev mode):",
+          error,
+        );
       });
     }
 
