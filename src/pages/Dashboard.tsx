@@ -243,7 +243,8 @@ export default function Dashboard() {
                       <p className="text-blue-100">
                         {user?.department
                           ? "Here's what's happening with your projects today"
-                          : "Your department is yet to be assigned. Please contact your administrator."}
+                          : "Your department is yet to be assigned. Please contact your administrator."
+                        }
                       </p>
                     </div>
                     <div className="hidden md:block">
@@ -446,19 +447,13 @@ export default function Dashboard() {
                             Department Assignment Pending
                           </h3>
                           <p className="text-amber-800 mb-4">
-                            Your account has been created successfully, but you
-                            haven't been assigned to a department yet. Once an
-                            administrator assigns you to a department, you'll
-                            gain access to specialized tools and dashboards
+                            Your account has been created successfully, but you haven't been assigned to a department yet.
+                            Once an administrator assigns you to a department, you'll gain access to specialized tools and dashboards
                             tailored to your role.
                           </p>
                           <div className="flex flex-col sm:flex-row gap-3">
                             <Button
-                              onClick={() =>
-                                alert(
-                                  "Contact admin functionality would be implemented here",
-                                )
-                              }
+                              onClick={() => alert("Contact admin functionality would be implemented here")}
                               className="bg-amber-600 hover:bg-amber-700 text-white"
                             >
                               <MessageSquare className="h-4 w-4 mr-2" />
@@ -494,8 +489,7 @@ export default function Dashboard() {
                         Available Departments
                       </CardTitle>
                       <CardDescription>
-                        Learn about different departments and their specialized
-                        tools
+                        Learn about different departments and their specialized tools
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -503,78 +497,60 @@ export default function Dashboard() {
                         <div className="p-4 border border-blue-200 rounded-lg bg-blue-50">
                           <div className="flex items-center gap-2 mb-2">
                             <Shield className="h-5 w-5 text-blue-600" />
-                            <h4 className="font-semibold text-blue-900">
-                              Secretariat/Admin
-                            </h4>
+                            <h4 className="font-semibold text-blue-900">Secretariat/Admin</h4>
                           </div>
                           <p className="text-sm text-blue-700">
-                            Full system control, user management, and
-                            administrative tools
+                            Full system control, user management, and administrative tools
                           </p>
                         </div>
 
                         <div className="p-4 border border-emerald-200 rounded-lg bg-emerald-50">
                           <div className="flex items-center gap-2 mb-2">
                             <TrendingUp className="h-5 w-5 text-emerald-600" />
-                            <h4 className="font-semibold text-emerald-900">
-                              Business Development
-                            </h4>
+                            <h4 className="font-semibold text-emerald-900">Business Development</h4>
                           </div>
                           <p className="text-sm text-emerald-700">
-                            Lead tracking, proposals, partnerships, and revenue
-                            management
+                            Lead tracking, proposals, partnerships, and revenue management
                           </p>
                         </div>
 
                         <div className="p-4 border border-violet-200 rounded-lg bg-violet-50">
                           <div className="flex items-center gap-2 mb-2">
                             <Project className="h-5 w-5 text-violet-600" />
-                            <h4 className="font-semibold text-violet-900">
-                              Project Management
-                            </h4>
+                            <h4 className="font-semibold text-violet-900">Project Management</h4>
                           </div>
                           <p className="text-sm text-violet-700">
-                            Site updates, task tracking, document management,
-                            and progress monitoring
+                            Site updates, task tracking, document management, and progress monitoring
                           </p>
                         </div>
 
                         <div className="p-4 border border-red-200 rounded-lg bg-red-50">
                           <div className="flex items-center gap-2 mb-2">
                             <DollarSign className="h-5 w-5 text-red-600" />
-                            <h4 className="font-semibold text-red-900">
-                              Accounting
-                            </h4>
+                            <h4 className="font-semibold text-red-900">Accounting</h4>
                           </div>
                           <p className="text-sm text-red-700">
-                            Invoicing, payroll, budget management, and financial
-                            reporting
+                            Invoicing, payroll, budget management, and financial reporting
                           </p>
                         </div>
 
                         <div className="p-4 border border-amber-200 rounded-lg bg-amber-50">
                           <div className="flex items-center gap-2 mb-2">
                             <Users className="h-5 w-5 text-amber-600" />
-                            <h4 className="font-semibold text-amber-900">
-                              Human Resources
-                            </h4>
+                            <h4 className="font-semibold text-amber-900">Human Resources</h4>
                           </div>
                           <p className="text-sm text-amber-700">
-                            Employee records, recruitment, leave requests, and
-                            staff management
+                            Employee records, recruitment, leave requests, and staff management
                           </p>
                         </div>
 
                         <div className="p-4 border border-pink-200 rounded-lg bg-pink-50">
                           <div className="flex items-center gap-2 mb-2">
                             <Megaphone className="h-5 w-5 text-pink-600" />
-                            <h4 className="font-semibold text-pink-900">
-                              Digital Marketing
-                            </h4>
+                            <h4 className="font-semibold text-pink-900">Digital Marketing</h4>
                           </div>
                           <p className="text-sm text-pink-700">
-                            Campaign analytics, content pipeline, and social
-                            media management
+                            Campaign analytics, content pipeline, and social media management
                           </p>
                         </div>
                       </div>
@@ -587,10 +563,7 @@ export default function Dashboard() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.6,
-                  delay: user?.department ? 0.1 : 0.15,
-                }}
+                transition={{ duration: 0.6, delay: user?.department ? 0.1 : 0.15 }}
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
               >
                 <Card className="border-0 shadow-lg">
@@ -673,19 +646,42 @@ export default function Dashboard() {
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
+                    transition={{ duration: 0.6, delay: user?.department ? 0.2 : 0.25 }}
                   >
                     <Card className="border-0 shadow-lg">
                       <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                           <Project className="h-5 w-5 text-[#F97316]" />
-                          Your Assigned Projects
+                          {user?.department ? "Your Assigned Projects" : "Project Access"}
                         </CardTitle>
                         <CardDescription>
-                          Projects you're currently working on
+                          {user?.department
+                            ? "Projects you're currently working on"
+                            : "Project access will be available once your department is assigned"
+                          }
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
+                        {!user?.department ? (
+                          <div className="text-center py-12">
+                            <div className="p-4 bg-gray-100 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                              <Project className="h-10 w-10 text-gray-400" />
+                            </div>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                              Department Assignment Required
+                            </h3>
+                            <p className="text-gray-600 mb-4 max-w-md mx-auto">
+                              To access projects and department-specific tools, you need to be assigned to a department by an administrator.
+                            </p>
+                            <Button
+                              onClick={() => alert("Contact admin functionality would be implemented here")}
+                              className="bg-[#F97316] hover:bg-[#F97316]/90 text-white"
+                            >
+                              <MessageSquare className="h-4 w-4 mr-2" />
+                              Request Department Assignment
+                            </Button>
+                          </div>
+                        ) : (
                         <div className="space-y-4">
                           {projects.length > 0 ? (
                             projects.map((project) => (
