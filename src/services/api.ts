@@ -36,6 +36,7 @@ export const apiCall = async <T = any>(
     };
 
     console.log(`Making API call to: ${API_BASE_URL}${endpoint}`);
+    console.log("Fetch options:", fetchOptions);
 
     const response = await fetch(`${API_BASE_URL}${endpoint}`, fetchOptions);
 
