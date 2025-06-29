@@ -300,7 +300,7 @@ export default function Dashboard() {
                   </CardContent>
                 </Card>
 
-                {/* 📈 Activity Summary */}
+                {/* ���� Activity Summary */}
                 <Card className="border-0 shadow-lg">
                   <CardHeader className="pb-3">
                     <CardTitle className="flex items-center gap-2 text-lg">
@@ -423,6 +423,58 @@ export default function Dashboard() {
                   </CardContent>
                 </Card>
               </motion.div>
+
+              {/* Department Assignment Notice for Unassigned Users */}
+              {!user?.department && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.05 }}
+                  className="mb-8"
+                >
+                  <Card className="border-0 shadow-lg bg-gradient-to-r from-amber-50 to-orange-50 border-l-4 border-l-amber-500">
+                    <CardContent className="p-6">
+                      <div className="flex items-start gap-4">
+                        <div className="p-3 bg-amber-100 rounded-full">
+                          <Building className="h-6 w-6 text-amber-600" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-xl font-semibold text-amber-900 mb-2">
+                            Department Assignment Pending
+                          </h3>
+                          <p className="text-amber-800 mb-4">
+                            Your account has been created successfully, but you
+                            haven't been assigned to a department yet. Once an
+                            administrator assigns you to a department, you'll
+                            gain access to specialized tools and dashboards
+                            tailored to your role.
+                          </p>
+                          <div className="flex flex-col sm:flex-row gap-3">
+                            <Button
+                              onClick={() =>
+                                alert(
+                                  "Contact admin functionality would be implemented here",
+                                )
+                              }
+                              className="bg-amber-600 hover:bg-amber-700 text-white"
+                            >
+                              <MessageSquare className="h-4 w-4 mr-2" />
+                              Contact Administrator
+                            </Button>
+                            <Button
+                              variant="outline"
+                              className="border-amber-300 text-amber-700 hover:bg-amber-50"
+                            >
+                              <Settings className="h-4 w-4 mr-2" />
+                              View Account Settings
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )}
 
               {/* Stats Grid */}
               <motion.div
