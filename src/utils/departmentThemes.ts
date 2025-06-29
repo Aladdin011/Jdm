@@ -202,6 +202,7 @@ export const getDepartmentDisplayName = (department?: string): string => {
     "project-management": "Project Management",
     accounting: "Accounting & Finance",
     "human-resources": "Human Resources",
+    "digital-marketing": "Digital Marketing",
   };
 
   return (
