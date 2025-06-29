@@ -22,26 +22,52 @@ export const apiCall = async <T = any>(
   try {
     const token = getAuthToken();
 
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(token && { Authorization: `Bearer ${token}` }),
-        ...options.headers,
-      },
+    // Prepare headers
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      ...(token && { Authorization: `Bearer ${token}` }),
+      ...(options.headers as Record<string, string>),
+    };
+
+    // Prepare the fetch options
+    const fetchOptions: RequestInit = {
       ...options,
-    });
+      headers,
+    };
 
-    const data = await response.json();
+    console.log(`Making API call to: ${API_BASE_URL}${endpoint}`);
 
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, fetchOptions);
+
+    // Check if response is ok before trying to parse JSON
     if (!response.ok) {
+      // Handle specific error cases
+      if (response.status === 404) {
+        return {
+          success: false,
+          error:
+            "API endpoint not found. Please check if the backend server is running.",
+        };
+      }
+
+      let errorMessage;
+      try {
+        const errorData = await response.json();
+        errorMessage =
+          errorData.message ||
+          errorData.error ||
+          `HTTP ${response.status}: ${response.statusText}`;
+      } catch {
+        errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+      }
+
       return {
         success: false,
-        error:
-          data.message ||
-          data.error ||
-          `HTTP ${response.status}: ${response.statusText}`,
+        error: errorMessage,
       };
     }
+
+    const data = await response.json();
 
     return {
       success: true,
@@ -50,6 +76,16 @@ export const apiCall = async <T = any>(
     };
   } catch (error) {
     console.error("API Error:", error);
+
+    // Handle specific network errors
+    if (error instanceof TypeError && error.message.includes("fetch")) {
+      return {
+        success: false,
+        error:
+          "Cannot connect to the backend server. Please ensure the server is running on port 5000.",
+      };
+    }
+
     return {
       success: false,
       error:
