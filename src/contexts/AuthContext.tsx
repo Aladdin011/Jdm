@@ -181,10 +181,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Check if backend is available first
       let backendAvailable = false;
       try {
-        const healthCheck = await fetch(`${API_BASE_URL.replace('/api', '')}/api/health`, {
-          method: 'GET',
-          signal: AbortSignal.timeout(3000)
-        });
+        const healthCheck = await fetch(
+          `${API_BASE_URL.replace("/api", "")}/api/health`,
+          {
+            method: "GET",
+            signal: AbortSignal.timeout(3000),
+          },
+        );
         backendAvailable = healthCheck.ok;
       } catch (error) {
         console.log("Backend health check failed, using development mode");
@@ -194,44 +197,73 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (!backendAvailable) {
         console.warn("Backend unavailable, using development mode for login");
 
-          // Mock authentication for development
-          await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API delay
+        // Mock authentication for development
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API delay
 
-          // Simple development mode: any email/password combination works
-          if (email && password) {
-            const mockUser: User = {
-              id: Date.now().toString(),
-              email: email,
-              firstName: email.split('@')[0] || "User",
-              lastName: "Dev",
-              role: email.includes("admin") ? "admin" : "user",
-              company: "JD Marc (Dev Mode)",
-              phone: "+234 803 000 0000",
-              location: "Lagos, Nigeria",
-              department: email.includes("admin") ? "secretariat-admin" : undefined,
-              isActive: true,
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
-            };
+        // Simple development mode: any email/password combination works
+        if (email && password) {
+          const mockUser: User = {
+            id: Date.now().toString(),
+            email: email,
+            firstName: email.split("@")[0] || "User",
+            lastName: "Dev",
+            role: email.includes("admin") ? "admin" : "user",
+            company: "JD Marc (Dev Mode)",
+            phone: "+234 803 000 0000",
+            location: "Lagos, Nigeria",
+            department: email.includes("admin")
+              ? "secretariat-admin"
+              : undefined,
+            isActive: true,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
 
-            const mockToken = "dev_token_" + Date.now();
+          const mockToken = "dev_token_" + Date.now();
 
-            setUser(mockUser);
-            setToken(mockToken);
+          setUser(mockUser);
+          setToken(mockToken);
 
-            localStorage.setItem("jdmarc_token", mockToken);
-            localStorage.setItem("jdmarc_user", JSON.stringify(mockUser));
+          localStorage.setItem("jdmarc_token", mockToken);
+          localStorage.setItem("jdmarc_user", JSON.stringify(mockUser));
 
-            setIsLoading(false);
-            return { success: true, user: mockUser };
-          }
+          setIsLoading(false);
+          return { success: true, user: mockUser };
+        } else {
+          setIsLoading(false);
+          return {
+            success: false,
+            error: "Please enter email and password",
+          };
         }
+      } else {
+        // Use real API for authentication
+        const response = await apiCall<{ user: User; token: string }>(
+          "/auth/login",
+          {
+            method: "POST",
+            body: JSON.stringify({ email, password }),
+          },
+        );
 
-        setIsLoading(false);
-        return {
-          success: false,
-          error: response.error || "Invalid email or password",
-        };
+        if (response.success && response.data) {
+          const { user: loginUser, token: loginToken } = response.data;
+
+          setUser(loginUser);
+          setToken(loginToken);
+
+          localStorage.setItem("jdmarc_token", loginToken);
+          localStorage.setItem("jdmarc_user", JSON.stringify(loginUser));
+
+          setIsLoading(false);
+          return { success: true, user: loginUser };
+        } else {
+          setIsLoading(false);
+          return {
+            success: false,
+            error: response.error || "Invalid email or password",
+          };
+        }
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -260,10 +292,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Check if backend is available first
       let backendAvailable = false;
       try {
-        const healthCheck = await fetch(`${API_BASE_URL.replace('/api', '')}/api/health`, {
-          method: 'GET',
-          signal: AbortSignal.timeout(3000)
-        });
+        const healthCheck = await fetch(
+          `${API_BASE_URL.replace("/api", "")}/api/health`,
+          {
+            method: "GET",
+            signal: AbortSignal.timeout(3000),
+          },
+        );
         backendAvailable = healthCheck.ok;
       } catch (error) {
         console.log("Backend health check failed, using development mode");
@@ -271,7 +306,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
 
       if (!backendAvailable) {
-        console.warn("Backend unavailable, using development mode for registration");
+        console.warn(
+          "Backend unavailable, using development mode for registration",
+        );
 
         // Mock registration for development when backend is unavailable
         await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate API delay
@@ -337,7 +374,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsLoading(false);
       return {
         success: false,
-        error: "Registration failed. Please check your connection and try again.",
+        error:
+          "Registration failed. Please check your connection and try again.",
       };
     }
   };
