@@ -90,11 +90,16 @@ export default function Dashboard() {
       case "business-development":
         return <BusinessDevelopmentDashboard />;
       case "project-management":
+      case "project": // Support both naming conventions
         return <ProjectDashboard />;
       case "accounting":
+      case "account": // Support both naming conventions
         return <AccountsDashboard />;
       case "human-resources":
+      case "hr": // Support both naming conventions
         return <HRDashboard />;
+      case "digital-marketing":
+        return <DigitalMarketingDashboard />;
       default:
         // General dashboard for users without specific department assignment
         return null;
