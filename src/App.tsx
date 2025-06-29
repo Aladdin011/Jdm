@@ -25,6 +25,7 @@ import { initGA } from "./hooks/useAnalytics";
 import VideoCallInterface from "./components/calls/VideoCallInterface";
 import IncomingCallNotification from "./components/calls/IncomingCallNotification";
 import JoinCallBanner from "./components/calls/JoinCallBanner";
+import DevelopmentModeIndicator from "./components/ui/DevelopmentModeIndicator";
 
 const queryClient = new QueryClient();
 
