@@ -30,6 +30,9 @@ import {
   Activity,
   Target,
   LogOut,
+  Shield,
+  DollarSign,
+  Megaphone,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import PageTransition from "@/components/ui/PageTransition";
