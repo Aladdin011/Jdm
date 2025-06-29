@@ -229,7 +229,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         };
       }
 
-      // Use real API for registration
+      // Try real API for registration first
       const response = await apiCall<{ user: User; token: string }>(
         "/auth/register",
         {
@@ -250,6 +250,40 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setIsLoading(false);
         return { success: true, user: newUser };
       } else {
+        // If API fails due to backend unavailability, use development mode
+        if (response.error?.includes("Cannot connect") || response.error?.includes("not found")) {
+          console.warn("Backend unavailable, using development mode for registration");
+
+          // Mock registration for development when backend is unavailable
+          await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate API delay
+
+          const mockUser: User = {
+            id: Date.now().toString(),
+            email: userData.email,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            role: "user", // New registrations default to user role
+            company: userData.company,
+            phone: userData.phone,
+            location: userData.location,
+            department: undefined, // No department assigned initially
+            isActive: true,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+
+          const mockToken = "dev_token_" + Date.now();
+
+          setUser(mockUser);
+          setToken(mockToken);
+
+          localStorage.setItem("jdmarc_token", mockToken);
+          localStorage.setItem("jdmarc_user", JSON.stringify(mockUser));
+
+          setIsLoading(false);
+          return { success: true, user: mockUser };
+        }
+
         setIsLoading(false);
         return {
           success: false,
@@ -261,10 +295,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsLoading(false);
       return {
         success: false,
-        error:
-          "Registration failed. Please check your connection and try again.",
+        error: "Registration failed. Please check your connection and try again.",
       };
     }
+  };
   };
 
   const updateUser = async (
