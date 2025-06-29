@@ -200,12 +200,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return { success: true, user: loginUser };
       } else {
         // If API fails due to backend unavailability, use development mode
-        if (
-          response.error?.includes("Cannot connect") ||
-          response.error?.includes("not found") ||
-          response.error?.includes("endpoint not found") ||
-          response.error?.includes("Failed to fetch")
-        ) {
+        if (response.error?.includes("Cannot connect") ||
+            response.error?.includes("not found") ||
+            response.error?.includes("endpoint not found") ||
+            response.error?.includes("Failed to fetch")) {
           console.warn("Backend unavailable, using development mode for login");
 
           // Mock authentication for development
@@ -216,15 +214,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             const mockUser: User = {
               id: Date.now().toString(),
               email: email,
-              firstName: email.split("@")[0] || "User",
+              firstName: email.split('@')[0] || "User",
               lastName: "Dev",
               role: email.includes("admin") ? "admin" : "user",
               company: "JD Marc (Dev Mode)",
               phone: "+234 803 000 0000",
               location: "Lagos, Nigeria",
-              department: email.includes("admin")
-                ? "secretariat-admin"
-                : undefined,
+              department: email.includes("admin") ? "secretariat-admin" : undefined,
               isActive: true,
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
@@ -273,39 +269,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         };
       }
 
-      // Try real API for registration first
-      console.log("Attempting registration with API...");
-      const response = await apiCall<{ user: User; token: string }>(
-        "/auth/register",
-        {
-          method: "POST",
-          body: JSON.stringify(userData),
-        },
-      );
-      console.log("Registration API response:", response);
+      // Check if backend is available first
+      let backendAvailable = false;
+      try {
+        const healthCheck = await fetch(`${API_BASE_URL.replace('/api', '')}/api/health`, {
+          method: 'GET',
+          signal: AbortSignal.timeout(3000)
+        });
+        backendAvailable = healthCheck.ok;
+      } catch (error) {
+        console.log("Backend health check failed, using development mode");
+        backendAvailable = false;
+      }
 
-      if (response.success && response.data) {
-        const { user: newUser, token: newToken } = response.data;
-
-        setUser(newUser);
-        setToken(newToken);
-
-        localStorage.setItem("jdmarc_token", newToken);
-        localStorage.setItem("jdmarc_user", JSON.stringify(newUser));
-
-        setIsLoading(false);
-        return { success: true, user: newUser };
-      } else {
-        // If API fails due to backend unavailability, use development mode
-        if (
-          response.error?.includes("Cannot connect") ||
-          response.error?.includes("not found") ||
-          response.error?.includes("endpoint not found") ||
-          response.error?.includes("Failed to fetch")
-        ) {
-          console.warn(
-            "Backend unavailable, using development mode for registration",
-          );
+      if (!backendAvailable) {
+        console.warn("Backend unavailable, using development mode for registration");
 
           // Mock registration for development when backend is unavailable
           await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate API delay
@@ -348,8 +326,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsLoading(false);
       return {
         success: false,
-        error:
-          "Registration failed. Please check your connection and try again.",
+        error: "Registration failed. Please check your connection and try again.",
       };
     }
   };
