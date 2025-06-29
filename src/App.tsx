@@ -157,6 +157,7 @@ const App = () => {
         <AuthProvider>
           <CallProvider>
             <BrowserRouter>
+              <DevelopmentModeIndicator />
               <AnimatedRoutes />
               {/* Global Call Components */}
               <VideoCallInterface />
