@@ -62,11 +62,16 @@ export const apiCall = async <T = any>(
       if (response.status === 404) {
         return {
           success: false,
-          error: "API endpoint not found. Please check if the backend server is running.",
+          error:
+            "API endpoint not found. Please check if the backend server is running.",
         };
       }
 
-      const errorMessage = data.message || data.error || responseText || `HTTP ${response.status}: ${response.statusText}`;
+      const errorMessage =
+        data.message ||
+        data.error ||
+        responseText ||
+        `HTTP ${response.status}: ${response.statusText}`;
 
       return {
         success: false,
@@ -75,10 +80,6 @@ export const apiCall = async <T = any>(
     }
 
     return {
-      success: true,
-      data: data.data || data,
-      message: data.message,
-    };
       success: true,
       data: data.data || data,
       message: data.message,
