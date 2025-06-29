@@ -274,6 +274,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
 
       // Try real API for registration first
+      console.log("Attempting registration with API...");
       const response = await apiCall<{ user: User; token: string }>(
         "/auth/register",
         {
@@ -281,6 +282,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           body: JSON.stringify(userData),
         },
       );
+      console.log("Registration API response:", response);
 
       if (response.success && response.data) {
         const { user: newUser, token: newToken } = response.data;
