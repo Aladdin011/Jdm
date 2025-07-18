@@ -326,7 +326,7 @@ export default function Header() {
 
         {/* Mobile Navigation Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden absolute top-full left-0 right-0 bg-primary/95 backdrop-blur-md border-t border-white/20">
+          <div className="lg:hidden absolute top-full left-0 right-0 bg-slate-900/95 dark:bg-slate-800/95 backdrop-blur-md border-t border-white/20 dark:border-slate-600">
             <nav className="container mx-auto px-4 py-4 space-y-2">
               {location.pathname === "/" ? (
                 // Homepage - Use smooth scroll anchors
