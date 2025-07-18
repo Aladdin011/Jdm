@@ -241,7 +241,7 @@ export default function Footer() {
                   <Phone size={16} />
                   <a
                     href="tel:+447760954844"
-                    className="hover:text-accent transition-colors"
+                    className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                   >
                     +44 (0)7760954844
                   </a>
@@ -250,7 +250,7 @@ export default function Footer() {
                   <Mail size={16} />
                   <a
                     href="mailto:info@jdmarc.co.uk"
-                    className="hover:text-accent transition-colors"
+                    className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                   >
                     info@jdmarc.co.uk
                   </a>
@@ -259,7 +259,7 @@ export default function Footer() {
                   <Globe size={16} />
                   <a
                     href="https://www.jdmarc.co.uk"
-                    className="hover:text-accent transition-colors"
+                    className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                   >
                     www.jdmarc.co.uk
                   </a>
