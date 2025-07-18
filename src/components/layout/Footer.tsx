@@ -30,35 +30,35 @@ export default function Footer() {
                 <br />
               </p>
             </Link>
-            <p className="text-gray-300">
+            <p className="text-slate-600 dark:text-slate-200">
               Building Africa's future cities with innovative construction and
               infrastructure solutions since 2007.
             </p>
             <div className="flex space-x-4">
               <a
                 href="#"
-                className="text-gray-300 hover:text-accent transition-colors"
+                className="text-slate-600 dark:text-slate-200 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                 aria-label="Facebook"
               >
                 <Facebook size={20} />
               </a>
               <a
                 href="#"
-                className="text-gray-300 hover:text-accent transition-colors"
+                className="text-slate-600 dark:text-slate-200 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                 aria-label="Twitter"
               >
                 <Twitter size={20} />
               </a>
               <a
                 href="#"
-                className="text-gray-300 hover:text-accent transition-colors"
+                className="text-slate-600 dark:text-slate-200 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram size={20} />
               </a>
               <a
                 href="#"
-                className="text-gray-300 hover:text-accent transition-colors"
+                className="text-slate-600 dark:text-slate-200 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                 aria-label="LinkedIn"
               >
                 <Linkedin size={20} />
