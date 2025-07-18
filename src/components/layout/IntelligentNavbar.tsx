@@ -51,24 +51,19 @@ export const IntelligentNavbar = () => {
     setIsAtTop(latest < 50);
   });
 
-  // Dark mode toggle
-  useEffect(() => {
-    const isDark = localStorage.getItem("darkMode") === "true";
-    setDarkMode(isDark);
-    if (isDark) {
-      document.documentElement.classList.add("dark");
+  const getNextTheme = (currentTheme: string) => {
+    switch (currentTheme) {
+      case "light":
+        return "dark";
+      case "dark":
+        return "system";
+      default:
+        return "light";
     }
-  }, []);
+  };
 
-  const toggleDarkMode = () => {
-    const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
-    localStorage.setItem("darkMode", newDarkMode.toString());
-    if (newDarkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
+  const toggleTheme = () => {
+    setTheme(getNextTheme(theme) as "light" | "dark" | "system");
   };
 
   const navigation = [
