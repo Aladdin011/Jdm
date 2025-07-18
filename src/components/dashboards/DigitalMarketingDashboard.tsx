@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Card,
   CardContent,
@@ -18,6 +18,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Progress } from "@/components/ui/progress";
+import { Switch } from "@/components/ui/switch";
 import {
   Megaphone,
   BarChart3,
@@ -38,9 +49,40 @@ import {
   Camera,
   FileText,
   Target,
+  DollarSign,
+  Zap,
+  Bot,
+  Video,
+  Image,
+  Mail,
+  Phone,
+  MessageSquare,
+  Clock,
+  Filter,
+  Download,
+  Upload,
+  Play,
+  Pause,
+  RotateCcw,
+  Settings,
+  Palette,
+  ChevronDown,
+  Activity,
+  Sparkles,
+  Briefcase,
+  BookOpen,
+  Send,
+  Bell,
+  Search,
+  RefreshCw,
+  MoreVertical,
+  CheckCircle,
+  AlertTriangle,
+  XCircle,
 } from "lucide-react";
 import DashboardThemeWrapper from "./DashboardThemeWrapper";
 import { getDepartmentTheme } from "@/utils/departmentThemes";
+import { useCall } from "@/contexts/CallContext";
 
 interface Campaign {
   id: string;
