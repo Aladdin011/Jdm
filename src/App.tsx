@@ -152,22 +152,24 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <AuthProvider>
-          <CallProvider>
-            <BrowserRouter>
-              <DevelopmentModeIndicator />
-              <AnimatedRoutes />
-              {/* Global Call Components */}
-              <VideoCallInterface />
-              <IncomingCallNotification />
-              <JoinCallBanner />
-            </BrowserRouter>
-          </CallProvider>
-        </AuthProvider>
-      </TooltipProvider>
+      <ThemeProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <AuthProvider>
+            <CallProvider>
+              <BrowserRouter>
+                <DevelopmentModeIndicator />
+                <AnimatedRoutes />
+                {/* Global Call Components */}
+                <VideoCallInterface />
+                <IncomingCallNotification />
+                <JoinCallBanner />
+              </BrowserRouter>
+            </CallProvider>
+          </AuthProvider>
+        </TooltipProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 };
