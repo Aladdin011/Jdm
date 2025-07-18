@@ -206,18 +206,23 @@ export const IntelligentNavbar = () => {
 
             {/* Right side controls */}
             <div className="flex items-center space-x-4">
-              {/* Dark mode toggle */}
+              {/* Theme toggle */}
               <motion.button
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                onClick={toggleDarkMode}
-                className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-300"
+                onClick={toggleTheme}
+                className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-300 group"
+                title={`Current: ${theme}. Click to switch to ${getNextTheme(theme)}`}
               >
-                {darkMode ? (
-                  <Sun className="h-5 w-5 text-yellow-500" />
-                ) : (
-                  <Moon className="h-5 w-5 text-slate-600" />
+                {theme === "light" && (
+                  <Sun className="h-5 w-5 text-yellow-500 group-hover:rotate-12 transition-transform duration-300" />
+                )}
+                {theme === "dark" && (
+                  <Moon className="h-5 w-5 text-slate-600 dark:text-slate-300 group-hover:rotate-12 transition-transform duration-300" />
+                )}
+                {theme === "system" && (
+                  <Monitor className="h-5 w-5 text-slate-600 dark:text-slate-300 group-hover:scale-110 transition-transform duration-300" />
                 )}
               </motion.button>
 
