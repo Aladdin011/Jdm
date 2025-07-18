@@ -269,8 +269,10 @@ export default function Footer() {
 
             {/* USA Office */}
             <div className="text-center">
-              <h4 className="font-bold mb-3 text-accent">United States</h4>
-              <div className="space-y-2 text-sm text-gray-300">
+              <h4 className="font-bold mb-3 text-orange-500 dark:text-orange-400">
+                United States
+              </h4>
+              <div className="space-y-2 text-sm text-slate-600 dark:text-slate-200">
                 <div className="flex items-center justify-center gap-2">
                   <MapPin size={16} />
                   <span>125 Park Avenue, New York, NY 10017</span>
@@ -279,7 +281,7 @@ export default function Footer() {
                   <Phone size={16} />
                   <a
                     href="tel:+12124567890"
-                    className="hover:text-accent transition-colors"
+                    className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                   >
                     +1 (212) 456-7890
                   </a>
@@ -288,7 +290,7 @@ export default function Footer() {
                   <Mail size={16} />
                   <a
                     href="mailto:usa@jdmarc.com"
-                    className="hover:text-accent transition-colors"
+                    className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                   >
                     usa@jdmarc.com
                   </a>
