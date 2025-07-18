@@ -52,21 +52,6 @@ export const IntelligentNavbar = () => {
     setIsAtTop(latest < 50);
   });
 
-  const getNextTheme = (currentTheme: string) => {
-    switch (currentTheme) {
-      case "light":
-        return "dark";
-      case "dark":
-        return "system";
-      default:
-        return "light";
-    }
-  };
-
-  const toggleTheme = () => {
-    setTheme(getNextTheme(theme) as "light" | "dark" | "system");
-  };
-
   const navigation = [
     { name: "Home", href: "/", section: "hero" },
     { name: "About", href: "/#about", section: "about" },
