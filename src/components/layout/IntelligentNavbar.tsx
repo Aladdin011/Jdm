@@ -27,9 +27,9 @@ export const IntelligentNavbar = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [isAtTop, setIsAtTop] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
   const { scrollY } = useScroll();
   const { isAuthenticated, user, logout } = useAuth();
+  const { theme, setTheme, actualTheme } = useTheme();
   const location = useLocation();
 
   // Scroll direction detection
