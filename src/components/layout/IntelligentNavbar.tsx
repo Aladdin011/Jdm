@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { SimpleThemeToggle } from "@/components/ui/ThemeToggle";
 
 export const IntelligentNavbar = () => {
   const [isVisible, setIsVisible] = useState(true);
