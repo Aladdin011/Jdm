@@ -301,18 +301,18 @@ export default function Footer() {
         </div>
 
         {/* Newsletter */}
-        <div className="border-t border-gray-700 pt-8 pb-6">
+        <div className="border-t border-slate-500 dark:border-slate-400 pt-8 pb-6">
           <div className="max-w-md mx-auto">
-            <h3 className="text-lg font-bold text-center mb-4">
+            <h3 className="text-lg font-bold text-center mb-4 text-slate-800 dark:text-white">
               Stay Updated with JD Marc
             </h3>
             <div className="flex gap-2">
               <Input
                 type="email"
                 placeholder="Your email address"
-                className="bg-gray-800 border-gray-700 text-white"
+                className="bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
               />
-              <Button className="bg-accent hover:bg-accent/90 whitespace-nowrap">
+              <Button className="bg-orange-500 hover:bg-orange-600 dark:bg-orange-600 dark:hover:bg-orange-700 text-white whitespace-nowrap">
                 Subscribe
               </Button>
             </div>
@@ -320,7 +320,7 @@ export default function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="border-t border-gray-700 pt-6 text-center text-gray-400 text-sm">
+        <div className="border-t border-slate-500 dark:border-slate-400 pt-6 text-center text-slate-500 dark:text-slate-400 text-sm">
           <p>
             &copy; {currentYear} JD Marc. All rights reserved. Building Africa's
             Future Cities.
