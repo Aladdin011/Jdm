@@ -361,8 +361,16 @@ export default function Header() {
                 </>
               )}
 
+              {/* Theme Toggle - Mobile */}
+              <div className="border-t border-white/20 dark:border-slate-600 pt-4 mt-4">
+                <div className="flex items-center justify-between px-3 py-2">
+                  <span className="text-white/90 font-medium">Theme</span>
+                  <ThemeToggle />
+                </div>
+              </div>
+
               {/* Mobile Authentication Links - Role-based */}
-              <div className="border-t border-white/20 pt-4 mt-4 space-y-2">
+              <div className="border-t border-white/20 dark:border-slate-600 pt-4 mt-4 space-y-2">
                 {isAuthenticated ? (
                   <>
                     {/* User Info - Mobile */}
