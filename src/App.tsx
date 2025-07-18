@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { AuthProvider } from "./contexts/AuthContext";
 import { CallProvider } from "./contexts/CallContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import PageTransition from "./components/ui/PageTransition";
 import Home from "./pages/Home";
