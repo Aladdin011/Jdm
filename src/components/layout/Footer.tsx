@@ -222,15 +222,17 @@ export default function Footer() {
         </div>
 
         {/* International Offices */}
-        <div className="border-t border-gray-700 pt-8 pb-6">
-          <h3 className="text-lg font-bold text-center mb-6">
+        <div className="border-t border-slate-500 dark:border-slate-400 pt-8 pb-6">
+          <h3 className="text-lg font-bold text-center mb-6 text-slate-800 dark:text-white">
             International Offices
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {/* UK Office */}
             <div className="text-center">
-              <h4 className="font-bold mb-3 text-accent">United Kingdom</h4>
-              <div className="space-y-2 text-sm text-gray-300">
+              <h4 className="font-bold mb-3 text-orange-500 dark:text-orange-400">
+                United Kingdom
+              </h4>
+              <div className="space-y-2 text-sm text-slate-600 dark:text-slate-200">
                 <div className="flex items-center justify-center gap-2">
                   <MapPin size={16} />
                   <span>71-75 Shelton Street, London WC2H 9RQ</span>
