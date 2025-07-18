@@ -68,14 +68,14 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-bold mb-4 border-b border-gray-700 pb-2">
+            <h3 className="text-lg font-bold mb-4 border-b border-slate-500 dark:border-slate-400 pb-2 text-slate-800 dark:text-white">
               Quick Links
             </h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   to="/"
-                  className="text-gray-300 hover:text-accent transition-colors"
+                  className="text-slate-600 dark:text-slate-200 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                 >
                   Home
                 </Link>
@@ -83,7 +83,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/about"
-                  className="text-gray-300 hover:text-accent transition-colors"
+                  className="text-slate-600 dark:text-slate-200 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                 >
                   About
                 </Link>
@@ -91,7 +91,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/services"
-                  className="text-gray-300 hover:text-accent transition-colors"
+                  className="text-slate-600 dark:text-slate-200 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                 >
                   Services
                 </Link>
@@ -99,7 +99,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/projects"
-                  className="text-gray-300 hover:text-accent transition-colors"
+                  className="text-slate-600 dark:text-slate-200 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                 >
                   Projects
                 </Link>
@@ -107,7 +107,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/blog"
-                  className="text-gray-300 hover:text-accent transition-colors"
+                  className="text-slate-600 dark:text-slate-200 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                 >
                   Blog
                 </Link>
@@ -115,7 +115,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/contact"
-                  className="text-gray-300 hover:text-accent transition-colors"
+                  className="text-slate-600 dark:text-slate-200 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                 >
                   Contact
                 </Link>
