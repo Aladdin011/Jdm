@@ -140,8 +140,13 @@ export default function Header() {
               </>
             )}
 
+            {/* Theme Toggle */}
+            <div className="mx-4">
+              <ThemeToggle />
+            </div>
+
             {/* Authentication Links - Role-based */}
-            <div className="flex items-center gap-1 ml-6 pl-6 border-l border-white/20">
+            <div className="flex items-center gap-1 ml-6 pl-6 border-l border-white/20 dark:border-slate-600">
               {isAuthenticated ? (
                 <>
                   {/* Dashboard Link - Always show for logged in users */}
