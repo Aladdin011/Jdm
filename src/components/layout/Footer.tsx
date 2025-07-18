@@ -166,41 +166,53 @@ export default function Footer() {
 
           {/* Contact Info - Nigeria HQ */}
           <div>
-            <h3 className="text-lg font-bold mb-4 border-b border-gray-700 pb-2">
+            <h3 className="text-lg font-bold mb-4 border-b border-slate-500 dark:border-slate-400 pb-2 text-slate-800 dark:text-white">
               Nigeria (HQ)
             </h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-3">
-                <MapPin className="text-accent mt-1 flex-shrink-0" size={18} />
-                <span className="text-gray-300">
+                <MapPin
+                  className="text-orange-500 dark:text-orange-400 mt-1 flex-shrink-0"
+                  size={18}
+                />
+                <span className="text-slate-600 dark:text-slate-200">
                   Plot 107, Ahmadu Bello Way
                   <br />
                   Abuja, Nigeria
                 </span>
               </li>
               <li className="flex items-center gap-3">
-                <Phone className="text-accent flex-shrink-0" size={18} />
+                <Phone
+                  className="text-orange-500 dark:text-orange-400 flex-shrink-0"
+                  size={18}
+                />
                 <a
                   href="tel:+2348037065497"
-                  className="text-gray-300 hover:text-accent transition-colors"
+                  className="text-slate-600 dark:text-slate-200 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                 >
                   +234 (0)8037 065497
                 </a>
               </li>
               <li className="flex items-center gap-3">
-                <Mail className="text-accent flex-shrink-0" size={18} />
+                <Mail
+                  className="text-orange-500 dark:text-orange-400 flex-shrink-0"
+                  size={18}
+                />
                 <a
                   href="mailto:info@jdmarcng.com"
-                  className="text-gray-300 hover:text-accent transition-colors"
+                  className="text-slate-600 dark:text-slate-200 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                 >
                   info@jdmarcng.com
                 </a>
               </li>
               <li className="flex items-center gap-3">
-                <Globe className="text-accent flex-shrink-0" size={18} />
+                <Globe
+                  className="text-orange-500 dark:text-orange-400 flex-shrink-0"
+                  size={18}
+                />
                 <a
                   href="https://www.jdmarcng.com"
-                  className="text-gray-300 hover:text-accent transition-colors"
+                  className="text-slate-600 dark:text-slate-200 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                 >
                   www.jdmarcng.com
                 </a>
