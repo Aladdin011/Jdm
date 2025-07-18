@@ -125,14 +125,14 @@ export default function Footer() {
 
           {/* Services */}
           <div>
-            <h3 className="text-lg font-bold mb-4 border-b border-gray-700 pb-2">
+            <h3 className="text-lg font-bold mb-4 border-b border-slate-500 dark:border-slate-400 pb-2 text-slate-800 dark:text-white">
               Our Services
             </h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   to="/services"
-                  className="text-gray-300 hover:text-accent transition-colors"
+                  className="text-slate-600 dark:text-slate-200 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                 >
                   Total Construction
                 </Link>
@@ -140,7 +140,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/services"
-                  className="text-gray-300 hover:text-accent transition-colors"
+                  className="text-slate-600 dark:text-slate-200 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                 >
                   Urban Planning & Smart Cities
                 </Link>
@@ -148,7 +148,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/services"
-                  className="text-gray-300 hover:text-accent transition-colors"
+                  className="text-slate-600 dark:text-slate-200 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                 >
                   Global Procurement
                 </Link>
@@ -156,7 +156,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/services"
-                  className="text-gray-300 hover:text-accent transition-colors"
+                  className="text-slate-600 dark:text-slate-200 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
                 >
                   Infrastructure Development
                 </Link>
