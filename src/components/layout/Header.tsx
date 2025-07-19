@@ -194,7 +194,7 @@ export default function Header() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-80 p-0">
                       {/* User Info Header */}
-                      <div className="p-4 bg-gradient-to-r from-[#142E54] to-[#F97316] text-white">
+                      <div className="p-4 bg-gradient-to-r from-arch-charcoal to-arch-orange text-white">
                         <div className="flex items-center gap-3">
                           <Avatar className="h-12 w-12">
                             <AvatarFallback className="bg-white/20 text-white text-lg font-bold">
