@@ -164,7 +164,7 @@ export default function Header() {
                   {isAdmin && (
                     <Link
                       to="/admin"
-                      className="flex items-center gap-2 bg-[#F97316]/20 text-[#F97316] hover:bg-[#F97316]/30 transition-colors px-3 py-2 rounded-lg border border-[#F97316]/30"
+                      className="flex items-center gap-2 bg-arch-orange/20 text-arch-orange hover:bg-arch-orange/30 transition-colors px-3 py-2 rounded-lg border border-arch-orange/30"
                     >
                       <Settings size={16} />
                       <span className="hidden xl:inline">Admin Panel</span>
