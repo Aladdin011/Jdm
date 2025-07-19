@@ -218,35 +218,39 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         // API failed, use development mode
         console.warn("Backend unavailable, using development mode for login");
 
-        // Mock authentication for development
+        // Test accounts authentication for development
         await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API delay
 
-        // Simple development mode: any email/password combination works
-        if (email && password) {
-          const mockUser: User = {
+        // Check against test accounts
+        const testAccount = getTestAccountByEmail(email);
+
+        if (testAccount && testAccount.password === password) {
+          const authenticatedUser: User = {
             id: Date.now().toString(),
-            email: email,
-            firstName: email.split("@")[0] || "User",
-            lastName: "Dev",
-            role: email.includes("admin") ? "admin" : "user",
-            company: "JD Marc (Dev Mode)",
-            phone: "+234 803 000 0000",
-            location: "Lagos, Nigeria",
-            department: email.includes("admin")
-              ? "secretariat-admin"
-              : undefined,
+            email: testAccount.email,
+            firstName: testAccount.firstName,
+            lastName: testAccount.lastName,
+            role: testAccount.role,
+            company: "JD Marc Limited",
+            phone: testAccount.phone,
+            location: testAccount.location,
+            department: testAccount.department,
             isActive: true,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
           };
 
-          const mockToken = "dev_token_" + Date.now();
+          const authToken =
+            "test_token_" + testAccount.email.split("@")[0] + "_" + Date.now();
 
-          setUser(mockUser);
-          setToken(mockToken);
+          setUser(authenticatedUser);
+          setToken(authToken);
 
-          localStorage.setItem("jdmarc_token", mockToken);
-          localStorage.setItem("jdmarc_user", JSON.stringify(mockUser));
+          localStorage.setItem("jdmarc_token", authToken);
+          localStorage.setItem(
+            "jdmarc_user",
+            JSON.stringify(authenticatedUser),
+          );
 
           setIsLoading(false);
           return { success: true, user: mockUser };
