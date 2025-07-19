@@ -419,7 +419,7 @@ export default function Header() {
                       <Link
                         to="/admin"
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="flex items-center gap-2 bg-[#F97316]/20 text-[#F97316] hover:bg-[#F97316]/30 transition-colors py-2 px-3 rounded-lg border border-[#F97316]/30"
+                        className="flex items-center gap-2 bg-arch-orange/20 text-arch-orange hover:bg-arch-orange/30 transition-colors py-2 px-3 rounded-lg border border-arch-orange/30"
                       >
                         <Settings size={16} />
                         Admin Panel
