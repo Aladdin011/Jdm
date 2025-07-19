@@ -94,7 +94,9 @@ export default function Header() {
             {/* Enhanced Logo */}
             <div className="flex items-center">
               <div className="flex items-center mr-2">
-                <div className="text-2xl font-bold mr-1 text-[#4A90E2]">JD</div>
+                <div className="text-2xl font-bold mr-1 text-arch-orange">
+                  JD
+                </div>
                 <div className="text-xl font-bold text-white">Marc</div>
               </div>
             </div>
