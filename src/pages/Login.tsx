@@ -242,7 +242,10 @@ export default function Login() {
     setError("");
 
     try {
-      const validation = await validateUniqueKey(uniqueKey, selectedDepartment);
+      const validation = await validateUniqueKeyLocal(
+        uniqueKey,
+        selectedDepartment,
+      );
 
       if (validation.isValid) {
         setSuccess("UniqueKey verified successfully!");
