@@ -46,26 +46,26 @@ export const departmentThemes: Record<string, DepartmentTheme> = {
   },
 
   "business-development": {
-    primary: "#059669", // Emerald
-    secondary: "#10B981", // Green
-    accent: "#F97316", // Orange
-    background: "from-emerald-50 to-green-50",
-    card: "border-emerald-200 bg-white shadow-emerald-100/50",
+    primary: "#83371D", // Architectural Rust
+    secondary: "#4B332E", // Architectural Brown
+    accent: "#EE690B", // Architectural Orange
+    background: "from-arch-light-blue/10 to-arch-rust/5",
+    card: "border-arch-rust/20 bg-white shadow-arch-rust/10",
     text: {
-      primary: "#059669",
-      secondary: "#6B7280",
-      accent: "#F97316",
+      primary: "#83371D",
+      secondary: "#4B332E",
+      accent: "#EE690B",
     },
-    gradient: "from-emerald-600 via-green-600 to-teal-600",
+    gradient: "from-arch-rust via-arch-brown to-arch-orange",
     badge: {
-      bg: "bg-emerald-100",
-      text: "text-emerald-800",
+      bg: "bg-arch-rust/10",
+      text: "text-arch-rust",
     },
     button: {
-      primary: "bg-emerald-600 hover:bg-emerald-700",
+      primary: "bg-arch-rust hover:bg-arch-rust/90",
       secondary:
-        "bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200",
-      hover: "hover:bg-emerald-50",
+        "bg-arch-rust/10 hover:bg-arch-rust/20 text-arch-rust border-arch-rust/30",
+      hover: "hover:bg-arch-rust/10",
     },
   },
 
