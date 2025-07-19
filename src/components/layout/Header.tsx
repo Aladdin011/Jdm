@@ -91,14 +91,13 @@ export default function Header() {
       >
         <div className="container mx-auto px-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
-            {/* Enhanced Logo */}
+            {/* JD Marc Logo */}
             <div className="flex items-center">
-              <div className="flex items-center mr-2">
-                <div className="text-2xl font-bold mr-1 text-arch-orange">
-                  JD
-                </div>
-                <div className="text-xl font-bold text-white">Marc</div>
-              </div>
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F6982878bae124d2589b95f89b1a5cf5b?format=webp&width=800"
+                alt="JD Marc Limited Logo"
+                className="h-10 w-auto filter brightness-0 invert transition-all duration-300 hover:scale-105"
+              />
             </div>
           </Link>
 
