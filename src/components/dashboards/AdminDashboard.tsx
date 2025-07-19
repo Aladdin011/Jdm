@@ -77,6 +77,7 @@ import {
   Filter,
   Download,
   Upload,
+  Key,
   RefreshCw,
   MoreVertical,
   Lock,
