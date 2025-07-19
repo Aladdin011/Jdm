@@ -19,6 +19,14 @@ export default {
     },
     extend: {
       colors: {
+        // Architectural Palette
+        "arch-orange": "#EE690B",
+        "arch-rust": "#83371D",
+        "arch-brown": "#4B332E",
+        "arch-charcoal": "#0B1014",
+        "arch-blue-gray": "#2E3E4B",
+        "arch-light-blue": "#BBD3EB",
+
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
