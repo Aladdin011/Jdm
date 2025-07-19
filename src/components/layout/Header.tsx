@@ -85,8 +85,8 @@ export default function Header() {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled
-            ? "bg-background/95 dark:bg-slate-900/95 backdrop-blur-md shadow-lg border-b border-border py-3"
-            : "bg-gradient-to-r from-slate-900 to-slate-800 dark:from-slate-800 dark:to-slate-900 py-5"
+            ? "bg-background/95 dark:bg-arch-charcoal/95 backdrop-blur-md shadow-lg border-b border-border py-3"
+            : "bg-gradient-to-r from-arch-charcoal to-arch-blue-gray dark:from-arch-charcoal dark:to-arch-brown py-5"
         }`}
       >
         <div className="container mx-auto px-4 flex items-center justify-between">
