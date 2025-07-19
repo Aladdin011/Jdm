@@ -70,11 +70,11 @@ const ArchitecturalBackground = () => {
       />
 
       {/* Enhanced gradient overlays for better text readability and brand colors */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-blue-900/60 to-slate-800/70 z-10" />
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent z-20" />
+      <div className="absolute inset-0 bg-gradient-to-br from-arch-charcoal/85 via-arch-blue-gray/65 to-arch-brown/75 z-10" />
+      <div className="absolute inset-0 bg-gradient-to-t from-arch-charcoal/95 via-transparent to-transparent z-20" />
 
       {/* Subtle brand color accent overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-orange-600/20 via-transparent to-red-600/20 z-15" />
+      <div className="absolute inset-0 bg-gradient-to-r from-arch-orange/25 via-transparent to-arch-rust/25 z-15" />
 
       {/* Enhanced floating particles for depth */}
       <FloatingParticles />
