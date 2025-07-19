@@ -529,6 +529,19 @@ export default function Dashboard() {
                           </p>
                         </div>
 
+                        <div className="p-4 border border-purple-200 rounded-lg bg-purple-50">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Building className="h-5 w-5 text-purple-600" />
+                            <h4 className="font-semibold text-purple-900">
+                              Business Administration
+                            </h4>
+                          </div>
+                          <p className="text-sm text-purple-700">
+                            Organization KPIs, approval workflows, policy
+                            management, and governance oversight
+                          </p>
+                        </div>
+
                         <div className="p-4 border border-violet-200 rounded-lg bg-violet-50">
                           <div className="flex items-center gap-2 mb-2">
                             <Project className="h-5 w-5 text-violet-600" />
