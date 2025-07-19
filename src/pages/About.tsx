@@ -197,14 +197,76 @@ export default function About() {
                     </div>
 
                     {/* Back of Card */}
-                    <div className="absolute inset-0 backface-hidden bg-white dark:bg-gray-700 rounded-xl shadow-lg p-6 [transform:rotateY(180deg)]">
-                      <h3 className="text-xl font-bold mb-2">{member.name}</h3>
-                      <p className="text-accent font-medium mb-4">
-                        {member.title}
-                      </p>
-                      <p className="text-muted-foreground text-sm leading-relaxed">
-                        {member.bio}
-                      </p>
+                    <div className="absolute inset-0 backface-hidden bg-gradient-to-br from-white via-gray-50 to-white dark:from-gray-700 dark:via-gray-800 dark:to-gray-700 rounded-xl shadow-lg [transform:rotateY(180deg)] overflow-hidden">
+                      {/* Header with mini profile */}
+                      <div className="bg-gradient-to-r from-arch-charcoal to-arch-blue-gray p-6 text-white">
+                        <div className="flex items-center gap-4">
+                          <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white/30">
+                            <img
+                              src={
+                                member.image ||
+                                `https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face&auto=format&q=80`
+                              }
+                              alt={member.name}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.src = `https://images.unsplash.com/photo-${
+                                  member.id === 1
+                                    ? "1507003211169-0a1dd7228f2d"
+                                    : member.id === 2
+                                      ? "1472099645785-5658abf4ff4e"
+                                      : "1519085360753-af0119f7c6b6"
+                                }?w=100&h=100&fit=crop&crop=face&auto=format&q=80`;
+                              }}
+                            />
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-bold text-white">
+                              {member.name}
+                            </h3>
+                            <p className="text-arch-orange font-medium text-sm">
+                              {member.title}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Biography Content */}
+                      <div className="p-6 flex-1">
+                        <div className="mb-4">
+                          <h4 className="text-sm font-semibold text-arch-orange mb-2 uppercase tracking-wide">
+                            Professional Background
+                          </h4>
+                          <div className="w-12 h-0.5 bg-arch-orange mb-4"></div>
+                        </div>
+                        <p className="text-muted-foreground text-sm leading-relaxed">
+                          {member.bio}
+                        </p>
+
+                        {/* Decorative Elements */}
+                        <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-600">
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <div className="w-2 h-2 bg-arch-orange rounded-full"></div>
+                            <span>JD Marc Limited Leadership</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Click hint */}
+                      <div className="absolute bottom-4 right-4">
+                        <div className="w-8 h-8 bg-arch-orange/20 rounded-full flex items-center justify-center">
+                          <motion.div
+                            animate={{
+                              rotate: flippedCard === member.id ? 0 : 180,
+                            }}
+                            transition={{ duration: 0.3 }}
+                            className="text-arch-orange text-sm"
+                          >
+                            ←
+                          </motion.div>
+                        </div>
+                      </div>
                     </div>
                   </motion.div>
                 </div>
