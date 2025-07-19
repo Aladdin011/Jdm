@@ -196,7 +196,7 @@ export default function ModernHero() {
           <Button
             asChild
             size="lg"
-            className="group bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white border-0 px-8 py-4 text-lg font-semibold rounded-full shadow-2xl hover:shadow-orange-500/25 transition-all duration-300 cursor-button"
+            className="group bg-gradient-to-r from-arch-orange to-arch-rust hover:from-arch-orange/90 hover:to-arch-rust/90 text-white border-0 px-8 py-4 text-lg font-semibold rounded-full shadow-2xl hover:shadow-arch-orange/25 transition-all duration-300 cursor-button"
           >
             <Link to="/projects">
               <span>Explore Our Projects</span>
