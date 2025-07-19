@@ -323,7 +323,7 @@ export default function Register() {
             <CardContent className="p-8">
               {/* Progress Bar */}
               <div className="mb-8">
-                <div className="flex justify-between items-center mb-2">
+                <div className="flex justify-between items-center mb-4">
                   <span className="text-sm font-medium text-arch-charcoal">
                     Step {currentStep} of 4: {stepTitles[currentStep]}
                   </span>
@@ -331,6 +331,41 @@ export default function Register() {
                     {Math.round(progress)}% Complete
                   </span>
                 </div>
+
+                {/* Step Indicators */}
+                <div className="flex justify-center mb-4">
+                  <div className="flex items-center space-x-2">
+                    {[1, 2, 3, 4].map((step) => (
+                      <div key={step} className="flex items-center">
+                        <div
+                          className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300 ${
+                            step <= currentStep
+                              ? "bg-arch-orange text-white shadow-lg"
+                              : step === currentStep + 1
+                                ? "bg-arch-orange/20 text-arch-orange border-2 border-arch-orange"
+                                : "bg-arch-light-blue/30 text-arch-blue-gray"
+                          }`}
+                        >
+                          {step < currentStep ? (
+                            <CheckCircle className="h-5 w-5" />
+                          ) : (
+                            step
+                          )}
+                        </div>
+                        {step < 4 && (
+                          <div
+                            className={`w-12 h-0.5 transition-all duration-300 ${
+                              step < currentStep
+                                ? "bg-arch-orange"
+                                : "bg-arch-light-blue/30"
+                            }`}
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
                 <Progress
                   value={progress}
                   className="h-2 bg-arch-light-blue/30"
