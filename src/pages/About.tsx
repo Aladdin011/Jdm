@@ -123,23 +123,74 @@ export default function About() {
                   >
                     {/* Front of Card */}
                     <div className="absolute inset-0 backface-hidden">
-                      <div className="h-full bg-white dark:bg-gray-700 rounded-xl shadow-lg overflow-hidden">
-                        <div className="h-80 overflow-hidden">
+                      <div className="h-full bg-white dark:bg-gray-700 rounded-xl shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300">
+                        {/* Enhanced Image Section with Gradient Overlay */}
+                        <div className="relative h-80 overflow-hidden">
+                          <div className="absolute inset-0 bg-gradient-to-t from-arch-charcoal/60 via-transparent to-transparent z-10" />
                           <img
-                            src={member.image}
+                            src={
+                              member.image ||
+                              `https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face&auto=format&q=80`
+                            }
                             alt={member.name}
-                            className="w-full h-full object-cover object-center"
+                            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.src = `https://images.unsplash.com/photo-${
+                                member.id === 1
+                                  ? "1507003211169-0a1dd7228f2d"
+                                  : member.id === 2
+                                    ? "1472099645785-5658abf4ff4e"
+                                    : "1519085360753-af0119f7c6b6"
+                              }?w=400&h=400&fit=crop&crop=face&auto=format&q=80`;
+                            }}
                           />
+                          {/* Professional Badge */}
+                          <div className="absolute top-4 right-4 z-20">
+                            <div className="bg-arch-orange/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold">
+                              Leadership
+                            </div>
+                          </div>
+                          {/* Bottom Gradient with Name Preview */}
+                          <div className="absolute bottom-0 left-0 right-0 z-20 p-4">
+                            <div className="text-white">
+                              <h4 className="font-bold text-lg mb-1 drop-shadow-lg">
+                                {member.name}
+                              </h4>
+                              <p className="text-arch-orange text-sm font-medium drop-shadow-md">
+                                {member.title}
+                              </p>
+                            </div>
+                          </div>
                         </div>
-                        <div className="p-6">
-                          <h3 className="text-xl font-bold mb-2">
-                            {member.name}
-                          </h3>
-                          <p className="text-accent font-medium">
-                            {member.title}
-                          </p>
-                          <p className="text-sm text-muted-foreground mt-2">
-                            Click to read bio
+
+                        {/* Card Content */}
+                        <div className="p-6 bg-gradient-to-b from-white to-gray-50 dark:from-gray-700 dark:to-gray-800">
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                              <h3 className="text-xl font-bold mb-2 text-arch-charcoal dark:text-white">
+                                {member.name}
+                              </h3>
+                              <p className="text-arch-orange font-medium text-sm">
+                                {member.title}
+                              </p>
+                            </div>
+                            <div className="ml-4">
+                              <div className="w-10 h-10 bg-arch-orange/10 rounded-full flex items-center justify-center">
+                                <motion.div
+                                  animate={{
+                                    rotate: flippedCard === member.id ? 180 : 0,
+                                  }}
+                                  transition={{ duration: 0.3 }}
+                                  className="text-arch-orange"
+                                >
+                                  →
+                                </motion.div>
+                              </div>
+                            </div>
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-3 italic">
+                            Click to read full biography
                           </p>
                         </div>
                       </div>
