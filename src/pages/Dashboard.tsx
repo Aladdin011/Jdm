@@ -42,6 +42,7 @@ import useAnalytics from "@/hooks/useAnalytics";
 // Import department-specific dashboards
 import SecretariatDashboard from "@/components/dashboards/SecretariatDashboard";
 import BusinessDevelopmentDashboard from "@/components/dashboards/BusinessDevelopmentDashboard";
+import BusinessAdministrationDashboard from "@/components/dashboards/BusinessAdministrationDashboard";
 import ProjectDashboard from "@/components/dashboards/ProjectDashboard";
 import AccountsDashboard from "@/components/dashboards/AccountsDashboard";
 import HRDashboard from "@/components/dashboards/HRDashboard";
@@ -92,6 +93,8 @@ export default function Dashboard() {
     switch (user.department) {
       case "business-development":
         return <BusinessDevelopmentDashboard />;
+      case "business-administration":
+        return <BusinessAdministrationDashboard />;
       case "project-management":
       case "project": // Support both naming conventions
         return <ProjectDashboard />;
@@ -341,7 +344,7 @@ export default function Dashboard() {
                   </CardContent>
                 </Card>
 
-                {/* 📞 Quick Links */}
+                {/* ���� Quick Links */}
                 <Card className="border-0 shadow-lg">
                   <CardHeader className="pb-3">
                     <CardTitle className="flex items-center gap-2 text-lg">
