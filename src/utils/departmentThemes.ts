@@ -187,27 +187,28 @@ export const departmentThemes: Record<string, DepartmentTheme> = {
     },
   },
 
-  // Default theme for fallback
+  // Default theme for fallback - Architectural Palette
   default: {
-    primary: "#142E54", // JD Marc Navy
-    secondary: "#A7967E", // JD Marc Sage
-    accent: "#F97316", // JD Marc Orange
-    background: "from-gray-50 to-gray-100",
-    card: "border-gray-200 bg-white shadow-gray-100/50",
+    primary: "#0B1014", // Architectural Charcoal
+    secondary: "#2E3E4B", // Architectural Blue-Gray
+    accent: "#EE690B", // Architectural Orange
+    background: "from-arch-light-blue/20 to-arch-light-blue/10",
+    card: "border-arch-light-blue bg-white shadow-arch-blue-gray/20",
     text: {
-      primary: "#142E54",
-      secondary: "#6B7280",
-      accent: "#F97316",
+      primary: "#0B1014",
+      secondary: "#2E3E4B",
+      accent: "#EE690B",
     },
-    gradient: "from-[#142E54] via-[#A7967E] to-[#F97316]",
+    gradient: "from-arch-charcoal via-arch-blue-gray to-arch-orange",
     badge: {
-      bg: "bg-gray-100",
-      text: "text-gray-800",
+      bg: "bg-arch-light-blue",
+      text: "text-arch-charcoal",
     },
     button: {
-      primary: "bg-[#142E54] hover:bg-[#142E54]/90",
-      secondary: "bg-gray-50 hover:bg-gray-100 text-gray-700 border-gray-200",
-      hover: "hover:bg-gray-50",
+      primary: "bg-arch-orange hover:bg-arch-orange/90",
+      secondary:
+        "bg-arch-light-blue hover:bg-arch-light-blue/80 text-arch-charcoal border-arch-light-blue",
+      hover: "hover:bg-arch-light-blue/20",
     },
   },
 };
