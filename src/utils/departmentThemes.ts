@@ -69,6 +69,30 @@ export const departmentThemes: Record<string, DepartmentTheme> = {
     },
   },
 
+  "business-administration": {
+    primary: "#6D28D9", // Deep purple
+    secondary: "#8B5CF6", // Purple
+    accent: "#F59E0B", // Amber
+    background: "from-purple-50 to-indigo-50",
+    card: "border-purple-200 bg-white shadow-purple-100/50",
+    text: {
+      primary: "#6D28D9",
+      secondary: "#6B7280",
+      accent: "#F59E0B",
+    },
+    gradient: "from-purple-600 via-violet-600 to-indigo-600",
+    badge: {
+      bg: "bg-purple-100",
+      text: "text-purple-800",
+    },
+    button: {
+      primary: "bg-purple-600 hover:bg-purple-700",
+      secondary:
+        "bg-purple-50 hover:bg-purple-100 text-purple-700 border-purple-200",
+      hover: "hover:bg-purple-50",
+    },
+  },
+
   "project-management": {
     primary: "#7C3AED", // Violet
     secondary: "#8B5CF6", // Purple
@@ -199,6 +223,7 @@ export const getDepartmentDisplayName = (department?: string): string => {
   const displayNames: Record<string, string> = {
     "secretariat-admin": "Secretariat & Administration",
     "business-development": "Business Development",
+    "business-administration": "Business Administration",
     "project-management": "Project Management",
     accounting: "Accounting & Finance",
     "human-resources": "Human Resources",
