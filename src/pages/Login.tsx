@@ -151,7 +151,7 @@ export default function Login() {
     }
   }, [isStaffMember]);
 
-  const validateUniqueKey = async (
+  const validateUniqueKeyLocal = async (
     key: string,
     department: string,
   ): Promise<UniqueKeyValidation> => {
@@ -161,7 +161,7 @@ export default function Login() {
     const departmentInfo = departments.find((d) => d.id === department);
     const expectedPrefix = departmentInfo?.prefix || "";
 
-    // Mock validation logic
+    // Basic format validation
     if (!key.startsWith(expectedPrefix)) {
       return {
         isValid: false,
@@ -178,7 +178,19 @@ export default function Login() {
       };
     }
 
-    // Mock expired key check
+    // Check against test accounts
+    const isValidKey = validateUniqueKey(key, department);
+
+    if (isValidKey) {
+      return {
+        isValid: true,
+        isExpired: false,
+        department: departmentInfo?.name,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      };
+    }
+
+    // Mock expired key check for demo
     if (key === `${expectedPrefix}9999`) {
       return {
         isValid: false,
@@ -187,21 +199,11 @@ export default function Login() {
       };
     }
 
-    // Mock invalid key
-    if (key === `${expectedPrefix}0000`) {
-      return {
-        isValid: false,
-        isExpired: false,
-        error: "Invalid UniqueKey. Please check your key and try again.",
-      };
-    }
-
-    // Mock valid key (for demo: any key starting with department prefix and not 0000 or 9999)
+    // Invalid key
     return {
-      isValid: true,
+      isValid: false,
       isExpired: false,
-      department: departmentInfo?.name,
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      error: "Invalid UniqueKey. Please check your key and try again.",
     };
   };
 
