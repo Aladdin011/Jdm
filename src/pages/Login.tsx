@@ -47,6 +47,11 @@ import {
 } from "lucide-react";
 import PageTransition from "@/components/ui/PageTransition";
 import useAnalytics from "@/hooks/useAnalytics";
+import {
+  getTestAccountByEmail,
+  validateUniqueKey,
+  getDepartmentPrefix,
+} from "@/data/testAccounts";
 
 interface Department {
   id: string;
