@@ -253,12 +253,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           );
 
           setIsLoading(false);
-          return { success: true, user: mockUser };
+          return { success: true, user: authenticatedUser };
         } else {
           setIsLoading(false);
           return {
             success: false,
-            error: "Please enter email and password",
+            error: testAccount
+              ? "Invalid password. Please check your credentials and try again."
+              : "Account not found. Please check your email or contact support.",
           };
         }
       }
