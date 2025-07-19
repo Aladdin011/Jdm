@@ -49,30 +49,57 @@ const FloatingParticles = () => {
   );
 };
 
-// Construction site drone footage simulation
-const DroneFootage = () => {
+// Modern architectural background with the provided image
+const ArchitecturalBackground = () => {
   return (
     <div className="absolute inset-0 overflow-hidden">
-      {/* Background gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-orange-900/40 via-slate-900/60 to-red-900/40 z-10" />
-
-      {/* Animated background image */}
+      {/* Main architectural background image */}
       <motion.div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23f59e0b;stop-opacity:0.8" /><stop offset="50%" style="stop-color:%23ef4444;stop-opacity:0.6" /><stop offset="100%" style="stop-color:%23dc2626;stop-opacity:0.8" /></linearGradient></defs><rect width="1200" height="600" fill="url(%23bg)"/><circle cx="200" cy="150" r="80" fill="%23ffffff" opacity="0.1"/><circle cx="800" cy="300" r="120" fill="%23ffffff" opacity="0.05"/><circle cx="1000" cy="100" r="60" fill="%23ffffff" opacity="0.1"/><rect x="100" y="400" width="200" height="100" fill="%23ffffff" opacity="0.05"/><rect x="700" y="450" width="150" height="80" fill="%23ffffff" opacity="0.08"/></svg>')`,
+          backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F3ea4e8ddcd314db6b491a8835cfb72ec?format=webp&width=800')`,
         }}
         animate={{
-          scale: [1, 1.1, 1],
+          scale: [1, 1.05, 1],
         }}
         transition={{
-          duration: 20,
+          duration: 25,
           repeat: Infinity,
           ease: "linear",
         }}
       />
 
+      {/* Enhanced gradient overlays for better text readability and brand colors */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-blue-900/60 to-slate-800/70 z-10" />
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent z-20" />
+
+      {/* Subtle brand color accent overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-orange-600/20 via-transparent to-red-600/20 z-15" />
+
+      {/* Enhanced floating particles for depth */}
       <FloatingParticles />
+
+      {/* Geometric overlay to enhance the architectural theme */}
+      <div className="absolute inset-0 z-5">
+        <motion.div
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: `
+              linear-gradient(45deg, transparent 49%, rgba(255,255,255,0.1) 50%, transparent 51%),
+              linear-gradient(-45deg, transparent 49%, rgba(255,255,255,0.05) 50%, transparent 51%)
+            `,
+            backgroundSize: "60px 60px",
+          }}
+          animate={{
+            backgroundPosition: ["0px 0px", "60px 60px"],
+          }}
+          transition={{
+            duration: 30,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+      </div>
     </div>
   );
 };
@@ -118,7 +145,7 @@ export default function ModernHero() {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background */}
       <motion.div style={{ y, opacity }} className="absolute inset-0">
-        <DroneFootage />
+        <ArchitecturalBackground />
       </motion.div>
 
       {/* Content */}
@@ -130,29 +157,32 @@ export default function ModernHero() {
       >
         <motion.div variants={itemVariants} className="mb-6">
           <span
-            className="inline-block px-6 py-2 bg-white/20 backdrop-blur-sm text-white rounded-full text-sm font-medium border border-white/30"
+            className="inline-block px-6 py-2 bg-white/20 backdrop-blur-md text-white rounded-full text-sm font-medium border border-white/30 shadow-lg"
             style={{ fontFamily: "'Inter', sans-serif" }}
           >
-            🏗️ Leading Pan-African Construction Company
+            🏢 Leading Pan-African Construction & Infrastructure Company
           </span>
         </motion.div>
 
         <motion.h1
           variants={itemVariants}
-          className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight"
+          className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight drop-shadow-2xl"
           style={{ fontFamily: "'Playfair Display', serif" }}
         >
           Building Africa's
           <br />
-          <span className="bg-gradient-to-r from-orange-400 via-red-400 to-pink-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-orange-400 via-amber-300 to-orange-500 bg-clip-text text-transparent drop-shadow-lg">
             Future Cities
           </span>
         </motion.h1>
 
         <motion.p
           variants={itemVariants}
-          className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed"
-          style={{ fontFamily: "'Inter', sans-serif" }}
+          className="text-xl md:text-2xl text-white/95 mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow-lg"
+          style={{
+            fontFamily: "'Inter', sans-serif",
+            textShadow: "0 2px 4px rgba(0,0,0,0.5)",
+          }}
         >
           From innovative infrastructure to sustainable solar solutions, we're
           transforming Africa's landscape with excellence, expertise, and
