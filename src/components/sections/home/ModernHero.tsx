@@ -171,7 +171,7 @@ export default function ModernHero() {
         >
           Building Africa's
           <br />
-          <span className="bg-gradient-to-r from-orange-400 via-amber-300 to-orange-500 bg-clip-text text-transparent drop-shadow-lg">
+          <span className="bg-gradient-to-r from-arch-orange via-amber-300 to-arch-rust bg-clip-text text-transparent drop-shadow-lg">
             Future Cities
           </span>
         </motion.h1>
