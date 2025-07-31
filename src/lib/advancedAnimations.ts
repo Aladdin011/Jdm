@@ -1,4 +1,4 @@
-import { animate, stagger, timeline } from 'motion';
+import { animate, stagger } from 'motion';
 import { useAppStore } from '@/stores/appStore';
 
 // Animation configurations based on performance and accessibility
