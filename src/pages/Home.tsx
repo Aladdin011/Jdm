@@ -180,6 +180,7 @@ export default function Home() {
   return (
     <>
       <CustomCursor position={mousePosition} />
+      <PremiumNavigation />
       <PremiumLayout hideNavigation>
         <motion.div
           variants={pageVariants}
