@@ -1,13 +1,12 @@
 import express from 'express';
 import { z } from 'zod';
-import { prisma } from '@/utils/database';
-import { sendEmail } from '@/utils/email';
-import { logger } from '@/utils/logger';
-import { validateRequest } from '@/middleware/validation';
-import { authMiddleware, optionalAuthMiddleware } from '@/middleware/auth';
-import { createLeadScore, updateLeadScore } from '@/services/leadScoring';
-import { trackUserAnalytics } from '@/services/analytics';
-import { io } from '@/server';
+import { prisma } from '../utils/database';
+import { sendEmail } from '../utils/email';
+import { logger } from '../utils/logger';
+import { validateContactForm, validatePaginationQuery } from '../middleware/validation';
+import { authenticateToken, requireRole } from '../middleware/auth';
+import { createLeadScore, updateLeadScore } from '../services/leadScoring';
+import { trackUserAnalytics } from '../services/analytics';
 
 const router = express.Router();
 
