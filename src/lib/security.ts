@@ -4,6 +4,7 @@ export const cspConfig = {
   'script-src': [
     "'self'",
     "'unsafe-inline'", // For inline scripts (minimize in production)
+    "'unsafe-eval'", // Required for Google Analytics gtag function
     'https://www.googletagmanager.com',
     'https://www.google-analytics.com',
     'https://connect.facebook.net',
