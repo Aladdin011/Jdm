@@ -29,6 +29,16 @@ export const validateSecureOTP = (otp: string, length: number = 8): boolean => {
   return otpRegex.test(otp);
 };
 
+// Verify OTP (alias for validateOTP for backward compatibility)
+export const verifyOTP = validateOTP;
+
+// Check if OTP is expired
+export const isOTPExpired = (createdAt: Date, expiryMinutes: number = 15): boolean => {
+  const now = new Date();
+  const expiryTime = new Date(createdAt.getTime() + (expiryMinutes * 60 * 1000));
+  return now > expiryTime;
+};
+
 // Generate OTP with expiry information
 export const generateOTPWithExpiry = (expiryMinutes: number = 10) => {
   const otp = generateOTP();
