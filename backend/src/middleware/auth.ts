@@ -1,13 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { prisma } from '@/utils/database';
-import { logger, logSecurityEvent } from '@/utils/logger';
+import { prisma } from '../utils/database';
+import { logger } from '../utils/logger';
 
 // Extend Request interface to include user
 declare global {
   namespace Express {
     interface Request {
       user?: {
+        id: string;
         userId: string;
         sessionId: string;
         role: string;
@@ -25,15 +26,47 @@ interface JWTPayload {
   exp: number;
 }
 
-// Main authentication middleware
-export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+interface TokenPair {
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: string;
+}
+
+/**
+ * Generate JWT tokens
+ */
+export const generateTokens = (userId: string, sessionId: string): TokenPair => {
+  const accessToken = jwt.sign(
+    { userId, sessionId, type: 'access' },
+    process.env.JWT_SECRET!,
+    { expiresIn: process.env.JWT_EXPIRES_IN || '15m' }
+  );
+
+  const refreshToken = jwt.sign(
+    { userId, sessionId, type: 'refresh' },
+    process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET!,
+    { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d' }
+  );
+
+  return {
+    accessToken,
+    refreshToken,
+    expiresIn: process.env.JWT_EXPIRES_IN || '15m'
+  };
+};
+
+/**
+ * Main authentication middleware
+ */
+export const authenticateToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const authHeader = req.headers.authorization;
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({
         success: false,
-        error: 'Access token is required'
+        error: 'Access token is required',
+        code: 'NO_TOKEN'
       });
     }
 
@@ -43,16 +76,17 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     let decoded: JWTPayload;
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
-    } catch (jwtError) {
-      logSecurityEvent('invalid_token_attempt', {
+    } catch (jwtError: any) {
+      logger.warn('Invalid token attempt', {
         ip: req.ip,
         userAgent: req.headers['user-agent'],
-        token: token.substring(0, 20) + '...' // Log partial token for debugging
+        error: jwtError.message
       });
 
       return res.status(401).json({
         success: false,
-        error: 'Invalid or expired token'
+        error: 'Invalid or expired token',
+        code: 'INVALID_TOKEN'
       });
     }
 
@@ -60,21 +94,14 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     if (decoded.type !== 'access') {
       return res.status(401).json({
         success: false,
-        error: 'Invalid token type'
+        error: 'Invalid token type',
+        code: 'INVALID_TOKEN_TYPE'
       });
     }
 
-    // Find user session
-    const session = await prisma.userSession.findFirst({
-      where: {
-        id: decoded.sessionId,
-        userId: decoded.userId,
-        token,
-        isActive: true,
-        expiresAt: {
-          gt: new Date()
-        }
-      },
+    // Verify session exists and is active
+    const session = await prisma.userSession.findUnique({
+      where: { id: decoded.sessionId },
       include: {
         user: {
           select: {
@@ -88,100 +115,98 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
       }
     });
 
-    if (!session) {
-      logSecurityEvent('invalid_session_attempt', {
-        userId: decoded.userId,
-        sessionId: decoded.sessionId,
-        ip: req.ip,
-        userAgent: req.headers['user-agent']
-      });
-
+    if (!session || !session.isActive) {
       return res.status(401).json({
         success: false,
-        error: 'Session not found or expired'
+        error: 'Session not found or inactive',
+        code: 'INVALID_SESSION'
       });
     }
 
-    // Check if user is active
     if (!session.user.isActive) {
       return res.status(401).json({
         success: false,
-        error: 'Account is deactivated'
+        error: 'User account is disabled',
+        code: 'ACCOUNT_DISABLED'
       });
     }
 
-    // Attach user to request
+    // Update last activity
+    await prisma.userSession.update({
+      where: { id: decoded.sessionId },
+      data: { lastActivity: new Date() }
+    });
+
+    // Attach user info to request
     req.user = {
+      id: session.user.id,
       userId: session.user.id,
-      sessionId: session.id,
+      sessionId: decoded.sessionId,
       role: session.user.role,
       email: session.user.email
     };
 
-    // Update session last activity
-    await prisma.userSession.update({
-      where: { id: session.id },
-      data: { updatedAt: new Date() }
+    next();
+  } catch (error: any) {
+    logger.error('Authentication middleware error', {
+      error: error.message,
+      stack: error.stack,
+      ip: req.ip
     });
 
-    next();
-  } catch (error) {
-    logger.error('Auth middleware error:', error);
-    
     return res.status(500).json({
       success: false,
-      error: 'Internal server error'
+      error: 'Authentication failed',
+      code: 'AUTH_ERROR'
     });
   }
 };
 
-// Optional authentication middleware (for endpoints that work with or without auth)
-export const optionalAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const authHeader = req.headers.authorization;
-    
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return next(); // Continue without authentication
-    }
-
-    // Use the main auth middleware but don't return errors
-    await authMiddleware(req, res, (error) => {
-      if (error) {
-        // Log the error but continue
-        logger.warn('Optional auth failed:', error);
-      }
-      next();
-    });
-  } catch (error) {
-    logger.warn('Optional auth middleware error:', error);
-    next(); // Continue even if auth fails
-  }
-};
-
-// Role-based authorization middleware
-export const requireRole = (allowedRoles: string | string[]) => {
-  const roles = Array.isArray(allowedRoles) ? allowedRoles : [allowedRoles];
+/**
+ * Optional authentication middleware (doesn't fail if no token)
+ */
+export const optionalAuth = async (req: Request, res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
   
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return next(); // No token, continue without user
+  }
+
+  try {
+    await authenticateToken(req, res, next);
+  } catch (error) {
+    // If auth fails, continue without user (don't throw error)
+    next();
+  }
+};
+
+/**
+ * Role-based access control middleware
+ */
+export const requireRole = (allowedRoles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
       return res.status(401).json({
         success: false,
-        error: 'Authentication required'
+        error: 'Authentication required',
+        code: 'AUTH_REQUIRED'
       });
     }
 
-    if (!roles.includes(req.user.role)) {
-      logSecurityEvent('unauthorized_access_attempt', {
-        userId: req.user.userId,
-        requiredRoles: roles,
+    if (!allowedRoles.includes(req.user.role)) {
+      logger.warn('Unauthorized access attempt', {
+        userId: req.user.id,
         userRole: req.user.role,
+        requiredRoles: allowedRoles,
         endpoint: req.path,
+        method: req.method,
         ip: req.ip
       });
 
       return res.status(403).json({
         success: false,
-        error: 'Insufficient permissions'
+        error: 'Insufficient permissions',
+        code: 'INSUFFICIENT_PERMISSIONS'
       });
     }
 
@@ -189,175 +214,100 @@ export const requireRole = (allowedRoles: string | string[]) => {
   };
 };
 
-// Admin role middleware
-export const requireAdmin = requireRole(['ADMIN', 'SUPER_ADMIN']);
-
-// Manager or above middleware
-export const requireManager = requireRole(['PROJECT_MANAGER', 'ADMIN', 'SUPER_ADMIN']);
-
-// Professional roles middleware (contractors, architects, engineers)
-export const requireProfessional = requireRole([
-  'CONTRACTOR', 'ARCHITECT', 'ENGINEER', 'PROJECT_MANAGER', 'ADMIN', 'SUPER_ADMIN'
-]);
-
-// Email verification middleware
-export const requireEmailVerification = (req: Request, res: Response, next: NextFunction) => {
-  // This would need user data, typically used after authMiddleware
-  // For now, we'll assume this check is done in routes that need it
-  next();
-};
-
-// Rate limiting by user
-const userRateLimits = new Map<string, { count: number; resetTime: number }>();
-
-export const userRateLimit = (maxRequests: number = 100, windowMinutes: number = 15) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    if (!req.user) {
-      return next(); // Skip rate limiting for unauthenticated requests
-    }
-
-    const userId = req.user.userId;
-    const now = Date.now();
-    const windowMs = windowMinutes * 60 * 1000;
-    
-    const current = userRateLimits.get(userId);
-    
-    if (!current || now > current.resetTime) {
-      userRateLimits.set(userId, { count: 1, resetTime: now + windowMs });
-      return next();
-    }
-    
-    if (current.count >= maxRequests) {
-      logSecurityEvent('user_rate_limit_exceeded', {
-        userId,
-        maxRequests,
-        windowMinutes,
-        ip: req.ip
-      });
-
-      return res.status(429).json({
-        success: false,
-        error: 'Too many requests. Please try again later.',
-        retryAfter: Math.ceil((current.resetTime - now) / 1000)
-      });
-    }
-    
-    current.count++;
-    userRateLimits.set(userId, current);
-    
-    next();
-  };
-};
-
-// API key authentication (for external integrations)
-export const apiKeyAuth = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const apiKey = req.headers['x-api-key'] as string;
-    
-    if (!apiKey) {
-      return res.status(401).json({
-        success: false,
-        error: 'API key is required'
-      });
-    }
-
-    // In a real implementation, you'd store API keys in the database
-    // For now, we'll use environment variables
-    const validApiKeys = process.env.API_KEYS?.split(',') || [];
-    
-    if (!validApiKeys.includes(apiKey)) {
-      logSecurityEvent('invalid_api_key_attempt', {
-        apiKey: apiKey.substring(0, 8) + '...', // Log partial key
-        ip: req.ip,
-        userAgent: req.headers['user-agent']
-      });
-
-      return res.status(401).json({
-        success: false,
-        error: 'Invalid API key'
-      });
-    }
-
-    // You could attach API key info to req for logging
-    req.user = {
-      userId: 'api-user',
-      sessionId: 'api-session',
-      role: 'API',
-      email: 'api@jdmarc.com'
-    };
-
-    next();
-  } catch (error) {
-    logger.error('API key auth error:', error);
-    res.status(500).json({
+/**
+ * Email verification requirement middleware
+ */
+export const requireEmailVerification = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.user) {
+    return res.status(401).json({
       success: false,
-      error: 'Internal server error'
+      error: 'Authentication required',
+      code: 'AUTH_REQUIRED'
     });
   }
-};
 
-// IP whitelist middleware (for sensitive endpoints)
-export const ipWhitelist = (allowedIPs: string[]) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    const clientIP = req.ip || req.socket.remoteAddress;
-    
-    if (!allowedIPs.includes(clientIP)) {
-      logSecurityEvent('ip_not_whitelisted', {
-        clientIP,
-        allowedIPs,
-        endpoint: req.path
-      });
+  const user = await prisma.user.findUnique({
+    where: { id: req.user.id },
+    select: { isEmailVerified: true }
+  });
 
-      return res.status(403).json({
-        success: false,
-        error: 'Access denied from this IP address'
-      });
-    }
+  if (!user?.isEmailVerified) {
+    return res.status(403).json({
+      success: false,
+      error: 'Email verification required',
+      code: 'EMAIL_VERIFICATION_REQUIRED'
+    });
+  }
 
-    next();
-  };
-};
-
-// Two-factor authentication middleware (placeholder for future implementation)
-export const require2FA = (req: Request, res: Response, next: NextFunction) => {
-  // This would check if the user has 2FA enabled and if the current session is 2FA verified
-  // For now, we'll just pass through
   next();
 };
 
-// Session validation (check if session is still valid)
-export const validateSession = async (req: Request, res: Response, next: NextFunction) => {
+/**
+ * Validate refresh token
+ */
+export const validateRefreshToken = async (refreshToken: string): Promise<{ userId: string; sessionId: string } | null> => {
   try {
-    if (!req.user) {
-      return next();
+    const decoded = jwt.verify(
+      refreshToken, 
+      process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET!
+    ) as JWTPayload;
+
+    if (decoded.type !== 'refresh') {
+      return null;
     }
 
+    // Verify session exists and is active
     const session = await prisma.userSession.findUnique({
-      where: { id: req.user.sessionId }
+      where: { 
+        id: decoded.sessionId,
+        refreshToken: refreshToken,
+        isActive: true
+      },
+      include: {
+        user: {
+          select: { id: true, isActive: true }
+        }
+      }
     });
 
-    if (!session || !session.isActive || session.expiresAt < new Date()) {
-      return res.status(401).json({
-        success: false,
-        error: 'Session expired. Please login again.'
-      });
+    if (!session || !session.user.isActive) {
+      return null;
     }
 
-    next();
+    return {
+      userId: decoded.userId,
+      sessionId: decoded.sessionId
+    };
   } catch (error) {
-    logger.error('Session validation error:', error);
-    next(); // Don't block the request on validation errors
+    return null;
   }
 };
 
-// Clean expired user rate limits
-setInterval(() => {
-  const now = Date.now();
-  for (const [userId, data] of userRateLimits.entries()) {
-    if (now > data.resetTime) {
-      userRateLimits.delete(userId);
+/**
+ * Logout and invalidate session
+ */
+export const invalidateSession = async (sessionId: string): Promise<void> => {
+  await prisma.userSession.update({
+    where: { id: sessionId },
+    data: { 
+      isActive: false,
+      refreshToken: null // Clear refresh token
     }
-  }
-}, 5 * 60 * 1000); // Clean every 5 minutes
+  });
+};
 
-export default authMiddleware;
+/**
+ * Logout all user sessions
+ */
+export const invalidateAllUserSessions = async (userId: string): Promise<void> => {
+  await prisma.userSession.updateMany({
+    where: { userId },
+    data: { 
+      isActive: false,
+      refreshToken: null
+    }
+  });
+};
+
+// Legacy exports for backward compatibility
+export const authMiddleware = authenticateToken;
