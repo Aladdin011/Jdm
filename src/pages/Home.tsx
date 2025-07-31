@@ -179,8 +179,7 @@ export default function Home() {
   return (
     <>
       <CustomCursor position={mousePosition} />
-      <Layout hideDefaultHeader>
-        <IntelligentNavbar />
+      <PremiumLayout hideNavigation>
         <motion.div
           variants={pageVariants}
           initial="initial"
@@ -194,20 +193,38 @@ export default function Home() {
             animate="visible"
             className="relative"
           >
-            {/* Enhanced Hero Section */}
+            {/* Premium Hero Section */}
             <motion.section
               id="hero"
               variants={sectionVariants}
-              className="relative min-h-screen overflow-hidden"
+              className="relative"
             >
-              <EnhancedHero />
+              <PremiumHero />
             </motion.section>
 
-            {/* About Section with Animated Stats */}
+            {/* Premium Services */}
+            <motion.section
+              id="services"
+              variants={sectionVariants}
+              className="relative"
+            >
+              <PremiumServices />
+            </motion.section>
+
+            {/* Platform Hub */}
+            <motion.section
+              id="platform"
+              variants={sectionVariants}
+              className="relative"
+            >
+              <PlatformHub />
+            </motion.section>
+
+            {/* About Section */}
             <motion.section
               id="about"
               variants={sectionVariants}
-              className="relative py-20 bg-gradient-to-b from-white to-amber-50"
+              className="relative py-20 bg-gradient-to-b from-white to-gray-50"
             >
               <AboutSection />
             </motion.section>
@@ -216,25 +233,16 @@ export default function Home() {
             <motion.section
               id="projects"
               variants={sectionVariants}
-              className="relative py-20 bg-slate-50"
+              className="relative py-20 bg-white"
             >
               <ProjectsShowcase />
-            </motion.section>
-
-            {/* Core Services */}
-            <motion.section
-              id="services"
-              variants={sectionVariants}
-              className="relative py-20 bg-gradient-to-b from-white to-orange-50"
-            >
-              <CoreServices />
             </motion.section>
 
             {/* Testimonials */}
             <motion.section
               id="testimonials"
               variants={sectionVariants}
-              className="relative py-20 bg-slate-800"
+              className="relative py-20 bg-gray-900"
             >
               <TestimonialsSection />
             </motion.section>
@@ -243,7 +251,7 @@ export default function Home() {
             <motion.section
               id="blog"
               variants={sectionVariants}
-              className="relative py-20 bg-white"
+              className="relative py-20 bg-gray-50"
             >
               <BlogPreview />
             </motion.section>
@@ -252,13 +260,13 @@ export default function Home() {
             <motion.section
               id="contact"
               variants={sectionVariants}
-              className="relative py-20 bg-gradient-to-br from-orange-500 via-red-500 to-pink-500"
+              className="relative py-20 bg-gradient-to-br from-gray-900 to-black"
             >
               <CallToActionSection />
             </motion.section>
           </motion.div>
         </motion.div>
-      </Layout>
+      </PremiumLayout>
     </>
   );
 }
