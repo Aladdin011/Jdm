@@ -160,8 +160,12 @@ export default function ChatbotPlaceholder() {
               transition={{ type: "spring", duration: 0.4, damping: 25 }}
               style={{
                 filter: "drop-shadow(0 25px 50px rgba(0, 0, 0, 0.15))",
-                transformOrigin: "bottom right",
               }}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              transition={{ type: "spring", duration: 0.3 }}
+              transformOrigin="bottom right"
             >
               {/* Header */}
               <div className="bg-[#142E54] text-white p-4 flex items-center justify-between">
