@@ -537,6 +537,10 @@ export const clearAuthentication = (): void => {
 export { apiClient };
 
 // Default export
+// Export individual APIs for backward compatibility
+export const projectAPI = projectsAPI;
+export const activityAPI = analyticsAPI;
+
 export default {
   authAPI,
   contactAPI,
