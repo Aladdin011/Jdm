@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import Modern Design System */
+@import './styles/modern-design-system.css';
+
 @layer base {
   :root {
     /* Architectural Palette Colors */
