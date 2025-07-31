@@ -540,6 +540,7 @@ export { apiClient };
 // Export individual APIs for backward compatibility
 export const projectAPI = projectsAPI;
 export const activityAPI = analyticsAPI;
+export const userAPI = usersAPI;
 
 export default {
   authAPI,
