@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import PremiumLayout from "@/components/layout/PremiumLayout";
+import PremiumNavigation from "@/components/layout/PremiumNavigation";
 import PremiumHero from "@/components/sections/home/PremiumHero";
 import PremiumServices from "@/components/sections/home/PremiumServices";
 import PlatformHub from "@/components/sections/home/PlatformHub";
