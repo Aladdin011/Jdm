@@ -51,7 +51,7 @@ const AnimatedCounter = ({
   }, [isInView, value, duration]);
 
   return (
-    <div ref={ref} className="text-4xl lg:text-5xl font-bold text-white font-mono">
+    <div ref={ref} className="text-2xl lg:text-3xl font-bold text-white font-mono">
       {prefix}{count}{suffix}
     </div>
   );
@@ -150,34 +150,27 @@ const PremiumHero = () => {
   };
 
   return (
-    <section 
+    <section
       ref={heroRef}
       className="relative min-h-screen overflow-hidden"
     >
-      {/* Background Video */}
+      {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="w-full h-full object-cover"
-          style={{ filter: "brightness(0.3)" }}
-        >
-          <source
-            src="https://cdn.builder.io/o/assets%2Fb9e926f9dca9498f8a0f99f9f9792da7%2Fd8ab210f1b32410085018c6afc0bd529?alt=media&token=d73e85ba-7d92-4810-b477-7e16b8873fb0&apiKey=b9e926f9dca9498f8a0f99f9f9792da7"
-            type="video/mp4"
-          />
-        </video>
+        <div
+          className="w-full h-full bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2Fb9e926f9dca9498f8a0f99f9f9792da7%2F0fdaa5fa3aa8442bb410972edd69093b?format=webp&width=1920')`,
+            filter: "brightness(0.4) contrast(1.1)"
+          }}
+        />
       </div>
 
-      {/* Gradient Overlay with Bright Blue Tones */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/90 via-blue-800/80 to-cyan-900/90 z-10" />
-      
-      {/* Additional Blue Mesh Gradient */}
+      {/* Subtle Blue Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/70 via-blue-800/50 to-cyan-900/60 z-10" />
+
+      {/* Additional depth gradient */}
       <div className="absolute inset-0 z-10">
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/20 to-cyan-400/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-blue-900/60 via-transparent to-blue-700/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-blue-950/80 via-transparent to-transparent" />
       </div>
 
       {/* Floating Particles */}
@@ -188,167 +181,104 @@ const PremiumHero = () => {
         <div className="container mx-auto px-6 lg:px-8">
           <div className="grid lg:grid-cols-12 gap-8 items-center">
             
-            {/* Left side - Minimal decorative elements */}
-            <div className="lg:col-span-4 hidden lg:block">
-              <motion.div
-                style={{ y, opacity }}
-                className="space-y-8"
-              >
-                {/* Floating Tech Cards */}
+            {/* Centered content with minimal footprint */}
+            <div className="col-span-12 flex justify-center lg:justify-end">
+              <div className="w-full lg:max-w-xl xl:max-w-2xl">
                 <motion.div
-                  initial={{ opacity: 0, x: -50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 1.5, duration: 1 }}
-                  className="relative"
-                >
-                  <div className="glass-card p-4 rounded-2xl border border-blue-400/30 bg-blue-500/10 backdrop-blur-xl">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-blue-400 to-cyan-400 flex items-center justify-center">
-                        <Building2 className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <div className="text-white/90 text-sm font-semibold">Smart Construction</div>
-                        <div className="text-blue-300/70 text-xs">AI-Powered Solutions</div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 2, duration: 1 }}
-                  className="ml-8"
-                >
-                  <div className="glass-card p-4 rounded-2xl border border-cyan-400/30 bg-cyan-500/10 backdrop-blur-xl">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-cyan-400 to-blue-400 flex items-center justify-center">
-                        <TrendingUp className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <div className="text-white/90 text-sm font-semibold">Growth Analytics</div>
-                        <div className="text-cyan-300/70 text-xs">Real-time Insights</div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              </motion.div>
-            </div>
-
-            {/* Right side - Main content with glassmorphism */}
-            <div className="lg:col-span-8 flex justify-end">
-              <motion.div
-                variants={glassVariants}
-                initial="hidden"
-                animate="visible"
-                className="glass-hero-card p-8 lg:p-12 rounded-3xl border border-blue-400/30 bg-blue-500/10 backdrop-blur-2xl max-w-2xl w-full"
-                style={{
-                  background: "linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%)",
-                  boxShadow: "0 25px 50px -12px rgba(59, 130, 246, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1)"
-                }}
-              >
-                <motion.div
-                  variants={containerVariants}
+                  variants={glassVariants}
                   initial="hidden"
                   animate="visible"
-                  className="space-y-8"
+                  className="glass-hero-card p-6 lg:p-8 rounded-2xl border border-blue-400/20 bg-blue-500/5 backdrop-blur-xl w-full"
+                  style={{
+                    background: "linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(6, 182, 212, 0.05) 100%)",
+                    boxShadow: "0 20px 40px -12px rgba(59, 130, 246, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05)"
+                  }}
                 >
-                  {/* Badge */}
-                  <motion.div variants={itemVariants}>
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-blue-400/40 bg-blue-500/20 backdrop-blur-sm">
-                      <Sparkles className="w-4 h-4 text-blue-300" />
-                      <span className="text-blue-100 text-sm font-medium">
-                        Building Africa's Future Since 2007
-                      </span>
-                    </div>
-                  </motion.div>
+                  <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="space-y-6"
+                  >
+                    {/* Compact Badge */}
+                    <motion.div variants={itemVariants}>
+                      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-blue-400/30 bg-blue-500/15 backdrop-blur-sm">
+                        <Sparkles className="w-3 h-3 text-blue-300" />
+                        <span className="text-blue-100 text-xs font-medium">
+                          Since 2007
+                        </span>
+                      </div>
+                    </motion.div>
 
-                  {/* Main Heading */}
-                  <motion.div variants={itemVariants} className="space-y-4">
-                    <h1 className="text-5xl lg:text-7xl font-bold text-white leading-tight">
-                      Building{" "}
-                      <span className="bg-gradient-to-r from-blue-300 via-cyan-300 to-blue-400 bg-clip-text text-transparent">
-                        Tomorrow's
-                      </span>
-                      <br />
-                      <span className="bg-gradient-to-r from-cyan-300 via-blue-300 to-cyan-400 bg-clip-text text-transparent">
-                        Cities
-                      </span>
-                    </h1>
-                    
-                    <p className="text-xl text-blue-100/90 leading-relaxed max-w-lg">
-                      Revolutionizing construction through intelligent digital solutions and sustainable innovation for Africa's urban transformation.
-                    </p>
-                  </motion.div>
+                    {/* Compressed Heading */}
+                    <motion.div variants={itemVariants} className="space-y-3">
+                      <h1 className="text-3xl lg:text-5xl font-bold text-white leading-tight">
+                        Building{" "}
+                        <span className="bg-gradient-to-r from-blue-300 via-cyan-300 to-blue-400 bg-clip-text text-transparent">
+                          Tomorrow's Cities
+                        </span>
+                      </h1>
 
-                  {/* CTA Buttons */}
-                  <motion.div variants={itemVariants}>
-                    <div className="flex flex-col sm:flex-row gap-4">
-                      <motion.button
-                        className="group px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-2xl font-semibold text-lg shadow-xl shadow-blue-500/25 hover:shadow-2xl hover:shadow-blue-500/40 transition-all duration-300"
-                        whileHover={{ scale: 1.05, y: -2 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span>Start Building</span>
-                          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      </motion.button>
+                      <p className="text-lg text-blue-100/80 leading-relaxed max-w-md">
+                        Intelligent construction solutions for Africa's urban transformation.
+                      </p>
+                    </motion.div>
 
-                      <motion.button
-                        className="group px-8 py-4 bg-white/10 backdrop-blur-sm text-white rounded-2xl font-semibold text-lg border border-blue-400/40 hover:bg-white/20 transition-all duration-300"
-                        whileHover={{ scale: 1.05, y: -2 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <div className="flex items-center gap-2">
-                          <div className="w-5 h-5 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400 flex items-center justify-center">
-                            <Play className="w-3 h-3 text-white ml-0.5" />
+                    {/* Compact CTA */}
+                    <motion.div variants={itemVariants}>
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <motion.button
+                          className="group px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300"
+                          whileHover={{ scale: 1.02, y: -1 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <div className="flex items-center gap-2">
+                            <span>Get Started</span>
+                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                           </div>
-                          <span>Watch Demo</span>
-                        </div>
-                      </motion.button>
-                    </div>
-                  </motion.div>
+                        </motion.button>
 
-                  {/* Stats */}
-                  <motion.div variants={itemVariants}>
-                    <div className="grid grid-cols-3 gap-6 pt-8 border-t border-blue-400/20">
-                      <div className="text-center">
-                        <AnimatedCounter value={500} suffix="+" />
-                        <div className="text-blue-200/80 text-sm font-medium mt-1">
-                          Projects Completed
-                        </div>
+                        <motion.button
+                          className="group px-6 py-3 bg-white/10 backdrop-blur-sm text-white rounded-xl font-semibold border border-blue-400/30 hover:bg-white/15 transition-all duration-300"
+                          whileHover={{ scale: 1.02, y: -1 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400 flex items-center justify-center">
+                              <Play className="w-2 h-2 text-white ml-0.5" />
+                            </div>
+                            <span>View Projects</span>
+                          </div>
+                        </motion.button>
                       </div>
-                      <div className="text-center">
-                        <AnimatedCounter value={15} suffix="+" />
-                        <div className="text-blue-200/80 text-sm font-medium mt-1">
-                          Years Experience
-                        </div>
-                      </div>
-                      <div className="text-center">
-                        <AnimatedCounter value={50} prefix="$" suffix="M+" />
-                        <div className="text-blue-200/80 text-sm font-medium mt-1">
-                          Investment Value
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
+                    </motion.div>
 
-                  {/* Achievement Badges */}
-                  <motion.div variants={itemVariants}>
-                    <div className="flex flex-wrap gap-3 pt-6">
-                      <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-blue-500/20 border border-blue-400/30">
-                        <Award className="w-4 h-4 text-blue-300" />
-                        <span className="text-blue-100 text-sm">ISO Certified</span>
+                    {/* Minimal Stats */}
+                    <motion.div variants={itemVariants}>
+                      <div className="grid grid-cols-3 gap-4 pt-4 border-t border-blue-400/15">
+                        <div className="text-center">
+                          <AnimatedCounter value={500} suffix="+" />
+                          <div className="text-blue-200/60 text-xs font-medium mt-0.5">
+                            Projects
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <AnimatedCounter value={15} suffix="+" />
+                          <div className="text-blue-200/60 text-xs font-medium mt-0.5">
+                            Years
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <AnimatedCounter value={50} prefix="$" suffix="M+" />
+                          <div className="text-blue-200/60 text-xs font-medium mt-0.5">
+                            Value
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-cyan-500/20 border border-cyan-400/30">
-                        <Users className="w-4 h-4 text-cyan-300" />
-                        <span className="text-blue-100 text-sm">1000+ Clients</span>
-                      </div>
-                    </div>
+                    </motion.div>
                   </motion.div>
                 </motion.div>
-              </motion.div>
+              </div>
             </div>
           </div>
         </div>
