@@ -28,6 +28,12 @@ import IncomingCallNotification from "./components/calls/IncomingCallNotificatio
 import JoinCallBanner from "./components/calls/JoinCallBanner";
 import DevelopmentModeIndicator from "./components/ui/DevelopmentModeIndicator";
 
+// Advanced Systems
+import { useAdvancedAnalytics } from "./lib/advancedAnalytics";
+import { initializeSecurity } from "./lib/security";
+import { accessibilityEngine } from "./lib/accessibility";
+import { businessIntelligence } from "./lib/businessIntelligence";
+
 const queryClient = new QueryClient();
 
 function AnimatedRoutes() {
