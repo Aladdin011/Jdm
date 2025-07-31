@@ -2,14 +2,14 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
-import { prisma } from '@/utils/database';
-import { generateOTP, validateOTP } from '@/utils/otp';
-import { sendEmail } from '@/utils/email';
-import { logger } from '@/utils/logger';
-import { authMiddleware } from '@/middleware/auth';
-import { validateRequest } from '@/middleware/validation';
-import { createLeadScore } from '@/services/leadScoring';
-import { trackUserAnalytics } from '@/services/analytics';
+import { prisma } from '../utils/database';
+import { generateOTP, verifyOTP } from '../utils/otp';
+import { sendEmail } from '../utils/email';
+import { logger } from '../utils/logger';
+import { authenticateToken, generateTokens } from '../middleware/auth';
+import { validateUserRegistration, validateUserLogin, validateOTP } from '../middleware/validation';
+import { createLeadScore } from '../services/leadScoring';
+import { trackUserAnalytics } from '../services/analytics';
 
 const router = express.Router();
 
