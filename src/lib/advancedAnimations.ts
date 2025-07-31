@@ -1,4 +1,4 @@
-import { animate, stagger, timeline, spring } from 'motion';
+import { animate, stagger, timeline } from 'motion';
 import { useAppStore } from '@/stores/appStore';
 
 // Animation configurations based on performance and accessibility
@@ -172,7 +172,7 @@ export class AdvancedAnimations {
     const optimizedConfig = this.getOptimizedConfig(config);
     
     // Apply initial state
-    Object.assign(element.style, fromState);
+    Object.assign((element as HTMLElement).style, fromState);
     
     return animate(
       element,
@@ -201,7 +201,7 @@ export class AdvancedAnimations {
       
       elements.forEach(({ element, speed }) => {
         const yPos = scrolled * speed;
-        element.style.transform = `translate3d(0, ${yPos}px, 0)`;
+        (element as HTMLElement).style.transform = `translate3d(0, ${yPos}px, 0)`;
       });
       
       ticking = false;
@@ -311,30 +311,9 @@ export class AdvancedAnimations {
 // Singleton instance
 export const advancedAnimations = new AdvancedAnimations();
 
-// React hook for using advanced animations
+// Hook for using advanced animations
 export const useAdvancedAnimations = () => {
   return advancedAnimations;
-};
-
-// Higher-order component for automatic reveal animations
-export const withRevealAnimation = (WrappedComponent: React.ComponentType<any>) => {
-  return function AnimatedComponent(props: any) {
-    const ref = React.useRef<HTMLDivElement>(null);
-    const animations = useAdvancedAnimations();
-    
-    React.useEffect(() => {
-      if (ref.current) {
-        const cleanup = animations.revealOnScroll(ref.current);
-        return cleanup;
-      }
-    }, [animations]);
-    
-    return (
-      <div ref={ref}>
-        <WrappedComponent {...props} />
-      </div>
-    );
-  };
 };
 
 // CSS-in-JS styles for hardware acceleration
