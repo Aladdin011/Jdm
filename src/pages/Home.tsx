@@ -198,14 +198,13 @@ export default function Home() {
             animate="visible"
             className="relative"
           >
-            {/* Hero Section */}
+            {/* Enhanced Hero Section */}
             <motion.section
               id="hero"
               variants={sectionVariants}
               className="relative min-h-screen overflow-hidden"
-              style={{ y: heroY, opacity: heroOpacity }}
             >
-              <ModernHero />
+              <EnhancedHero />
             </motion.section>
 
             {/* About Section with Animated Stats */}
