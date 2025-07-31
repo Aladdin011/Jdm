@@ -224,27 +224,27 @@ export default function Home() {
             <motion.section
               id="about"
               variants={sectionVariants}
-              className="relative py-20 bg-gradient-to-b from-white to-gray-50"
+              className="relative"
             >
-              <AboutSection />
+              <PremiumAbout />
             </motion.section>
 
             {/* Projects Showcase */}
             <motion.section
               id="projects"
               variants={sectionVariants}
-              className="relative py-20 bg-white"
+              className="relative"
             >
-              <ProjectsShowcase />
+              <PremiumProjects />
             </motion.section>
 
             {/* Testimonials */}
             <motion.section
               id="testimonials"
               variants={sectionVariants}
-              className="relative py-20 bg-gray-900"
+              className="relative"
             >
-              <TestimonialsSection />
+              <PremiumTestimonials />
             </motion.section>
 
             {/* Blog Preview */}
