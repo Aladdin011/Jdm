@@ -160,17 +160,17 @@ const PremiumHero = () => {
           className="w-full h-full bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2Fb9e926f9dca9498f8a0f99f9f9792da7%2F0fdaa5fa3aa8442bb410972edd69093b?format=webp&width=1920')`,
-            filter: "brightness(0.4) contrast(1.1)"
+            filter: "brightness(0.8) contrast(1.2) saturate(1.1)"
           }}
         />
       </div>
 
-      {/* Subtle Blue Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/70 via-blue-800/50 to-cyan-900/60 z-10" />
+      {/* Minimal Blue Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-blue-800/20 to-cyan-900/25 z-10" />
 
-      {/* Additional depth gradient */}
+      {/* Subtle depth gradient */}
       <div className="absolute inset-0 z-10">
-        <div className="absolute inset-0 bg-gradient-to-t from-blue-950/80 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-blue-950/40 via-transparent to-transparent" />
       </div>
 
       {/* Floating Particles */}
@@ -188,10 +188,10 @@ const PremiumHero = () => {
                   variants={glassVariants}
                   initial="hidden"
                   animate="visible"
-                  className="glass-hero-card p-6 lg:p-8 rounded-2xl border border-blue-400/20 bg-blue-500/5 backdrop-blur-xl w-full"
+                  className="glass-hero-card p-6 lg:p-8 rounded-2xl border border-blue-400/15 bg-blue-500/3 backdrop-blur-md w-full"
                   style={{
-                    background: "linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(6, 182, 212, 0.05) 100%)",
-                    boxShadow: "0 20px 40px -12px rgba(59, 130, 246, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05)"
+                    background: "linear-gradient(135deg, rgba(59, 130, 246, 0.04) 0%, rgba(6, 182, 212, 0.02) 100%)",
+                    boxShadow: "0 15px 30px -12px rgba(59, 130, 246, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.03)"
                   }}
                 >
                   <motion.div
