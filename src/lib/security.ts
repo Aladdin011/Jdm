@@ -470,7 +470,7 @@ export const securityLogger = new SecurityLogger();
 // Initialize security measures
 export const initializeSecurity = (): void => {
   // Apply CSP
-  applyCRP();
+  applyCSP();
   
   // Apply security headers (client-side demonstration)
   applySecurityHeaders();
