@@ -259,18 +259,19 @@ export class AdvancedAnimations {
   }
   
   // Timeline animations for complex sequences
-  createTimeline(animations: Array<{
+  async createTimeline(animations: Array<{
     element: Element | Element[];
     keyframes: Record<string, any>;
     options?: AnimationConfig;
   }>): Promise<void> {
-    const sequence = animations.map(({ element, keyframes, options = {} }) => [
-      element,
-      keyframes,
-      this.getOptimizedConfig(options)
-    ]);
-    
-    return timeline(sequence).finished;
+    // Execute animations in sequence
+    for (const { element, keyframes, options = {} } of animations) {
+      await animate(
+        element,
+        keyframes,
+        this.getOptimizedConfig(options)
+      ).finished;
+    }
   }
   
   // Get optimized config based on performance mode and accessibility
