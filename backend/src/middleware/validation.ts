@@ -392,7 +392,7 @@ export const validatePaginationQuery = (req: Request, res: Response, next: NextF
  * File upload validation
  */
 export const validateFileUpload = (allowedTypes: string[], maxSize: number = 5 * 1024 * 1024) => {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return (req: Request, res: Response, next: NextFunction): void => {
     if (!req.file && !req.files) {
       return res.status(400).json({
         success: false,
