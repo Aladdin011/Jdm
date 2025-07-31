@@ -1,19 +1,15 @@
 import { useState, useEffect } from "react";
-import {
-  motion,
-  useScroll,
-  useTransform,
-} from "framer-motion";
-import Layout from "@/components/layout/Layout";
-import EnhancedHero from "@/components/sections/home/EnhancedHero";
+import { motion, useScroll, useTransform } from "framer-motion";
+import PremiumLayout from "@/components/layout/PremiumLayout";
+import PremiumHero from "@/components/sections/home/PremiumHero";
+import PremiumServices from "@/components/sections/home/PremiumServices";
+import PlatformHub from "@/components/sections/home/PlatformHub";
 import AboutSection from "@/components/sections/home/AboutSection";
 import ProjectsShowcase from "@/components/sections/home/ProjectsShowcase";
-import CoreServices from "@/components/sections/home/CoreServices";
 import TestimonialsSection from "@/components/sections/home/TestimonialsSection";
 import CallToActionSection from "@/components/sections/home/CallToActionSection";
 import BlogPreview from "@/components/sections/home/BlogPreview";
 import { CustomCursor } from "@/components/ui/CustomCursor";
-import { IntelligentNavbar } from "@/components/layout/IntelligentNavbar";
 import { useAppStore, usePerformanceMonitoring } from "@/stores/appStore";
 import { usePersonalization, useLeadScoring } from "@/lib/personalization";
 import { useAdvancedAnimations } from "@/lib/advancedAnimations";
