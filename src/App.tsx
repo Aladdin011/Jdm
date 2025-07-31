@@ -151,10 +151,51 @@ function AnimatedRoutes() {
 }
 
 const App = () => {
+  const analytics = useAdvancedAnalytics();
+
   useEffect(() => {
-    // Initialize Google Analytics on app startup
+    // Initialize all advanced systems
     initGA();
-  }, []);
+    initializeSecurity();
+
+    // Track app initialization
+    analytics.trackEvent('app', 'initialized', {
+      timestamp: new Date(),
+      userAgent: navigator.userAgent,
+      viewport: {
+        width: window.innerWidth,
+        height: window.innerHeight
+      }
+    });
+
+    // Initialize accessibility features
+    setTimeout(() => {
+      // Delay to ensure DOM is ready
+      accessibilityEngine.updateConfig({
+        reduceMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+        highContrast: window.matchMedia('(prefers-contrast: high)').matches,
+      });
+    }, 1000);
+
+    // Performance monitoring
+    const observer = new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+        if (entry.entryType === 'navigation') {
+          analytics.trackEvent('performance', 'page_load', {
+            loadTime: entry.loadEventEnd - entry.loadEventStart,
+            domContentLoaded: entry.domContentLoadedEventEnd - entry.domContentLoadedEventStart,
+            firstPaint: entry.responseEnd - entry.requestStart,
+          });
+        }
+      }
+    });
+
+    observer.observe({ entryTypes: ['navigation'] });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [analytics]);
 
   return (
     <QueryClientProvider client={queryClient}>
