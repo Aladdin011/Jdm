@@ -58,10 +58,16 @@ export const generateCSPHeader = (): string => {
 // Apply CSP to the document
 export const applyCSP = (): void => {
   if (typeof document !== 'undefined') {
-    const meta = document.createElement('meta');
-    meta.httpEquiv = 'Content-Security-Policy';
-    meta.content = generateCSPHeader();
-    document.head.appendChild(meta);
+    // Only apply CSP in production to avoid development issues
+    if (process.env.NODE_ENV === 'production') {
+      const meta = document.createElement('meta');
+      meta.httpEquiv = 'Content-Security-Policy';
+      meta.content = generateCSPHeader();
+      document.head.appendChild(meta);
+    } else {
+      // In development, log the CSP that would be applied
+      console.log('CSP (disabled in development):', generateCSPHeader());
+    }
   }
 };
 
