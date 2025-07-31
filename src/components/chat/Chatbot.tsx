@@ -8,6 +8,7 @@ import {
 import { MessageCircle, X, Send } from "lucide-react";
 import ChatMessage, { Message } from "./ChatMessage";
 import TypingIndicator from "./TypingIndicator";
+import ErrorBoundary from "../ui/ErrorBoundary";
 import { findBestResponse, welcomeMessage } from "@/data/chatbotKnowledge";
 
 export default function Chatbot() {
