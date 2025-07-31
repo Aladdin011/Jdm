@@ -161,10 +161,6 @@ export default function ChatbotPlaceholder() {
               style={{
                 filter: "drop-shadow(0 25px 50px rgba(0, 0, 0, 0.15))",
               }}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0, opacity: 0 }}
-              transition={{ type: "spring", duration: 0.3 }}
               transformOrigin="bottom right"
             >
               {/* Header */}
