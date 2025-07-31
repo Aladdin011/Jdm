@@ -6,9 +6,19 @@ const GA_TRACKING_ID = "G-XXXXXXXXXX"; // Replace with your actual GA4 tracking 
 
 // Initialize Google Analytics
 export const initGA = () => {
-  if (typeof window !== "undefined" && window.gtag) {
-    // Google Analytics script is already loaded from HTML
-    // Just configure it with initial page view
+  if (typeof window !== "undefined") {
+    // Ensure dataLayer exists
+    window.dataLayer = window.dataLayer || [];
+
+    // If gtag isn't available yet, wait for it
+    if (!window.gtag) {
+      // Set up a minimal gtag function if script hasn't loaded yet
+      window.gtag = function(...args: any[]) {
+        window.dataLayer.push(args);
+      };
+    }
+
+    // Configure with initial page view
     window.gtag("config", GA_TRACKING_ID, {
       page_title: document.title,
       page_location: window.location.href,
