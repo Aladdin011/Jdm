@@ -366,7 +366,7 @@ export const validateId = [
 /**
  * Query parameter validation helpers
  */
-export const validatePaginationQuery = (req: Request, res: Response, next: NextFunction) => {
+export const validatePaginationQuery = (req: Request, res: Response, next: NextFunction): void => {
   const { page, limit } = req.query;
   
   if (page && (isNaN(Number(page)) || Number(page) < 1)) {
