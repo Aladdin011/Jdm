@@ -116,13 +116,21 @@ export const errorHandler = (
   }
 
   // Send error response
-  res.status(statusCode).json({
+  const response: any = {
     success: false,
     error: message,
-    code,
-    ...(details && { details }),
-    ...(process.env.NODE_ENV === 'development' && { stack: error.stack })
-  });
+    code
+  };
+
+  if (details) {
+    response.details = details;
+  }
+
+  if (process.env.NODE_ENV === 'development' && error.stack) {
+    response.stack = error.stack;
+  }
+
+  res.status(statusCode).json(response);
 };
 
 /**
