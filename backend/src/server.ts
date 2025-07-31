@@ -9,22 +9,16 @@ import dotenv from 'dotenv';
 import path from 'path';
 
 // Import utilities and middleware
-import { logger } from '@/utils/logger';
-import { prisma } from '@/utils/database';
-import { errorHandler, notFoundHandler } from '@/middleware/errorHandler';
-import { requestLogger } from '@/middleware/requestLogger';
-import { authMiddleware } from '@/middleware/auth';
+import { logger } from './utils/logger';
+import { prisma } from './utils/database';
+import { errorHandler, notFoundHandler } from './middleware/errorHandler';
+import { requestLogger } from './middleware/requestLogger';
+import { authenticateToken } from './middleware/auth';
 
 // Import routes
-import authRoutes from '@/routes/auth';
-import userRoutes from '@/routes/users';
-import projectRoutes from '@/routes/projects';
-import contactRoutes from '@/routes/contact';
-import testimonialRoutes from '@/routes/testimonials';
-import analyticsRoutes from '@/routes/analytics';
-import uploadRoutes from '@/routes/upload';
-import notificationRoutes from '@/routes/notifications';
-import adminRoutes from '@/routes/admin';
+import authRoutes from './routes/auth';
+import userRoutes from './routes/users';
+import contactRoutes from './routes/contact';
 
 // Load environment variables
 dotenv.config();
@@ -130,14 +124,8 @@ app.get('/health', (req, res) => {
 
 // API routes
 app.use('/api/auth', authRoutes);
-app.use('/api/users', authMiddleware, userRoutes);
-app.use('/api/projects', projectRoutes);
+app.use('/api/users', authenticateToken, userRoutes);
 app.use('/api/contact', contactRoutes);
-app.use('/api/testimonials', testimonialRoutes);
-app.use('/api/analytics', analyticsRoutes);
-app.use('/api/upload', authMiddleware, uploadRoutes);
-app.use('/api/notifications', authMiddleware, notificationRoutes);
-app.use('/api/admin', authMiddleware, adminRoutes);
 
 // Socket.IO setup for real-time features
 io.use((socket, next) => {
