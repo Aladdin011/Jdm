@@ -1,20 +1,19 @@
 import { useState, useEffect } from "react";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useViewportScroll,
-} from "framer-motion";
-import Layout from "@/components/layout/Layout";
-import ModernHero from "@/components/sections/home/ModernHero";
-import AboutSection from "@/components/sections/home/AboutSection";
-import ProjectsShowcase from "@/components/sections/home/ProjectsShowcase";
-import CoreServices from "@/components/sections/home/CoreServices";
-import TestimonialsSection from "@/components/sections/home/TestimonialsSection";
+import { motion, useScroll, useTransform } from "framer-motion";
+import PremiumLayout from "@/components/layout/PremiumLayout";
+import PremiumNavigation from "@/components/layout/PremiumNavigation";
+import PremiumHero from "@/components/sections/home/PremiumHero";
+import PremiumServices from "@/components/sections/home/PremiumServices";
+import PlatformHub from "@/components/sections/home/PlatformHub";
+import PremiumAbout from "@/components/sections/home/PremiumAbout";
+import PremiumProjects from "@/components/sections/home/PremiumProjects";
+import PremiumTestimonials from "@/components/sections/home/PremiumTestimonials";
 import CallToActionSection from "@/components/sections/home/CallToActionSection";
 import BlogPreview from "@/components/sections/home/BlogPreview";
 import { CustomCursor } from "@/components/ui/CustomCursor";
-import { IntelligentNavbar } from "@/components/layout/IntelligentNavbar";
+import { useAppStore, usePerformanceMonitoring } from "@/stores/appStore";
+import { usePersonalization, useLeadScoring } from "@/lib/personalization";
+import { useAdvancedAnimations } from "@/lib/advancedAnimations";
 
 // Page transition variants
 const pageVariants = {
@@ -74,26 +73,76 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const { scrollY } = useScroll();
 
+  // Enhanced state management
+  const {
+    setMousePosition: setStoreMousePosition,
+    setScrollProgress,
+    trackUserInteraction,
+    updateUserActivity,
+  } = useAppStore();
+
+  // Advanced features
+  const { personalization, adaptContent } = usePersonalization();
+  const { calculateScore } = useLeadScoring();
+  const animations = useAdvancedAnimations();
+
+  // Performance monitoring
+  usePerformanceMonitoring();
+
   // Parallax effect for hero background
   const heroY = useTransform(scrollY, [0, 500], [0, 150]);
   const heroOpacity = useTransform(scrollY, [0, 300], [1, 0.5]);
 
-  // Mouse tracking for custom cursor
+  // Enhanced mouse tracking with analytics
   useEffect(() => {
     const updateMousePosition = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+      const position = { x: e.clientX, y: e.clientY };
+      setMousePosition(position);
+      setStoreMousePosition(position);
+    };
+
+    const handleUserActivity = () => {
+      updateUserActivity();
+    };
+
+    const handleScroll = () => {
+      const progress =
+        window.scrollY / (document.body.scrollHeight - window.innerHeight);
+      setScrollProgress(progress);
+      trackUserInteraction("scroll");
     };
 
     window.addEventListener("mousemove", updateMousePosition);
+    window.addEventListener("click", handleUserActivity);
+    window.addEventListener("keydown", handleUserActivity);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
-    // Simulate page load
-    const timer = setTimeout(() => setIsLoading(false), 1000);
+    // Enhanced page load simulation with performance tracking
+    const startTime = performance.now();
+    const timer = setTimeout(() => {
+      const loadTime = performance.now() - startTime;
+      setIsLoading(false);
+      trackUserInteraction("page-loaded");
+
+      // Track page load performance
+      if (loadTime > 3000) {
+        trackUserInteraction("slow-page-load");
+      }
+    }, 800);
 
     return () => {
       window.removeEventListener("mousemove", updateMousePosition);
+      window.removeEventListener("click", handleUserActivity);
+      window.removeEventListener("keydown", handleUserActivity);
+      window.removeEventListener("scroll", handleScroll);
       clearTimeout(timer);
     };
-  }, []);
+  }, [
+    setStoreMousePosition,
+    setScrollProgress,
+    trackUserInteraction,
+    updateUserActivity,
+  ]);
 
   // Loading animation
   if (isLoading) {
@@ -137,8 +186,8 @@ export default function Home() {
   return (
     <>
       <CustomCursor position={mousePosition} />
-      <Layout hideDefaultHeader>
-        <IntelligentNavbar />
+      <PremiumNavigation />
+      <PremiumLayout hideNavigation>
         <motion.div
           variants={pageVariants}
           initial="initial"
@@ -152,57 +201,65 @@ export default function Home() {
             animate="visible"
             className="relative"
           >
-            {/* Hero Section */}
+            {/* Premium Hero Section */}
             <motion.section
               id="hero"
               variants={sectionVariants}
-              className="relative min-h-screen overflow-hidden"
-              style={{ y: heroY, opacity: heroOpacity }}
+              className="relative"
             >
-              <ModernHero />
+              <PremiumHero />
             </motion.section>
 
-            {/* About Section with Animated Stats */}
+            {/* Premium Services */}
+            <motion.section
+              id="services"
+              variants={sectionVariants}
+              className="relative"
+            >
+              <PremiumServices />
+            </motion.section>
+
+            {/* Platform Hub */}
+            <motion.section
+              id="platform"
+              variants={sectionVariants}
+              className="relative"
+            >
+              <PlatformHub />
+            </motion.section>
+
+            {/* About Section */}
             <motion.section
               id="about"
               variants={sectionVariants}
-              className="relative py-20 bg-gradient-to-b from-white to-amber-50"
+              className="relative"
             >
-              <AboutSection />
+              <PremiumAbout />
             </motion.section>
 
             {/* Projects Showcase */}
             <motion.section
               id="projects"
               variants={sectionVariants}
-              className="relative py-20 bg-slate-50"
+              className="relative"
             >
-              <ProjectsShowcase />
-            </motion.section>
-
-            {/* Core Services */}
-            <motion.section
-              id="services"
-              variants={sectionVariants}
-              className="relative py-20 bg-gradient-to-b from-white to-orange-50"
-            >
-              <CoreServices />
+              <PremiumProjects />
             </motion.section>
 
             {/* Testimonials */}
             <motion.section
               id="testimonials"
               variants={sectionVariants}
-              className="relative py-20 bg-slate-800"
+              className="relative"
             >
-              <TestimonialsSection />
+              <PremiumTestimonials />
             </motion.section>
 
             {/* Blog Preview */}
             <motion.section
               id="blog"
               variants={sectionVariants}
-              className="relative py-20 bg-white"
+              className="relative py-20 bg-gray-50"
             >
               <BlogPreview />
             </motion.section>
@@ -211,13 +268,13 @@ export default function Home() {
             <motion.section
               id="contact"
               variants={sectionVariants}
-              className="relative py-20 bg-gradient-to-br from-orange-500 via-red-500 to-pink-500"
+              className="relative py-20 bg-gradient-to-br from-gray-900 to-black"
             >
               <CallToActionSection />
             </motion.section>
           </motion.div>
         </motion.div>
-      </Layout>
+      </PremiumLayout>
     </>
   );
 }
