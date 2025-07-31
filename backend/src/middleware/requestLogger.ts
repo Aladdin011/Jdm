@@ -17,12 +17,10 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction) =
     timestamp: new Date().toISOString()
   });
 
-  // Override res.end to log response details
-  const originalEnd = res.end;
-  res.end = function(chunk?: any, encoding?: any, cb?: any) {
+  // Log response details when request finishes
+  res.on('finish', () => {
     const duration = Date.now() - startTime;
-    
-    // Log response details
+
     logger.info('Request completed', {
       method: req.method,
       url: req.url,
@@ -31,10 +29,7 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction) =
       ip: req.ip,
       userId: (req as any).user?.id
     });
-
-    // Call original end method
-    originalEnd.call(this, chunk, encoding, cb);
-  };
+  });
 
   next();
 };
