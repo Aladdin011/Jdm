@@ -249,23 +249,35 @@ export class AdvancedAnalyticsEngine {
   
   // Error Tracking
   private setupErrorTracking() {
-    window.addEventListener('error', (event) => {
-      this.trackEvent('error', 'javascript_error', {
-        message: event.message,
-        filename: event.filename,
-        line: event.lineno,
-        column: event.colno,
-        stack: event.error?.stack,
-        timestamp: new Date()
-      });
-    });
-    
-    window.addEventListener('unhandledrejection', (event) => {
-      this.trackEvent('error', 'promise_rejection', {
-        reason: event.reason,
-        timestamp: new Date()
-      });
-    });
+    try {
+      window.addEventListener('error', (event) => {
+        try {
+          this.trackEvent('error', 'javascript_error', {
+            message: event.message,
+            filename: event.filename,
+            line: event.lineno,
+            column: event.colno,
+            stack: event.error?.stack,
+            timestamp: new Date()
+          });
+        } catch (trackingError) {
+          console.warn('Error tracking failed:', trackingError);
+        }
+      }, { passive: true });
+
+      window.addEventListener('unhandledrejection', (event) => {
+        try {
+          this.trackEvent('error', 'promise_rejection', {
+            reason: event.reason,
+            timestamp: new Date()
+          });
+        } catch (trackingError) {
+          console.warn('Promise rejection tracking failed:', trackingError);
+        }
+      }, { passive: true });
+    } catch (error) {
+      console.warn('Failed to setup error tracking:', error);
+    }
   }
   
   // Conversion Tracking
