@@ -76,26 +76,70 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const { scrollY } = useScroll();
 
+  // Enhanced state management
+  const {
+    setMousePosition: setStoreMousePosition,
+    setScrollProgress,
+    trackUserInteraction,
+    updateUserActivity
+  } = useAppStore();
+
+  // Advanced features
+  const { personalization, adaptContent } = usePersonalization();
+  const { calculateScore } = useLeadScoring();
+  const animations = useAdvancedAnimations();
+
+  // Performance monitoring
+  usePerformanceMonitoring();
+
   // Parallax effect for hero background
   const heroY = useTransform(scrollY, [0, 500], [0, 150]);
   const heroOpacity = useTransform(scrollY, [0, 300], [1, 0.5]);
 
-  // Mouse tracking for custom cursor
+  // Enhanced mouse tracking with analytics
   useEffect(() => {
     const updateMousePosition = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+      const position = { x: e.clientX, y: e.clientY };
+      setMousePosition(position);
+      setStoreMousePosition(position);
+    };
+
+    const handleUserActivity = () => {
+      updateUserActivity();
+    };
+
+    const handleScroll = () => {
+      const progress = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+      setScrollProgress(progress);
+      trackUserInteraction('scroll');
     };
 
     window.addEventListener("mousemove", updateMousePosition);
+    window.addEventListener("click", handleUserActivity);
+    window.addEventListener("keydown", handleUserActivity);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
-    // Simulate page load
-    const timer = setTimeout(() => setIsLoading(false), 1000);
+    // Enhanced page load simulation with performance tracking
+    const startTime = performance.now();
+    const timer = setTimeout(() => {
+      const loadTime = performance.now() - startTime;
+      setIsLoading(false);
+      trackUserInteraction('page-loaded');
+
+      // Track page load performance
+      if (loadTime > 3000) {
+        trackUserInteraction('slow-page-load');
+      }
+    }, 800);
 
     return () => {
       window.removeEventListener("mousemove", updateMousePosition);
+      window.removeEventListener("click", handleUserActivity);
+      window.removeEventListener("keydown", handleUserActivity);
+      window.removeEventListener("scroll", handleScroll);
       clearTimeout(timer);
     };
-  }, []);
+  }, [setStoreMousePosition, setScrollProgress, trackUserInteraction, updateUserActivity]);
 
   // Loading animation
   if (isLoading) {
