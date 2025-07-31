@@ -341,8 +341,8 @@ export default function Chatbot() {
                   scrollY + viewportHeight - 600,
                 )}px`,
                 filter: "drop-shadow(0 25px 50px rgba(0, 0, 0, 0.15))",
-                transformOrigin: "top right",
               }}
+              transformOrigin="top right"
             >
               <div className="bg-[#142E54] text-white p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
