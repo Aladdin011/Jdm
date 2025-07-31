@@ -1,5 +1,5 @@
-import crypto from 'crypto';
-import { logger } from './logger';
+import crypto from "crypto";
+import { logger } from "./logger";
 
 // Generate a 6-digit OTP
 export const generateOTP = (): string => {
@@ -8,8 +8,8 @@ export const generateOTP = (): string => {
 
 // Generate a more secure alphanumeric OTP
 export const generateSecureOTP = (length: number = 8): string => {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let result = '';
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let result = "";
   for (let i = 0; i < length; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
@@ -33,9 +33,12 @@ export const validateSecureOTP = (otp: string, length: number = 8): boolean => {
 export const verifyOTP = validateOTP;
 
 // Check if OTP is expired
-export const isOTPExpired = (createdAt: Date, expiryMinutes: number = 15): boolean => {
+export const isOTPExpired = (
+  createdAt: Date,
+  expiryMinutes: number = 15,
+): boolean => {
   const now = new Date();
-  const expiryTime = new Date(createdAt.getTime() + (expiryMinutes * 60 * 1000));
+  const expiryTime = new Date(createdAt.getTime() + expiryMinutes * 60 * 1000);
   return now > expiryTime;
 };
 
@@ -43,11 +46,11 @@ export const isOTPExpired = (createdAt: Date, expiryMinutes: number = 15): boole
 export const generateOTPWithExpiry = (expiryMinutes: number = 10) => {
   const otp = generateOTP();
   const expiresAt = new Date(Date.now() + expiryMinutes * 60 * 1000);
-  
+
   return {
     otp,
     expiresAt,
-    expiryMinutes
+    expiryMinutes,
   };
 };
 
@@ -58,7 +61,7 @@ export const isOTPExpired = (expiresAt: Date): boolean => {
 
 // Generate a hash for OTP (for additional security)
 export const hashOTP = (otp: string): string => {
-  return crypto.createHash('sha256').update(otp).digest('hex');
+  return crypto.createHash("sha256").update(otp).digest("hex");
 };
 
 // Verify hashed OTP
@@ -70,27 +73,31 @@ export const verifyHashedOTP = (otp: string, hashedOTP: string): boolean => {
 // Rate limiting for OTP generation
 const otpRateLimits = new Map<string, { count: number; resetTime: number }>();
 
-export const checkOTPRateLimit = (identifier: string, maxAttempts: number = 5, windowMinutes: number = 15): boolean => {
+export const checkOTPRateLimit = (
+  identifier: string,
+  maxAttempts: number = 5,
+  windowMinutes: number = 15,
+): boolean => {
   const now = Date.now();
   const windowMs = windowMinutes * 60 * 1000;
-  
+
   const current = otpRateLimits.get(identifier);
-  
+
   if (!current || now > current.resetTime) {
     // Reset or create new rate limit entry
     otpRateLimits.set(identifier, { count: 1, resetTime: now + windowMs });
     return true;
   }
-  
+
   if (current.count >= maxAttempts) {
     logger.warn(`OTP rate limit exceeded for identifier: ${identifier}`);
     return false;
   }
-  
+
   // Increment count
   current.count++;
   otpRateLimits.set(identifier, current);
-  
+
   return true;
 };
 
@@ -108,42 +115,49 @@ export const cleanupOTPRateLimits = (): void => {
 setInterval(cleanupOTPRateLimits, 60 * 60 * 1000);
 
 // OTP attempt tracking for security
-const otpAttempts = new Map<string, { attempts: number; lastAttempt: number; blocked: boolean }>();
+const otpAttempts = new Map<
+  string,
+  { attempts: number; lastAttempt: number; blocked: boolean }
+>();
 
 export const trackOTPAttempt = (identifier: string, success: boolean): void => {
   const now = Date.now();
-  const current = otpAttempts.get(identifier) || { attempts: 0, lastAttempt: 0, blocked: false };
-  
+  const current = otpAttempts.get(identifier) || {
+    attempts: 0,
+    lastAttempt: 0,
+    blocked: false,
+  };
+
   if (success) {
     // Reset on successful verification
     otpAttempts.delete(identifier);
     return;
   }
-  
+
   // Increment failed attempts
   current.attempts++;
   current.lastAttempt = now;
-  
+
   // Block after 5 failed attempts
   if (current.attempts >= 5) {
     current.blocked = true;
     logger.warn(`OTP attempts blocked for identifier: ${identifier}`);
   }
-  
+
   otpAttempts.set(identifier, current);
 };
 
 export const isOTPBlocked = (identifier: string): boolean => {
   const current = otpAttempts.get(identifier);
   if (!current) return false;
-  
+
   // Unblock after 1 hour
   const oneHour = 60 * 60 * 1000;
   if (current.blocked && Date.now() - current.lastAttempt > oneHour) {
     otpAttempts.delete(identifier);
     return false;
   }
-  
+
   return current.blocked;
 };
 
@@ -199,5 +213,5 @@ export default {
   generateLoginVerificationOTP,
   generatePhoneVerificationOTP,
   formatOTPForDisplay,
-  generateBackupCodes
+  generateBackupCodes,
 };

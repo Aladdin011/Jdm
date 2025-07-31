@@ -78,7 +78,7 @@ export default function Home() {
     setMousePosition: setStoreMousePosition,
     setScrollProgress,
     trackUserInteraction,
-    updateUserActivity
+    updateUserActivity,
   } = useAppStore();
 
   // Advanced features
@@ -106,9 +106,10 @@ export default function Home() {
     };
 
     const handleScroll = () => {
-      const progress = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+      const progress =
+        window.scrollY / (document.body.scrollHeight - window.innerHeight);
       setScrollProgress(progress);
-      trackUserInteraction('scroll');
+      trackUserInteraction("scroll");
     };
 
     window.addEventListener("mousemove", updateMousePosition);
@@ -121,11 +122,11 @@ export default function Home() {
     const timer = setTimeout(() => {
       const loadTime = performance.now() - startTime;
       setIsLoading(false);
-      trackUserInteraction('page-loaded');
+      trackUserInteraction("page-loaded");
 
       // Track page load performance
       if (loadTime > 3000) {
-        trackUserInteraction('slow-page-load');
+        trackUserInteraction("slow-page-load");
       }
     }, 800);
 
@@ -136,7 +137,12 @@ export default function Home() {
       window.removeEventListener("scroll", handleScroll);
       clearTimeout(timer);
     };
-  }, [setStoreMousePosition, setScrollProgress, trackUserInteraction, updateUserActivity]);
+  }, [
+    setStoreMousePosition,
+    setScrollProgress,
+    trackUserInteraction,
+    updateUserActivity,
+  ]);
 
   // Loading animation
   if (isLoading) {

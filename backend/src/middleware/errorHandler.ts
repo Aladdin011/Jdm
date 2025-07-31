@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import { logger } from '../utils/logger';
+import { Request, Response, NextFunction } from "express";
+import { logger } from "../utils/logger";
 
 export interface AppError extends Error {
   statusCode?: number;
@@ -15,10 +15,10 @@ export const errorHandler = (
   error: AppError,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   // Log the error
-  logger.error('Error occurred', {
+  logger.error("Error occurred", {
     message: error.message,
     stack: error.stack,
     statusCode: error.statusCode,
@@ -26,63 +26,63 @@ export const errorHandler = (
     method: req.method,
     url: req.url,
     ip: req.ip,
-    userAgent: req.get('User-Agent'),
-    userId: (req as any).user?.id
+    userAgent: req.get("User-Agent"),
+    userId: (req as any).user?.id,
   });
 
   // Default error values
   let statusCode = error.statusCode || 500;
-  let message = error.message || 'Internal Server Error';
-  let code = error.code || 'INTERNAL_ERROR';
+  let message = error.message || "Internal Server Error";
+  let code = error.code || "INTERNAL_ERROR";
   let details = error.details;
 
   // Handle specific error types
   switch (error.name) {
-    case 'ValidationError':
+    case "ValidationError":
       statusCode = 400;
-      message = 'Validation Error';
-      code = 'VALIDATION_ERROR';
+      message = "Validation Error";
+      code = "VALIDATION_ERROR";
       break;
-    
-    case 'CastError':
+
+    case "CastError":
       statusCode = 400;
-      message = 'Invalid ID format';
-      code = 'INVALID_ID';
+      message = "Invalid ID format";
+      code = "INVALID_ID";
       break;
-    
-    case 'JsonWebTokenError':
+
+    case "JsonWebTokenError":
       statusCode = 401;
-      message = 'Invalid token';
-      code = 'INVALID_TOKEN';
+      message = "Invalid token";
+      code = "INVALID_TOKEN";
       break;
-    
-    case 'TokenExpiredError':
+
+    case "TokenExpiredError":
       statusCode = 401;
-      message = 'Token expired';
-      code = 'TOKEN_EXPIRED';
+      message = "Token expired";
+      code = "TOKEN_EXPIRED";
       break;
-    
-    case 'MulterError':
+
+    case "MulterError":
       statusCode = 400;
-      if (error.code === 'LIMIT_FILE_SIZE') {
-        message = 'File too large';
-        code = 'FILE_TOO_LARGE';
-      } else if (error.code === 'LIMIT_FILE_COUNT') {
-        message = 'Too many files';
-        code = 'TOO_MANY_FILES';
+      if (error.code === "LIMIT_FILE_SIZE") {
+        message = "File too large";
+        code = "FILE_TOO_LARGE";
+      } else if (error.code === "LIMIT_FILE_COUNT") {
+        message = "Too many files";
+        code = "TOO_MANY_FILES";
       } else {
-        message = 'File upload error';
-        code = 'UPLOAD_ERROR';
+        message = "File upload error";
+        code = "UPLOAD_ERROR";
       }
       break;
   }
 
   // Handle Prisma errors
-  if (error.message.includes('Unique constraint')) {
+  if (error.message.includes("Unique constraint")) {
     statusCode = 409;
-    message = 'Resource already exists';
-    code = 'DUPLICATE_RESOURCE';
-    
+    message = "Resource already exists";
+    code = "DUPLICATE_RESOURCE";
+
     // Extract field name from Prisma error
     const fieldMatch = error.message.match(/Key \(([^)]+)\)/);
     if (fieldMatch) {
@@ -90,28 +90,28 @@ export const errorHandler = (
     }
   }
 
-  if (error.message.includes('Foreign key constraint')) {
+  if (error.message.includes("Foreign key constraint")) {
     statusCode = 400;
-    message = 'Invalid reference';
-    code = 'INVALID_REFERENCE';
+    message = "Invalid reference";
+    code = "INVALID_REFERENCE";
   }
 
-  if (error.message.includes('Record to delete does not exist')) {
+  if (error.message.includes("Record to delete does not exist")) {
     statusCode = 404;
-    message = 'Resource not found';
-    code = 'RESOURCE_NOT_FOUND';
+    message = "Resource not found";
+    code = "RESOURCE_NOT_FOUND";
   }
 
   // Handle rate limiting errors
-  if (error.message.includes('Too many requests')) {
+  if (error.message.includes("Too many requests")) {
     statusCode = 429;
-    message = 'Too many requests';
-    code = 'RATE_LIMIT_EXCEEDED';
+    message = "Too many requests";
+    code = "RATE_LIMIT_EXCEEDED";
   }
 
   // Don't leak sensitive information in production
-  if (process.env.NODE_ENV === 'production' && statusCode === 500) {
-    message = 'Something went wrong';
+  if (process.env.NODE_ENV === "production" && statusCode === 500) {
+    message = "Something went wrong";
     details = undefined;
   }
 
@@ -119,14 +119,14 @@ export const errorHandler = (
   const response: any = {
     success: false,
     error: message,
-    code
+    code,
   };
 
   if (details) {
     response.details = details;
   }
 
-  if (process.env.NODE_ENV === 'development' && error.stack) {
+  if (process.env.NODE_ENV === "development" && error.stack) {
     response.stack = error.stack;
   }
 
@@ -136,17 +136,26 @@ export const errorHandler = (
 /**
  * Handle 404 errors
  */
-export const notFoundHandler = (req: Request, res: Response, next: NextFunction) => {
+export const notFoundHandler = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const error: AppError = new Error(`Route ${req.originalUrl} not found`);
   error.statusCode = 404;
-  error.code = 'ROUTE_NOT_FOUND';
+  error.code = "ROUTE_NOT_FOUND";
   next(error);
 };
 
 /**
  * Create custom error
  */
-export const createError = (message: string, statusCode: number = 500, code?: string, details?: any): AppError => {
+export const createError = (
+  message: string,
+  statusCode: number = 500,
+  code?: string,
+  details?: any,
+): AppError => {
   const error: AppError = new Error(message);
   error.statusCode = statusCode;
   error.code = code;

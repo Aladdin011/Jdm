@@ -1,16 +1,19 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 // API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-const TOKEN_STORAGE_KEY = import.meta.env.VITE_TOKEN_STORAGE_KEY || 'jdmarc_auth_token';
-const REFRESH_TOKEN_STORAGE_KEY = import.meta.env.VITE_REFRESH_TOKEN_STORAGE_KEY || 'jdmarc_refresh_token';
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const TOKEN_STORAGE_KEY =
+  import.meta.env.VITE_TOKEN_STORAGE_KEY || "jdmarc_auth_token";
+const REFRESH_TOKEN_STORAGE_KEY =
+  import.meta.env.VITE_REFRESH_TOKEN_STORAGE_KEY || "jdmarc_refresh_token";
 
 // Create axios instance
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -44,7 +47,7 @@ apiClient.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Response interceptor for token refresh
@@ -59,11 +62,15 @@ apiClient.interceptors.response.use(
       try {
         const refreshToken = getRefreshToken();
         if (refreshToken) {
-          const response = await axios.post(`${API_BASE_URL}/auth/refresh-token`, {
-            refreshToken,
-          });
+          const response = await axios.post(
+            `${API_BASE_URL}/auth/refresh-token`,
+            {
+              refreshToken,
+            },
+          );
 
-          const { accessToken, refreshToken: newRefreshToken } = response.data.data;
+          const { accessToken, refreshToken: newRefreshToken } =
+            response.data.data;
           setTokens(accessToken, newRefreshToken);
 
           // Retry the original request
@@ -73,13 +80,13 @@ apiClient.interceptors.response.use(
       } catch (refreshError) {
         // Refresh failed, redirect to login
         clearTokens();
-        window.location.href = '/login';
+        window.location.href = "/login";
         return Promise.reject(refreshError);
       }
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 // API Response types
@@ -102,7 +109,7 @@ const apiRequest = async <T>(
   method: string,
   endpoint: string,
   data?: any,
-  config?: AxiosRequestConfig
+  config?: AxiosRequestConfig,
 ): Promise<T> => {
   try {
     const response: AxiosResponse<ApiResponse<T>> = await apiClient.request({
@@ -115,17 +122,19 @@ const apiRequest = async <T>(
     if (response.data.success) {
       return response.data.data as T;
     } else {
-      throw new Error(response.data.error || 'API request failed');
+      throw new Error(response.data.error || "API request failed");
     }
   } catch (error: any) {
     // Handle network errors
-    if (error.code === 'NETWORK_ERROR' || error.message === 'Network Error') {
-      throw new Error('Network connection failed. Please check your internet connection.');
+    if (error.code === "NETWORK_ERROR" || error.message === "Network Error") {
+      throw new Error(
+        "Network connection failed. Please check your internet connection.",
+      );
     }
 
     // Handle timeout errors
-    if (error.code === 'ECONNABORTED') {
-      throw new Error('Request timeout. Please try again.');
+    if (error.code === "ECONNABORTED") {
+      throw new Error("Request timeout. Please try again.");
     }
 
     // Handle API errors
@@ -148,7 +157,7 @@ export const authAPI = {
     company?: string;
     role?: string;
   }) => {
-    return apiRequest('POST', '/auth/register', userData);
+    return apiRequest("POST", "/auth/register", userData);
   },
 
   login: async (credentials: {
@@ -164,17 +173,17 @@ export const authAPI = {
         refreshToken: string;
         expiresIn: string;
       };
-    }>('POST', '/auth/login', credentials);
+    }>("POST", "/auth/login", credentials);
 
     // Store tokens
     setTokens(response.tokens.accessToken, response.tokens.refreshToken);
-    
+
     return response;
   },
 
   logout: async () => {
     try {
-      await apiRequest('POST', '/auth/logout');
+      await apiRequest("POST", "/auth/logout");
     } finally {
       clearTokens();
     }
@@ -183,13 +192,13 @@ export const authAPI = {
   verifyOTP: async (otpData: {
     email: string;
     otp: string;
-    type: 'EMAIL_VERIFICATION' | 'PASSWORD_RESET' | 'LOGIN_VERIFICATION';
+    type: "EMAIL_VERIFICATION" | "PASSWORD_RESET" | "LOGIN_VERIFICATION";
   }) => {
-    return apiRequest('POST', '/auth/verify-otp', otpData);
+    return apiRequest("POST", "/auth/verify-otp", otpData);
   },
 
   forgotPassword: async (email: string) => {
-    return apiRequest('POST', '/auth/forgot-password', { email });
+    return apiRequest("POST", "/auth/forgot-password", { email });
   },
 
   resetPassword: async (resetData: {
@@ -197,22 +206,22 @@ export const authAPI = {
     otp: string;
     newPassword: string;
   }) => {
-    return apiRequest('POST', '/auth/reset-password', resetData);
+    return apiRequest("POST", "/auth/reset-password", resetData);
   },
 
   changePassword: async (passwordData: {
     currentPassword: string;
     newPassword: string;
   }) => {
-    return apiRequest('POST', '/auth/change-password', passwordData);
+    return apiRequest("POST", "/auth/change-password", passwordData);
   },
 
   getCurrentUser: async () => {
-    return apiRequest('GET', '/auth/me');
+    return apiRequest("GET", "/auth/me");
   },
 
   resendVerification: async (email: string) => {
-    return apiRequest('POST', '/auth/resend-verification', { email });
+    return apiRequest("POST", "/auth/resend-verification", { email });
   },
 };
 
@@ -231,7 +240,7 @@ export const contactAPI = {
     location?: string;
     source?: string;
   }) => {
-    return apiRequest('POST', '/contact/submit', formData);
+    return apiRequest("POST", "/contact/submit", formData);
   },
 
   getAll: async (params?: {
@@ -244,29 +253,32 @@ export const contactAPI = {
     sortBy?: string;
     sortOrder?: string;
   }) => {
-    return apiRequest('GET', '/contact', null, { params });
+    return apiRequest("GET", "/contact", null, { params });
   },
 
   getById: async (id: string) => {
-    return apiRequest('GET', `/contact/${id}`);
+    return apiRequest("GET", `/contact/${id}`);
   },
 
-  update: async (id: string, updateData: {
-    status?: string;
-    priority?: string;
-    assignedTo?: string;
-    notes?: string;
-    followUpDate?: string;
-  }) => {
-    return apiRequest('PATCH', `/contact/${id}`, updateData);
+  update: async (
+    id: string,
+    updateData: {
+      status?: string;
+      priority?: string;
+      assignedTo?: string;
+      notes?: string;
+      followUpDate?: string;
+    },
+  ) => {
+    return apiRequest("PATCH", `/contact/${id}`, updateData);
   },
 
   getStats: async () => {
-    return apiRequest('GET', '/contact/stats/overview');
+    return apiRequest("GET", "/contact/stats/overview");
   },
 
   delete: async (id: string) => {
-    return apiRequest('DELETE', `/contact/${id}`);
+    return apiRequest("DELETE", `/contact/${id}`);
   },
 };
 
@@ -281,11 +293,11 @@ export const projectsAPI = {
     sortBy?: string;
     sortOrder?: string;
   }) => {
-    return apiRequest('GET', '/projects', null, { params });
+    return apiRequest("GET", "/projects", null, { params });
   },
 
   getById: async (id: string) => {
-    return apiRequest('GET', `/projects/${id}`);
+    return apiRequest("GET", `/projects/${id}`);
   },
 
   create: async (projectData: {
@@ -299,15 +311,15 @@ export const projectsAPI = {
     features?: string[];
     tags?: string[];
   }) => {
-    return apiRequest('POST', '/projects', projectData);
+    return apiRequest("POST", "/projects", projectData);
   },
 
   update: async (id: string, updateData: any) => {
-    return apiRequest('PUT', `/projects/${id}`, updateData);
+    return apiRequest("PUT", `/projects/${id}`, updateData);
   },
 
   delete: async (id: string) => {
-    return apiRequest('DELETE', `/projects/${id}`);
+    return apiRequest("DELETE", `/projects/${id}`);
   },
 
   uploadImages: async (projectId: string, images: File[]) => {
@@ -316,9 +328,9 @@ export const projectsAPI = {
       formData.append(`images`, image);
     });
 
-    return apiRequest('POST', `/projects/${projectId}/images`, formData, {
+    return apiRequest("POST", `/projects/${projectId}/images`, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
   },
@@ -327,7 +339,7 @@ export const projectsAPI = {
 // Users API
 export const usersAPI = {
   getProfile: async () => {
-    return apiRequest('GET', '/users/profile');
+    return apiRequest("GET", "/users/profile");
   },
 
   updateProfile: async (profileData: {
@@ -345,16 +357,16 @@ export const usersAPI = {
     linkedIn?: string;
     twitter?: string;
   }) => {
-    return apiRequest('PUT', '/users/profile', profileData);
+    return apiRequest("PUT", "/users/profile", profileData);
   },
 
   uploadAvatar: async (avatar: File) => {
     const formData = new FormData();
-    formData.append('avatar', avatar);
+    formData.append("avatar", avatar);
 
-    return apiRequest('POST', '/users/upload-avatar', formData, {
+    return apiRequest("POST", "/users/upload-avatar", formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
   },
@@ -367,20 +379,20 @@ export const usersAPI = {
     sortBy?: string;
     sortOrder?: string;
   }) => {
-    return apiRequest('GET', '/users', null, { params });
+    return apiRequest("GET", "/users", null, { params });
   },
 };
 
 // Analytics API
 export const analyticsAPI = {
-  getOverview: async (timeframe?: 'day' | 'week' | 'month') => {
-    return apiRequest('GET', '/analytics/overview', null, {
+  getOverview: async (timeframe?: "day" | "week" | "month") => {
+    return apiRequest("GET", "/analytics/overview", null, {
       params: { timeframe },
     });
   },
 
   getUserJourney: async (userId: string) => {
-    return apiRequest('GET', `/analytics/user/${userId}`);
+    return apiRequest("GET", `/analytics/user/${userId}`);
   },
 
   trackEvent: async (eventData: {
@@ -388,11 +400,11 @@ export const analyticsAPI = {
     data?: any;
     userId?: string;
   }) => {
-    return apiRequest('POST', '/analytics/track', eventData);
+    return apiRequest("POST", "/analytics/track", eventData);
   },
 
   getLeadScoring: async () => {
-    return apiRequest('GET', '/analytics/lead-scoring');
+    return apiRequest("GET", "/analytics/lead-scoring");
   },
 };
 
@@ -405,11 +417,11 @@ export const testimonialsAPI = {
     featured?: boolean;
     rating?: number;
   }) => {
-    return apiRequest('GET', '/testimonials', null, { params });
+    return apiRequest("GET", "/testimonials", null, { params });
   },
 
   getById: async (id: string) => {
-    return apiRequest('GET', `/testimonials/${id}`);
+    return apiRequest("GET", `/testimonials/${id}`);
   },
 
   create: async (testimonialData: {
@@ -424,42 +436,42 @@ export const testimonialsAPI = {
     projectValue?: string;
     projectDuration?: string;
   }) => {
-    return apiRequest('POST', '/testimonials', testimonialData);
+    return apiRequest("POST", "/testimonials", testimonialData);
   },
 
   update: async (id: string, updateData: any) => {
-    return apiRequest('PUT', `/testimonials/${id}`, updateData);
+    return apiRequest("PUT", `/testimonials/${id}`, updateData);
   },
 
   delete: async (id: string) => {
-    return apiRequest('DELETE', `/testimonials/${id}`);
+    return apiRequest("DELETE", `/testimonials/${id}`);
   },
 };
 
 // File Upload API
 export const uploadAPI = {
-  uploadFile: async (file: File, type: 'avatar' | 'project' | 'document') => {
+  uploadFile: async (file: File, type: "avatar" | "project" | "document") => {
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('type', type);
+    formData.append("file", file);
+    formData.append("type", type);
 
-    return apiRequest('POST', '/upload', formData, {
+    return apiRequest("POST", "/upload", formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
   },
 
-  uploadMultiple: async (files: File[], type: 'project' | 'document') => {
+  uploadMultiple: async (files: File[], type: "project" | "document") => {
     const formData = new FormData();
     files.forEach((file) => {
-      formData.append('files', file);
+      formData.append("files", file);
     });
-    formData.append('type', type);
+    formData.append("type", type);
 
-    return apiRequest('POST', '/upload/multiple', formData, {
+    return apiRequest("POST", "/upload/multiple", formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
   },
@@ -473,48 +485,48 @@ export const notificationsAPI = {
     type?: string;
     isRead?: boolean;
   }) => {
-    return apiRequest('GET', '/notifications', null, { params });
+    return apiRequest("GET", "/notifications", null, { params });
   },
 
   markAsRead: async (id: string) => {
-    return apiRequest('PATCH', `/notifications/${id}/read`);
+    return apiRequest("PATCH", `/notifications/${id}/read`);
   },
 
   markAllAsRead: async () => {
-    return apiRequest('PATCH', '/notifications/read-all');
+    return apiRequest("PATCH", "/notifications/read-all");
   },
 
   delete: async (id: string) => {
-    return apiRequest('DELETE', `/notifications/${id}`);
+    return apiRequest("DELETE", `/notifications/${id}`);
   },
 };
 
 // Admin API
 export const adminAPI = {
   getDashboard: async () => {
-    return apiRequest('GET', '/admin/dashboard');
+    return apiRequest("GET", "/admin/dashboard");
   },
 
   getSystemHealth: async () => {
-    return apiRequest('GET', '/admin/health');
+    return apiRequest("GET", "/admin/health");
   },
 
   getSystemSettings: async () => {
-    return apiRequest('GET', '/admin/settings');
+    return apiRequest("GET", "/admin/settings");
   },
 
   updateSystemSettings: async (settings: Record<string, any>) => {
-    return apiRequest('PUT', '/admin/settings', settings);
+    return apiRequest("PUT", "/admin/settings", settings);
   },
 
   getUserAnalytics: async (timeframe?: string) => {
-    return apiRequest('GET', '/admin/analytics/users', null, {
+    return apiRequest("GET", "/admin/analytics/users", null, {
       params: { timeframe },
     });
   },
 
   getProjectAnalytics: async (timeframe?: string) => {
-    return apiRequest('GET', '/admin/analytics/projects', null, {
+    return apiRequest("GET", "/admin/analytics/projects", null, {
       params: { timeframe },
     });
   },

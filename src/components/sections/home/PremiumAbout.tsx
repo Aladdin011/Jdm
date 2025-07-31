@@ -1,11 +1,11 @@
-import React, { useRef, useState } from 'react';
-import { motion, useInView, useScroll, useTransform } from 'framer-motion';
-import { 
-  Award, 
-  Calendar, 
-  Users, 
-  MapPin, 
-  Target, 
+import React, { useRef, useState } from "react";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import {
+  Award,
+  Calendar,
+  Users,
+  MapPin,
+  Target,
   Lightbulb,
   Zap,
   Building2,
@@ -13,40 +13,40 @@ import {
   CheckCircle,
   ArrowRight,
   Play,
-  TrendingUp
-} from 'lucide-react';
-import { useAppStore } from '@/stores/appStore';
+  TrendingUp,
+} from "lucide-react";
+import { useAppStore } from "@/stores/appStore";
 
 // Company stats data
 const companyStats = [
-  { 
-    value: "15+", 
-    label: "Years of Excellence", 
+  {
+    value: "15+",
+    label: "Years of Excellence",
     icon: <Calendar className="w-6 h-6" />,
     description: "Since 2007",
-    color: "from-blue-500 to-blue-600"
+    color: "from-blue-500 to-blue-600",
   },
-  { 
-    value: "500+", 
-    label: "Projects Completed", 
+  {
+    value: "500+",
+    label: "Projects Completed",
     icon: <Building2 className="w-6 h-6" />,
     description: "Across Africa",
-    color: "from-green-500 to-green-600"
+    color: "from-green-500 to-green-600",
   },
-  { 
-    value: "50M+", 
-    label: "Investment Value", 
+  {
+    value: "50M+",
+    label: "Investment Value",
     icon: <TrendingUp className="w-6 h-6" />,
     description: "USD Total",
-    color: "from-purple-500 to-purple-600"
+    color: "from-purple-500 to-purple-600",
   },
-  { 
-    value: "98%", 
-    label: "Client Satisfaction", 
+  {
+    value: "98%",
+    label: "Client Satisfaction",
     icon: <Award className="w-6 h-6" />,
     description: "Success Rate",
-    color: "from-orange-500 to-red-500"
-  }
+    color: "from-orange-500 to-red-500",
+  },
 ];
 
 // Core values data
@@ -54,27 +54,31 @@ const coreValues = [
   {
     icon: <Target className="w-8 h-8" />,
     title: "Excellence",
-    description: "We deliver world-class construction projects that exceed expectations and set new industry standards.",
-    color: "from-blue-500 to-cyan-500"
+    description:
+      "We deliver world-class construction projects that exceed expectations and set new industry standards.",
+    color: "from-blue-500 to-cyan-500",
   },
   {
     icon: <Lightbulb className="w-8 h-8" />,
     title: "Innovation",
-    description: "Pioneering smart construction technologies and sustainable building practices for Africa's future.",
-    color: "from-yellow-500 to-orange-500"
+    description:
+      "Pioneering smart construction technologies and sustainable building practices for Africa's future.",
+    color: "from-yellow-500 to-orange-500",
   },
   {
     icon: <Users className="w-8 h-8" />,
     title: "Collaboration",
-    description: "Building strong partnerships with clients, communities, and stakeholders across all our projects.",
-    color: "from-green-500 to-emerald-500"
+    description:
+      "Building strong partnerships with clients, communities, and stakeholders across all our projects.",
+    color: "from-green-500 to-emerald-500",
   },
   {
     icon: <Globe2 className="w-8 h-8" />,
     title: "Sustainability",
-    description: "Committed to environmentally responsible construction that preserves Africa's natural heritage.",
-    color: "from-purple-500 to-pink-500"
-  }
+    description:
+      "Committed to environmentally responsible construction that preserves Africa's natural heritage.",
+    color: "from-purple-500 to-pink-500",
+  },
 ];
 
 // Achievements data
@@ -84,52 +88,65 @@ const achievements = [
   "Winner of Africa Construction Excellence Award 2023",
   "Carbon-neutral construction practices since 2020",
   "Remote workforce platform serving 10+ African countries",
-  "LEED Gold certification for 15+ completed projects"
+  "LEED Gold certification for 15+ completed projects",
 ];
 
 // Animated counter component
-const AnimatedCounter = ({ value, duration = 2000 }: { value: string; duration?: number }) => {
+const AnimatedCounter = ({
+  value,
+  duration = 2000,
+}: {
+  value: string;
+  duration?: number;
+}) => {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true });
-  
+
   // Extract number from value string
-  const numericValue = parseInt(value.replace(/[^0-9]/g, ''));
-  const suffix = value.replace(/[0-9]/g, '');
+  const numericValue = parseInt(value.replace(/[^0-9]/g, ""));
+  const suffix = value.replace(/[0-9]/g, "");
 
   React.useEffect(() => {
     if (isInView && numericValue) {
       const startTime = Date.now();
       const endTime = startTime + duration;
-      
+
       const updateCounter = () => {
         const now = Date.now();
         const progress = Math.min((now - startTime) / duration, 1);
-        
+
         // Easing function for smooth animation
         const easeOutCubic = 1 - Math.pow(1 - progress, 3);
         const currentValue = Math.floor(numericValue * easeOutCubic);
-        
+
         setCount(currentValue);
-        
+
         if (now < endTime) {
           requestAnimationFrame(updateCounter);
         }
       };
-      
+
       requestAnimationFrame(updateCounter);
     }
   }, [isInView, numericValue, duration]);
 
   return (
     <div ref={ref} className="font-bold text-4xl md:text-5xl">
-      {count}{suffix}
+      {count}
+      {suffix}
     </div>
   );
 };
 
 // Individual stat card component
-const StatCard = ({ stat, index }: { stat: typeof companyStats[0]; index: number }) => {
+const StatCard = ({
+  stat,
+  index,
+}: {
+  stat: (typeof companyStats)[0];
+  index: number;
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
@@ -151,13 +168,13 @@ const StatCard = ({ stat, index }: { stat: typeof companyStats[0]; index: number
         animate={{ opacity: isHovered ? 0.05 : 0 }}
         transition={{ duration: 0.3 }}
       />
-      
+
       {/* Icon */}
       <motion.div
         className={`w-16 h-16 rounded-xl bg-gradient-to-r ${stat.color} flex items-center justify-center text-white mb-6`}
-        animate={{ 
+        animate={{
           rotate: isHovered ? 360 : 0,
-          scale: isHovered ? 1.1 : 1
+          scale: isHovered ? 1.1 : 1,
         }}
         transition={{ duration: 0.6 }}
       >
@@ -192,7 +209,13 @@ const StatCard = ({ stat, index }: { stat: typeof companyStats[0]; index: number
 };
 
 // Values card component
-const ValueCard = ({ value, index }: { value: typeof coreValues[0]; index: number }) => (
+const ValueCard = ({
+  value,
+  index,
+}: {
+  value: (typeof coreValues)[0];
+  index: number;
+}) => (
   <motion.div
     className="group p-8 bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300"
     initial={{ opacity: 0, scale: 0.9 }}
@@ -223,7 +246,7 @@ const CompanyOverview = () => {
   const { trackUserInteraction } = useAppStore();
 
   const handleWatchStory = () => {
-    trackUserInteraction('about-watch-story');
+    trackUserInteraction("about-watch-story");
   };
 
   return (
@@ -255,9 +278,11 @@ const CompanyOverview = () => {
           </h2>
 
           <p className="text-body-lg text-gray-600 leading-relaxed mb-8">
-            Since 2007, JD Marc Limited has been at the forefront of Africa's construction revolution. 
-            With offices in Abuja, London, and New York, we combine international expertise with 
-            deep local knowledge to deliver world-class infrastructure projects that transform communities.
+            Since 2007, JD Marc Limited has been at the forefront of Africa's
+            construction revolution. With offices in Abuja, London, and New
+            York, we combine international expertise with deep local knowledge
+            to deliver world-class infrastructure projects that transform
+            communities.
           </p>
         </div>
 
@@ -269,8 +294,9 @@ const CompanyOverview = () => {
               Our Mission
             </h4>
             <p className="text-blue-700 leading-relaxed">
-              To transform Africa's urban landscape through innovative construction and infrastructure 
-              solutions that are sustainable, intelligent, and community-focused.
+              To transform Africa's urban landscape through innovative
+              construction and infrastructure solutions that are sustainable,
+              intelligent, and community-focused.
             </p>
           </div>
 
@@ -280,8 +306,9 @@ const CompanyOverview = () => {
               Our Vision
             </h4>
             <p className="text-green-700 leading-relaxed">
-              To be Africa's leading construction company, pioneering smart cities and sustainable 
-              development that enhances quality of life for millions across the continent.
+              To be Africa's leading construction company, pioneering smart
+              cities and sustainable development that enhances quality of life
+              for millions across the continent.
             </p>
           </div>
         </div>
@@ -292,10 +319,7 @@ const CompanyOverview = () => {
             <span>Our Story</span>
             <ArrowRight className="btn-icon" />
           </button>
-          <button 
-            onClick={handleWatchStory}
-            className="btn-secondary-premium"
-          >
+          <button onClick={handleWatchStory} className="btn-secondary-premium">
             <Play className="w-5 h-5" />
             <span>Watch Story</span>
           </button>
@@ -311,7 +335,9 @@ const CompanyOverview = () => {
         viewport={{ once: true }}
       >
         <div className="space-y-4">
-          <h3 className="text-2xl font-semibold text-gray-800 mb-6">Key Achievements</h3>
+          <h3 className="text-2xl font-semibold text-gray-800 mb-6">
+            Key Achievements
+          </h3>
           {achievements.map((achievement, index) => (
             <motion.div
               key={index}
@@ -336,13 +362,16 @@ export default function PremiumAbout() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start end", "end start"]
+    offset: ["start end", "end start"],
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
 
   return (
-    <section ref={sectionRef} className="py-24 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
+    <section
+      ref={sectionRef}
+      className="py-24 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden"
+    >
       {/* Background Elements */}
       <motion.div
         className="absolute top-20 right-10 w-72 h-72 bg-gradient-to-r from-blue-200/30 to-cyan-200/30 rounded-full blur-3xl"
@@ -368,7 +397,7 @@ export default function PremiumAbout() {
           <div className="text-center mb-16">
             <h3 className="text-heading-lg mb-4">Our Impact in Numbers</h3>
             <p className="text-body-lg text-gray-600 max-w-2xl mx-auto">
-              Measurable results that demonstrate our commitment to excellence 
+              Measurable results that demonstrate our commitment to excellence
               and innovation in African construction.
             </p>
           </div>
@@ -391,7 +420,7 @@ export default function PremiumAbout() {
           <div className="text-center mb-16">
             <h3 className="text-heading-lg mb-4">Our Core Values</h3>
             <p className="text-body-lg text-gray-600 max-w-2xl mx-auto">
-              The principles that guide every project, partnership, and 
+              The principles that guide every project, partnership, and
               innovation in our journey to build Africa's future.
             </p>
           </div>
@@ -412,11 +441,13 @@ export default function PremiumAbout() {
           viewport={{ once: true }}
         >
           <Globe2 className="w-16 h-16 mx-auto mb-6 text-orange-400" />
-          <h3 className="text-3xl font-bold mb-4">Global Reach, Local Impact</h3>
+          <h3 className="text-3xl font-bold mb-4">
+            Global Reach, Local Impact
+          </h3>
           <p className="text-gray-300 text-lg max-w-3xl mx-auto mb-8">
-            Operating from three continents with deep African roots, we bring international 
-            standards and global best practices to every local project, creating lasting 
-            value for communities across Africa.
+            Operating from three continents with deep African roots, we bring
+            international standards and global best practices to every local
+            project, creating lasting value for communities across Africa.
           </p>
           <div className="flex flex-wrap justify-center gap-8 text-sm">
             <div className="flex items-center gap-2">

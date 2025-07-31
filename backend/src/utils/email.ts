@@ -1,73 +1,73 @@
-import nodemailer from 'nodemailer';
-import { logger } from './logger';
+import nodemailer from "nodemailer";
+import { logger } from "./logger";
 
 // Email configuration
 const createTransporter = () => {
-  const isDevelopment = process.env.NODE_ENV === 'development';
-  
-  if (isDevelopment && process.env.EMAIL_PROVIDER === 'ethereal') {
+  const isDevelopment = process.env.NODE_ENV === "development";
+
+  if (isDevelopment && process.env.EMAIL_PROVIDER === "ethereal") {
     // Use Ethereal for development testing
     return nodemailer.createTransporter({
-      host: 'smtp.ethereal.email',
+      host: "smtp.ethereal.email",
       port: 587,
       auth: {
         user: process.env.ETHEREAL_EMAIL,
-        pass: process.env.ETHEREAL_PASSWORD
-      }
+        pass: process.env.ETHEREAL_PASSWORD,
+      },
     });
   }
 
   // Production configuration for various providers
   switch (process.env.EMAIL_PROVIDER) {
-    case 'gmail':
+    case "gmail":
       return nodemailer.createTransporter({
-        service: 'gmail',
+        service: "gmail",
         auth: {
           user: process.env.GMAIL_USER,
-          pass: process.env.GMAIL_APP_PASSWORD
-        }
+          pass: process.env.GMAIL_APP_PASSWORD,
+        },
       });
-    
-    case 'sendgrid':
+
+    case "sendgrid":
       return nodemailer.createTransporter({
-        host: 'smtp.sendgrid.net',
+        host: "smtp.sendgrid.net",
         port: 587,
         auth: {
-          user: 'apikey',
-          pass: process.env.SENDGRID_API_KEY
-        }
+          user: "apikey",
+          pass: process.env.SENDGRID_API_KEY,
+        },
       });
-    
-    case 'mailgun':
+
+    case "mailgun":
       return nodemailer.createTransporter({
-        host: 'smtp.mailgun.org',
+        host: "smtp.mailgun.org",
         port: 587,
         auth: {
           user: process.env.MAILGUN_SMTP_LOGIN,
-          pass: process.env.MAILGUN_SMTP_PASSWORD
-        }
+          pass: process.env.MAILGUN_SMTP_PASSWORD,
+        },
       });
-    
-    case 'ses':
+
+    case "ses":
       return nodemailer.createTransporter({
-        host: 'email-smtp.us-east-1.amazonaws.com',
+        host: "email-smtp.us-east-1.amazonaws.com",
         port: 587,
         auth: {
           user: process.env.AWS_SES_ACCESS_KEY,
-          pass: process.env.AWS_SES_SECRET_KEY
-        }
+          pass: process.env.AWS_SES_SECRET_KEY,
+        },
       });
-    
+
     default:
       // SMTP configuration
       return nodemailer.createTransporter({
         host: process.env.SMTP_HOST,
-        port: parseInt(process.env.SMTP_PORT || '587'),
-        secure: process.env.SMTP_SECURE === 'true',
+        port: parseInt(process.env.SMTP_PORT || "587"),
+        secure: process.env.SMTP_SECURE === "true",
         auth: {
           user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASSWORD
-        }
+          pass: process.env.SMTP_PASSWORD,
+        },
       });
   }
 };
@@ -76,8 +76,8 @@ const transporter = createTransporter();
 
 // Email templates
 const emailTemplates = {
-  'email-verification': {
-    subject: 'Verify Your Email - JD Marc Limited',
+  "email-verification": {
+    subject: "Verify Your Email - JD Marc Limited",
     html: (data: any) => `
       <!DOCTYPE html>
       <html>
@@ -136,11 +136,11 @@ const emailTemplates = {
       
       Best regards,
       The JD Marc Limited Team
-    `
+    `,
   },
 
-  'password-reset': {
-    subject: 'Password Reset - JD Marc Limited',
+  "password-reset": {
+    subject: "Password Reset - JD Marc Limited",
     html: (data: any) => `
       <!DOCTYPE html>
       <html>
@@ -199,11 +199,11 @@ const emailTemplates = {
       
       Best regards,
       The JD Marc Limited Team
-    `
+    `,
   },
 
-  'contact-confirmation': {
-    subject: 'Thank You for Contacting JD Marc Limited',
+  "contact-confirmation": {
+    subject: "Thank You for Contacting JD Marc Limited",
     html: (data: any) => `
       <!DOCTYPE html>
       <html>
@@ -232,9 +232,9 @@ const emailTemplates = {
             <div class="info-box">
               <h3>Your Inquiry Details:</h3>
               <p><strong>Subject:</strong> ${data.subject}</p>
-              <p><strong>Project Type:</strong> ${data.projectType || 'Not specified'}</p>
-              <p><strong>Budget Range:</strong> ${data.budget || 'Not specified'}</p>
-              <p><strong>Timeline:</strong> ${data.timeline || 'Not specified'}</p>
+              <p><strong>Project Type:</strong> ${data.projectType || "Not specified"}</p>
+              <p><strong>Budget Range:</strong> ${data.budget || "Not specified"}</p>
+              <p><strong>Timeline:</strong> ${data.timeline || "Not specified"}</p>
               <p><strong>Reference ID:</strong> ${data.referenceId}</p>
             </div>
             
@@ -275,11 +275,11 @@ const emailTemplates = {
       
       Email: info@jdmarc.com
       Phone: +234 (0) 9 291 3991
-    `
+    `,
   },
 
-  'project-update': {
-    subject: 'Project Update - {{projectName}}',
+  "project-update": {
+    subject: "Project Update - {{projectName}}",
     html: (data: any) => `
       <!DOCTYPE html>
       <html>
@@ -345,8 +345,8 @@ const emailTemplates = {
       
       Best regards,
       The JD Marc Project Team
-    `
-  }
+    `,
+  },
 };
 
 // Email sending interface
@@ -364,10 +364,14 @@ interface EmailOptions {
 export const sendEmail = async (options: EmailOptions): Promise<boolean> => {
   try {
     let { to, subject, html, text } = options;
-    
+
     // If template is specified, use template
-    if (options.template && emailTemplates[options.template as keyof typeof emailTemplates]) {
-      const template = emailTemplates[options.template as keyof typeof emailTemplates];
+    if (
+      options.template &&
+      emailTemplates[options.template as keyof typeof emailTemplates]
+    ) {
+      const template =
+        emailTemplates[options.template as keyof typeof emailTemplates];
       subject = subject || template.subject;
       html = template.html(options.data || {});
       text = template.text(options.data || {});
@@ -375,28 +379,28 @@ export const sendEmail = async (options: EmailOptions): Promise<boolean> => {
 
     const mailOptions = {
       from: {
-        name: process.env.EMAIL_FROM_NAME || 'JD Marc Limited',
-        address: process.env.EMAIL_FROM_ADDRESS || 'noreply@jdmarc.com'
+        name: process.env.EMAIL_FROM_NAME || "JD Marc Limited",
+        address: process.env.EMAIL_FROM_ADDRESS || "noreply@jdmarc.com",
       },
-      to: Array.isArray(to) ? to.join(', ') : to,
+      to: Array.isArray(to) ? to.join(", ") : to,
       subject,
       html,
       text,
-      attachments: options.attachments || []
+      attachments: options.attachments || [],
     };
 
     const info = await transporter.sendMail(mailOptions);
-    
-    if (process.env.NODE_ENV === 'development') {
+
+    if (process.env.NODE_ENV === "development") {
       logger.info(`Email sent: ${info.messageId}`);
-      if (process.env.EMAIL_PROVIDER === 'ethereal') {
+      if (process.env.EMAIL_PROVIDER === "ethereal") {
         logger.info(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
       }
     }
 
     return true;
   } catch (error) {
-    logger.error('Email sending failed:', error);
+    logger.error("Email sending failed:", error);
     return false;
   }
 };
@@ -405,17 +409,21 @@ export const sendEmail = async (options: EmailOptions): Promise<boolean> => {
 export const sendBulkEmail = async (
   recipients: string[],
   template: string,
-  data: any
+  data: any,
 ): Promise<{ success: number; failed: number }> => {
   const results = await Promise.allSettled(
-    recipients.map(email => sendEmail({
-      to: email,
-      template,
-      data: { ...data, email }
-    }))
+    recipients.map((email) =>
+      sendEmail({
+        to: email,
+        template,
+        data: { ...data, email },
+      }),
+    ),
   );
 
-  const success = results.filter(result => result.status === 'fulfilled' && result.value).length;
+  const success = results.filter(
+    (result) => result.status === "fulfilled" && result.value,
+  ).length;
   const failed = results.length - success;
 
   logger.info(`Bulk email sent: ${success} successful, ${failed} failed`);
@@ -427,10 +435,10 @@ export const sendBulkEmail = async (
 export const verifyEmailConfig = async (): Promise<boolean> => {
   try {
     await transporter.verify();
-    logger.info('✅ Email configuration verified');
+    logger.info("✅ Email configuration verified");
     return true;
   } catch (error) {
-    logger.error('❌ Email configuration failed:', error);
+    logger.error("❌ Email configuration failed:", error);
     return false;
   }
 };

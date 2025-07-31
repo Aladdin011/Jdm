@@ -1,10 +1,16 @@
-import { useState, useRef } from 'react';
-import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { 
-  Star, 
-  Quote, 
-  Play, 
-  ChevronLeft, 
+import { useState, useRef } from "react";
+import {
+  motion,
+  useInView,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+} from "framer-motion";
+import {
+  Star,
+  Quote,
+  Play,
+  ChevronLeft,
   ChevronRight,
   Building2,
   Users,
@@ -14,9 +20,9 @@ import {
   Video,
   MessageSquare,
   Heart,
-  TrendingUp
-} from 'lucide-react';
-import { useAppStore } from '@/stores/appStore';
+  TrendingUp,
+} from "lucide-react";
+import { useAppStore } from "@/stores/appStore";
 
 // Testimonials data
 const testimonials = [
@@ -26,18 +32,21 @@ const testimonials = [
     role: "Managing Director",
     company: "Lagos Development Authority",
     location: "Lagos, Nigeria",
-    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=150&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=150&q=80",
     rating: 5,
     project: "Lagos Smart City Complex",
-    testimonial: "JD Marc Limited exceeded all our expectations. Their innovative approach to smart city development and attention to sustainability has set a new standard for urban planning in Nigeria. The project was delivered on time and within budget.",
-    videoThumbnail: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400&q=80",
+    testimonial:
+      "JD Marc Limited exceeded all our expectations. Their innovative approach to smart city development and attention to sustainability has set a new standard for urban planning in Nigeria. The project was delivered on time and within budget.",
+    videoThumbnail:
+      "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400&q=80",
     hasVideo: true,
     metrics: {
       projectValue: "$45M",
       timeline: "24 months",
-      satisfaction: "98%"
+      satisfaction: "98%",
     },
-    tags: ["Smart Cities", "Sustainability", "Innovation"]
+    tags: ["Smart Cities", "Sustainability", "Innovation"],
   },
   {
     id: 2,
@@ -45,18 +54,21 @@ const testimonials = [
     role: "Chairman",
     company: "Okafor Holdings Ltd",
     location: "Abuja, Nigeria",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&q=80",
     rating: 5,
     project: "Abuja Financial District",
-    testimonial: "Working with JD Marc was a game-changer for our business expansion. Their expertise in commercial construction and understanding of modern business needs resulted in a world-class facility that attracts top-tier tenants.",
-    videoThumbnail: "https://images.unsplash.com/photo-1555636222-cae831e670b3?w=400&q=80",
+    testimonial:
+      "Working with JD Marc was a game-changer for our business expansion. Their expertise in commercial construction and understanding of modern business needs resulted in a world-class facility that attracts top-tier tenants.",
+    videoThumbnail:
+      "https://images.unsplash.com/photo-1555636222-cae831e670b3?w=400&q=80",
     hasVideo: true,
     metrics: {
       projectValue: "$32M",
       timeline: "18 months",
-      satisfaction: "96%"
+      satisfaction: "96%",
     },
-    tags: ["Commercial", "Business", "Quality"]
+    tags: ["Commercial", "Business", "Quality"],
   },
   {
     id: 3,
@@ -64,18 +76,21 @@ const testimonials = [
     role: "Community Leader",
     company: "Kano Residents Association",
     location: "Kano, Nigeria",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&q=80",
     rating: 5,
     project: "Kano Residential Estate",
-    testimonial: "The residential estate built by JD Marc has transformed our community. The quality of construction, modern amenities, and focus on family-friendly design has created a wonderful place to call home.",
-    videoThumbnail: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&q=80",
+    testimonial:
+      "The residential estate built by JD Marc has transformed our community. The quality of construction, modern amenities, and focus on family-friendly design has created a wonderful place to call home.",
+    videoThumbnail:
+      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&q=80",
     hasVideo: false,
     metrics: {
       projectValue: "$28M",
       timeline: "20 months",
-      satisfaction: "99%"
+      satisfaction: "99%",
     },
-    tags: ["Residential", "Community", "Family"]
+    tags: ["Residential", "Community", "Family"],
   },
   {
     id: 4,
@@ -83,18 +98,21 @@ const testimonials = [
     role: "State Commissioner",
     company: "Cross River State Government",
     location: "Cross River, Nigeria",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&q=80",
     rating: 5,
     project: "Cross River Bridge",
-    testimonial: "The Cross River Bridge project demonstrates JD Marc's exceptional capability in complex infrastructure development. Their innovative engineering solutions and commitment to safety standards are unmatched.",
-    videoThumbnail: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&q=80",
+    testimonial:
+      "The Cross River Bridge project demonstrates JD Marc's exceptional capability in complex infrastructure development. Their innovative engineering solutions and commitment to safety standards are unmatched.",
+    videoThumbnail:
+      "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&q=80",
     hasVideo: true,
     metrics: {
       projectValue: "$55M",
       timeline: "30 months",
-      satisfaction: "100%"
+      satisfaction: "100%",
     },
-    tags: ["Infrastructure", "Engineering", "Safety"]
+    tags: ["Infrastructure", "Engineering", "Safety"],
   },
   {
     id: 5,
@@ -102,33 +120,55 @@ const testimonials = [
     role: "CEO",
     company: "Port Harcourt Development Corp",
     location: "Port Harcourt, Nigeria",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&q=80",
     rating: 5,
     project: "Port Harcourt Mall",
-    testimonial: "JD Marc delivered a retail complex that has become the heart of our city's commercial activity. Their understanding of modern retail needs and architectural excellence is truly impressive.",
-    videoThumbnail: "https://images.unsplash.com/photo-1519642055093-45c8770d0e8e?w=400&q=80",
+    testimonial:
+      "JD Marc delivered a retail complex that has become the heart of our city's commercial activity. Their understanding of modern retail needs and architectural excellence is truly impressive.",
+    videoThumbnail:
+      "https://images.unsplash.com/photo-1519642055093-45c8770d0e8e?w=400&q=80",
     hasVideo: false,
     metrics: {
       projectValue: "$22M",
       timeline: "15 months",
-      satisfaction: "97%"
+      satisfaction: "97%",
     },
-    tags: ["Retail", "Commercial", "Architecture"]
-  }
+    tags: ["Retail", "Commercial", "Architecture"],
+  },
 ];
 
 // Company stats for credibility
 const companyStats = [
-  { label: "Projects Completed", value: "500+", icon: <Building2 className="w-6 h-6" /> },
-  { label: "Happy Clients", value: "450+", icon: <Users className="w-6 h-6" /> },
-  { label: "Industry Awards", value: "25+", icon: <Award className="w-6 h-6" /> },
-  { label: "Client Satisfaction", value: "98%", icon: <TrendingUp className="w-6 h-6" /> }
+  {
+    label: "Projects Completed",
+    value: "500+",
+    icon: <Building2 className="w-6 h-6" />,
+  },
+  {
+    label: "Happy Clients",
+    value: "450+",
+    icon: <Users className="w-6 h-6" />,
+  },
+  {
+    label: "Industry Awards",
+    value: "25+",
+    icon: <Award className="w-6 h-6" />,
+  },
+  {
+    label: "Client Satisfaction",
+    value: "98%",
+    icon: <TrendingUp className="w-6 h-6" />,
+  },
 ];
 
 // Individual testimonial card
-const TestimonialCard = ({ testimonial, isActive }: { 
-  testimonial: typeof testimonials[0]; 
-  isActive: boolean; 
+const TestimonialCard = ({
+  testimonial,
+  isActive,
+}: {
+  testimonial: (typeof testimonials)[0];
+  isActive: boolean;
 }) => {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const { trackUserInteraction } = useAppStore();
@@ -142,7 +182,7 @@ const TestimonialCard = ({ testimonial, isActive }: {
     <>
       <motion.div
         className={`bg-white rounded-2xl shadow-xl border border-gray-100 p-8 relative overflow-hidden ${
-          isActive ? 'ring-2 ring-orange-200' : ''
+          isActive ? "ring-2 ring-orange-200" : ""
         }`}
         layout
         initial={{ opacity: 0, scale: 0.95 }}
@@ -168,10 +208,12 @@ const TestimonialCard = ({ testimonial, isActive }: {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3, delay: i * 0.1 }}
             >
-              <Star 
+              <Star
                 className={`w-5 h-5 ${
-                  i < testimonial.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                }`} 
+                  i < testimonial.rating
+                    ? "text-yellow-400 fill-current"
+                    : "text-gray-300"
+                }`}
               />
             </motion.div>
           ))}
@@ -186,15 +228,21 @@ const TestimonialCard = ({ testimonial, isActive }: {
         <div className="grid grid-cols-3 gap-4 mb-8 p-4 bg-gray-50 rounded-xl">
           <div className="text-center">
             <div className="text-sm text-gray-600 mb-1">Project Value</div>
-            <div className="font-semibold text-gray-800">{testimonial.metrics.projectValue}</div>
+            <div className="font-semibold text-gray-800">
+              {testimonial.metrics.projectValue}
+            </div>
           </div>
           <div className="text-center">
             <div className="text-sm text-gray-600 mb-1">Timeline</div>
-            <div className="font-semibold text-gray-800">{testimonial.metrics.timeline}</div>
+            <div className="font-semibold text-gray-800">
+              {testimonial.metrics.timeline}
+            </div>
           </div>
           <div className="text-center">
             <div className="text-sm text-gray-600 mb-1">Satisfaction</div>
-            <div className="font-semibold text-green-600">{testimonial.metrics.satisfaction}</div>
+            <div className="font-semibold text-green-600">
+              {testimonial.metrics.satisfaction}
+            </div>
           </div>
         </div>
 
@@ -206,15 +254,19 @@ const TestimonialCard = ({ testimonial, isActive }: {
             className="w-16 h-16 rounded-full object-cover"
           />
           <div className="flex-1">
-            <h4 className="font-semibold text-gray-800 text-lg">{testimonial.name}</h4>
+            <h4 className="font-semibold text-gray-800 text-lg">
+              {testimonial.name}
+            </h4>
             <p className="text-gray-600">{testimonial.role}</p>
             <p className="text-sm text-gray-500">{testimonial.company}</p>
             <div className="flex items-center gap-1 mt-1">
               <MapPin className="w-3 h-3 text-gray-400" />
-              <span className="text-xs text-gray-500">{testimonial.location}</span>
+              <span className="text-xs text-gray-500">
+                {testimonial.location}
+              </span>
             </div>
           </div>
-          
+
           {/* Video Button */}
           {testimonial.hasVideo && (
             <motion.button
@@ -243,7 +295,10 @@ const TestimonialCard = ({ testimonial, isActive }: {
         {/* Project Reference */}
         <div className="mt-6 pt-6 border-t border-gray-100">
           <div className="text-sm text-gray-600">
-            Project: <span className="font-medium text-gray-800">{testimonial.project}</span>
+            Project:{" "}
+            <span className="font-medium text-gray-800">
+              {testimonial.project}
+            </span>
           </div>
         </div>
       </motion.div>
@@ -278,7 +333,7 @@ const TestimonialCard = ({ testimonial, isActive }: {
                   <p className="text-sm opacity-60">Coming Soon</p>
                 </div>
               </div>
-              
+
               <button
                 onClick={() => setIsVideoModalOpen(false)}
                 className="absolute top-4 right-4 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors"
@@ -315,7 +370,9 @@ const TestimonialCarousel = () => {
   };
 
   const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    setCurrentIndex(
+      (prev) => (prev - 1 + testimonials.length) % testimonials.length,
+    );
     setAutoPlay(false);
   };
 
@@ -340,7 +397,7 @@ const TestimonialCarousel = () => {
               key={index}
               onClick={() => setCurrentIndex(index)}
               className={`w-3 h-3 rounded-full transition-colors ${
-                index === currentIndex ? 'bg-orange-500' : 'bg-gray-300'
+                index === currentIndex ? "bg-orange-500" : "bg-gray-300"
               }`}
             />
           ))}
@@ -385,7 +442,9 @@ const StatsGrid = () => (
         >
           {stat.icon}
         </motion.div>
-        <div className="text-3xl font-bold text-gray-800 mb-2">{stat.value}</div>
+        <div className="text-3xl font-bold text-gray-800 mb-2">
+          {stat.value}
+        </div>
         <div className="text-sm text-gray-600">{stat.label}</div>
       </motion.div>
     ))}
@@ -396,13 +455,16 @@ export default function PremiumTestimonials() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start end", "end start"]
+    offset: ["start end", "end start"],
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [50, -50]);
 
   return (
-    <section ref={sectionRef} className="py-24 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden">
+    <section
+      ref={sectionRef}
+      className="py-24 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden"
+    >
       {/* Background Elements */}
       <motion.div
         className="absolute top-20 right-10 w-72 h-72 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-full blur-3xl"
@@ -440,8 +502,9 @@ export default function PremiumTestimonials() {
           </h2>
 
           <p className="text-body-lg text-gray-300 max-w-3xl mx-auto">
-            Discover why industry leaders, government officials, and community stakeholders 
-            choose JD Marc Limited for their most important construction projects.
+            Discover why industry leaders, government officials, and community
+            stakeholders choose JD Marc Limited for their most important
+            construction projects.
           </p>
         </motion.div>
 
@@ -476,9 +539,12 @@ export default function PremiumTestimonials() {
           viewport={{ once: true }}
         >
           <Heart className="w-12 h-12 text-orange-400 mx-auto mb-6" />
-          <h3 className="text-2xl font-bold text-white mb-4">Join Our Growing Family of Satisfied Clients</h3>
+          <h3 className="text-2xl font-bold text-white mb-4">
+            Join Our Growing Family of Satisfied Clients
+          </h3>
           <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
-            Experience the same level of excellence that has made us Nigeria's most trusted construction partner.
+            Experience the same level of excellence that has made us Nigeria's
+            most trusted construction partner.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button className="btn-primary-premium">

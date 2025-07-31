@@ -1,49 +1,49 @@
-import { PrismaClient } from '@prisma/client';
-import { logger } from './logger';
+import { PrismaClient } from "@prisma/client";
+import { logger } from "./logger";
 
 // Create Prisma client with enhanced configuration
 const prisma = new PrismaClient({
   log: [
     {
-      emit: 'event',
-      level: 'query',
+      emit: "event",
+      level: "query",
     },
     {
-      emit: 'event',
-      level: 'error',
+      emit: "event",
+      level: "error",
     },
     {
-      emit: 'event',
-      level: 'info',
+      emit: "event",
+      level: "info",
     },
     {
-      emit: 'event',
-      level: 'warn',
+      emit: "event",
+      level: "warn",
     },
   ],
-  errorFormat: 'pretty',
+  errorFormat: "pretty",
 });
 
 // Log database queries in development
-if (process.env.NODE_ENV === 'development') {
-  prisma.$on('query', (e) => {
+if (process.env.NODE_ENV === "development") {
+  prisma.$on("query", (e) => {
     logger.debug(`Query: ${e.query}`);
     logger.debug(`Duration: ${e.duration}ms`);
   });
 }
 
 // Log database errors
-prisma.$on('error', (e) => {
-  logger.error('Database error:', e);
+prisma.$on("error", (e) => {
+  logger.error("Database error:", e);
 });
 
 // Log database info
-prisma.$on('info', (e) => {
+prisma.$on("info", (e) => {
   logger.info(`Database info: ${e.message}`);
 });
 
 // Log database warnings
-prisma.$on('warn', (e) => {
+prisma.$on("warn", (e) => {
   logger.warn(`Database warning: ${e.message}`);
 });
 
@@ -51,10 +51,10 @@ prisma.$on('warn', (e) => {
 export const testDatabaseConnection = async () => {
   try {
     await prisma.$connect();
-    logger.info('✅ Database connected successfully');
+    logger.info("✅ Database connected successfully");
     return true;
   } catch (error) {
-    logger.error('❌ Database connection failed:', error);
+    logger.error("❌ Database connection failed:", error);
     return false;
   }
 };
@@ -63,9 +63,9 @@ export const testDatabaseConnection = async () => {
 export const disconnectDatabase = async () => {
   try {
     await prisma.$disconnect();
-    logger.info('Database disconnected successfully');
+    logger.info("Database disconnected successfully");
   } catch (error) {
-    logger.error('Error disconnecting from database:', error);
+    logger.error("Error disconnecting from database:", error);
   }
 };
 
@@ -75,25 +75,25 @@ export const databaseHealthCheck = async () => {
     const startTime = Date.now();
     await prisma.$queryRaw`SELECT 1`;
     const responseTime = Date.now() - startTime;
-    
+
     return {
-      status: 'healthy',
+      status: "healthy",
       responseTime: `${responseTime}ms`,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
   } catch (error) {
-    logger.error('Database health check failed:', error);
+    logger.error("Database health check failed:", error);
     return {
-      status: 'unhealthy',
-      error: error instanceof Error ? error.message : 'Unknown error',
-      timestamp: new Date().toISOString()
+      status: "unhealthy",
+      error: error instanceof Error ? error.message : "Unknown error",
+      timestamp: new Date().toISOString(),
     };
   }
 };
 
 // Transaction helper
 export const withTransaction = async <T>(
-  callback: (tx: any) => Promise<T>
+  callback: (tx: any) => Promise<T>,
 ): Promise<T> => {
   return await prisma.$transaction(callback);
 };

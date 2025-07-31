@@ -1,5 +1,5 @@
-import { prisma } from '@/utils/database';
-import { logger } from '@/utils/logger';
+import { prisma } from "@/utils/database";
+import { logger } from "@/utils/logger";
 
 interface AnalyticsEvent {
   userId?: string;
@@ -15,62 +15,68 @@ interface AnalyticsEvent {
 export const trackUserAnalytics = async (
   userId: string,
   event: string,
-  data?: any
+  data?: any,
 ) => {
   try {
     // Update user analytics record
     const analytics = await prisma.userAnalytics.upsert({
       where: { userId },
       update: {
-        pageViews: event === 'page_view' ? { increment: 1 } : undefined,
-        sessionCount: event === 'login' ? { increment: 1 } : undefined,
+        pageViews: event === "page_view" ? { increment: 1 } : undefined,
+        sessionCount: event === "login" ? { increment: 1 } : undefined,
         lastVisit: new Date(),
-        conversionEvents: event.includes('conversion') ? {
-          push: event
-        } : undefined,
-        interactionData: data ? {
-          // Merge with existing data
-          ...data
-        } : undefined,
-        updatedAt: new Date()
+        conversionEvents: event.includes("conversion")
+          ? {
+              push: event,
+            }
+          : undefined,
+        interactionData: data
+          ? {
+              // Merge with existing data
+              ...data,
+            }
+          : undefined,
+        updatedAt: new Date(),
       },
       create: {
         userId,
-        pageViews: event === 'page_view' ? 1 : 0,
-        sessionCount: event === 'login' ? 1 : 0,
+        pageViews: event === "page_view" ? 1 : 0,
+        sessionCount: event === "login" ? 1 : 0,
         lastVisit: new Date(),
-        conversionEvents: event.includes('conversion') ? [event] : [],
-        interactionData: data || {}
-      }
+        conversionEvents: event.includes("conversion") ? [event] : [],
+        interactionData: data || {},
+      },
     });
 
-    logger.debug('Analytics tracked', {
+    logger.debug("Analytics tracked", {
       userId,
       event,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     return analytics;
   } catch (error) {
-    logger.error('Track analytics error:', error);
+    logger.error("Track analytics error:", error);
     throw error;
   }
 };
 
 // Get analytics overview
-export const getAnalyticsOverview = async (timeframe: 'day' | 'week' | 'month' = 'week') => {
+export const getAnalyticsOverview = async (
+  timeframe: "day" | "week" | "month" = "week",
+) => {
   try {
     const now = new Date();
     const startDate = new Date();
-    
+
     switch (timeframe) {
-      case 'day':
+      case "day":
         startDate.setDate(now.getDate() - 1);
         break;
-      case 'week':
+      case "week":
         startDate.setDate(now.getDate() - 7);
         break;
-      case 'month':
+      case "month":
         startDate.setMonth(now.getMonth() - 1);
         break;
     }
@@ -82,30 +88,30 @@ export const getAnalyticsOverview = async (timeframe: 'day' | 'week' | 'month' =
       averageSessionDuration,
       topPages,
       deviceStats,
-      trafficSources
+      trafficSources,
     ] = await Promise.all([
       prisma.user.count(),
       prisma.userAnalytics.count({
         where: {
           lastVisit: {
-            gte: startDate
-          }
-        }
+            gte: startDate,
+          },
+        },
       }),
       prisma.userAnalytics.aggregate({
         _sum: { pageViews: true },
         where: {
           updatedAt: {
-            gte: startDate
-          }
-        }
+            gte: startDate,
+          },
+        },
       }),
       prisma.userAnalytics.aggregate({
-        _avg: { totalTimeOnSite: true }
+        _avg: { totalTimeOnSite: true },
       }),
       getTopPages(startDate),
       getDeviceStats(startDate),
-      getTrafficSources(startDate)
+      getTrafficSources(startDate),
     ]);
 
     return {
@@ -113,15 +119,17 @@ export const getAnalyticsOverview = async (timeframe: 'day' | 'week' | 'month' =
         totalUsers,
         activeUsers,
         pageViews: pageViews._sum.pageViews || 0,
-        averageSessionDuration: Math.round(averageSessionDuration._avg.totalTimeOnSite || 0),
-        timeframe
+        averageSessionDuration: Math.round(
+          averageSessionDuration._avg.totalTimeOnSite || 0,
+        ),
+        timeframe,
       },
       topPages,
       deviceStats,
-      trafficSources
+      trafficSources,
     };
   } catch (error) {
-    logger.error('Get analytics overview error:', error);
+    logger.error("Get analytics overview error:", error);
     throw error;
   }
 };
@@ -131,59 +139,59 @@ const getTopPages = async (startDate: Date) => {
   // This would be more complex in a real implementation
   // For now, return mock data based on common patterns
   return [
-    { page: '/', views: 1250, percentage: 35 },
-    { page: '/projects', views: 890, percentage: 25 },
-    { page: '/services', views: 620, percentage: 17 },
-    { page: '/about', views: 445, percentage: 12 },
-    { page: '/contact', views: 395, percentage: 11 }
+    { page: "/", views: 1250, percentage: 35 },
+    { page: "/projects", views: 890, percentage: 25 },
+    { page: "/services", views: 620, percentage: 17 },
+    { page: "/about", views: 445, percentage: 12 },
+    { page: "/contact", views: 395, percentage: 11 },
   ];
 };
 
 // Get device statistics
 const getDeviceStats = async (startDate: Date) => {
   const deviceStats = await prisma.userAnalytics.groupBy({
-    by: ['deviceType'],
+    by: ["deviceType"],
     _count: { id: true },
     where: {
       updatedAt: {
-        gte: startDate
+        gte: startDate,
       },
       deviceType: {
-        not: null
-      }
-    }
+        not: null,
+      },
+    },
   });
 
   const total = deviceStats.reduce((sum, stat) => sum + stat._count.id, 0);
 
-  return deviceStats.map(stat => ({
+  return deviceStats.map((stat) => ({
     device: stat.deviceType,
     count: stat._count.id,
-    percentage: total > 0 ? Math.round((stat._count.id / total) * 100) : 0
+    percentage: total > 0 ? Math.round((stat._count.id / total) * 100) : 0,
   }));
 };
 
 // Get traffic sources
 const getTrafficSources = async (startDate: Date) => {
   const sourceStats = await prisma.userAnalytics.groupBy({
-    by: ['utmSource'],
+    by: ["utmSource"],
     _count: { id: true },
     where: {
       updatedAt: {
-        gte: startDate
+        gte: startDate,
       },
       utmSource: {
-        not: null
-      }
-    }
+        not: null,
+      },
+    },
   });
 
   const total = sourceStats.reduce((sum, stat) => sum + stat._count.id, 0);
 
-  return sourceStats.map(stat => ({
+  return sourceStats.map((stat) => ({
     source: stat.utmSource,
     count: stat._count.id,
-    percentage: total > 0 ? Math.round((stat._count.id / total) * 100) : 0
+    percentage: total > 0 ? Math.round((stat._count.id / total) * 100) : 0,
   }));
 };
 
@@ -191,12 +199,12 @@ const getTrafficSources = async (startDate: Date) => {
 export const trackPageView = async (
   userId: string,
   page: string,
-  data?: any
+  data?: any,
 ) => {
-  return await trackUserAnalytics(userId, 'page_view', {
+  return await trackUserAnalytics(userId, "page_view", {
     page,
     timestamp: new Date(),
-    ...data
+    ...data,
   });
 };
 
@@ -205,13 +213,13 @@ export const trackConversion = async (
   userId: string,
   conversionType: string,
   value?: number,
-  data?: any
+  data?: any,
 ) => {
   return await trackUserAnalytics(userId, `conversion_${conversionType}`, {
     conversionType,
     value,
     timestamp: new Date(),
-    ...data
+    ...data,
   });
 };
 
@@ -226,10 +234,10 @@ export const getUserJourney = async (userId: string) => {
             firstName: true,
             lastName: true,
             email: true,
-            createdAt: true
-          }
-        }
-      }
+            createdAt: true,
+          },
+        },
+      },
     });
 
     if (!analytics) {
@@ -244,9 +252,9 @@ export const getUserJourney = async (userId: string) => {
         subject: true,
         projectType: true,
         status: true,
-        createdAt: true
+        createdAt: true,
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: "desc" },
     });
 
     // Get projects
@@ -257,9 +265,9 @@ export const getUserJourney = async (userId: string) => {
         title: true,
         status: true,
         budget: true,
-        createdAt: true
+        createdAt: true,
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: "desc" },
     });
 
     return {
@@ -273,67 +281,71 @@ export const getUserJourney = async (userId: string) => {
         browser: analytics.browser,
         country: analytics.country,
         utmSource: analytics.utmSource,
-        conversionEvents: analytics.conversionEvents
+        conversionEvents: analytics.conversionEvents,
       },
       contactForms,
       projects,
-      journey: buildUserJourney(analytics, contactForms, projects)
+      journey: buildUserJourney(analytics, contactForms, projects),
     };
   } catch (error) {
-    logger.error('Get user journey error:', error);
+    logger.error("Get user journey error:", error);
     throw error;
   }
 };
 
 // Build user journey timeline
-const buildUserJourney = (analytics: any, contactForms: any[], projects: any[]) => {
+const buildUserJourney = (
+  analytics: any,
+  contactForms: any[],
+  projects: any[],
+) => {
   const events = [];
 
   // Add registration event
   events.push({
-    type: 'registration',
+    type: "registration",
     timestamp: analytics.user.createdAt,
-    description: 'User registered'
+    description: "User registered",
   });
 
   // Add contact form events
-  contactForms.forEach(form => {
+  contactForms.forEach((form) => {
     events.push({
-      type: 'contact_form',
+      type: "contact_form",
       timestamp: form.createdAt,
       description: `Submitted inquiry: ${form.subject}`,
       data: {
         projectType: form.projectType,
-        status: form.status
-      }
+        status: form.status,
+      },
     });
   });
 
   // Add project events
-  projects.forEach(project => {
+  projects.forEach((project) => {
     events.push({
-      type: 'project',
+      type: "project",
       timestamp: project.createdAt,
       description: `Project started: ${project.title}`,
       data: {
         status: project.status,
-        budget: project.budget
-      }
+        budget: project.budget,
+      },
     });
   });
 
   // Add conversion events
   analytics.conversionEvents.forEach((event: string) => {
     events.push({
-      type: 'conversion',
+      type: "conversion",
       timestamp: analytics.lastVisit, // Approximate
-      description: `Conversion: ${event.replace('conversion_', '')}`
+      description: `Conversion: ${event.replace("conversion_", "")}`,
     });
   });
 
   // Sort by timestamp
-  return events.sort((a, b) => 
-    new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+  return events.sort(
+    (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
   );
 };
 
@@ -341,7 +353,7 @@ const buildUserJourney = (analytics: any, contactForms: any[], projects: any[]) 
 export const trackRealTimeEvent = async (event: AnalyticsEvent) => {
   try {
     // Log the event
-    logger.info('Real-time analytics event', event);
+    logger.info("Real-time analytics event", event);
 
     // If user is identified, update their analytics
     if (event.userId) {
@@ -353,7 +365,7 @@ export const trackRealTimeEvent = async (event: AnalyticsEvent) => {
 
     return true;
   } catch (error) {
-    logger.error('Track real-time event error:', error);
+    logger.error("Track real-time event error:", error);
     return false;
   }
 };
@@ -364,5 +376,5 @@ export default {
   trackPageView,
   trackConversion,
   getUserJourney,
-  trackRealTimeEvent
+  trackRealTimeEvent,
 };

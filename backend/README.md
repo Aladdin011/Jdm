@@ -71,6 +71,7 @@ npm run seed
 Choose one of the following email providers:
 
 #### Gmail Setup
+
 ```bash
 # In .env file
 EMAIL_PROVIDER=gmail
@@ -79,6 +80,7 @@ GMAIL_APP_PASSWORD=your_app_password
 ```
 
 #### SendGrid Setup
+
 ```bash
 # In .env file
 EMAIL_PROVIDER=sendgrid
@@ -86,6 +88,7 @@ SENDGRID_API_KEY=your_sendgrid_api_key
 ```
 
 #### SMTP Setup
+
 ```bash
 # In .env file
 EMAIL_PROVIDER=smtp
@@ -192,6 +195,7 @@ Email templates are defined in `src/utils/email.ts`. To add a new template:
 ## 📊 API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/register` - User registration
 - `POST /api/auth/login` - User login
 - `POST /api/auth/verify-otp` - Email verification
@@ -202,6 +206,7 @@ Email templates are defined in `src/utils/email.ts`. To add a new template:
 - `GET /api/auth/me` - Get current user
 
 ### Contact Forms
+
 - `POST /api/contact/submit` - Submit contact form
 - `GET /api/contact` - List contact forms (admin)
 - `GET /api/contact/:id` - Get contact form details
@@ -209,11 +214,13 @@ Email templates are defined in `src/utils/email.ts`. To add a new template:
 - `GET /api/contact/stats/overview` - Contact form statistics
 
 ### Users
+
 - `GET /api/users/profile` - Get user profile
 - `PUT /api/users/profile` - Update user profile
 - `POST /api/users/upload-avatar` - Upload profile avatar
 
 ### Projects
+
 - `GET /api/projects` - List projects
 - `POST /api/projects` - Create new project
 - `GET /api/projects/:id` - Get project details
@@ -221,6 +228,7 @@ Email templates are defined in `src/utils/email.ts`. To add a new template:
 - `DELETE /api/projects/:id` - Delete project
 
 ### Analytics
+
 - `GET /api/analytics/overview` - Analytics dashboard data
 - `GET /api/analytics/user/:id` - User journey analytics
 - `POST /api/analytics/track` - Track custom events
@@ -428,6 +436,7 @@ curl http://localhost:5000/api/admin/health/database
 ### Common Issues
 
 #### Database Connection Issues
+
 ```bash
 # Check PostgreSQL status
 sudo service postgresql status
@@ -440,6 +449,7 @@ psql -l | grep jdmarc
 ```
 
 #### Email Not Sending
+
 ```bash
 # Check email configuration
 node -e "require('./dist/utils/email').verifyEmailConfig()"
@@ -449,6 +459,7 @@ EMAIL_PROVIDER=ethereal npm run dev
 ```
 
 #### Port Already in Use
+
 ```bash
 # Find process using port 5000
 lsof -i :5000
@@ -458,6 +469,7 @@ kill -9 <PID>
 ```
 
 #### Memory Issues
+
 ```bash
 # Increase Node.js memory limit
 export NODE_OPTIONS="--max-old-space-size=4096"
