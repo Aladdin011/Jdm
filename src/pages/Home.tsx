@@ -3,10 +3,9 @@ import {
   motion,
   useScroll,
   useTransform,
-  useViewportScroll,
 } from "framer-motion";
 import Layout from "@/components/layout/Layout";
-import ModernHero from "@/components/sections/home/ModernHero";
+import EnhancedHero from "@/components/sections/home/EnhancedHero";
 import AboutSection from "@/components/sections/home/AboutSection";
 import ProjectsShowcase from "@/components/sections/home/ProjectsShowcase";
 import CoreServices from "@/components/sections/home/CoreServices";
@@ -15,6 +14,9 @@ import CallToActionSection from "@/components/sections/home/CallToActionSection"
 import BlogPreview from "@/components/sections/home/BlogPreview";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import { IntelligentNavbar } from "@/components/layout/IntelligentNavbar";
+import { useAppStore, usePerformanceMonitoring } from "@/stores/appStore";
+import { usePersonalization, useLeadScoring } from "@/lib/personalization";
+import { useAdvancedAnimations } from "@/lib/advancedAnimations";
 
 // Page transition variants
 const pageVariants = {
