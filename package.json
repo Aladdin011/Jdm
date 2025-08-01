@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:package": "node build-and-package.js",
+    "preview": "vite preview",
     "test": "vitest --run",
     "format.fix": "prettier --write .",
     "typecheck": "tsc",
