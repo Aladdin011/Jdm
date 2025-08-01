@@ -5,8 +5,11 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "nodemon src/server.ts",
+    "dev:supabase": "nodemon src/server-supabase.ts",
     "build": "tsc",
+    "build:supabase": "tsc src/server-supabase.ts --outDir dist",
     "start": "node dist/server.js",
+    "start:supabase": "node dist/server-supabase.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "prisma:generate": "prisma generate",

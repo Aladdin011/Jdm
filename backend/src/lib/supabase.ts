@@ -1,12 +1,11 @@
 import { createClient } from '@supabase/supabase-js'
-import { Database } from '../types/supabase'
 
 // Environment variables
 const supabaseUrl = process.env.SUPABASE_URL!
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
 // Create Supabase client with service role key for backend operations
-export const supabase = createClient<Database>(supabaseUrl, supabaseServiceKey, {
+export const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   auth: {
     autoRefreshToken: false,
     persistSession: false
@@ -17,7 +16,7 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseServiceKey, 
 export const createUserClient = (accessToken?: string) => {
   const supabaseAnonKey = process.env.SUPABASE_ANON_KEY!
   
-  return createClient<Database>(supabaseUrl, supabaseAnonKey, {
+  return createClient(supabaseUrl, supabaseAnonKey, {
     auth: {
       autoRefreshToken: true,
       persistSession: true
@@ -162,7 +161,7 @@ export const uploadFile = async (bucket: string, path: string, file: Buffer, con
     const { data, error } = await supabase.storage
       .from(bucket)
       .upload(path, file, {
-        contentType,
+        contentType: contentType || 'application/octet-stream',
         upsert: true
       })
     
