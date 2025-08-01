@@ -1,7 +1,14 @@
-const ftp = require('basic-ftp')
-const fs = require('fs')
-const path = require('path')
-require('dotenv').config()
+import ftp from 'basic-ftp'
+import fs from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 async function uploadToHostinger() {
   const client = new ftp.Client()
@@ -30,6 +37,9 @@ async function uploadToHostinger() {
     }
 
     console.log(`📡 Connecting to ${config.host}...`)
+    console.log(`👤 Username: ${config.user}`)
+    console.log(`🔑 Password: ${config.password.substring(0, 3)}***`)
+    
     await client.access(config)
 
     // Navigate to the remote directory
@@ -50,7 +60,7 @@ async function uploadToHostinger() {
     await client.uploadFromDir(localPath)
 
     console.log('✅ Upload completed successfully!')
-    console.log(`🌐 Your site should be available at: https://${config.host.replace('ftp.', '')}`)
+    console.log(`🌐 Your site should be available at: https://jdmarcng.com`)
 
   } catch (err) {
     console.error('❌ Upload failed:', err.message)
@@ -59,6 +69,12 @@ async function uploadToHostinger() {
       console.log('💡 Make sure your FTP credentials are correct and the server is accessible.')
     } else if (err.code === 'EAUTH') {
       console.log('💡 Check your username and password.')
+    } else if (err.message.includes('530 Login incorrect')) {
+      console.log('💡 FTP Login failed. Please check:')
+      console.log('   - Username is correct')
+      console.log('   - Password is correct')
+      console.log('   - Special characters in password are properly escaped')
+      console.log('   - Try using the full domain as username: u158969833.jdmarcng.com')
     }
   }
 
