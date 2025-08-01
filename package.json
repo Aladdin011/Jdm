@@ -9,7 +9,8 @@
     "test": "vitest --run",
     "format.fix": "prettier --write .",
     "typecheck": "tsc",
-    "postinstall": "if [ \"$(uname)\" = \"Linux\" ]; then npm install @rollup/rollup-linux-x64-gnu @swc/core-linux-x64-gnu; fi"
+    "postinstall": "if [ \"$(uname)\" = \"Linux\" ]; then npm install @rollup/rollup-linux-x64-gnu @swc/core-linux-x64-gnu; fi",
+    "upload": "node upload-to-hostinger.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -48,10 +49,12 @@
     "@tanstack/react-query": "^5.56.2",
     "@types/three": "^0.176.0",
     "axios": "^1.11.0",
+    "basic-ftp": "^5.0.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
+    "dotenv": "^17.2.1",
     "embla-carousel-react": "^8.3.0",
     "framer-motion": "^12.6.2",
     "input-otp": "^1.2.4",
