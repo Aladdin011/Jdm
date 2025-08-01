@@ -12,10 +12,9 @@ async function testFTP() {
     
     // Try different password formats
     const passwords = [
-      '3U|UqBDZ3RUDXvRt',
-      '3U\\|UqBDZ3RUDXvRt',
-      encodeURIComponent('3U|UqBDZ3RUDXvRt'),
-      '3U%7CUqBDZ3RUDXvRt'
+      'Error@404',
+      'Error%40404',
+      encodeURIComponent('Error@404')
     ]
     
     const usernames = [
