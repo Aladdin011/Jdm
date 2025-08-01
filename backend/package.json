@@ -67,6 +67,9 @@
     "typescript",
     "prisma"
   ],
+  "engines": {
+    "node": "18.x"
+  },
   "author": "JD Marc Limited",
   "license": "MIT"
 }
