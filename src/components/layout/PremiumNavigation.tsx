@@ -1,20 +1,26 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Menu, 
-  X, 
-  ChevronDown, 
-  Phone, 
-  Mail, 
+import {
+  Menu,
+  X,
+  ChevronDown,
+  Phone,
+  Mail,
   MapPin,
   ArrowRight,
   Building2,
   Users,
   Briefcase,
-  MessageSquare
+  MessageSquare,
+  LogIn,
+  UserPlus,
+  Sun,
+  Moon,
+  Monitor
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAppStore } from '@/stores/appStore';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface NavItem {
   label: string;
