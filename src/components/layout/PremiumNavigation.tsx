@@ -366,14 +366,18 @@ export default function PremiumNavigation() {
               whileTap={{ scale: 0.98 }}
             >
               <motion.div
-                className="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center"
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.6 }}
+                className="h-10 w-auto flex items-center justify-center"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
               >
-                <Building2 className="w-6 h-6 text-white" />
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2Fb9e926f9dca9498f8a0f99f9f9792da7%2F850832a345244408ac37832fa5cb7097?format=webp&width=800"
+                  alt="JD Marc Limited Logo"
+                  className="h-8 w-auto object-contain"
+                />
               </motion.div>
               <div className="text-white font-bold text-xl group-hover:text-orange-300 transition-colors">
-                JD Marc Limited
+                Limited
               </div>
             </motion.button>
 
