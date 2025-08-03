@@ -151,9 +151,69 @@ const MobileMenu = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
                 </div>
               </div>
 
+              {/* Theme Toggle */}
+              <div className="mt-8 pt-6 border-t border-gray-200">
+                <div className="mb-4">
+                  <p className="text-sm font-medium text-gray-700 mb-3">Theme Preference</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    <button
+                      onClick={() => setTheme('light')}
+                      className={`p-3 rounded-lg border text-sm font-medium transition-colors flex flex-col items-center gap-1 ${
+                        theme === 'light'
+                          ? 'border-orange-500 bg-orange-50 text-orange-600'
+                          : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                      }`}
+                    >
+                      <Sun className="w-4 h-4" />
+                      <span>Light</span>
+                    </button>
+                    <button
+                      onClick={() => setTheme('dark')}
+                      className={`p-3 rounded-lg border text-sm font-medium transition-colors flex flex-col items-center gap-1 ${
+                        theme === 'dark'
+                          ? 'border-orange-500 bg-orange-50 text-orange-600'
+                          : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                      }`}
+                    >
+                      <Moon className="w-4 h-4" />
+                      <span>Dark</span>
+                    </button>
+                    <button
+                      onClick={() => setTheme('system')}
+                      className={`p-3 rounded-lg border text-sm font-medium transition-colors flex flex-col items-center gap-1 ${
+                        theme === 'system'
+                          ? 'border-orange-500 bg-orange-50 text-orange-600'
+                          : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                      }`}
+                    >
+                      <Monitor className="w-4 h-4" />
+                      <span>Auto</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Auth Buttons */}
+              <div className="space-y-3">
+                <button
+                  onClick={() => handleNavClick('/login', 'Login')}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium transition-colors"
+                >
+                  <LogIn className="w-4 h-4" />
+                  <span>Login</span>
+                </button>
+                <button
+                  onClick={() => handleNavClick('/register', 'Register')}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 font-medium transition-colors"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  <span>Register</span>
+                </button>
+              </div>
+
               {/* CTA Button */}
-              <div className="mt-8">
-                <button 
+              <div className="mt-6">
+                <button
                   onClick={() => handleNavClick('/contact', 'Get Quote')}
                   className="w-full btn-primary-premium justify-center"
                 >
