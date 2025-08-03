@@ -50,6 +50,7 @@ const MobileMenu = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
   const location = useLocation();
   const navigate = useNavigate();
   const { trackUserInteraction } = useAppStore();
+  const { theme, setTheme, actualTheme } = useTheme();
 
   const handleNavClick = (href: string, label: string) => {
     trackUserInteraction(`mobile-nav-${label.toLowerCase()}`);
