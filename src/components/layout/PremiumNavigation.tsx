@@ -299,10 +299,11 @@ export default function PremiumNavigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  
+
   const location = useLocation();
   const navigate = useNavigate();
   const { trackUserInteraction } = useAppStore();
+  const { theme, setTheme, actualTheme } = useTheme();
 
   // Handle scroll effect
   useEffect(() => {
