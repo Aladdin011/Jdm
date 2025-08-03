@@ -413,6 +413,43 @@ export default function PremiumNavigation() {
 
             {/* Action Buttons */}
             <div className="flex items-center gap-4">
+              {/* Theme Toggle - Desktop */}
+              <div className="hidden lg:flex items-center gap-2">
+                <button
+                  onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+                  className="w-10 h-10 flex items-center justify-center rounded-lg glass text-white border border-white/20 hover:bg-white/10 transition-colors"
+                  title={`Switch to ${actualTheme === 'light' ? 'dark' : 'light'} mode`}
+                >
+                  {actualTheme === 'light' ? (
+                    <Moon className="w-5 h-5" />
+                  ) : (
+                    <Sun className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
+
+              {/* Auth Buttons - Desktop */}
+              <div className="hidden lg:flex items-center gap-2">
+                <motion.button
+                  onClick={() => handleNavClick('/login', 'Login')}
+                  className="flex items-center gap-2 px-4 py-2 text-white/90 hover:text-white border border-white/20 rounded-lg hover:bg-white/10 transition-colors"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <LogIn className="w-4 h-4" />
+                  <span>Login</span>
+                </motion.button>
+                <motion.button
+                  onClick={() => handleNavClick('/register', 'Register')}
+                  className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <UserPlus className="w-4 h-4" />
+                  <span>Register</span>
+                </motion.button>
+              </div>
+
               {/* Get Quote Button - Desktop */}
               <motion.button
                 onClick={handleGetQuote}
