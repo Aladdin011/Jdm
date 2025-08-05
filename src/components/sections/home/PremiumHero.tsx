@@ -52,7 +52,9 @@ const AnimatedCounter = ({
 
   return (
     <div ref={ref} className="text-2xl lg:text-3xl font-bold text-white font-mono">
-      {prefix}{count}{suffix}
+      <span className="bg-gradient-to-r from-orange-300 to-amber-300 bg-clip-text text-transparent">
+        {prefix}{count}{suffix}
+      </span>
     </div>
   );
 };
