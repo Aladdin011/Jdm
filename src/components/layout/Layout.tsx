@@ -16,7 +16,7 @@ export default function Layout({
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground transition-colors duration-300">
       {!hideDefaultHeader && <PremiumNavigation />}
-      <main className="flex-grow pt-18">{children}</main>
+      <main className="flex-grow pt-20">{children}</main>
       <Footer />
       <BackToTop />
       <ChatbotPlaceholder />
