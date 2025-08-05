@@ -495,11 +495,11 @@ export default function PremiumNavigation() {
               {/* Mobile Menu Toggle */}
               <motion.button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="lg:hidden w-10 h-10 flex items-center justify-center rounded-lg glass text-white border border-white/20"
+                className="lg:hidden w-10 h-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-sm text-white border border-white/20 hover:bg-white/20 transition-all duration-300"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Menu className="w-6 h-6" />
+                <Menu className="w-5 h-5" />
               </motion.button>
             </div>
           </nav>
