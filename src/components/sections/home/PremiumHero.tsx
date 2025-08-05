@@ -229,12 +229,17 @@ const PremiumHero = () => {
 
         {/* Scroll indicator */}
         <motion.div
-          className="absolute bottom-8 right-8 text-white/60 text-xs writing-vertical-rl"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
+          className="absolute bottom-8 right-8 text-white/60 text-xs writing-vertical-rl scroll-indicator"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2, duration: 0.8 }}
         >
-          SCROLL
+          <motion.span
+            animate={{ y: [0, 5, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            SCROLL
+          </motion.span>
         </motion.div>
       </motion.section>
 
