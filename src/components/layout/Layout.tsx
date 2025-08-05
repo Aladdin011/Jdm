@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import Header from "./Header";
+import PremiumNavigation from "./PremiumNavigation";
 import Footer from "./Footer";
 import BackToTop from "@/components/ui/BackToTop";
 import ChatbotPlaceholder from "@/components/chat/ChatbotPlaceholder";
@@ -15,8 +15,8 @@ export default function Layout({
 }: LayoutProps) {
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground transition-colors duration-300">
-      {!hideDefaultHeader && <Header />}
-      <main className="flex-grow">{children}</main>
+      {!hideDefaultHeader && <PremiumNavigation />}
+      <main className="flex-grow pt-18">{children}</main>
       <Footer />
       <BackToTop />
       <ChatbotPlaceholder />
