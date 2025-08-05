@@ -186,14 +186,14 @@ const PremiumHero = () => {
             >
               {/* BLACK VISION - Main Title */}
               <motion.div variants={itemVariants}>
-                <h1 className="text-4xl lg:text-6xl font-bold text-white tracking-wider">
+                <h1 className="text-4xl lg:text-6xl font-bold text-white tracking-wider hero-title">
                   BLACK <span className="text-gray-300 font-light">VISION</span>
                 </h1>
               </motion.div>
 
               {/* Subtitle */}
               <motion.div variants={itemVariants}>
-                <p className="text-sm text-gray-300 italic font-light tracking-wide">
+                <p className="text-sm text-gray-300 italic font-light tracking-wide hero-subtitle">
                   Advanced darkness
                 </p>
               </motion.div>
