@@ -286,25 +286,33 @@ const PremiumHero = () => {
                 </div>
               </motion.div>
 
-              {/* Mini Stats */}
+              {/* Premium Stats Card */}
               <motion.div variants={itemVariants}>
-                <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/10">
-                  <div className="text-center">
-                    <AnimatedCounter value={500} suffix="+" />
-                    <div className="text-gray-400 text-xs font-medium mt-0.5">
-                      Projects
+                <div className="p-4 rounded-xl backdrop-blur-md bg-white/5 border border-white/10 shadow-lg">
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="text-center group">
+                      <div className="p-2 rounded-lg bg-orange-500/10 mb-2 transition-all duration-300 group-hover:bg-orange-500/20">
+                        <AnimatedCounter value={500} suffix="+" />
+                      </div>
+                      <div className="text-white/70 text-xs font-medium uppercase tracking-wider">
+                        Projects
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-center">
-                    <AnimatedCounter value={15} suffix="+" />
-                    <div className="text-gray-400 text-xs font-medium mt-0.5">
-                      Years
+                    <div className="text-center group">
+                      <div className="p-2 rounded-lg bg-amber-500/10 mb-2 transition-all duration-300 group-hover:bg-amber-500/20">
+                        <AnimatedCounter value={15} suffix="+" />
+                      </div>
+                      <div className="text-white/70 text-xs font-medium uppercase tracking-wider">
+                        Years
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-center">
-                    <AnimatedCounter value={50} prefix="$" suffix="M+" />
-                    <div className="text-gray-400 text-xs font-medium mt-0.5">
-                      Value
+                    <div className="text-center group">
+                      <div className="p-2 rounded-lg bg-orange-500/10 mb-2 transition-all duration-300 group-hover:bg-orange-500/20">
+                        <AnimatedCounter value={50} prefix="$" suffix="M+" />
+                      </div>
+                      <div className="text-white/70 text-xs font-medium uppercase tracking-wider">
+                        Value
+                      </div>
                     </div>
                   </div>
                 </div>
