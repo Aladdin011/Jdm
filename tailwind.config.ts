@@ -116,6 +116,10 @@ export default {
         '2xl': '40px',
         '3xl': '64px',
       },
+      spacing: {
+        '18': '4.5rem',
+        '72': '18rem',
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
