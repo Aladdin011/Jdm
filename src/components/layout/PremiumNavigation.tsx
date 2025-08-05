@@ -505,16 +505,8 @@ export default function PremiumNavigation() {
           </nav>
         </div>
 
-        {/* Progress Bar */}
-        <motion.div
-          className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-orange-500 to-red-500"
-          style={{
-            width: `${Math.min((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100, 100)}%`,
-            transformOrigin: "left"
-          }}
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-        />
+        {/* Subtle bottom accent */}
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
       </motion.header>
 
       {/* Mobile Menu */}
