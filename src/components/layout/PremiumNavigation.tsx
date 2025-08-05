@@ -394,10 +394,10 @@ export default function PremiumNavigation() {
                   ) : (
                     <button
                       onClick={() => handleNavClick(item.href, item.label)}
-                      className={`px-4 py-2 rounded-lg transition-colors relative ${
+                      className={`px-4 py-2 rounded-lg transition-all duration-300 relative ${
                         location.pathname === item.href
-                          ? 'text-orange-300'
-                          : 'text-white/90 hover:text-white'
+                          ? 'text-white bg-white/10'
+                          : 'text-white/80 hover:text-white hover:bg-white/5'
                       }`}
                     >
                       <span>{item.label}</span>
