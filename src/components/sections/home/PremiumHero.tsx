@@ -96,8 +96,13 @@ const PremiumHero = () => {
     offset: ["start start", "end start"]
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, 300]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, -200]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+
+  // Scroll animation for pulling next section
+  const nextSectionY = useTransform(scrollYProgress, [0, 1], [100, 0]);
+  const nextSectionOpacity = useTransform(scrollYProgress, [0.5, 1], [0, 1]);
 
   // Container variants for staggered animations
   const containerVariants = {
