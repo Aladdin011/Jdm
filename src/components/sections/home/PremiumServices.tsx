@@ -1,16 +1,17 @@
 import { useRef, useState } from 'react';
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
-import { 
-  Building2, 
-  Home, 
-  Factory, 
-  Cpu, 
-  Shield, 
-  Users, 
+import {
+  Building2,
+  Home,
+  Factory,
+  Cpu,
+  Shield,
+  Users,
   ArrowRight,
   Zap,
   CheckCircle,
-  Star
+  Star,
+  Sparkles
 } from 'lucide-react';
 import { useAppStore } from '@/stores/appStore';
 
