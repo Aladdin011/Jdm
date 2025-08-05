@@ -184,43 +184,85 @@ const PremiumHero = () => {
               animate="visible"
               className="space-y-4"
             >
-              {/* BLACK VISION - Main Title */}
+              {/* Company Badge */}
               <motion.div variants={itemVariants}>
-                <h1 className="text-4xl lg:text-6xl font-bold text-white tracking-wider hero-title">
-                  BLACK <span className="text-gray-300 font-light">VISION</span>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-orange-400/30 bg-orange-500/15 backdrop-blur-sm">
+                  <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
+                  <span className="text-orange-200 text-xs font-medium tracking-wide">
+                    Since 2007
+                  </span>
+                </div>
+              </motion.div>
+
+              {/* Main Title */}
+              <motion.div variants={itemVariants}>
+                <h1 className="text-4xl lg:text-6xl font-bold text-white tracking-tight hero-title leading-tight">
+                  Building{" "}
+                  <span className="bg-gradient-to-r from-orange-300 via-amber-300 to-orange-400 bg-clip-text text-transparent">
+                    Tomorrow's
+                  </span>
+                  <br />
+                  Cities
                 </h1>
               </motion.div>
 
               {/* Subtitle */}
               <motion.div variants={itemVariants}>
-                <p className="text-sm text-gray-300 italic font-light tracking-wide hero-subtitle">
-                  Advanced darkness
+                <p className="text-lg text-gray-300 font-light leading-relaxed hero-subtitle max-w-sm">
+                  Intelligent construction solutions for Africa's urban transformation.
                 </p>
               </motion.div>
 
-              {/* Decorative Plus */}
+              {/* CTA Buttons */}
               <motion.div variants={itemVariants}>
-                <div className="w-8 h-8 flex items-center justify-center">
-                  <div className="w-6 h-0.5 bg-gray-400"></div>
-                  <div className="w-0.5 h-6 bg-gray-400 absolute"></div>
+                <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                  <motion.button
+                    className="group px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-lg font-semibold shadow-lg shadow-orange-500/20 hover:shadow-xl hover:shadow-orange-500/30 transition-all duration-300"
+                    whileHover={{ scale: 1.02, y: -1 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span>Get Started</span>
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </motion.button>
+
+                  <motion.button
+                    className="group px-6 py-3 bg-white/10 backdrop-blur-sm text-white rounded-lg font-semibold border border-white/20 hover:bg-white/15 transition-all duration-300"
+                    whileHover={{ scale: 1.02, y: -1 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded-full bg-gradient-to-r from-orange-400 to-amber-400 flex items-center justify-center">
+                        <Play className="w-2 h-2 text-white ml-0.5" />
+                      </div>
+                      <span>View Projects</span>
+                    </div>
+                  </motion.button>
                 </div>
               </motion.div>
 
-              {/* Main Description */}
-              <motion.div variants={itemVariants} className="space-y-2">
-                <p className="text-xs text-gray-300 uppercase tracking-widest leading-relaxed">
-                  LET GO OF THE LIGHT<br />
-                  GIVE INTO<br />
-                  THE DARK SIDE
-                </p>
-              </motion.div>
-
-              {/* Decorative Wave */}
+              {/* Mini Stats */}
               <motion.div variants={itemVariants}>
-                <div className="flex items-center gap-1">
-                  <div className="w-2 h-0.5 bg-gray-400 rounded-full"></div>
-                  <div className="w-1 h-0.5 bg-gray-400 rounded-full"></div>
-                  <div className="w-2 h-0.5 bg-gray-400 rounded-full"></div>
+                <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/10">
+                  <div className="text-center">
+                    <AnimatedCounter value={500} suffix="+" />
+                    <div className="text-gray-400 text-xs font-medium mt-0.5">
+                      Projects
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <AnimatedCounter value={15} suffix="+" />
+                    <div className="text-gray-400 text-xs font-medium mt-0.5">
+                      Years
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <AnimatedCounter value={50} prefix="$" suffix="M+" />
+                    <div className="text-gray-400 text-xs font-medium mt-0.5">
+                      Value
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             </motion.div>
