@@ -484,12 +484,12 @@ export default function PremiumNavigation() {
               {/* Get Quote Button - Desktop */}
               <motion.button
                 onClick={handleGetQuote}
-                className="hidden lg:flex btn-primary-premium"
-                whileHover={{ scale: 1.02 }}
+                className="hidden lg:flex items-center gap-2 px-6 py-2.5 bg-white text-black rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 shadow-lg"
+                whileHover={{ scale: 1.02, y: -1 }}
                 whileTap={{ scale: 0.98 }}
               >
                 <span>Get Quote</span>
-                <ArrowRight className="btn-icon" />
+                <ArrowRight className="w-4 h-4" />
               </motion.button>
 
               {/* Mobile Menu Toggle */}
