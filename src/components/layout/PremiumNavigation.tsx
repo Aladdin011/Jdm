@@ -347,14 +347,14 @@ export default function PremiumNavigation() {
   return (
     <>
       <motion.header
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-          isScrolled 
-            ? 'glass-dark shadow-xl' 
-            : 'bg-transparent'
+        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
+          isScrolled
+            ? 'bg-black/90 backdrop-blur-xl border-b border-white/10 shadow-2xl'
+            : 'bg-black/20 backdrop-blur-sm'
         }`}
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6 }}
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
       >
         <div className="container-fluid">
           <nav className="flex items-center justify-between h-20">
