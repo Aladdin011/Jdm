@@ -206,39 +206,81 @@ const PremiumHero = () => {
                 </h1>
               </motion.div>
 
-              {/* Subtitle */}
-              <motion.div variants={itemVariants}>
-                <p className="text-lg text-gray-300 font-light leading-relaxed hero-subtitle max-w-sm">
-                  Intelligent construction solutions for Africa's urban transformation.
-                </p>
-              </motion.div>
+              {/* Glassmorphism Container for Subtitle and CTA */}
+              <motion.div
+                variants={glassVariants}
+                className="relative group"
+              >
+                {/* Premium Glass Card */}
+                <div className="relative p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-black/40 via-black/30 to-black/20 border border-white/10 shadow-2xl shadow-black/50 overflow-hidden">
+                  {/* Subtle gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-amber-500/5 rounded-2xl" />
 
-              {/* CTA Buttons */}
-              <motion.div variants={itemVariants}>
-                <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                  <motion.button
-                    className="group px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-lg font-semibold shadow-lg shadow-orange-500/20 hover:shadow-xl hover:shadow-orange-500/30 transition-all duration-300"
-                    whileHover={{ scale: 1.02, y: -1 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <div className="flex items-center gap-2">
-                      <span>Get Started</span>
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </motion.button>
+                  {/* Shimmer effect on hover */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent rotate-12 transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                  </div>
 
-                  <motion.button
-                    className="group px-6 py-3 bg-white/10 backdrop-blur-sm text-white rounded-lg font-semibold border border-white/20 hover:bg-white/15 transition-all duration-300"
-                    whileHover={{ scale: 1.02, y: -1 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded-full bg-gradient-to-r from-orange-400 to-amber-400 flex items-center justify-center">
-                        <Play className="w-2 h-2 text-white ml-0.5" />
+                  {/* Content */}
+                  <div className="relative z-10 space-y-5">
+                    {/* Enhanced Subtitle */}
+                    <motion.div variants={itemVariants}>
+                      <div className="space-y-3">
+                        <p className="text-lg text-white/90 font-light leading-relaxed tracking-wide">
+                          Intelligent construction solutions for{" "}
+                          <span className="bg-gradient-to-r from-orange-300 to-amber-300 bg-clip-text text-transparent font-medium">
+                            Africa's urban transformation
+                          </span>
+                        </p>
+
+                        {/* Decorative line */}
+                        <div className="flex items-center gap-2">
+                          <div className="h-px bg-gradient-to-r from-orange-400 to-amber-400 flex-1" />
+                          <div className="w-2 h-2 bg-gradient-to-r from-orange-400 to-amber-400 rounded-full" />
+                          <div className="h-px bg-gradient-to-r from-amber-400 to-orange-400 flex-1" />
+                        </div>
                       </div>
-                      <span>View Projects</span>
-                    </div>
-                  </motion.button>
+                    </motion.div>
+
+                    {/* Premium CTA Buttons */}
+                    <motion.div variants={itemVariants}>
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <motion.button
+                          className="group/btn relative px-8 py-4 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 text-white rounded-xl font-semibold shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 transition-all duration-300 overflow-hidden"
+                          whileHover={{ scale: 1.02, y: -2 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          {/* Button shine effect */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-500" />
+
+                          <div className="relative flex items-center justify-center gap-2">
+                            <span className="font-semibold">Get Started</span>
+                            <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
+                          </div>
+                        </motion.button>
+
+                        <motion.button
+                          className="group/btn relative px-8 py-4 bg-white/10 backdrop-blur-sm text-white rounded-xl font-semibold border border-white/20 hover:bg-white/15 hover:border-white/30 transition-all duration-300 overflow-hidden"
+                          whileHover={{ scale: 1.02, y: -2 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          {/* Button glow effect */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+
+                          <div className="relative flex items-center justify-center gap-2">
+                            <div className="w-5 h-5 rounded-full bg-gradient-to-r from-orange-400 to-amber-400 flex items-center justify-center shadow-lg shadow-orange-400/30">
+                              <Play className="w-2.5 h-2.5 text-white ml-0.5" />
+                            </div>
+                            <span className="font-semibold">View Projects</span>
+                          </div>
+                        </motion.button>
+                      </div>
+                    </motion.div>
+                  </div>
+
+                  {/* Corner accents */}
+                  <div className="absolute top-0 left-0 w-16 h-16 bg-gradient-to-br from-orange-400/20 to-transparent rounded-2xl" />
+                  <div className="absolute bottom-0 right-0 w-20 h-20 bg-gradient-to-tl from-amber-400/20 to-transparent rounded-2xl" />
                 </div>
               </motion.div>
 
