@@ -155,143 +155,97 @@ const PremiumHero = () => {
   };
 
   return (
-    <section
-      ref={heroRef}
-      className="relative min-h-screen overflow-hidden"
-    >
-      {/* Background Image */}
-      <div className="absolute inset-0 z-0">
-        <div
-          className="w-full h-full bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2Fb9e926f9dca9498f8a0f99f9f9792da7%2F0fdaa5fa3aa8442bb410972edd69093b?format=webp&width=1920')`,
-            filter: "brightness(0.8) contrast(1.2) saturate(1.1)"
-          }}
-        />
-      </div>
+    <>
+      <motion.section
+        ref={heroRef}
+        className="relative min-h-screen overflow-hidden"
+        style={{ y, opacity, scale }}
+      >
+        {/* Background Image - BLACK VISION */}
+        <div className="absolute inset-0 z-0">
+          <div
+            className="w-full h-full bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2Fb9e926f9dca9498f8a0f99f9f9792da7%2F8c631f6cbd504f8caa73f8290d09cd3c?format=webp&width=800')`,
+              filter: "brightness(0.9) contrast(1.1)"
+            }}
+          />
+        </div>
 
-      {/* Minimal Blue Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-blue-800/20 to-cyan-900/25 z-10" />
+        {/* Dark overlay for content readability */}
+        <div className="absolute inset-0 bg-black/20 z-10" />
 
-      {/* Subtle depth gradient */}
-      <div className="absolute inset-0 z-10">
-        <div className="absolute inset-0 bg-gradient-to-t from-blue-950/40 via-transparent to-transparent" />
-      </div>
+        {/* Content Container - Top Left Positioning */}
+        <div className="relative z-20 min-h-screen flex items-start pt-32 pl-8 lg:pl-16">
+          <div className="w-full max-w-md">
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="space-y-4"
+            >
+              {/* BLACK VISION - Main Title */}
+              <motion.div variants={itemVariants}>
+                <h1 className="text-4xl lg:text-6xl font-bold text-white tracking-wider">
+                  BLACK <span className="text-gray-300 font-light">VISION</span>
+                </h1>
+              </motion.div>
 
-      {/* Floating Particles */}
-      <FloatingParticles />
+              {/* Subtitle */}
+              <motion.div variants={itemVariants}>
+                <p className="text-sm text-gray-300 italic font-light tracking-wide">
+                  Advanced darkness
+                </p>
+              </motion.div>
 
-      {/* Content Container */}
-      <div className="relative z-20 min-h-screen flex items-center">
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="grid lg:grid-cols-12 gap-8 items-center">
-            
-            {/* Centered content with minimal footprint */}
-            <div className="col-span-12 flex justify-center lg:justify-end">
-              <div className="w-full lg:max-w-xl xl:max-w-2xl">
-                <motion.div
-                  variants={glassVariants}
-                  initial="hidden"
-                  animate="visible"
-                  className="glass-hero-card p-6 lg:p-8 rounded-2xl border border-blue-400/15 bg-blue-500/3 backdrop-blur-md w-full"
-                  style={{
-                    background: "linear-gradient(135deg, rgba(59, 130, 246, 0.04) 0%, rgba(6, 182, 212, 0.02) 100%)",
-                    boxShadow: "0 15px 30px -12px rgba(59, 130, 246, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.03)"
-                  }}
-                >
-                  <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                    className="space-y-6"
-                  >
-                    {/* Compact Badge */}
-                    <motion.div variants={itemVariants}>
-                      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-blue-400/30 bg-blue-500/15 backdrop-blur-sm">
-                        <Sparkles className="w-3 h-3 text-blue-300" />
-                        <span className="text-blue-100 text-xs font-medium">
-                          Since 2007
-                        </span>
-                      </div>
-                    </motion.div>
+              {/* Decorative Plus */}
+              <motion.div variants={itemVariants}>
+                <div className="w-8 h-8 flex items-center justify-center">
+                  <div className="w-6 h-0.5 bg-gray-400"></div>
+                  <div className="w-0.5 h-6 bg-gray-400 absolute"></div>
+                </div>
+              </motion.div>
 
-                    {/* Compressed Heading */}
-                    <motion.div variants={itemVariants} className="space-y-3">
-                      <h1 className="text-3xl lg:text-5xl font-bold text-white leading-tight">
-                        Building{" "}
-                        <span className="bg-gradient-to-r from-blue-300 via-cyan-300 to-blue-400 bg-clip-text text-transparent">
-                          Tomorrow's Cities
-                        </span>
-                      </h1>
+              {/* Main Description */}
+              <motion.div variants={itemVariants} className="space-y-2">
+                <p className="text-xs text-gray-300 uppercase tracking-widest leading-relaxed">
+                  LET GO OF THE LIGHT<br />
+                  GIVE INTO<br />
+                  THE DARK SIDE
+                </p>
+              </motion.div>
 
-                      <p className="text-lg text-blue-100/80 leading-relaxed max-w-md">
-                        Intelligent construction solutions for Africa's urban transformation.
-                      </p>
-                    </motion.div>
-
-                    {/* Compact CTA */}
-                    <motion.div variants={itemVariants}>
-                      <div className="flex flex-col sm:flex-row gap-3">
-                        <motion.button
-                          className="group px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300"
-                          whileHover={{ scale: 1.02, y: -1 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          <div className="flex items-center gap-2">
-                            <span>Get Started</span>
-                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                          </div>
-                        </motion.button>
-
-                        <motion.button
-                          className="group px-6 py-3 bg-white/10 backdrop-blur-sm text-white rounded-xl font-semibold border border-blue-400/30 hover:bg-white/15 transition-all duration-300"
-                          whileHover={{ scale: 1.02, y: -1 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400 flex items-center justify-center">
-                              <Play className="w-2 h-2 text-white ml-0.5" />
-                            </div>
-                            <span>View Projects</span>
-                          </div>
-                        </motion.button>
-                      </div>
-                    </motion.div>
-
-                    {/* Minimal Stats */}
-                    <motion.div variants={itemVariants}>
-                      <div className="grid grid-cols-3 gap-4 pt-4 border-t border-blue-400/15">
-                        <div className="text-center">
-                          <AnimatedCounter value={500} suffix="+" />
-                          <div className="text-blue-200/60 text-xs font-medium mt-0.5">
-                            Projects
-                          </div>
-                        </div>
-                        <div className="text-center">
-                          <AnimatedCounter value={15} suffix="+" />
-                          <div className="text-blue-200/60 text-xs font-medium mt-0.5">
-                            Years
-                          </div>
-                        </div>
-                        <div className="text-center">
-                          <AnimatedCounter value={50} prefix="$" suffix="M+" />
-                          <div className="text-blue-200/60 text-xs font-medium mt-0.5">
-                            Value
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  </motion.div>
-                </motion.div>
-              </div>
-            </div>
+              {/* Decorative Wave */}
+              <motion.div variants={itemVariants}>
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-0.5 bg-gray-400 rounded-full"></div>
+                  <div className="w-1 h-0.5 bg-gray-400 rounded-full"></div>
+                  <div className="w-2 h-0.5 bg-gray-400 rounded-full"></div>
+                </div>
+              </motion.div>
+            </motion.div>
           </div>
         </div>
-      </div>
 
-      {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-blue-950 to-transparent z-15" />
-    </section>
+        {/* Scroll indicator */}
+        <motion.div
+          className="absolute bottom-8 right-8 text-white/60 text-xs writing-vertical-rl"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2 }}
+        >
+          SCROLL
+        </motion.div>
+      </motion.section>
+
+      {/* Next Section Preview (pulled by scroll) */}
+      <motion.div
+        className="relative z-30"
+        style={{ y: nextSectionY, opacity: nextSectionOpacity }}
+      >
+        <div className="h-20 bg-white"></div>
+      </motion.div>
+    </>
   );
 };
 
