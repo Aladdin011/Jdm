@@ -417,19 +417,46 @@ export default function PremiumNavigation() {
 
             {/* Action Buttons */}
             <div className="flex items-center gap-4">
-              {/* Theme Toggle - Desktop */}
+              {/* Fancy Theme Toggle - Desktop */}
               <div className="hidden lg:flex items-center gap-2">
-                <button
-                  onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-                  className="w-10 h-10 flex items-center justify-center rounded-lg glass text-white border border-white/20 hover:bg-white/10 transition-colors"
-                  title={`Switch to ${actualTheme === 'light' ? 'dark' : 'light'} mode`}
+                <motion.div
+                  className="relative w-16 h-8 bg-black/40 border border-white/20 rounded-full p-1 cursor-pointer backdrop-blur-sm"
+                  onClick={() => setTheme(actualTheme === 'light' ? 'dark' : 'light')}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  {actualTheme === 'light' ? (
-                    <Moon className="w-5 h-5" />
-                  ) : (
-                    <Sun className="w-5 h-5" />
-                  )}
-                </button>
+                  {/* Track gradient */}
+                  <div className={`absolute inset-1 rounded-full transition-all duration-500 ${
+                    actualTheme === 'dark'
+                      ? 'bg-gradient-to-r from-blue-600 to-purple-600'
+                      : 'bg-gradient-to-r from-yellow-400 to-orange-500'
+                  }`} />
+
+                  {/* Sliding toggle */}
+                  <motion.div
+                    className="relative w-6 h-6 bg-white rounded-full shadow-lg flex items-center justify-center"
+                    animate={{ x: actualTheme === 'dark' ? 0 : 32 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  >
+                    <motion.div
+                      animate={{ rotate: actualTheme === 'dark' ? 0 : 180 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {actualTheme === 'dark' ? (
+                        <Moon className="w-3 h-3 text-blue-600" />
+                      ) : (
+                        <Sun className="w-3 h-3 text-orange-500" />
+                      )}
+                    </motion.div>
+                  </motion.div>
+
+                  {/* Glow effect */}
+                  <div className={`absolute inset-0 rounded-full transition-opacity duration-500 ${
+                    actualTheme === 'dark'
+                      ? 'shadow-lg shadow-blue-500/30'
+                      : 'shadow-lg shadow-orange-500/30'
+                  }`} />
+                </motion.div>
               </div>
 
               {/* Auth Buttons - Desktop */}
