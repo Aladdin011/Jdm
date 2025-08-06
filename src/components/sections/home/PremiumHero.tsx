@@ -163,12 +163,12 @@ const PremiumHero = () => {
         className="relative min-h-screen overflow-hidden"
         style={{ y, opacity, scale }}
       >
-        {/* Background Image - BLACK VISION */}
+        {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <div
             className="w-full h-full bg-cover bg-center bg-no-repeat"
             style={{
-              backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2Fb9e926f9dca9498f8a0f99f9f9792da7%2F8c631f6cbd504f8caa73f8290d09cd3c?format=webp&width=800')`,
+              backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2Fb9e926f9dca9498f8a0f99f9f9792da7%2F8f98d79878704821ac687723d7e03126?format=webp&width=800')`,
               filter: "brightness(0.9) contrast(1.1)"
             }}
           />
