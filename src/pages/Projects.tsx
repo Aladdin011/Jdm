@@ -2,7 +2,6 @@ import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import AnimatedSection from "@/components/ui/AnimatedSection";
 import { projects, projectCategories } from "@/data/projects";
-import ProjectCard from "@/components/ui/ProjectCard";
 import {
   Dialog,
   DialogContent,
@@ -14,6 +13,39 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+
+// Simple ProjectCard component
+interface ProjectCardProps {
+  id: number;
+  title: string;
+  category: string;
+  image: string;
+  onClick: () => void;
+}
+
+const ProjectCard = ({ title, category, image, onClick }: ProjectCardProps) => (
+  <div
+    className="group cursor-pointer bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+    onClick={onClick}
+  >
+    <div className="relative overflow-hidden aspect-[4/3]">
+      <img
+        src={image}
+        alt={title}
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <Badge className="absolute top-4 left-4 bg-accent text-white">
+        {category}
+      </Badge>
+    </div>
+    <div className="p-6">
+      <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-accent transition-colors duration-300">
+        {title}
+      </h3>
+    </div>
+  </div>
+);
 
 export default function Projects() {
   const [selectedCategory, setSelectedCategory] = useState("all");

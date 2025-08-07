@@ -1,446 +1,155 @@
 import nodemailer from "nodemailer";
-import { logger } from "./logger";
 
-// Email configuration
+interface ContactEmailData {
+  name: string;
+  email: string;
+  phone: string;
+  subject: string;
+  message: string;
+  projectType: string;
+  budget: string;
+  timestamp: string;
+}
+
+// Create email transporter
 const createTransporter = () => {
-  const isDevelopment = process.env.NODE_ENV === "development";
-
-  if (isDevelopment && process.env.EMAIL_PROVIDER === "ethereal") {
-    // Use Ethereal for development testing
+  if (process.env.EMAIL_SERVICE === "gmail") {
     return nodemailer.createTransporter({
-      host: "smtp.ethereal.email",
-      port: 587,
+      service: "gmail",
       auth: {
-        user: process.env.ETHEREAL_EMAIL,
-        pass: process.env.ETHEREAL_PASSWORD,
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
       },
     });
   }
 
-  // Production configuration for various providers
-  switch (process.env.EMAIL_PROVIDER) {
-    case "gmail":
-      return nodemailer.createTransporter({
-        service: "gmail",
-        auth: {
-          user: process.env.GMAIL_USER,
-          pass: process.env.GMAIL_APP_PASSWORD,
-        },
-      });
+  // Generic SMTP configuration
+  return nodemailer.createTransporter({
+    host: process.env.SMTP_HOST || "smtp.gmail.com",
+    port: parseInt(process.env.SMTP_PORT || "587"),
+    secure: process.env.SMTP_SECURE === "true",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
+};
 
-    case "sendgrid":
-      return nodemailer.createTransporter({
-        host: "smtp.sendgrid.net",
-        port: 587,
-        auth: {
-          user: "apikey",
-          pass: process.env.SENDGRID_API_KEY,
-        },
-      });
-
-    case "mailgun":
-      return nodemailer.createTransporter({
-        host: "smtp.mailgun.org",
-        port: 587,
-        auth: {
-          user: process.env.MAILGUN_SMTP_LOGIN,
-          pass: process.env.MAILGUN_SMTP_PASSWORD,
-        },
-      });
-
-    case "ses":
-      return nodemailer.createTransporter({
-        host: "email-smtp.us-east-1.amazonaws.com",
-        port: 587,
-        auth: {
-          user: process.env.AWS_SES_ACCESS_KEY,
-          pass: process.env.AWS_SES_SECRET_KEY,
-        },
-      });
-
-    default:
-      // SMTP configuration
-      return nodemailer.createTransporter({
-        host: process.env.SMTP_HOST,
-        port: parseInt(process.env.SMTP_PORT || "587"),
-        secure: process.env.SMTP_SECURE === "true",
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASSWORD,
-        },
-      });
+// Send contact form email
+export const sendContactEmail = async (
+  data: ContactEmailData,
+): Promise<void> => {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+    console.log("Email service not configured - skipping email send");
+    return;
   }
-};
 
-const transporter = createTransporter();
+  const transporter = createTransporter();
 
-// Email templates
-const emailTemplates = {
-  "email-verification": {
-    subject: "Verify Your Email - JD Marc Limited",
-    html: (data: any) => `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <title>Email Verification</title>
-        <style>
-          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: linear-gradient(135deg, #EE690B 0%, #F7931E 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
-          .otp-code { background: white; border: 2px solid #EE690B; color: #EE690B; font-size: 32px; font-weight: bold; text-align: center; padding: 20px; margin: 20px 0; border-radius: 8px; letter-spacing: 5px; }
-          .button { display: inline-block; background: #EE690B; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 20px 0; }
-          .footer { text-align: center; color: #666; font-size: 14px; margin-top: 30px; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1>🏗️ JD Marc Limited</h1>
-            <h2>Email Verification</h2>
-          </div>
-          <div class="content">
-            <p>Hello ${data.firstName},</p>
-            <p>Thank you for registering with JD Marc Limited! To complete your registration and start exploring our construction services, please verify your email address using the code below:</p>
-            
-            <div class="otp-code">${data.otp}</div>
-            
-            <p><strong>This verification code will expire in ${data.expiresIn}.</strong></p>
-            
-            <p>If you didn't create an account with us, please ignore this email.</p>
-            
-            <p>Welcome to the JD Marc family!</p>
-            
-            <p>Best regards,<br>
-            The JD Marc Limited Team</p>
-          </div>
-          <div class="footer">
-            <p>JD Marc Limited - Building Africa's Future<br>
-            Abuja | London | New York</p>
-          </div>
+  // Email to company
+  const companyEmailHtml = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <h2 style="color: #EE690B;">New Contact Form Submission</h2>
+      
+      <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+        <h3>Contact Details</h3>
+        <p><strong>Name:</strong> ${data.name}</p>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Phone:</strong> ${data.phone}</p>
+        <p><strong>Project Type:</strong> ${data.projectType}</p>
+        <p><strong>Budget:</strong> ${data.budget}</p>
+        <p><strong>Submitted:</strong> ${new Date(data.timestamp).toLocaleString()}</p>
+      </div>
+      
+      <div style="background: #ffffff; padding: 20px; border-left: 4px solid #EE690B;">
+        <h3>Subject: ${data.subject}</h3>
+        <p style="line-height: 1.6;">${data.message.replace(/\n/g, "<br>")}</p>
+      </div>
+      
+      <p style="color: #666; font-size: 12px; margin-top: 30px;">
+        This email was sent from the JD Marc Limited website contact form.
+      </p>
+    </div>
+  `;
+
+  // Auto-reply email to customer
+  const customerEmailHtml = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #EE690B, #83371D);">
+        <h1 style="color: white; margin: 0;">JD Marc Limited</h1>
+        <p style="color: white; margin: 10px 0 0 0;">Building Africa's Future Cities</p>
+      </div>
+      
+      <div style="padding: 30px 20px;">
+        <h2 style="color: #EE690B;">Thank You for Your Inquiry!</h2>
+        
+        <p>Dear ${data.name},</p>
+        
+        <p>Thank you for reaching out to JD Marc Limited. We have received your message and will get back to you within 24 hours.</p>
+        
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h3>Your Message Summary:</h3>
+          <p><strong>Subject:</strong> ${data.subject}</p>
+          <p><strong>Project Type:</strong> ${data.projectType}</p>
+          <p><strong>Submitted:</strong> ${new Date(data.timestamp).toLocaleString()}</p>
         </div>
-      </body>
-      </html>
-    `,
-    text: (data: any) => `
-      Hello ${data.firstName},
+        
+        <p>In the meantime, feel free to:</p>
+        <ul>
+          <li>Explore our <a href="https://jdmarcng.com/projects" style="color: #EE690B;">portfolio of completed projects</a></li>
+          <li>Learn more <a href="https://jdmarcng.com/about" style="color: #EE690B;">about our company</a></li>
+          <li>Contact us directly at <a href="tel:+2349291399" style="color: #EE690B;">+234 9 291 3991</a></li>
+        </ul>
+        
+        <p>Best regards,<br>
+        <strong>The JD Marc Limited Team</strong></p>
+      </div>
       
-      Thank you for registering with JD Marc Limited!
-      
-      Your verification code is: ${data.otp}
-      
-      This code will expire in ${data.expiresIn}.
-      
-      If you didn't create an account with us, please ignore this email.
-      
-      Best regards,
-      The JD Marc Limited Team
-    `,
-  },
+      <div style="background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 12px;">
+        <p>JD Marc Limited | Abuja, Nigeria<br>
+        Email: info@jdmarcng.com | Phone: +234 9 291 3991<br>
+        Website: <a href="https://jdmarcng.com" style="color: #EE690B;">jdmarcng.com</a></p>
+      </div>
+    </div>
+  `;
 
-  "password-reset": {
-    subject: "Password Reset - JD Marc Limited",
-    html: (data: any) => `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <title>Password Reset</title>
-        <style>
-          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: linear-gradient(135deg, #EE690B 0%, #F7931E 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
-          .otp-code { background: white; border: 2px solid #EE690B; color: #EE690B; font-size: 32px; font-weight: bold; text-align: center; padding: 20px; margin: 20px 0; border-radius: 8px; letter-spacing: 5px; }
-          .warning { background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 15px; border-radius: 6px; margin: 20px 0; }
-          .footer { text-align: center; color: #666; font-size: 14px; margin-top: 30px; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1>🏗️ JD Marc Limited</h1>
-            <h2>Password Reset Request</h2>
-          </div>
-          <div class="content">
-            <p>Hello ${data.firstName},</p>
-            <p>We received a request to reset your password. Use the verification code below to proceed with resetting your password:</p>
-            
-            <div class="otp-code">${data.otp}</div>
-            
-            <div class="warning">
-              <strong>⚠️ Security Notice:</strong> This code will expire in ${data.expiresIn}. If you didn't request this password reset, please ignore this email and your password will remain unchanged.
-            </div>
-            
-            <p>For your security, never share this code with anyone.</p>
-            
-            <p>Best regards,<br>
-            The JD Marc Limited Team</p>
-          </div>
-          <div class="footer">
-            <p>JD Marc Limited - Building Africa's Future<br>
-            Abuja | London | New York</p>
-          </div>
-        </div>
-      </body>
-      </html>
-    `,
-    text: (data: any) => `
-      Hello ${data.firstName},
-      
-      We received a request to reset your password.
-      
-      Your password reset code is: ${data.otp}
-      
-      This code will expire in ${data.expiresIn}.
-      
-      If you didn't request this password reset, please ignore this email.
-      
-      Best regards,
-      The JD Marc Limited Team
-    `,
-  },
-
-  "contact-confirmation": {
-    subject: "Thank You for Contacting JD Marc Limited",
-    html: (data: any) => `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <title>Contact Confirmation</title>
-        <style>
-          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: linear-gradient(135deg, #EE690B 0%, #F7931E 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
-          .info-box { background: white; border-left: 4px solid #EE690B; padding: 20px; margin: 20px 0; }
-          .footer { text-align: center; color: #666; font-size: 14px; margin-top: 30px; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1>🏗️ JD Marc Limited</h1>
-            <h2>Message Received</h2>
-          </div>
-          <div class="content">
-            <p>Dear ${data.name},</p>
-            <p>Thank you for contacting JD Marc Limited! We have received your inquiry and our team will review it promptly.</p>
-            
-            <div class="info-box">
-              <h3>Your Inquiry Details:</h3>
-              <p><strong>Subject:</strong> ${data.subject}</p>
-              <p><strong>Project Type:</strong> ${data.projectType || "Not specified"}</p>
-              <p><strong>Budget Range:</strong> ${data.budget || "Not specified"}</p>
-              <p><strong>Timeline:</strong> ${data.timeline || "Not specified"}</p>
-              <p><strong>Reference ID:</strong> ${data.referenceId}</p>
-            </div>
-            
-            <p><strong>What happens next?</strong></p>
-            <ul>
-              <li>Our project team will review your requirements</li>
-              <li>We'll contact you within 24-48 hours</li>
-              <li>If suitable, we'll schedule a consultation</li>
-              <li>You'll receive a detailed proposal</li>
-            </ul>
-            
-            <p>In the meantime, feel free to explore our portfolio at <a href="${process.env.FRONTEND_URL}/projects">our projects page</a>.</p>
-            
-            <p>Best regards,<br>
-            The JD Marc Limited Team</p>
-          </div>
-          <div class="footer">
-            <p>JD Marc Limited - Building Africa's Future<br>
-            📧 info@jdmarc.com | 📞 +234 (0) 9 291 3991<br>
-            Abuja | London | New York</p>
-          </div>
-        </div>
-      </body>
-      </html>
-    `,
-    text: (data: any) => `
-      Dear ${data.name},
-      
-      Thank you for contacting JD Marc Limited!
-      
-      We have received your inquiry about: ${data.subject}
-      Reference ID: ${data.referenceId}
-      
-      Our team will review your requirements and contact you within 24-48 hours.
-      
-      Best regards,
-      The JD Marc Limited Team
-      
-      Email: info@jdmarc.com
-      Phone: +234 (0) 9 291 3991
-    `,
-  },
-
-  "project-update": {
-    subject: "Project Update - {{projectName}}",
-    html: (data: any) => `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <title>Project Update</title>
-        <style>
-          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: linear-gradient(135deg, #EE690B 0%, #F7931E 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
-          .progress-bar { background: #e0e0e0; border-radius: 10px; overflow: hidden; margin: 20px 0; }
-          .progress-fill { background: #28a745; height: 20px; border-radius: 10px; transition: width 0.3s ease; }
-          .update-box { background: white; border-left: 4px solid #28a745; padding: 20px; margin: 20px 0; }
-          .footer { text-align: center; color: #666; font-size: 14px; margin-top: 30px; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1>🏗️ JD Marc Limited</h1>
-            <h2>Project Progress Update</h2>
-          </div>
-          <div class="content">
-            <p>Hello ${data.clientName},</p>
-            <p>We're excited to share the latest progress update on your project:</p>
-            
-            <h3>${data.projectName}</h3>
-            
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: ${data.completionPercentage}%"></div>
-            </div>
-            <p style="text-align: center;"><strong>${data.completionPercentage}% Complete</strong></p>
-            
-            <div class="update-box">
-              <h4>Latest Update:</h4>
-              <p>${data.updateMessage}</p>
-              <p><strong>Date:</strong> ${data.updateDate}</p>
-              <p><strong>Next Milestone:</strong> ${data.nextMilestone}</p>
-            </div>
-            
-            <p>You can view detailed project information and timeline in your dashboard.</p>
-            
-            <p>Best regards,<br>
-            The JD Marc Project Team</p>
-          </div>
-          <div class="footer">
-            <p>JD Marc Limited - Building Africa's Future</p>
-          </div>
-        </div>
-      </body>
-      </html>
-    `,
-    text: (data: any) => `
-      Hello ${data.clientName},
-      
-      Project Update: ${data.projectName}
-      Progress: ${data.completionPercentage}% Complete
-      
-      Latest Update: ${data.updateMessage}
-      Date: ${data.updateDate}
-      Next Milestone: ${data.nextMilestone}
-      
-      Best regards,
-      The JD Marc Project Team
-    `,
-  },
-};
-
-// Email sending interface
-interface EmailOptions {
-  to: string | string[];
-  subject?: string;
-  template?: string;
-  data?: any;
-  html?: string;
-  text?: string;
-  attachments?: any[];
-}
-
-// Send email function
-export const sendEmail = async (options: EmailOptions): Promise<boolean> => {
   try {
-    let { to, subject, html, text } = options;
+    // Send email to company
+    await transporter.sendMail({
+      from: `"${data.name}" <${process.env.EMAIL_USER}>`,
+      to: process.env.COMPANY_EMAIL || process.env.EMAIL_USER,
+      subject: `New Contact Form: ${data.subject}`,
+      html: companyEmailHtml,
+      replyTo: data.email,
+    });
 
-    // If template is specified, use template
-    if (
-      options.template &&
-      emailTemplates[options.template as keyof typeof emailTemplates]
-    ) {
-      const template =
-        emailTemplates[options.template as keyof typeof emailTemplates];
-      subject = subject || template.subject;
-      html = template.html(options.data || {});
-      text = template.text(options.data || {});
-    }
+    // Send auto-reply to customer
+    await transporter.sendMail({
+      from: `"JD Marc Limited" <${process.env.EMAIL_USER}>`,
+      to: data.email,
+      subject: "Thank you for contacting JD Marc Limited",
+      html: customerEmailHtml,
+    });
 
-    const mailOptions = {
-      from: {
-        name: process.env.EMAIL_FROM_NAME || "JD Marc Limited",
-        address: process.env.EMAIL_FROM_ADDRESS || "noreply@jdmarc.com",
-      },
-      to: Array.isArray(to) ? to.join(", ") : to,
-      subject,
-      html,
-      text,
-      attachments: options.attachments || [],
-    };
-
-    const info = await transporter.sendMail(mailOptions);
-
-    if (process.env.NODE_ENV === "development") {
-      logger.info(`Email sent: ${info.messageId}`);
-      if (process.env.EMAIL_PROVIDER === "ethereal") {
-        logger.info(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
-      }
-    }
-
-    return true;
+    console.log("Contact emails sent successfully");
   } catch (error) {
-    logger.error("Email sending failed:", error);
-    return false;
+    console.error("Error sending contact emails:", error);
+    throw error;
   }
-};
-
-// Send bulk emails
-export const sendBulkEmail = async (
-  recipients: string[],
-  template: string,
-  data: any,
-): Promise<{ success: number; failed: number }> => {
-  const results = await Promise.allSettled(
-    recipients.map((email) =>
-      sendEmail({
-        to: email,
-        template,
-        data: { ...data, email },
-      }),
-    ),
-  );
-
-  const success = results.filter(
-    (result) => result.status === "fulfilled" && result.value,
-  ).length;
-  const failed = results.length - success;
-
-  logger.info(`Bulk email sent: ${success} successful, ${failed} failed`);
-
-  return { success, failed };
 };
 
 // Verify email configuration
 export const verifyEmailConfig = async (): Promise<boolean> => {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+    return false;
+  }
+
   try {
+    const transporter = createTransporter();
     await transporter.verify();
-    logger.info("✅ Email configuration verified");
     return true;
   } catch (error) {
-    logger.error("❌ Email configuration failed:", error);
+    console.error("Email configuration verification failed:", error);
     return false;
   }
 };
-
-export default transporter;

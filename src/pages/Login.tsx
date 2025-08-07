@@ -47,11 +47,49 @@ import {
 } from "lucide-react";
 import PageTransition from "@/components/ui/PageTransition";
 import useAnalytics from "@/hooks/useAnalytics";
-import {
-  getTestAccountByEmail,
-  validateUniqueKey,
-  getDepartmentPrefix,
-} from "@/data/testAccounts";
+// Development test accounts and utility functions
+const testAccounts = [
+  {
+    email: "admin@jdmarc.ng",
+    password: "admin123",
+    firstName: "Admin",
+    lastName: "User",
+    role: "admin" as const,
+    phone: "+234 808 000 0001",
+    location: "Lagos, Nigeria",
+    department: "Administration",
+  },
+  {
+    email: "user@jdmarc.ng",
+    password: "user123",
+    firstName: "Test",
+    lastName: "User",
+    role: "user" as const,
+    phone: "+234 808 000 0002",
+    location: "Abuja, Nigeria",
+    department: "General",
+  },
+];
+
+const getTestAccountByEmail = (email: string) => {
+  return testAccounts.find((account) => account.email === email);
+};
+
+const validateUniqueKey = (key: string, department: string) => {
+  // Simple validation for development
+  return key.startsWith(getDepartmentPrefix(department)) && key.length >= 8;
+};
+
+const getDepartmentPrefix = (department: string) => {
+  const prefixes: Record<string, string> = {
+    Administration: "ADM",
+    General: "GEN",
+    Engineering: "ENG",
+    Finance: "FIN",
+    HR: "HRM",
+  };
+  return prefixes[department] || "GEN";
+};
 
 interface Department {
   id: string;

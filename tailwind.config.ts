@@ -27,6 +27,15 @@ export default {
         "arch-blue-gray": "#2E3E4B",
         "arch-light-blue": "#BBD3EB",
 
+        // Premium Navigation
+        "nav-text": "var(--nav-text)",
+        "nav-hover": "var(--nav-hover)",
+        "nav-accent": "var(--nav-accent)",
+        "header-bg": "var(--header-bg)",
+        "header-blur": "var(--header-blur)",
+        "dropdown-bg": "var(--dropdown-bg)",
+        "border": "var(--border)",
+
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -97,6 +106,19 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      backdropBlur: {
+        xs: '2px',
+        sm: '4px',
+        md: '12px',
+        lg: '16px',
+        xl: '24px',
+        '2xl': '40px',
+        '3xl': '64px',
+      },
+      spacing: {
+        '18': '4.5rem',
+        '72': '18rem',
       },
     },
   },

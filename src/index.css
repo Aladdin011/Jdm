@@ -1,5 +1,8 @@
 /* Import Modern Design System */
 @import "./styles/modern-design-system.css";
+@import "./styles/glassmorphism.css";
+@import "./styles/black-vision.css";
+@import "./styles/premium-navigation.css";
 
 @tailwind base;
 @tailwind components;
