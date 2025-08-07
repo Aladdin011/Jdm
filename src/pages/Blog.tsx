@@ -285,7 +285,7 @@ function FeaturedPostCard({
     <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
       <div className="md:flex">
         <div className="md:w-1/2">
-          <LazyLoadImage
+          <img
             src={post.image}
             alt={post.title}
             className="w-full h-64 md:h-full object-cover"
@@ -352,7 +352,7 @@ function BlogPostCard({
 }) {
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      <LazyLoadImage
+      <img
         src={post.image}
         alt={post.title}
         className="w-full h-48 object-cover"
