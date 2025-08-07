@@ -12,7 +12,6 @@ import {
   BookOpen,
 } from "lucide-react";
 import PageTransition from "@/components/ui/PageTransition";
-import LazyLoadImage from "@/components/ui/LazyLoadImage";
 import { blogPosts } from "@/data/blog";
 
 // Define types based on the existing data structure
