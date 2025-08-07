@@ -95,11 +95,13 @@ The API supports email notifications for contact form submissions.
 ### SMTP Setup:
 
 ```
-EMAIL_SERVICE_ENABLED=true
-SMTP_HOST=your-smtp-host
+# Email Configuration (SMTP)
+SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
-EMAIL_USER=your-email
-EMAIL_PASSWORD=your-password
+SMTP_USER=Support@jdmarcng.com
+SMTP_PASS=55|K*^?Lr
+SMTP_FROM=Support@jdmarcng.com
+SMTP_SECURE=false
 ```
 
 ## 🚀 Render Deployment
