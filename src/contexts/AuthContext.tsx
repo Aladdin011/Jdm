@@ -5,7 +5,33 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import { getTestAccountByEmail, type TestAccount } from "@/data/testAccounts";
+// Development test accounts
+const testAccounts = [
+  {
+    email: "admin@jdmarc.ng",
+    password: "admin123",
+    firstName: "Admin",
+    lastName: "User",
+    role: "admin" as const,
+    phone: "+234 808 000 0001",
+    location: "Lagos, Nigeria",
+    department: "Administration"
+  },
+  {
+    email: "user@jdmarc.ng",
+    password: "user123",
+    firstName: "Test",
+    lastName: "User",
+    role: "user" as const,
+    phone: "+234 808 000 0002",
+    location: "Abuja, Nigeria",
+    department: "General"
+  }
+];
+
+const getTestAccountByEmail = (email: string) => {
+  return testAccounts.find(account => account.email === email);
+};
 
 interface User {
   id: string;
