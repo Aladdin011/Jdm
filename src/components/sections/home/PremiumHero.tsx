@@ -12,14 +12,14 @@ import {
 } from "lucide-react";
 
 // Enhanced animated counter with smooth easing
-const AnimatedCounter = ({ 
-  value, 
-  suffix = "", 
+const AnimatedCounter = ({
+  value,
+  suffix = "",
   prefix = "",
-  duration = 2.5 
-}: { 
-  value: number; 
-  suffix?: string; 
+  duration = 2.5,
+}: {
+  value: number;
+  suffix?: string;
   prefix?: string;
   duration?: number;
 }) => {
@@ -29,31 +29,36 @@ const AnimatedCounter = ({
 
   useEffect(() => {
     if (!isInView) return;
-    
+
     let startTime: number;
     let animationFrame: number;
-    
+
     const animate = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
       const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
-      
+
       // Smooth easing function
       const easeOut = 1 - Math.pow(1 - progress, 3);
       setCount(Math.floor(easeOut * value));
-      
+
       if (progress < 1) {
         animationFrame = requestAnimationFrame(animate);
       }
     };
-    
+
     animationFrame = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationFrame);
   }, [isInView, value, duration]);
 
   return (
-    <div ref={ref} className="text-2xl lg:text-3xl font-bold text-white font-mono">
+    <div
+      ref={ref}
+      className="text-2xl lg:text-3xl font-bold text-white font-mono"
+    >
       <span className="bg-gradient-to-r from-orange-300 to-amber-300 bg-clip-text text-transparent">
-        {prefix}{count}{suffix}
+        {prefix}
+        {count}
+        {suffix}
       </span>
     </div>
   );
@@ -95,7 +100,7 @@ const PremiumHero = () => {
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
-    offset: ["start start", "end start"]
+    offset: ["start start", "end start"],
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [0, -200]);
@@ -113,16 +118,16 @@ const PremiumHero = () => {
       opacity: 1,
       transition: {
         delayChildren: 0.2,
-        staggerChildren: 0.15
-      }
-    }
+        staggerChildren: 0.15,
+      },
+    },
   };
 
   const itemVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       y: 30,
-      scale: 0.95
+      scale: 0.95,
     },
     visible: {
       opacity: 1,
@@ -132,16 +137,16 @@ const PremiumHero = () => {
         type: "spring",
         damping: 25,
         stiffness: 120,
-        duration: 0.8
-      }
-    }
+        duration: 0.8,
+      },
+    },
   };
 
   const glassVariants = {
-    hidden: { 
+    hidden: {
       opacity: 0,
       scale: 0.8,
-      backdropFilter: "blur(0px)"
+      backdropFilter: "blur(0px)",
     },
     visible: {
       opacity: 1,
@@ -151,9 +156,9 @@ const PremiumHero = () => {
         type: "spring",
         damping: 20,
         stiffness: 100,
-        duration: 1.2
-      }
-    }
+        duration: 1.2,
+      },
+    },
   };
 
   return (
@@ -169,7 +174,7 @@ const PremiumHero = () => {
             className="w-full h-full bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2Fb9e926f9dca9498f8a0f99f9f9792da7%2F8f98d79878704821ac687723d7e03126?format=webp&width=800')`,
-              filter: "brightness(0.9) contrast(1.1)"
+              filter: "brightness(0.9) contrast(1.1)",
             }}
           />
         </div>
@@ -209,10 +214,7 @@ const PremiumHero = () => {
               </motion.div>
 
               {/* Glassmorphism Container for Subtitle and CTA */}
-              <motion.div
-                variants={glassVariants}
-                className="relative group"
-              >
+              <motion.div variants={glassVariants} className="relative group">
                 {/* Premium Glass Card */}
                 <div className="relative p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-black/40 via-black/30 to-black/20 border border-white/10 shadow-2xl shadow-black/50 overflow-hidden">
                   {/* Subtle gradient overlay */}

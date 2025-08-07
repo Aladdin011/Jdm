@@ -30,12 +30,14 @@ backend/
 ## 🛠️ Installation
 
 1. **Install dependencies:**
+
    ```bash
    cd backend
    npm install
    ```
 
 2. **Create environment file:**
+
    ```bash
    cp .env.example .env
    ```
@@ -64,11 +66,13 @@ npm run lint
 ## 🌐 API Endpoints
 
 ### Health Check
+
 - `GET /` - Basic server info
 - `GET /api/health` - Health check
 - `GET /api/health/detailed` - Detailed health info
 
 ### Contact
+
 - `POST /api/contact` - Submit contact form
 - `GET /api/contact/info` - Get contact information
 
@@ -77,6 +81,7 @@ npm run lint
 The API supports email notifications for contact form submissions.
 
 ### Gmail Setup:
+
 1. Enable 2-factor authentication
 2. Generate an app password
 3. Set environment variables:
@@ -88,6 +93,7 @@ The API supports email notifications for contact form submissions.
    ```
 
 ### SMTP Setup:
+
 ```
 EMAIL_SERVICE_ENABLED=true
 SMTP_HOST=your-smtp-host
@@ -101,15 +107,18 @@ EMAIL_PASSWORD=your-password
 ### Automatic Deployment:
 
 1. **Connect Repository:**
+
    - Link your GitHub repository to Render
    - Select the `backend` folder as the source
 
 2. **Configure Build:**
+
    - Build Command: `npm install && npm run build`
    - Start Command: `npm start`
 
 3. **Environment Variables:**
    Add these in Render dashboard:
+
    ```
    NODE_ENV=production
    PORT=5000
@@ -163,26 +172,28 @@ npm run test:coverage
 
 ## 📝 Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `NODE_ENV` | Environment mode | `development` |
-| `PORT` | Server port | `5000` |
-| `EMAIL_SERVICE_ENABLED` | Enable email features | `false` |
-| `EMAIL_USER` | Email username | - |
-| `EMAIL_PASSWORD` | Email password | - |
-| `COMPANY_EMAIL` | Company email address | - |
+| Variable                | Description           | Default       |
+| ----------------------- | --------------------- | ------------- |
+| `NODE_ENV`              | Environment mode      | `development` |
+| `PORT`                  | Server port           | `5000`        |
+| `EMAIL_SERVICE_ENABLED` | Enable email features | `false`       |
+| `EMAIL_USER`            | Email username        | -             |
+| `EMAIL_PASSWORD`        | Email password        | -             |
+| `COMPANY_EMAIL`         | Company email address | -             |
 
 ## 🆘 Troubleshooting
 
 ### Common Issues:
 
 1. **Port Already in Use:**
+
    ```bash
    # Kill process on port 5000
    npx kill-port 5000
    ```
 
 2. **Email Not Sending:**
+
    - Check environment variables
    - Verify email credentials
    - Check firewall settings
@@ -197,6 +208,7 @@ npm run test:coverage
 ## 📞 Support
 
 For technical support:
+
 - Email: info@jdmarcng.com
 - Phone: +234 9 291 3991
 

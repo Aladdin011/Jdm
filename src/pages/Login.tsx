@@ -57,7 +57,7 @@ const testAccounts = [
     role: "admin" as const,
     phone: "+234 808 000 0001",
     location: "Lagos, Nigeria",
-    department: "Administration"
+    department: "Administration",
   },
   {
     email: "user@jdmarc.ng",
@@ -67,12 +67,12 @@ const testAccounts = [
     role: "user" as const,
     phone: "+234 808 000 0002",
     location: "Abuja, Nigeria",
-    department: "General"
-  }
+    department: "General",
+  },
 ];
 
 const getTestAccountByEmail = (email: string) => {
-  return testAccounts.find(account => account.email === email);
+  return testAccounts.find((account) => account.email === email);
 };
 
 const validateUniqueKey = (key: string, department: string) => {
@@ -82,13 +82,13 @@ const validateUniqueKey = (key: string, department: string) => {
 
 const getDepartmentPrefix = (department: string) => {
   const prefixes: Record<string, string> = {
-    'Administration': 'ADM',
-    'General': 'GEN',
-    'Engineering': 'ENG',
-    'Finance': 'FIN',
-    'HR': 'HRM'
+    Administration: "ADM",
+    General: "GEN",
+    Engineering: "ENG",
+    Finance: "FIN",
+    HR: "HRM",
   };
-  return prefixes[department] || 'GEN';
+  return prefixes[department] || "GEN";
 };
 
 interface Department {

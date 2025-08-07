@@ -15,7 +15,7 @@ const testAccounts = [
     role: "admin" as const,
     phone: "+234 808 000 0001",
     location: "Lagos, Nigeria",
-    department: "Administration"
+    department: "Administration",
   },
   {
     email: "user@jdmarc.ng",
@@ -25,12 +25,12 @@ const testAccounts = [
     role: "user" as const,
     phone: "+234 808 000 0002",
     location: "Abuja, Nigeria",
-    department: "General"
-  }
+    department: "General",
+  },
 ];
 
 const getTestAccountByEmail = (email: string) => {
-  return testAccounts.find(account => account.email === email);
+  return testAccounts.find((account) => account.email === email);
 };
 
 interface User {

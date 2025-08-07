@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
 interface ContactEmailData {
   name: string;
@@ -13,9 +13,9 @@ interface ContactEmailData {
 
 // Create email transporter
 const createTransporter = () => {
-  if (process.env.EMAIL_SERVICE === 'gmail') {
+  if (process.env.EMAIL_SERVICE === "gmail") {
     return nodemailer.createTransporter({
-      service: 'gmail',
+      service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD,
@@ -25,9 +25,9 @@ const createTransporter = () => {
 
   // Generic SMTP configuration
   return nodemailer.createTransporter({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.SMTP_PORT || '587'),
-    secure: process.env.SMTP_SECURE === 'true',
+    host: process.env.SMTP_HOST || "smtp.gmail.com",
+    port: parseInt(process.env.SMTP_PORT || "587"),
+    secure: process.env.SMTP_SECURE === "true",
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASSWORD,
@@ -36,9 +36,11 @@ const createTransporter = () => {
 };
 
 // Send contact form email
-export const sendContactEmail = async (data: ContactEmailData): Promise<void> => {
+export const sendContactEmail = async (
+  data: ContactEmailData,
+): Promise<void> => {
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-    console.log('Email service not configured - skipping email send');
+    console.log("Email service not configured - skipping email send");
     return;
   }
 
@@ -61,7 +63,7 @@ export const sendContactEmail = async (data: ContactEmailData): Promise<void> =>
       
       <div style="background: #ffffff; padding: 20px; border-left: 4px solid #EE690B;">
         <h3>Subject: ${data.subject}</h3>
-        <p style="line-height: 1.6;">${data.message.replace(/\n/g, '<br>')}</p>
+        <p style="line-height: 1.6;">${data.message.replace(/\n/g, "<br>")}</p>
       </div>
       
       <p style="color: #666; font-size: 12px; margin-top: 30px;">
@@ -125,13 +127,13 @@ export const sendContactEmail = async (data: ContactEmailData): Promise<void> =>
     await transporter.sendMail({
       from: `"JD Marc Limited" <${process.env.EMAIL_USER}>`,
       to: data.email,
-      subject: 'Thank you for contacting JD Marc Limited',
+      subject: "Thank you for contacting JD Marc Limited",
       html: customerEmailHtml,
     });
 
-    console.log('Contact emails sent successfully');
+    console.log("Contact emails sent successfully");
   } catch (error) {
-    console.error('Error sending contact emails:', error);
+    console.error("Error sending contact emails:", error);
     throw error;
   }
 };
@@ -147,7 +149,7 @@ export const verifyEmailConfig = async (): Promise<boolean> => {
     await transporter.verify();
     return true;
   } catch (error) {
-    console.error('Email configuration verification failed:', error);
+    console.error("Email configuration verification failed:", error);
     return false;
   }
 };
