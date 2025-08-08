@@ -34,7 +34,6 @@ import {
   ArrowRight,
   ArrowLeft,
   Clock,
-  IdCard,
   FileText,
   Camera,
   Send,
@@ -53,8 +52,6 @@ interface FormData {
   location: string;
   password: string;
   confirmPassword: string;
-  idType: string;
-  idNumber: string;
   dateOfBirth: string;
   gender: string;
   otp: string;
@@ -72,8 +69,6 @@ export default function Register() {
     location: "",
     password: "",
     confirmPassword: "",
-    idType: "",
-    idNumber: "",
     dateOfBirth: "",
     gender: "",
     otp: "",
@@ -161,17 +156,8 @@ export default function Register() {
         return true;
 
       case 3:
-        if (
-          !formData.idType ||
-          !formData.idNumber ||
-          !formData.dateOfBirth ||
-          !formData.gender
-        ) {
+        if (!formData.dateOfBirth || !formData.gender) {
           setError("Please complete your KYC information");
-          return false;
-        }
-        if (formData.idNumber.length < 5) {
-          setError("Please enter a valid ID number");
           return false;
         }
         return true;
@@ -687,63 +673,52 @@ export default function Register() {
                         </p>
                       </div>
 
+                      {/* Removed ID Type and ID Number fields as requested */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label
-                            htmlFor="idType"
+                            htmlFor="dateOfBirth"
                             className="text-arch-charcoal font-medium"
                           >
-                            ID Type *
+                            Date of Birth *
                           </Label>
-                          <Select
-                            value={formData.idType}
-                            onValueChange={(value) =>
-                              handleInputChange("idType", value)
+                          <Input
+                            id="dateOfBirth"
+                            type="date"
+                            className="h-12 border-arch-light-blue/50 focus:border-arch-orange focus:ring-arch-orange/20"
+                            value={formData.dateOfBirth}
+                            onChange={(e) =>
+                              handleInputChange("dateOfBirth", e.target.value)
                             }
-                          >
-                            <SelectTrigger className="h-12 border-arch-light-blue/50 focus:border-arch-orange">
-                              <SelectValue placeholder="Select ID type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="nin">
-                                National Identity Number (NIN)
-                              </SelectItem>
-                              <SelectItem value="bvn">
-                                Bank Verification Number (BVN)
-                              </SelectItem>
-                              <SelectItem value="passport">
-                                International Passport
-                              </SelectItem>
-                              <SelectItem value="drivers">
-                                Driver's License
-                              </SelectItem>
-                              <SelectItem value="voters">
-                                Voter's Card
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
+                            required
+                          />
                         </div>
 
                         <div className="space-y-2">
                           <Label
-                            htmlFor="idNumber"
+                            htmlFor="gender"
                             className="text-arch-charcoal font-medium"
                           >
-                            ID Number *
+                            Gender *
                           </Label>
-                          <div className="relative">
-                            <IdCard className="absolute left-3 top-3 h-5 w-5 text-arch-blue-gray" />
-                            <Input
-                              id="idNumber"
-                              placeholder="Enter your ID number"
-                              className="pl-11 h-12 border-arch-light-blue/50 focus:border-arch-orange focus:ring-arch-orange/20"
-                              value={formData.idNumber}
-                              onChange={(e) =>
-                                handleInputChange("idNumber", e.target.value)
-                              }
-                              required
-                            />
-                          </div>
+                          <Select
+                            value={formData.gender}
+                            onValueChange={(value) =>
+                              handleInputChange("gender", value)
+                            }
+                          >
+                            <SelectTrigger className="h-12 border-arch-light-blue/50 focus:border-arch-orange">
+                              <SelectValue placeholder="Select gender" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="male">Male</SelectItem>
+                              <SelectItem value="female">Female</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                              <SelectItem value="prefer-not-to-say">
+                                Prefer not to say
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
                         </div>
                       </div>
 
