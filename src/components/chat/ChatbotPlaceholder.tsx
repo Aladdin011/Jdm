@@ -36,7 +36,8 @@ export default function ChatbotPlaceholder() {
                 <MessageCircle className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
                 <h3 className="text-lg font-semibold mb-2">Chat Coming Soon</h3>
                 <p className="text-muted-foreground">
-                  Our AI assistant will be available here to help you with your questions.
+                  Our AI assistant will be available here to help you with your
+                  questions.
                 </p>
               </div>
             </CardContent>
