@@ -2,7 +2,8 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 // API Configuration
 const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+  (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/?$/, '') ||
+  "http://localhost:5000/api";
 const TOKEN_STORAGE_KEY =
   import.meta.env.VITE_TOKEN_STORAGE_KEY || "jdmarc_auth_token";
 const REFRESH_TOKEN_STORAGE_KEY =

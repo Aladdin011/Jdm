@@ -29,6 +29,7 @@ export const cspConfig = {
   'connect-src': [
     "'self'",
     'https://api.jdmarc.com',
+    'https://builder-aura-field-production.up.railway.app',
     'https://www.google-analytics.com',
     'https://vitals.vercel-analytics.com'
   ],
@@ -39,7 +40,7 @@ export const cspConfig = {
   'object-src': ["'none'"],
   'base-uri': ["'self'"],
   'form-action': ["'self'"],
-  'frame-ancestors': ["'none'"],
+  // Note: frame-ancestors must be set via HTTP header, not meta. Omitted here to avoid warnings.
   'upgrade-insecure-requests': [],
 };
 
@@ -296,7 +297,7 @@ export const nameSanitizer = new InputSanitizer({
 // Security Headers
 export const securityHeaders = {
   'X-Content-Type-Options': 'nosniff',
-  'X-Frame-Options': 'DENY',
+  // X-Frame-Options must be sent as an HTTP header by the server
   'X-XSS-Protection': '1; mode=block',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
