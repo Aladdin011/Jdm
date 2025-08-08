@@ -74,11 +74,12 @@ export const validateContactForm = (
       message: detail.message,
     }));
 
-    return res.status(400).json({
+    res.status(400).json({
       success: false,
       error: "Validation failed",
       details: validationErrors,
     });
+    return;
   }
 
   // Replace request body with validated and sanitized data
@@ -100,11 +101,12 @@ export const validate = (schema: Joi.ObjectSchema) => {
         message: detail.message,
       }));
 
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         error: "Validation failed",
         details: validationErrors,
       });
+      return;
     }
 
     req.body = value;
