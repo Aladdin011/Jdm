@@ -230,7 +230,7 @@ export const authAPI = {
     email: string,
     type: "EMAIL_VERIFICATION" | "PASSWORD_RESET" | "LOGIN_VERIFICATION" = "EMAIL_VERIFICATION",
   ) => {
-    return apiRequest("POST", "/auth/request-otp", { email, type });
+    return apiRequest("POST", "/auth/resend-verification", { email, type });
   },
 };
 
