@@ -224,6 +224,14 @@ export const authAPI = {
   resendVerification: async (email: string) => {
     return apiRequest("POST", "/auth/resend-verification", { email });
   },
+
+  // Request an OTP to be sent to the user's email for registration or other flows
+  requestOtp: async (
+    email: string,
+    type: "EMAIL_VERIFICATION" | "PASSWORD_RESET" | "LOGIN_VERIFICATION" = "EMAIL_VERIFICATION",
+  ) => {
+    return apiRequest("POST", "/auth/request-otp", { email, type });
+  },
 };
 
 // Contact Form API

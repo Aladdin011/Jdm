@@ -41,6 +41,7 @@ import {
 } from "lucide-react";
 import PageTransition from "@/components/ui/PageTransition";
 import useAnalytics from "@/hooks/useAnalytics";
+import { authAPI } from "@/services/api";
 
 type RegistrationStep = 1 | 2 | 3 | 4;
 
@@ -193,14 +194,19 @@ export default function Register() {
   };
 
   const sendOTP = async () => {
+    setError("");
+    setSuccess("");
     try {
-      // Simulate API call to send OTP
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (!formData.email) {
+        setError("Please provide your email before requesting an OTP.");
+        return;
+      }
+      await authAPI.requestOtp(formData.email, "EMAIL_VERIFICATION");
       setOtpSent(true);
-      setOtpTimer(300); // 5 minutes
+      setOtpTimer(300);
       setSuccess("OTP sent to your email address");
-    } catch (error) {
-      setError("Failed to send OTP. Please try again.");
+    } catch (error: any) {
+      setError(error.message || "Failed to send OTP. Please try again.");
     }
   };
 
@@ -217,15 +223,12 @@ export default function Register() {
     setIsVerifying(true);
 
     try {
-      // Simulate OTP verification
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      if (formData.otp !== "123456") {
-        // Mock OTP for demo
-        setError("Invalid OTP. Please check your email and try again.");
-        setIsVerifying(false);
-        return;
-      }
+      // Verify OTP against backend
+      await authAPI.verifyOTP({
+        email: formData.email,
+        otp: formData.otp,
+        type: "EMAIL_VERIFICATION",
+      });
 
       const result = await register({
         firstName: formData.firstName,
@@ -246,8 +249,8 @@ export default function Register() {
       } else {
         setError(result.error || "Registration failed");
       }
-    } catch (error) {
-      setError("Verification failed. Please try again.");
+    } catch (error: any) {
+      setError(error?.message || "Verification failed. Please try again.");
     } finally {
       setIsVerifying(false);
     }
@@ -673,13 +676,10 @@ export default function Register() {
                         </p>
                       </div>
 
-                      {/* Removed ID Type and ID Number fields as requested */}
+                      {/* Removed duplicate KYC fields block */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label
-                            htmlFor="dateOfBirth"
-                            className="text-arch-charcoal font-medium"
-                          >
+                          <Label htmlFor="dateOfBirth" className="text-arch-charcoal font-medium">
                             Date of Birth *
                           </Label>
                           <Input
@@ -687,25 +687,18 @@ export default function Register() {
                             type="date"
                             className="h-12 border-arch-light-blue/50 focus:border-arch-orange focus:ring-arch-orange/20"
                             value={formData.dateOfBirth}
-                            onChange={(e) =>
-                              handleInputChange("dateOfBirth", e.target.value)
-                            }
+                            onChange={(e) => handleInputChange("dateOfBirth", e.target.value)}
                             required
                           />
                         </div>
 
                         <div className="space-y-2">
-                          <Label
-                            htmlFor="gender"
-                            className="text-arch-charcoal font-medium"
-                          >
+                          <Label htmlFor="gender" className="text-arch-charcoal font-medium">
                             Gender *
                           </Label>
                           <Select
                             value={formData.gender}
-                            onValueChange={(value) =>
-                              handleInputChange("gender", value)
-                            }
+                            onValueChange={(value) => handleInputChange("gender", value)}
                           >
                             <SelectTrigger className="h-12 border-arch-light-blue/50 focus:border-arch-orange">
                               <SelectValue placeholder="Select gender" />
@@ -714,57 +707,7 @@ export default function Register() {
                               <SelectItem value="male">Male</SelectItem>
                               <SelectItem value="female">Female</SelectItem>
                               <SelectItem value="other">Other</SelectItem>
-                              <SelectItem value="prefer-not-to-say">
-                                Prefer not to say
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label
-                            htmlFor="dateOfBirth"
-                            className="text-arch-charcoal font-medium"
-                          >
-                            Date of Birth *
-                          </Label>
-                          <Input
-                            id="dateOfBirth"
-                            type="date"
-                            className="h-12 border-arch-light-blue/50 focus:border-arch-orange focus:ring-arch-orange/20"
-                            value={formData.dateOfBirth}
-                            onChange={(e) =>
-                              handleInputChange("dateOfBirth", e.target.value)
-                            }
-                            required
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label
-                            htmlFor="gender"
-                            className="text-arch-charcoal font-medium"
-                          >
-                            Gender *
-                          </Label>
-                          <Select
-                            value={formData.gender}
-                            onValueChange={(value) =>
-                              handleInputChange("gender", value)
-                            }
-                          >
-                            <SelectTrigger className="h-12 border-arch-light-blue/50 focus:border-arch-orange">
-                              <SelectValue placeholder="Select gender" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="male">Male</SelectItem>
-                              <SelectItem value="female">Female</SelectItem>
-                              <SelectItem value="other">Other</SelectItem>
-                              <SelectItem value="prefer-not-to-say">
-                                Prefer not to say
-                              </SelectItem>
+                              <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -854,20 +797,7 @@ export default function Register() {
                         )}
                       </div>
 
-                      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                        <div className="flex items-start gap-3">
-                          <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                          <div>
-                            <h4 className="font-medium text-yellow-900 mb-1">
-                              Demo Mode
-                            </h4>
-                            <p className="text-sm text-yellow-700">
-                              For demonstration purposes, use{" "}
-                              <strong>123456</strong> as the verification code.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
+                      {/* Demo OTP notice removed to enforce real OTP usage */}
                     </motion.div>
                   )}
                 </AnimatePresence>
