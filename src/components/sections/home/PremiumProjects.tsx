@@ -47,8 +47,10 @@ const featuredProjects = [
     duration: "24 months",
     status: "completed",
     completion: 100,
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80",
-    description: "Revolutionary smart city development with IoT integration, sustainable energy systems, and intelligent traffic management.",
+    image:
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80",
+    description:
+      "Revolutionary smart city development with IoT integration, sustainable energy systems, and intelligent traffic management.",
     features: ["IoT Integration", "Smart Grid", "Green Building", "Traffic AI"],
     stats: {
       area: "2.5M sq ft",
@@ -70,9 +72,16 @@ const featuredProjects = [
     duration: "18 months",
     status: "in-progress",
     completion: 75,
-    image: "https://images.unsplash.com/photo-1555636222-cae831e670b3?w=800&q=80",
-    description: "Modern financial hub featuring state-of-the-art office towers, conference centers, and integrated business facilities.",
-    features: ["High-tech Security", "Conference Centers", "Parking Solutions", "Retail Spaces"],
+    image:
+      "https://images.unsplash.com/photo-1555636222-cae831e670b3?w=800&q=80",
+    description:
+      "Modern financial hub featuring state-of-the-art office towers, conference centers, and integrated business facilities.",
+    features: [
+      "High-tech Security",
+      "Conference Centers",
+      "Parking Solutions",
+      "Retail Spaces",
+    ],
     stats: {
       area: "1.8M sq ft",
       offices: "200+",
@@ -93,9 +102,16 @@ const featuredProjects = [
     duration: "20 months",
     status: "completed",
     completion: 100,
-    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80",
-    description: "Sustainable residential community with modern amenities, green spaces, and smart home technologies.",
-    features: ["Smart Homes", "Green Spaces", "Security Systems", "Community Centers"],
+    image:
+      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80",
+    description:
+      "Sustainable residential community with modern amenities, green spaces, and smart home technologies.",
+    features: [
+      "Smart Homes",
+      "Green Spaces",
+      "Security Systems",
+      "Community Centers",
+    ],
     stats: {
       units: "500",
       families: "2,000+",
@@ -111,12 +127,14 @@ const featuredProjects = [
 
 const ProjectDisplayCard = ({ project, isActive, onActivate }: any) => {
   const [isHovered, setIsHovered] = useState(false);
-  
+
   return (
     <motion.div
       className={cn(
         "group relative bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden cursor-pointer transition-all duration-500",
-        isActive ? "ring-2 ring-blue-500 shadow-2xl scale-105" : "hover:shadow-xl hover:scale-102"
+        isActive
+          ? "ring-2 ring-blue-500 shadow-2xl scale-105"
+          : "hover:shadow-xl hover:scale-102",
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -130,12 +148,12 @@ const ProjectDisplayCard = ({ project, isActive, onActivate }: any) => {
           src={project.image}
           alt={project.title}
           className="w-full h-full object-cover"
-          animate={{ 
+          animate={{
             scale: isHovered ? 1.1 : 1,
-            transition: { duration: 0.6 }
+            transition: { duration: 0.6 },
           }}
         />
-        
+
         {/* Live indicator */}
         {project.isLive && (
           <div className="absolute top-4 left-4">
@@ -148,12 +166,14 @@ const ProjectDisplayCard = ({ project, isActive, onActivate }: any) => {
 
         {/* Status badge */}
         <div className="absolute top-4 right-4">
-          <div className={cn(
-            "px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm",
-            project.status === "completed" 
-              ? "bg-green-500/90 text-white" 
-              : "bg-blue-500/90 text-white"
-          )}>
+          <div
+            className={cn(
+              "px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm",
+              project.status === "completed"
+                ? "bg-green-500/90 text-white"
+                : "bg-blue-500/90 text-white",
+            )}
+          >
             {project.status === "completed" ? "Completed" : "In Progress"}
           </div>
         </div>
@@ -219,7 +239,9 @@ const ProjectDisplayCard = ({ project, isActive, onActivate }: any) => {
             </div>
           </div>
 
-          <p className="text-sm text-gray-600 line-clamp-2">{project.description}</p>
+          <p className="text-sm text-gray-600 line-clamp-2">
+            {project.description}
+          </p>
 
           {/* Features */}
           <div className="flex flex-wrap gap-2">
@@ -277,8 +299,10 @@ const ProjectControls = ({ activeProject, onProjectChange }: any) => {
       transition={{ duration: 0.8, delay: 0.3 }}
     >
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">Project Controls</h3>
-        <motion.button 
+        <h3 className="text-lg font-semibold text-gray-900">
+          Project Controls
+        </h3>
+        <motion.button
           className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors"
           whileHover={{ rotate: 180 }}
           transition={{ duration: 0.3 }}
@@ -293,9 +317,9 @@ const ProjectControls = ({ activeProject, onProjectChange }: any) => {
             key={project.id}
             className={cn(
               "flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-300",
-              activeProject?.id === project.id 
-                ? "bg-blue-50 border border-blue-200" 
-                : "hover:bg-gray-50"
+              activeProject?.id === project.id
+                ? "bg-blue-50 border border-blue-200"
+                : "hover:bg-gray-50",
             )}
             onClick={() => onProjectChange(project)}
             initial={{ opacity: 0, y: 20 }}
@@ -312,7 +336,9 @@ const ProjectControls = ({ activeProject, onProjectChange }: any) => {
               />
             </div>
             <div className="flex-1 min-w-0">
-              <h4 className="font-medium text-gray-900 truncate">{project.title}</h4>
+              <h4 className="font-medium text-gray-900 truncate">
+                {project.title}
+              </h4>
               <div className="flex items-center gap-2 text-sm text-gray-500">
                 <span>{project.location}</span>
                 {project.isLive && (
@@ -324,10 +350,14 @@ const ProjectControls = ({ activeProject, onProjectChange }: any) => {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <div className={cn(
-                "w-2 h-2 rounded-full",
-                activeProject?.id === project.id ? "bg-green-500" : "bg-gray-300"
-              )} />
+              <div
+                className={cn(
+                  "w-2 h-2 rounded-full",
+                  activeProject?.id === project.id
+                    ? "bg-green-500"
+                    : "bg-gray-300",
+                )}
+              />
             </div>
           </motion.div>
         ))}
@@ -363,10 +393,30 @@ const ProjectControls = ({ activeProject, onProjectChange }: any) => {
 
 const ProjectStats = ({ activeProject }: any) => {
   const stats = [
-    { label: "Completion", value: `${activeProject?.completion || 100}%`, color: "text-green-500", bgColor: "bg-green-500" },
-    { label: "Timeline", value: activeProject?.duration || "24 months", color: "text-blue-500", bgColor: "bg-blue-500" },
-    { label: "Investment", value: activeProject?.value || "$45M", color: "text-purple-500", bgColor: "bg-purple-500" },
-    { label: "Rating", value: `${activeProject?.rating || 4.9}★`, color: "text-yellow-500", bgColor: "bg-yellow-500" },
+    {
+      label: "Completion",
+      value: `${activeProject?.completion || 100}%`,
+      color: "text-green-500",
+      bgColor: "bg-green-500",
+    },
+    {
+      label: "Timeline",
+      value: activeProject?.duration || "24 months",
+      color: "text-blue-500",
+      bgColor: "bg-blue-500",
+    },
+    {
+      label: "Investment",
+      value: activeProject?.value || "$45M",
+      color: "text-purple-500",
+      bgColor: "bg-purple-500",
+    },
+    {
+      label: "Rating",
+      value: `${activeProject?.rating || 4.9}★`,
+      color: "text-yellow-500",
+      bgColor: "bg-yellow-500",
+    },
   ];
 
   return (
@@ -395,16 +445,19 @@ const ProjectStats = ({ activeProject }: any) => {
           >
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">{stat.label}</span>
-              <span className={cn("font-semibold", stat.color)}>{stat.value}</span>
+              <span className={cn("font-semibold", stat.color)}>
+                {stat.value}
+              </span>
             </div>
             <div className="w-full bg-gray-100 rounded-full h-2">
               <motion.div
                 className={cn("h-2 rounded-full", stat.bgColor)}
                 initial={{ width: "0%" }}
-                animate={{ 
-                  width: stat.label === "Completion" 
-                    ? `${activeProject?.completion || 100}%` 
-                    : "85%" 
+                animate={{
+                  width:
+                    stat.label === "Completion"
+                      ? `${activeProject?.completion || 100}%`
+                      : "85%",
                 }}
                 transition={{ duration: 1.5, delay: 0.8 + index * 0.2 }}
               />
@@ -422,8 +475,16 @@ const ProjectStats = ({ activeProject }: any) => {
         <div className="space-y-3">
           {[
             { time: "2min ago", action: "Progress updated", type: "update" },
-            { time: "1hr ago", action: "Quality check passed", type: "success" },
-            { time: "3hr ago", action: "New milestone reached", type: "milestone" },
+            {
+              time: "1hr ago",
+              action: "Quality check passed",
+              type: "success",
+            },
+            {
+              time: "3hr ago",
+              action: "New milestone reached",
+              type: "milestone",
+            },
           ].map((activity, index) => (
             <motion.div
               key={index}
@@ -433,12 +494,19 @@ const ProjectStats = ({ activeProject }: any) => {
               transition={{ duration: 0.3, delay: 1 + index * 0.1 }}
             >
               <div className="text-xs text-gray-500 w-16">{activity.time}</div>
-              <div className={cn(
-                "w-2 h-2 rounded-full",
-                activity.type === "success" ? "bg-green-500" :
-                activity.type === "milestone" ? "bg-purple-500" : "bg-blue-500"
-              )} />
-              <div className="text-sm text-gray-700 flex-1">{activity.action}</div>
+              <div
+                className={cn(
+                  "w-2 h-2 rounded-full",
+                  activity.type === "success"
+                    ? "bg-green-500"
+                    : activity.type === "milestone"
+                      ? "bg-purple-500"
+                      : "bg-blue-500",
+                )}
+              />
+              <div className="text-sm text-gray-700 flex-1">
+                {activity.action}
+              </div>
             </motion.div>
           ))}
         </div>
@@ -450,7 +518,7 @@ const ProjectStats = ({ activeProject }: any) => {
 export default function PremiumProjects() {
   const [activeProject, setActiveProject] = useState(featuredProjects[0]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  
+
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -463,7 +531,9 @@ export default function PremiumProjects() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % featuredProjects.length);
-      setActiveProject(featuredProjects[(currentIndex + 1) % featuredProjects.length]);
+      setActiveProject(
+        featuredProjects[(currentIndex + 1) % featuredProjects.length],
+      );
     }, 5000);
 
     return () => clearInterval(interval);
@@ -513,8 +583,9 @@ export default function PremiumProjects() {
           </h2>
 
           <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Experience our advanced project monitoring and control system with real-time analytics, 
-            smart automation, and comprehensive oversight of all construction activities.
+            Experience our advanced project monitoring and control system with
+            real-time analytics, smart automation, and comprehensive oversight
+            of all construction activities.
           </p>
         </motion.div>
 
@@ -555,7 +626,7 @@ export default function PremiumProjects() {
                     transition={{ duration: 0.6 }}
                   />
                 </AnimatePresence>
-                
+
                 {/* Project Info Overlay */}
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end"
@@ -564,7 +635,7 @@ export default function PremiumProjects() {
                   transition={{ duration: 0.8, delay: 0.6 }}
                 >
                   <div className="p-8 text-white w-full">
-                    <motion.h3 
+                    <motion.h3
                       className="text-2xl font-bold mb-2"
                       initial={{ y: 20, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
@@ -572,7 +643,7 @@ export default function PremiumProjects() {
                     >
                       {activeProject.title}
                     </motion.h3>
-                    <motion.div 
+                    <motion.div
                       className="flex items-center gap-4 text-sm"
                       initial={{ y: 20, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
@@ -603,7 +674,9 @@ export default function PremiumProjects() {
                       key={index}
                       className={cn(
                         "h-2 rounded-full transition-all duration-300",
-                        index === currentIndex ? "bg-white w-8" : "bg-white/50 w-2"
+                        index === currentIndex
+                          ? "bg-white w-8"
+                          : "bg-white/50 w-2",
                       )}
                       onClick={() => {
                         setCurrentIndex(index);
@@ -627,18 +700,20 @@ export default function PremiumProjects() {
                   <p className="text-gray-600 leading-relaxed">
                     {activeProject.description}
                   </p>
-                  
+
                   <div className="flex flex-wrap gap-2">
-                    {activeProject.features.map((feature: string, i: number) => (
-                      <span
-                        key={i}
-                        className="px-3 py-1 bg-blue-50 text-blue-600 text-sm rounded-lg font-medium"
-                      >
-                        {feature}
-                      </span>
-                    ))}
+                    {activeProject.features.map(
+                      (feature: string, i: number) => (
+                        <span
+                          key={i}
+                          className="px-3 py-1 bg-blue-50 text-blue-600 text-sm rounded-lg font-medium"
+                        >
+                          {feature}
+                        </span>
+                      ),
+                    )}
                   </div>
-                  
+
                   <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                     <div className="flex items-center gap-4 text-sm text-gray-500">
                       <span className="flex items-center gap-1">
@@ -650,7 +725,7 @@ export default function PremiumProjects() {
                         {activeProject.value}
                       </span>
                     </div>
-                    
+
                     <motion.button
                       className="px-6 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors font-medium"
                       whileHover={{ scale: 1.05 }}
@@ -678,9 +753,12 @@ export default function PremiumProjects() {
           viewport={{ once: true }}
         >
           <div className="text-center mb-12">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Featured Projects</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              Featured Projects
+            </h3>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Explore our portfolio of successful smart construction projects with real-time monitoring and control systems.
+              Explore our portfolio of successful smart construction projects
+              with real-time monitoring and control systems.
             </p>
           </div>
 
@@ -708,10 +786,11 @@ export default function PremiumProjects() {
             Experience Smart Construction Management
           </h3>
           <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-            Join the future of construction with our intelligent project management system and real-time monitoring capabilities.
+            Join the future of construction with our intelligent project
+            management system and real-time monitoring capabilities.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <motion.button 
+            <motion.button
               className="px-8 py-4 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors font-semibold flex items-center gap-2 justify-center"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -719,7 +798,7 @@ export default function PremiumProjects() {
               <span>Start Smart Project</span>
               <ArrowRight className="w-5 h-5" />
             </motion.button>
-            <motion.button 
+            <motion.button
               className="px-8 py-4 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors font-semibold"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
