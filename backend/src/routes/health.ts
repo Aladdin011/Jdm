@@ -1,24 +1,66 @@
 import express from "express";
+import { AppDataSource } from "../config/database";
 
 const router = express.Router();
 
 // Health check endpoint
-router.get("/", (req, res) => {
-  const healthData = {
-    status: "OK",
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    memory: {
-      used:
-        Math.round((process.memoryUsage().heapUsed / 1024 / 1024) * 100) / 100,
-      total:
-        Math.round((process.memoryUsage().heapTotal / 1024 / 1024) * 100) / 100,
-    },
-    environment: process.env.NODE_ENV || "development",
-    version: "1.0.0",
-  };
+router.get("/", async (req, res) => {
+  try {
+    // Test database connection
+    let dbStatus = "disconnected";
+    let dbMessage = "Database not initialized";
 
-  res.status(200).json(healthData);
+    if (AppDataSource.isInitialized) {
+      const queryRunner = AppDataSource.createQueryRunner();
+      await queryRunner.connect();
+      await queryRunner.query('SELECT 1');
+      await queryRunner.release();
+      dbStatus = "connected";
+      dbMessage = "Database connection healthy";
+    }
+
+    const healthData = {
+      status: "OK",
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      memory: {
+        used:
+          Math.round((process.memoryUsage().heapUsed / 1024 / 1024) * 100) / 100,
+        total:
+          Math.round((process.memoryUsage().heapTotal / 1024 / 1024) * 100) / 100,
+      },
+      environment: process.env.NODE_ENV || "development",
+      version: "1.0.0",
+      database: {
+        status: dbStatus,
+        message: dbMessage,
+        host: process.env.DB_HOST,
+        name: process.env.DB_NAME
+      }
+    };
+
+    res.status(200).json(healthData);
+  } catch (error) {
+    const healthData = {
+      status: "ERROR",
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      memory: {
+        used:
+          Math.round((process.memoryUsage().heapUsed / 1024 / 1024) * 100) / 100,
+        total:
+          Math.round((process.memoryUsage().heapTotal / 1024 / 1024) * 100) / 100,
+      },
+      environment: process.env.NODE_ENV || "development",
+      version: "1.0.0",
+      database: {
+        status: "error",
+        message: error instanceof Error ? error.message : "Unknown database error"
+      }
+    };
+
+    res.status(500).json(healthData);
+  }
 });
 
 // Detailed health check

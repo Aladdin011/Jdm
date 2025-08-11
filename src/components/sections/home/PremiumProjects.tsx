@@ -31,266 +31,141 @@ import {
   ChevronRight,
   TrendingUp,
   Activity,
+  Home,
+  Shield,
+  Camera,
+  Lock,
+  Eye,
+  EyeOff,
+  Bell,
+  Wifi,
+  Battery,
+  User,
+  MoreHorizontal,
 } from "lucide-react";
 import { useAppStore } from "@/stores/appStore";
 import { projects } from "@/data/projects";
 import { cn } from "@/lib/utils";
 
-// Featured projects with enhanced data
-const featuredProjects = [
+// Smart Home Security System Data
+const smartHomeProjects = [
   {
     id: 1,
-    title: "Lagos Smart City Complex",
-    category: "smart-cities",
+    title: "Smart Home Security Hub",
+    category: "security-systems",
     location: "Lagos, Nigeria",
-    value: "$45M",
-    duration: "24 months",
+    value: "$2.8M",
+    duration: "12 months",
     status: "completed",
     completion: 100,
-    image:
-      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80",
-    description:
-      "Revolutionary smart city development with IoT integration, sustainable energy systems, and intelligent traffic management.",
-    features: ["IoT Integration", "Smart Grid", "Green Building", "Traffic AI"],
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
+    description: "Advanced smart home security system with AI-powered monitoring, automated access control, and real-time surveillance capabilities.",
+    features: ["AI Monitoring", "Smart Locks", "24/7 Surveillance", "Mobile Control"],
     stats: {
-      area: "2.5M sq ft",
-      residents: "15,000+",
-      satisfaction: "98%",
-      energy: "40% reduction",
+      cameras: "8 Active",
+      sensors: "24 Online",
+      uptime: "99.9%",
+      response: "< 2sec",
     },
-    awards: ["LEED Platinum", "Smart City Award 2023"],
-    timeline: "2021-2023",
-    rating: 4.9,
+    security: {
+      cameras: [
+        { name: "Front Door", status: "active", signal: 95 },
+        { name: "Backyard", status: "active", signal: 87 },
+        { name: "Living Room", status: "active", signal: 92 },
+        { name: "Garage", status: "inactive", signal: 78 },
+      ],
+      locks: [
+        { name: "Main Entrance", status: "secured", battery: 95 },
+        { name: "Back Door", status: "secured", battery: 82 },
+      ],
+      members: [
+        { name: "John", status: "home", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" },
+        { name: "Sarah", status: "away", avatar: "https://images.unsplash.com/photo-1494790108755-2616b7c7ad4c?w=100&q=80" },
+        { name: "Mike", status: "home", avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&q=80" },
+      ],
+    },
     isLive: true,
+    rating: 4.9,
   },
   {
     id: 2,
-    title: "Abuja Financial District",
-    category: "commercial",
-    location: "Abuja, Nigeria",
-    value: "$32M",
-    duration: "18 months",
+    title: "Residential Complex Security",
+    category: "residential-security",
+    location: "Abuja, Nigeria", 
+    value: "$1.5M",
+    duration: "8 months",
     status: "in-progress",
     completion: 75,
-    image:
-      "https://images.unsplash.com/photo-1555636222-cae831e670b3?w=800&q=80",
-    description:
-      "Modern financial hub featuring state-of-the-art office towers, conference centers, and integrated business facilities.",
-    features: [
-      "High-tech Security",
-      "Conference Centers",
-      "Parking Solutions",
-      "Retail Spaces",
-    ],
+    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80",
+    description: "Comprehensive security solution for residential complex with perimeter monitoring and visitor management system.",
+    features: ["Perimeter Security", "Visitor Management", "Access Control", "Emergency Response"],
     stats: {
-      area: "1.8M sq ft",
-      offices: "200+",
-      jobs: "5,000+",
-      rating: "5-Star",
+      units: "120 Protected",
+      guards: "6 Active",
+      incidents: "0 Today",
+      satisfaction: "98%",
     },
-    awards: ["Architecture Excellence"],
-    timeline: "2022-2024",
-    rating: 4.7,
     isLive: true,
+    rating: 4.7,
   },
   {
     id: 3,
-    title: "Kano Residential Estate",
-    category: "residential",
-    location: "Kano, Nigeria",
-    value: "$28M",
-    duration: "20 months",
+    title: "Commercial Building Security",
+    category: "commercial-security",
+    location: "Port Harcourt, Nigeria",
+    value: "$3.2M", 
+    duration: "15 months",
     status: "completed",
     completion: 100,
-    image:
-      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80",
-    description:
-      "Sustainable residential community with modern amenities, green spaces, and smart home technologies.",
-    features: [
-      "Smart Homes",
-      "Green Spaces",
-      "Security Systems",
-      "Community Centers",
-    ],
+    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80",
+    description: "Enterprise-grade security system for commercial building with biometric access and integrated fire safety.",
+    features: ["Biometric Access", "Fire Integration", "Threat Detection", "Analytics Dashboard"],
     stats: {
-      units: "500",
-      families: "2,000+",
-      green: "30%",
-      amenities: "15+",
+      employees: "500+ Protected",
+      floors: "15 Monitored",
+      alerts: "Real-time",
+      compliance: "100%",
     },
-    awards: ["Sustainable Development Award"],
-    timeline: "2020-2022",
-    rating: 4.8,
     isLive: false,
+    rating: 4.8,
   },
 ];
 
-const ProjectDisplayCard = ({ project, isActive, onActivate }: any) => {
-  const [isHovered, setIsHovered] = useState(false);
-
+const SecurityCameraCard = ({ camera, isActive, onClick }: any) => {
   return (
     <motion.div
       className={cn(
-        "group relative bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden cursor-pointer transition-all duration-500",
-        isActive
-          ? "ring-2 ring-blue-500 shadow-2xl scale-105"
-          : "hover:shadow-xl hover:scale-102",
+        "flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-300",
+        isActive ? "bg-blue-50 border border-blue-200" : "hover:bg-gray-50"
       )}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onClick={onActivate}
-      whileHover={{ y: -4 }}
-      layout
+      onClick={onClick}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
     >
-      {/* Project Image */}
-      <div className="relative h-48 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
-        <motion.img
-          src={project.image}
-          alt={project.title}
-          className="w-full h-full object-cover"
-          animate={{
-            scale: isHovered ? 1.1 : 1,
-            transition: { duration: 0.6 },
-          }}
-        />
-
-        {/* Live indicator */}
-        {project.isLive && (
-          <div className="absolute top-4 left-4">
-            <div className="flex items-center gap-2 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              <span className="text-xs font-medium text-gray-700">Live</span>
-            </div>
-          </div>
-        )}
-
-        {/* Status badge */}
-        <div className="absolute top-4 right-4">
-          <div
-            className={cn(
-              "px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm",
-              project.status === "completed"
-                ? "bg-green-500/90 text-white"
-                : "bg-blue-500/90 text-white",
-            )}
-          >
-            {project.status === "completed" ? "Completed" : "In Progress"}
-          </div>
-        </div>
-
-        {/* Hover controls */}
-        <motion.div
-          className="absolute inset-0 bg-black/40 flex items-center justify-center gap-3"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isHovered ? 1 : 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <motion.button
-            className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Play className="w-5 h-5 ml-0.5" />
-          </motion.button>
-          <motion.button
-            className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Maximize2 className="w-5 h-5" />
-          </motion.button>
-        </motion.div>
-
-        {/* Progress bar for in-progress projects */}
-        {project.status === "in-progress" && (
-          <div className="absolute bottom-4 left-4 right-4">
-            <div className="flex items-center justify-between text-white text-xs mb-2">
-              <span>Progress</span>
-              <span>{project.completion}%</span>
-            </div>
-            <div className="w-full bg-white/20 rounded-full h-1.5">
-              <motion.div
-                className="h-1.5 bg-blue-400 rounded-full"
-                initial={{ width: "0%" }}
-                animate={{ width: `${project.completion}%` }}
-                transition={{ duration: 2, delay: 0.5 }}
-              />
-            </div>
-          </div>
+      <div className="relative w-8 h-8 rounded-lg overflow-hidden bg-gray-100">
+        <Camera className="w-4 h-4 text-gray-600 absolute inset-0 m-auto" />
+        {camera.status === "active" && (
+          <div className="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
         )}
       </div>
-
-      {/* Project Info */}
-      <div className="p-6">
-        <div className="space-y-3">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 group-hover:text-gray-800 transition-colors">
-              {project.title}
-            </h3>
-            <div className="flex items-center gap-4 text-sm text-gray-500 mt-1">
-              <span className="flex items-center gap-1">
-                <MapPin className="w-4 h-4" />
-                {project.location}
-              </span>
-              <span className="flex items-center gap-1">
-                <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                {project.rating}
-              </span>
-            </div>
-          </div>
-
-          <p className="text-sm text-gray-600 line-clamp-2">
-            {project.description}
-          </p>
-
-          {/* Features */}
-          <div className="flex flex-wrap gap-2">
-            {project.features.slice(0, 3).map((feature: string, i: number) => (
-              <span
-                key={i}
-                className="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-md font-medium"
-              >
-                {feature}
-              </span>
-            ))}
-            {project.features.length > 3 && (
-              <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md">
-                +{project.features.length - 3} more
-              </span>
-            )}
-          </div>
-
-          {/* Stats */}
-          <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-            <div className="flex items-center gap-1 text-sm font-semibold text-green-600">
-              <DollarSign className="w-4 h-4" />
-              {project.value}
-            </div>
-            <motion.div
-              className="flex items-center gap-2 text-blue-600 font-medium text-sm group-hover:text-blue-700 transition-colors"
-              animate={{ x: isHovered ? 5 : 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <span>View Project</span>
-              <ArrowRight className="w-4 h-4" />
-            </motion.div>
-          </div>
+      <div className="flex-1 min-w-0">
+        <h4 className="font-medium text-gray-900 text-sm">{camera.name}</h4>
+        <div className="flex items-center gap-2 text-xs text-gray-500">
+          <Wifi className="w-3 h-3" />
+          <span>{camera.signal}%</span>
         </div>
       </div>
-
-      {/* Active indicator */}
-      {isActive && (
-        <motion.div
-          className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-purple-500"
-          layoutId="activeIndicator"
-          transition={{ duration: 0.3 }}
-        />
-      )}
+      <div className={cn(
+        "w-2 h-2 rounded-full",
+        camera.status === "active" ? "bg-green-500" : "bg-gray-300"
+      )} />
     </motion.div>
   );
 };
 
-const ProjectControls = ({ activeProject, onProjectChange }: any) => {
+const SmartHomeControls = ({ activeProject, onProjectChange }: any) => {
+  const [activeCamera, setActiveCamera] = useState(0);
+
   return (
     <motion.div
       className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6"
@@ -299,9 +174,7 @@ const ProjectControls = ({ activeProject, onProjectChange }: any) => {
       transition={{ duration: 0.8, delay: 0.3 }}
     >
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">
-          Project Controls
-        </h3>
+        <h3 className="text-lg font-semibold text-gray-900">Security Control</h3>
         <motion.button
           className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors"
           whileHover={{ rotate: 180 }}
@@ -311,111 +184,303 @@ const ProjectControls = ({ activeProject, onProjectChange }: any) => {
         </motion.button>
       </div>
 
-      <div className="space-y-4">
-        {featuredProjects.map((project, index) => (
-          <motion.div
-            key={project.id}
-            className={cn(
-              "flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-300",
-              activeProject?.id === project.id
-                ? "bg-blue-50 border border-blue-200"
-                : "hover:bg-gray-50",
-            )}
-            onClick={() => onProjectChange(project)}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <div className="w-12 h-12 rounded-xl overflow-hidden bg-gray-100">
-              <img
-                src={project.image}
-                alt={project.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="flex-1 min-w-0">
-              <h4 className="font-medium text-gray-900 truncate">
-                {project.title}
-              </h4>
-              <div className="flex items-center gap-2 text-sm text-gray-500">
-                <span>{project.location}</span>
-                {project.isLive && (
-                  <div className="flex items-center gap-1">
-                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                    <span className="text-xs text-green-600">Live</span>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <div
-                className={cn(
-                  "w-2 h-2 rounded-full",
-                  activeProject?.id === project.id
-                    ? "bg-green-500"
-                    : "bg-gray-300",
-                )}
-              />
-            </div>
-          </motion.div>
-        ))}
+      {/* Camera Controls */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <h4 className="font-medium text-gray-900">Cameras</h4>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+            <span className="text-sm text-gray-600">
+              {activeProject?.security?.cameras?.filter((c: any) => c.status === 'active').length || 3}
+            </span>
+          </div>
+        </div>
+        <div className="space-y-2">
+          {(activeProject?.security?.cameras || []).map((camera: any, index: number) => (
+            <SecurityCameraCard
+              key={index}
+              camera={camera}
+              isActive={activeCamera === index}
+              onClick={() => setActiveCamera(index)}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* Navigation Controls */}
-      <div className="flex items-center justify-center gap-3 mt-6 pt-6 border-t border-gray-100">
-        <motion.button
-          className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </motion.button>
-        <motion.button
-          className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white hover:bg-blue-600 transition-colors"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <Play className="w-5 h-5 ml-0.5" />
-        </motion.button>
-        <motion.button
-          className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <ChevronRight className="w-5 h-5" />
-        </motion.button>
+      {/* Lock Status */}
+      <div className="border-t border-gray-100 pt-6">
+        <div className="flex items-center justify-between mb-4">
+          <h4 className="font-medium text-gray-900">Access Control</h4>
+          <span className="text-sm text-gray-500">All Secured</span>
+        </div>
+        <div className="space-y-3">
+          {(activeProject?.security?.locks || []).map((lock: any, index: number) => (
+            <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-2">
+                <Lock className="w-4 h-4 text-green-600" />
+                <span className="text-sm font-medium">{lock.name}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Battery className="w-4 h-4 text-gray-400" />
+                <span className="text-xs text-gray-500">{lock.battery}%</span>
+                <div className="w-2 h-2 bg-green-500 rounded-full" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Members */}
+      <div className="border-t border-gray-100 pt-6 mt-6">
+        <h4 className="font-medium text-gray-900 mb-4">Active Members</h4>
+        <div className="flex items-center gap-2">
+          {(activeProject?.security?.members || []).map((member: any, index: number) => (
+            <div key={index} className="relative">
+              <img
+                src={member.avatar}
+                alt={member.name}
+                className="w-8 h-8 rounded-full object-cover"
+              />
+              <div className={cn(
+                "absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white",
+                member.status === "home" ? "bg-green-500" : "bg-gray-400"
+              )} />
+            </div>
+          ))}
+          <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-xs font-medium text-gray-600">
+            +2
+          </div>
+        </div>
       </div>
     </motion.div>
   );
 };
 
-const ProjectStats = ({ activeProject }: any) => {
+const SmartHomeDisplay = ({ activeProject }: any) => {
+  return (
+    <motion.div
+      className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.8, delay: 0.4 }}
+    >
+      {/* Header */}
+      <div className="p-6 border-b border-gray-100">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+              <Home className="w-4 h-4" />
+            </div>
+            <div>
+              <h2 className="font-semibold text-gray-900">Home Security</h2>
+              <p className="text-sm text-gray-500">{activeProject?.location}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <Wifi className="w-4 h-4 text-gray-400" />
+              <span className="text-sm text-gray-600">Connected</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Bell className="w-4 h-4 text-gray-400" />
+              <Settings className="w-4 h-4 text-gray-400" />
+              <MoreHorizontal className="w-4 h-4 text-gray-400" />
+            </div>
+            <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+              <User className="w-4 h-4" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Display */}
+      <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 relative">
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={activeProject?.id}
+            src={activeProject?.image}
+            alt={activeProject?.title}
+            className="w-full h-full object-cover"
+            initial={{ opacity: 0, scale: 1.1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.6 }}
+          />
+        </AnimatePresence>
+
+        {/* Security Overlay */}
+        <div className="absolute inset-0 bg-black/20">
+          {/* Security Indicators */}
+          <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-2 bg-white/90 backdrop-blur-sm rounded-lg">
+            <Shield className="w-4 h-4 text-green-500" />
+            <span className="text-sm font-medium text-gray-900">All Systems Active</span>
+          </div>
+
+          {/* Live Indicators */}
+          <div className="absolute top-4 right-4 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white shadow-lg">
+            <Camera className="w-6 h-6" />
+          </div>
+          <div className="absolute top-20 right-20 w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg">
+            <Lock className="w-6 h-6" />
+          </div>
+          <div className="absolute bottom-20 left-20 w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white shadow-lg">
+            <Shield className="w-6 h-6" />
+          </div>
+
+          {/* Status Panel */}
+          <motion.div
+            className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-sm rounded-xl p-4 min-w-[200px]"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+          >
+            <div className="text-sm font-semibold text-gray-900 mb-3">System Status</div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs">
+                <span className="flex items-center gap-1">
+                  <div className="w-2 h-2 bg-green-500 rounded-full" />
+                  Cameras
+                </span>
+                <span className="font-medium">{activeProject?.stats?.cameras || "8 Active"}</span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="flex items-center gap-1">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full" />
+                  Locks
+                </span>
+                <span className="font-medium">2 Secured</span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="flex items-center gap-1">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full" />
+                  Uptime
+                </span>
+                <span className="font-medium">{activeProject?.stats?.uptime || "99.9%"}</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Project Info Overlay */}
+          <motion.div
+            className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+          >
+            <div className="text-white">
+              <motion.h3
+                className="text-2xl font-bold mb-2"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.8 }}
+              >
+                {activeProject?.title}
+              </motion.h3>
+              <motion.div
+                className="flex items-center gap-4 text-sm"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.9 }}
+              >
+                <span className="flex items-center gap-1">
+                  <MapPin className="w-4 h-4" />
+                  {activeProject?.location}
+                </span>
+                <span className="flex items-center gap-1">
+                  <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                  {activeProject?.rating}
+                </span>
+                {activeProject?.isLive && (
+                  <span className="flex items-center gap-1 px-2 py-1 bg-green-500/20 rounded-full">
+                    <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
+                    Live
+                  </span>
+                )}
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Project Details */}
+      <div className="p-6">
+        <motion.div
+          className="space-y-4"
+          key={activeProject?.id}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <p className="text-gray-600 leading-relaxed">
+            {activeProject?.description}
+          </p>
+
+          <div className="flex flex-wrap gap-2">
+            {(activeProject?.features || []).map((feature: string, i: number) => (
+              <span
+                key={i}
+                className="px-3 py-1 bg-blue-50 text-blue-600 text-sm rounded-lg font-medium"
+              >
+                {feature}
+              </span>
+            ))}
+          </div>
+
+          <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+            <div className="flex items-center gap-4 text-sm text-gray-500">
+              <span className="flex items-center gap-1">
+                <DollarSign className="w-4 h-4" />
+                {activeProject?.value}
+              </span>
+              <span className="flex items-center gap-1">
+                <Calendar className="w-4 h-4" />
+                {activeProject?.duration}
+              </span>
+            </div>
+
+            <motion.button
+              className="px-6 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors font-medium"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              View Dashboard
+            </motion.button>
+          </div>
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+};
+
+const SmartHomeStats = ({ activeProject }: any) => {
   const stats = [
     {
-      label: "Completion",
-      value: `${activeProject?.completion || 100}%`,
+      label: "Security Level",
+      value: "100%",
       color: "text-green-500",
       bgColor: "bg-green-500",
+      icon: Shield,
     },
     {
-      label: "Timeline",
-      value: activeProject?.duration || "24 months",
-      color: "text-blue-500",
+      label: "Response Time",
+      value: activeProject?.stats?.response || "< 2sec",
+      color: "text-blue-500", 
       bgColor: "bg-blue-500",
+      icon: Activity,
     },
     {
-      label: "Investment",
-      value: activeProject?.value || "$45M",
+      label: "System Uptime",
+      value: activeProject?.stats?.uptime || "99.9%",
       color: "text-purple-500",
-      bgColor: "bg-purple-500",
+      bgColor: "bg-purple-500", 
+      icon: TrendingUp,
     },
     {
-      label: "Rating",
-      value: `${activeProject?.rating || 4.9}★`,
-      color: "text-yellow-500",
-      bgColor: "bg-yellow-500",
+      label: "Satisfaction",
+      value: activeProject?.stats?.satisfaction || "98%",
+      color: "text-green-500",
+      bgColor: "bg-green-500",
+      icon: CheckCircle,
     },
   ];
 
@@ -435,56 +500,49 @@ const ProjectStats = ({ activeProject }: any) => {
       </div>
 
       <div className="space-y-6">
-        {stats.map((stat, index) => (
-          <motion.div
-            key={stat.label}
-            className="space-y-3"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">{stat.label}</span>
-              <span className={cn("font-semibold", stat.color)}>
-                {stat.value}
-              </span>
-            </div>
-            <div className="w-full bg-gray-100 rounded-full h-2">
-              <motion.div
-                className={cn("h-2 rounded-full", stat.bgColor)}
-                initial={{ width: "0%" }}
-                animate={{
-                  width:
-                    stat.label === "Completion"
-                      ? `${activeProject?.completion || 100}%`
-                      : "85%",
-                }}
-                transition={{ duration: 1.5, delay: 0.8 + index * 0.2 }}
-              />
-            </div>
-          </motion.div>
-        ))}
+        {stats.map((stat, index) => {
+          const IconComponent = stat.icon;
+          return (
+            <motion.div
+              key={stat.label}
+              className="space-y-3"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <IconComponent className={cn("w-4 h-4", stat.color)} />
+                  <span className="text-sm text-gray-600">{stat.label}</span>
+                </div>
+                <span className={cn("font-semibold", stat.color)}>
+                  {stat.value}
+                </span>
+              </div>
+              <div className="w-full bg-gray-100 rounded-full h-2">
+                <motion.div
+                  className={cn("h-2 rounded-full", stat.bgColor)}
+                  initial={{ width: "0%" }}
+                  animate={{ width: "95%" }}
+                  transition={{ duration: 1.5, delay: 0.8 + index * 0.2 }}
+                />
+              </div>
+            </motion.div>
+          );
+        })}
       </div>
 
       {/* Live Activity */}
       <div className="mt-8 pt-6 border-t border-gray-100">
         <h4 className="font-medium text-gray-900 mb-4 flex items-center gap-2">
-          <Activity className="w-4 h-4 text-blue-500" />
+          <Clock className="w-4 h-4 text-blue-500" />
           Live Activity
         </h4>
         <div className="space-y-3">
           {[
-            { time: "2min ago", action: "Progress updated", type: "update" },
-            {
-              time: "1hr ago",
-              action: "Quality check passed",
-              type: "success",
-            },
-            {
-              time: "3hr ago",
-              action: "New milestone reached",
-              type: "milestone",
-            },
+            { time: "2min ago", action: "Security system armed", type: "system" },
+            { time: "1hr ago", action: "Motion detected - Front door", type: "motion" },
+            { time: "3hr ago", action: "Access granted - Main entrance", type: "access" },
           ].map((activity, index) => (
             <motion.div
               key={index}
@@ -494,19 +552,12 @@ const ProjectStats = ({ activeProject }: any) => {
               transition={{ duration: 0.3, delay: 1 + index * 0.1 }}
             >
               <div className="text-xs text-gray-500 w-16">{activity.time}</div>
-              <div
-                className={cn(
-                  "w-2 h-2 rounded-full",
-                  activity.type === "success"
-                    ? "bg-green-500"
-                    : activity.type === "milestone"
-                      ? "bg-purple-500"
-                      : "bg-blue-500",
-                )}
-              />
-              <div className="text-sm text-gray-700 flex-1">
-                {activity.action}
-              </div>
+              <div className={cn(
+                "w-2 h-2 rounded-full",
+                activity.type === "system" ? "bg-green-500" :
+                activity.type === "motion" ? "bg-yellow-500" : "bg-blue-500"
+              )} />
+              <div className="text-sm text-gray-700 flex-1">{activity.action}</div>
             </motion.div>
           ))}
         </div>
@@ -516,7 +567,7 @@ const ProjectStats = ({ activeProject }: any) => {
 };
 
 export default function PremiumProjects() {
-  const [activeProject, setActiveProject] = useState(featuredProjects[0]);
+  const [activeProject, setActiveProject] = useState(smartHomeProjects[0]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -530,11 +581,11 @@ export default function PremiumProjects() {
   // Auto-rotate projects
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % featuredProjects.length);
+      setCurrentIndex((prev) => (prev + 1) % smartHomeProjects.length);
       setActiveProject(
-        featuredProjects[(currentIndex + 1) % featuredProjects.length],
+        smartHomeProjects[(currentIndex + 1) % smartHomeProjects.length],
       );
-    }, 5000);
+    }, 8000);
 
     return () => clearInterval(interval);
   }, [currentIndex]);
@@ -570,26 +621,26 @@ export default function PremiumProjects() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <Building2 className="w-4 h-4" />
-            Smart Projects Dashboard
+            <Shield className="w-4 h-4" />
+            Smart Security Systems
           </motion.div>
 
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Intelligent Project
+            Intelligent Security
             <br />
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Management System
+              Management Platform
             </span>
           </h2>
 
           <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Experience our advanced project monitoring and control system with
-            real-time analytics, smart automation, and comprehensive oversight
-            of all construction activities.
+            Experience our advanced security monitoring and automation system with
+            real-time threat detection, smart access control, and comprehensive
+            home protection capabilities.
           </p>
         </motion.div>
 
-        {/* Smart Dashboard Interface */}
+        {/* Smart Security Dashboard Interface */}
         <motion.div
           className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16"
           initial={{ opacity: 0, y: 50 }}
@@ -597,197 +648,66 @@ export default function PremiumProjects() {
           transition={{ duration: 0.8, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          {/* Left Panel - Project Controls */}
+          {/* Left Panel - Security Controls */}
           <div className="lg:col-span-3">
-            <ProjectControls
+            <SmartHomeControls
               activeProject={activeProject}
               onProjectChange={setActiveProject}
             />
           </div>
 
-          {/* Center - Main Project Display */}
+          {/* Center - Main Security Display */}
           <div className="lg:col-span-6">
-            <motion.div
-              className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
-              <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 relative">
-                <AnimatePresence mode="wait">
-                  <motion.img
-                    key={activeProject.id}
-                    src={activeProject.image}
-                    alt={activeProject.title}
-                    className="w-full h-full object-cover"
-                    initial={{ opacity: 0, scale: 1.1 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.6 }}
-                  />
-                </AnimatePresence>
-
-                {/* Project Info Overlay */}
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 0.6 }}
-                >
-                  <div className="p-8 text-white w-full">
-                    <motion.h3
-                      className="text-2xl font-bold mb-2"
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ duration: 0.6, delay: 0.8 }}
-                    >
-                      {activeProject.title}
-                    </motion.h3>
-                    <motion.div
-                      className="flex items-center gap-4 text-sm"
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ duration: 0.6, delay: 0.9 }}
-                    >
-                      <span className="flex items-center gap-1">
-                        <MapPin className="w-4 h-4" />
-                        {activeProject.location}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                        {activeProject.rating}
-                      </span>
-                      {activeProject.isLive && (
-                        <span className="flex items-center gap-1 px-2 py-1 bg-green-500/20 rounded-full">
-                          <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
-                          Live
-                        </span>
-                      )}
-                    </motion.div>
-                  </div>
-                </motion.div>
-
-                {/* Navigation Dots */}
-                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2">
-                  {featuredProjects.map((_, index) => (
-                    <motion.button
-                      key={index}
-                      className={cn(
-                        "h-2 rounded-full transition-all duration-300",
-                        index === currentIndex
-                          ? "bg-white w-8"
-                          : "bg-white/50 w-2",
-                      )}
-                      onClick={() => {
-                        setCurrentIndex(index);
-                        setActiveProject(featuredProjects[index]);
-                      }}
-                      whileHover={{ scale: 1.2 }}
-                      whileTap={{ scale: 0.8 }}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div className="p-6">
-                <motion.div
-                  className="space-y-4"
-                  key={activeProject.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <p className="text-gray-600 leading-relaxed">
-                    {activeProject.description}
-                  </p>
-
-                  <div className="flex flex-wrap gap-2">
-                    {activeProject.features.map(
-                      (feature: string, i: number) => (
-                        <span
-                          key={i}
-                          className="px-3 py-1 bg-blue-50 text-blue-600 text-sm rounded-lg font-medium"
-                        >
-                          {feature}
-                        </span>
-                      ),
-                    )}
-                  </div>
-
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                    <div className="flex items-center gap-4 text-sm text-gray-500">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
-                        {activeProject.timeline}
-                      </span>
-                      <span className="flex items-center gap-1 font-semibold text-green-600">
-                        <DollarSign className="w-4 h-4" />
-                        {activeProject.value}
-                      </span>
-                    </div>
-
-                    <motion.button
-                      className="px-6 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors font-medium"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      View Details
-                    </motion.button>
-                  </div>
-                </motion.div>
-              </div>
-            </motion.div>
+            <SmartHomeDisplay activeProject={activeProject} />
           </div>
 
-          {/* Right Panel - Project Stats */}
+          {/* Right Panel - Security Stats */}
           <div className="lg:col-span-3">
-            <ProjectStats activeProject={activeProject} />
+            <SmartHomeStats activeProject={activeProject} />
           </div>
         </motion.div>
 
-        {/* Project Gallery */}
+        {/* Project Navigation */}
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          className="flex items-center justify-center gap-3 mb-16"
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
         >
-          <div className="text-center mb-12">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Featured Projects
-            </h3>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Explore our portfolio of successful smart construction projects
-              with real-time monitoring and control systems.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProjects.map((project, index) => (
-              <ProjectDisplayCard
-                key={project.id}
-                project={project}
-                isActive={activeProject.id === project.id}
-                onActivate={() => setActiveProject(project)}
-              />
-            ))}
-          </div>
+          {smartHomeProjects.map((_, index) => (
+            <motion.button
+              key={index}
+              className={cn(
+                "h-2 rounded-full transition-all duration-300",
+                index === currentIndex
+                  ? "bg-blue-500 w-8"
+                  : "bg-gray-300 w-2 hover:bg-gray-400",
+              )}
+              onClick={() => {
+                setCurrentIndex(index);
+                setActiveProject(smartHomeProjects[index]);
+              }}
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.8 }}
+            />
+          ))}
         </motion.div>
 
         {/* CTA Section */}
         <motion.div
-          className="text-center mt-20"
+          className="text-center"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
           <h3 className="text-2xl font-bold text-gray-900 mb-4">
-            Experience Smart Construction Management
+            Experience Smart Security Management
           </h3>
           <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-            Join the future of construction with our intelligent project
-            management system and real-time monitoring capabilities.
+            Join the future of home and business security with our intelligent
+            monitoring system and automated protection capabilities.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <motion.button
@@ -795,7 +715,7 @@ export default function PremiumProjects() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <span>Start Smart Project</span>
+              <span>Start Smart Security</span>
               <ArrowRight className="w-5 h-5" />
             </motion.button>
             <motion.button

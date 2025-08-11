@@ -2,6 +2,7 @@ import express from "express";
 import rateLimit from "express-rate-limit";
 import { validateContactForm } from "../middleware/validation";
 import { sendContactEmail } from "../utils/email";
+import { Server } from "socket.io";
 
 const router = express.Router();
 
@@ -51,6 +52,36 @@ router.post("/", contactLimiter, validateContactForm, async (req, res) => {
         console.error("Error sending contact email:", emailError);
         // Don't fail the request if email sending fails
       }
+    }
+
+    // Emit real-time notification to admin dashboard
+    const io: Server = req.app.get('io');
+    if (io) {
+      const notificationData = {
+        id: Date.now().toString(),
+        type: 'contact-submission',
+        data: {
+          name: emailData.name,
+          email: emailData.email,
+          subject: emailData.subject,
+          projectType: emailData.projectType,
+          timestamp: emailData.timestamp
+        },
+        message: `New contact form submission from ${emailData.name}`,
+        timestamp: new Date().toISOString()
+      };
+
+      // Emit to admin dashboard room
+      io.to('admin-dashboard').emit('new-contact', notificationData);
+
+      // Also emit a general notification
+      io.emit('notification', {
+        type: 'info',
+        message: 'New contact form submission received',
+        timestamp: new Date().toISOString()
+      });
+
+      console.log('📡 Real-time notification sent for contact submission');
     }
 
     // Return success response

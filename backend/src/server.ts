@@ -1,4 +1,5 @@
 import express from "express";
+import http from "http";
 import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
@@ -9,12 +10,28 @@ import dotenv from "dotenv";
 // Load environment variables
 dotenv.config();
 
+// Import database connection
+import { connectDatabase, disconnectDatabase } from "./config/database";
+
+// Import Socket.IO configuration
+import { setupSocketIO } from "./config/socket";
+
 // Import routes
 import contactRoutes from "./routes/contact";
 import healthRoutes from "./routes/health";
+import socketTestRoutes from "./routes/socket-test";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Create HTTP server
+const server = http.createServer(app);
+
+// Setup Socket.IO
+const io = setupSocketIO(server);
+
+// Make io accessible in routes
+app.set('io', io);
 
 // Security middleware
 app.use(
@@ -70,6 +87,7 @@ app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 // API Routes
 app.use("/api/health", healthRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/socket", socketTestRoutes);
 
 // Root endpoint
 app.get("/", (req, res) => {
@@ -109,11 +127,74 @@ app.use(
   },
 );
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 JD Marc API Server running on port ${PORT}`);
-  console.log(`📊 Environment: ${process.env.NODE_ENV || "development"}`);
-  console.log(`🌐 Server URL: http://localhost:${PORT}`);
+// Start server with database connection and WebSocket support
+const startServer = async () => {
+  try {
+    // Attempt to connect to Hostinger MySQL database
+    // This will not fail the server startup if database is unavailable
+    await connectDatabase();
+
+    // Start HTTP server with Socket.IO support
+    server.listen(PORT, () => {
+      console.log(`🚀 JD Marc API Server running on port ${PORT}`);
+      console.log(`📊 Environment: ${process.env.NODE_ENV || "development"}`);
+
+      const baseUrl = process.env.NODE_ENV === 'production'
+        ? 'https://jdmarc-backend-api.onrender.com'
+        : `http://localhost:${PORT}`;
+
+      console.log(`🌐 API URL: ${baseUrl}`);
+      console.log(`🔄 WebSocket enabled: ${baseUrl.replace('http', 'ws')}`);
+      console.log('🎯 Ready to handle requests and real-time connections');
+
+      if (!process.env.DB_HOST || !process.env.DB_USER || !process.env.DB_PASSWORD) {
+        console.log('\n⚠️  Database not configured. Run: npm run verify-credentials');
+      }
+    });
+  } catch (error) {
+    console.error('❌ Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+  console.log('\n🔄 Graceful shutdown initiated...');
+
+  // Close Socket.IO connections
+  io.close(() => {
+    console.log('🔌 Socket.IO connections closed');
+  });
+
+  // Close database connections
+  await disconnectDatabase();
+
+  // Close HTTP server
+  server.close(() => {
+    console.log('🔄 Server closed gracefully');
+    process.exit(0);
+  });
 });
+
+process.on('SIGTERM', async () => {
+  console.log('\n🔄 Graceful shutdown initiated...');
+
+  // Close Socket.IO connections
+  io.close(() => {
+    console.log('🔌 Socket.IO connections closed');
+  });
+
+  // Close database connections
+  await disconnectDatabase();
+
+  // Close HTTP server
+  server.close(() => {
+    console.log('🔄 Server closed gracefully');
+    process.exit(0);
+  });
+});
+
+// Start the server
+startServer();
 
 export default app;

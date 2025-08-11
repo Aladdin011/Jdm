@@ -545,6 +545,56 @@ export const clearAuthentication = (): void => {
   clearTokens();
 };
 
+// Generic API call function for compatibility
+export const apiCall = async <T>(
+  endpoint: string,
+  options?: {
+    method?: string;
+    body?: string;
+    headers?: Record<string, string>;
+  }
+): Promise<T> => {
+  try {
+    const method = options?.method || 'GET';
+    const data = options?.body ? JSON.parse(options.body) : undefined;
+    const config: AxiosRequestConfig = {
+      headers: options?.headers,
+    };
+
+    const response: AxiosResponse<ApiResponse<T>> = await apiClient.request({
+      method,
+      url: endpoint,
+      data,
+      ...config,
+    });
+
+    if (response.data.success) {
+      return response.data.data as T;
+    } else {
+      throw new Error(response.data.error || "API request failed");
+    }
+  } catch (error: any) {
+    // Handle network errors
+    if (error.code === "NETWORK_ERROR" || error.message === "Network Error") {
+      throw new Error(
+        "Network connection failed. Please check your internet connection.",
+      );
+    }
+
+    // Handle timeout errors
+    if (error.code === "ECONNABORTED") {
+      throw new Error("Request timeout. Please try again.");
+    }
+
+    // Handle API errors
+    if (error.response?.data?.error) {
+      throw new Error(error.response.data.error);
+    }
+
+    throw error;
+  }
+};
+
 // Export the configured axios instance for direct use if needed
 export { apiClient };
 
