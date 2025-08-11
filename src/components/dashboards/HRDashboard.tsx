@@ -1,1279 +1,627 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { motion } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
+import { useCall } from "@/contexts/CallContext";
+import ModernDashboardLayout from "./ModernDashboardLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Progress } from "@/components/ui/progress";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Users,
   UserPlus,
-  Search,
-  Filter,
-  Calendar as CalendarIcon,
+  UserCheck,
+  UserX,
+  Heart,
+  Calendar,
   Clock,
   TrendingUp,
   TrendingDown,
-  Heart,
-  Award,
-  Target,
-  Briefcase,
-  MapPin,
-  Phone,
-  Mail,
-  FileText,
-  Edit,
-  Eye,
-  Trash2,
-  CheckCircle,
-  XCircle,
   AlertTriangle,
-  Bot,
+  CheckCircle,
+  Phone,
   Video,
   MessageSquare,
+  FileText,
+  Download,
+  Plus,
+  MoreHorizontal,
+  Eye,
+  Edit,
+  Briefcase,
+  Award,
+  Target,
+  Activity,
   BarChart3,
   PieChart,
-  LineChart,
-  RefreshCw,
-  Download,
-  Upload,
-  Star,
-  ThumbsUp,
-  Activity,
-  Building,
+  Mail,
+  MapPin,
   GraduationCap,
-  Shield,
-  Coffee,
-  Home,
-  Zap,
-  BookOpen,
-  Bell,
-  Plus,
-  Minus,
+  Building,
+  Star,
+  Timer,
+  DollarSign,
 } from "lucide-react";
-import DashboardThemeWrapper from "./DashboardThemeWrapper";
-import { getDepartmentTheme } from "@/utils/departmentThemes";
-import { useCall } from "@/contexts/CallContext";
 
 interface Employee {
   id: string;
-  employeeId: string;
-  firstName: string;
-  lastName: string;
+  name: string;
+  role: string;
+  department: string;
+  avatar?: string;
   email: string;
   phone: string;
-  department: string;
-  position: string;
-  location: string;
-  hireDate: string;
-  salary: number;
+  joinDate: string;
   status: "active" | "on-leave" | "terminated";
-  performanceRating: number;
-  leaveBalance: number;
-  availabilityStatus: "available" | "busy" | "away" | "in-meeting";
-  avatar?: string;
+  performance: number;
 }
 
 interface LeaveRequest {
   id: string;
-  employeeId: string;
   employeeName: string;
-  type: "annual" | "sick" | "maternity" | "emergency";
+  type: "vacation" | "sick" | "personal" | "maternity";
   startDate: string;
   endDate: string;
-  days: number;
-  reason: string;
   status: "pending" | "approved" | "rejected";
+  reason: string;
+}
+
+interface JobApplication {
+  id: string;
+  candidateName: string;
+  position: string;
+  experience: string;
+  status: "new" | "screening" | "interview" | "offer" | "hired" | "rejected";
   appliedDate: string;
-}
-
-interface RecruitmentPosition {
-  id: string;
-  title: string;
-  department: string;
-  location: string;
-  type: "full-time" | "part-time" | "contract";
-  status: "open" | "interviewing" | "closed";
-  applicants: number;
-  postedDate: string;
-  priority: "high" | "medium" | "low";
-}
-
-interface AttendanceRecord {
-  id: string;
-  employeeId: string;
-  employeeName: string;
-  date: string;
-  checkIn: string;
-  checkOut: string;
-  hoursWorked: number;
-  status: "present" | "late" | "absent" | "half-day";
+  source: string;
 }
 
 interface PerformanceMetric {
-  id: string;
-  employeeId: string;
-  employeeName: string;
   department: string;
-  kpiScore: number;
-  projectsCompleted: number;
-  clientSatisfaction: number;
-  teamCollaboration: number;
-  overallRating: number;
-  period: string;
-}
-
-interface HRPolicy {
-  id: string;
-  title: string;
-  category: "leave" | "conduct" | "benefits" | "safety" | "wellness";
-  lastUpdated: string;
-  status: "active" | "draft" | "archived";
-  summary: string;
+  averageRating: number;
+  employeeCount: number;
+  topPerformers: number;
+  improvementNeeded: number;
 }
 
 export default function HRDashboard() {
-  const theme = getDepartmentTheme("human-resources");
-  const { startCall } = useCall();
-  const [activeTab, setActiveTab] = useState("core-hr");
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    new Date(),
-  );
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterDepartment, setFilterDepartment] = useState("all");
-
-  // Sample data
+  const { user } = useAuth();
+  const { isInCall, startCall } = useCall();
+  
   const [employees] = useState<Employee[]>([
     {
       id: "1",
-      employeeId: "EMP-001",
-      firstName: "Jude",
-      lastName: "Onwudebe",
-      email: "jude.onwudebe@jdmarcng.com",
-      phone: "+234 803 706 5497",
-      department: "Management",
-      position: "Managing Director",
-      location: "Abuja, Nigeria",
-      hireDate: "2023-01-15",
-      salary: 2000000,
+      name: "Sarah Johnson",
+      role: "Project Manager",
+      department: "Project Management",
+      email: "sarah.johnson@jdmarc.com",
+      phone: "+234 803 000 1001",
+      joinDate: "2023-01-15",
       status: "active",
-      performanceRating: 4.8,
-      leaveBalance: 25,
-      availabilityStatus: "available",
+      performance: 92,
     },
     {
       id: "2",
-      employeeId: "EMP-002",
-      firstName: "Sarah",
-      lastName: "Okafor",
-      email: "sarah.admin@jdmarcng.com",
-      phone: "+234 803 000 0003",
-      department: "Administration",
-      position: "Administrative Manager",
-      location: "Abuja, Nigeria",
-      hireDate: "2023-04-05",
-      salary: 800000,
+      name: "Michael Chen",
+      role: "Senior Developer",
+      department: "IT",
+      email: "michael.chen@jdmarc.com",
+      phone: "+234 803 000 1002",
+      joinDate: "2022-08-20",
       status: "active",
-      performanceRating: 4.5,
-      leaveBalance: 18,
-      availabilityStatus: "in-meeting",
+      performance: 88,
     },
     {
       id: "3",
-      employeeId: "EMP-003",
-      firstName: "Michael",
-      lastName: "Adebayo",
-      email: "michael.business@jdmarcng.com",
-      phone: "+234 803 000 0004",
-      department: "Business Development",
-      position: "Business Development Manager",
-      location: "Lagos, Nigeria",
-      hireDate: "2023-03-01",
-      salary: 1200000,
+      name: "Emma Wilson",
+      role: "Marketing Specialist",
+      department: "Digital Marketing",
+      email: "emma.wilson@jdmarc.com",
+      phone: "+234 803 000 1003",
+      joinDate: "2023-03-10",
       status: "on-leave",
-      performanceRating: 4.2,
-      leaveBalance: 12,
-      availabilityStatus: "away",
+      performance: 85,
     },
     {
       id: "4",
-      employeeId: "EMP-004",
-      firstName: "Grace",
-      lastName: "Nwosu",
-      email: "grace.account@jdmarcng.com",
-      phone: "+234 803 000 0005",
+      name: "David Brown",
+      role: "Accountant",
       department: "Accounting",
-      position: "Financial Analyst",
-      location: "Abuja, Nigeria",
-      hireDate: "2023-05-15",
-      salary: 900000,
+      email: "david.brown@jdmarc.com",
+      phone: "+234 803 000 1004",
+      joinDate: "2022-11-05",
       status: "active",
-      performanceRating: 4.7,
-      leaveBalance: 22,
-      availabilityStatus: "busy",
-    },
-    {
-      id: "5",
-      employeeId: "EMP-005",
-      firstName: "David",
-      lastName: "Emeka",
-      email: "david.hr@jdmarcng.com",
-      phone: "+234 803 000 0006",
-      department: "Human Resources",
-      position: "HR Coordinator",
-      location: "Abuja, Nigeria",
-      hireDate: "2023-06-10",
-      salary: 750000,
-      status: "active",
-      performanceRating: 4.3,
-      leaveBalance: 20,
-      availabilityStatus: "available",
+      performance: 94,
     },
   ]);
 
   const [leaveRequests] = useState<LeaveRequest[]>([
     {
       id: "1",
-      employeeId: "EMP-003",
-      employeeName: "Michael Adebayo",
-      type: "annual",
-      startDate: "2024-02-01",
-      endDate: "2024-02-07",
-      days: 7,
+      employeeName: "Emma Wilson",
+      type: "vacation",
+      startDate: "2024-01-20",
+      endDate: "2024-01-25",
+      status: "pending",
       reason: "Family vacation",
-      status: "approved",
-      appliedDate: "2024-01-15",
     },
     {
       id: "2",
-      employeeId: "EMP-004",
-      employeeName: "Grace Nwosu",
+      employeeName: "John Doe",
       type: "sick",
-      startDate: "2024-01-22",
-      endDate: "2024-01-23",
-      days: 2,
-      reason: "Medical appointment and recovery",
-      status: "pending",
-      appliedDate: "2024-01-20",
+      startDate: "2024-01-18",
+      endDate: "2024-01-19",
+      status: "approved",
+      reason: "Medical appointment",
     },
     {
       id: "3",
-      employeeId: "EMP-002",
-      employeeName: "Sarah Okafor",
-      type: "emergency",
-      startDate: "2024-02-05",
-      endDate: "2024-02-05",
-      days: 1,
-      reason: "Family emergency",
+      employeeName: "Lisa Park",
+      type: "personal",
+      startDate: "2024-01-22",
+      endDate: "2024-01-22",
       status: "pending",
-      appliedDate: "2024-01-18",
+      reason: "Personal matters",
     },
   ]);
 
-  const [recruitmentPositions] = useState<RecruitmentPosition[]>([
+  const [jobApplications] = useState<JobApplication[]>([
     {
       id: "1",
-      title: "Senior Project Manager",
-      department: "Project Management",
-      location: "Abuja, Nigeria",
-      type: "full-time",
-      status: "open",
-      applicants: 24,
-      postedDate: "2024-01-10",
-      priority: "high",
+      candidateName: "Alex Rivera",
+      position: "Frontend Developer",
+      experience: "3 years",
+      status: "interview",
+      appliedDate: "2024-01-10",
+      source: "LinkedIn",
     },
     {
       id: "2",
-      title: "Digital Marketing Specialist",
-      department: "Marketing",
-      location: "Lagos, Nigeria",
-      type: "full-time",
-      status: "interviewing",
-      applicants: 18,
-      postedDate: "2024-01-05",
-      priority: "medium",
+      candidateName: "Priya Patel",
+      position: "UX Designer",
+      experience: "5 years",
+      status: "screening",
+      appliedDate: "2024-01-12",
+      source: "Company Website",
     },
     {
       id: "3",
-      title: "Accountant",
-      department: "Accounting",
-      location: "Abuja, Nigeria",
-      type: "full-time",
-      status: "open",
-      applicants: 31,
-      postedDate: "2024-01-12",
-      priority: "high",
+      candidateName: "Marcus Thompson",
+      position: "Project Manager",
+      experience: "7 years",
+      status: "offer",
+      appliedDate: "2024-01-08",
+      source: "Referral",
     },
   ]);
 
   const [performanceMetrics] = useState<PerformanceMetric[]>([
     {
-      id: "1",
-      employeeId: "EMP-001",
-      employeeName: "Jude Onwudebe",
-      department: "Management",
-      kpiScore: 95,
-      projectsCompleted: 8,
-      clientSatisfaction: 4.8,
-      teamCollaboration: 4.9,
-      overallRating: 4.8,
-      period: "Q4 2023",
+      department: "Project Management",
+      averageRating: 4.2,
+      employeeCount: 15,
+      topPerformers: 8,
+      improvementNeeded: 2,
     },
     {
-      id: "2",
-      employeeId: "EMP-002",
-      employeeName: "Sarah Okafor",
-      department: "Administration",
-      kpiScore: 88,
-      projectsCompleted: 12,
-      clientSatisfaction: 4.5,
-      teamCollaboration: 4.7,
-      overallRating: 4.5,
-      period: "Q4 2023",
+      department: "IT Development",
+      averageRating: 4.0,
+      employeeCount: 12,
+      topPerformers: 6,
+      improvementNeeded: 3,
     },
     {
-      id: "3",
-      employeeId: "EMP-004",
-      employeeName: "Grace Nwosu",
+      department: "Digital Marketing",
+      averageRating: 3.8,
+      employeeCount: 10,
+      topPerformers: 4,
+      improvementNeeded: 4,
+    },
+    {
       department: "Accounting",
-      kpiScore: 92,
-      projectsCompleted: 15,
-      clientSatisfaction: 4.6,
-      teamCollaboration: 4.8,
-      overallRating: 4.7,
-      period: "Q4 2023",
+      averageRating: 4.5,
+      employeeCount: 8,
+      topPerformers: 6,
+      improvementNeeded: 1,
     },
   ]);
 
-  const [hrPolicies] = useState<HRPolicy[]>([
-    {
-      id: "1",
-      title: "Remote Work Policy",
-      category: "conduct",
-      lastUpdated: "2024-01-15",
-      status: "active",
-      summary:
-        "Guidelines for remote work arrangements and productivity expectations",
-    },
-    {
-      id: "2",
-      title: "Employee Wellness Program",
-      category: "wellness",
-      lastUpdated: "2024-01-10",
-      status: "active",
-      summary:
-        "Comprehensive wellness benefits including health insurance and mental health support",
-    },
-    {
-      id: "3",
-      title: "Leave and Vacation Policy",
-      category: "leave",
-      lastUpdated: "2024-01-05",
-      status: "active",
-      summary:
-        "Updated leave allocation and approval process for all employee types",
-    },
-  ]);
-
-  const departments = [
-    "Management",
-    "Administration",
-    "Business Development",
-    "Project Management",
-    "Accounting",
-    "Human Resources",
-    "Marketing",
-  ];
+  const hrThemeColors = {
+    primary: "#1e40af", // Rich blue
+    secondary: "#f8fafc", // Pale gray
+    accent: "#3b82f6",
+    background: "#f1f5f9",
+    headerBg: "#0f172a", // Dark blue for header
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active":
-      case "approved":
-      case "present":
-        return "bg-green-100 text-green-800 border-green-200";
-      case "pending":
-      case "interviewing":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "rejected":
-      case "absent":
-      case "terminated":
-        return "bg-red-100 text-red-800 border-red-200";
+        return "bg-green-100 text-green-800";
       case "on-leave":
-      case "late":
-        return "bg-blue-100 text-blue-800 border-blue-200";
+        return "bg-yellow-100 text-yellow-800";
+      case "terminated":
+        return "bg-red-100 text-red-800";
+      case "pending":
+        return "bg-blue-100 text-blue-800";
+      case "approved":
+        return "bg-green-100 text-green-800";
+      case "rejected":
+        return "bg-red-100 text-red-800";
+      case "new":
+        return "bg-blue-100 text-blue-800";
+      case "screening":
+        return "bg-yellow-100 text-yellow-800";
+      case "interview":
+        return "bg-purple-100 text-purple-800";
+      case "offer":
+        return "bg-green-100 text-green-800";
+      case "hired":
+        return "bg-emerald-100 text-emerald-800";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
+        return "bg-gray-100 text-gray-800";
     }
   };
 
-  const getAvailabilityColor = (status: string) => {
-    switch (status) {
-      case "available":
-        return "bg-green-500";
-      case "busy":
-        return "bg-red-500";
-      case "away":
-        return "bg-yellow-500";
-      case "in-meeting":
-        return "bg-blue-500";
+  const getLeaveTypeColor = (type: string) => {
+    switch (type) {
+      case "vacation":
+        return "text-blue-600";
+      case "sick":
+        return "text-red-600";
+      case "personal":
+        return "text-purple-600";
+      case "maternity":
+        return "text-pink-600";
       default:
-        return "bg-gray-500";
+        return "text-gray-600";
     }
   };
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "high":
-        return "bg-red-100 text-red-800 border-red-200";
-      case "medium":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "low":
-        return "bg-green-100 text-green-800 border-green-200";
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
-    }
+  const handleStartHRMeeting = () => {
+    startCall("hr-team-meeting", {
+      title: "HR Team Meeting",
+      participants: [],
+    });
   };
 
-  const filteredEmployees = employees.filter((employee) => {
-    const matchesSearch =
-      employee.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      employee.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      employee.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      employee.department.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesDepartment =
-      filterDepartment === "all" || employee.department === filterDepartment;
-
-    return matchesSearch && matchesDepartment;
-  });
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-NG", {
-      style: "currency",
-      currency: "NGN",
-      minimumFractionDigits: 0,
-    }).format(amount);
-  };
-
-  const stats = [
-    {
-      title: "Total Employees",
-      value: employees.length,
-      change: "+12%",
-      trend: "up",
-      icon: Users,
-    },
-    {
-      title: "Active Positions",
-      value: recruitmentPositions.filter((p) => p.status === "open").length,
-      change: "+3",
-      trend: "up",
-      icon: Briefcase,
-    },
-    {
-      title: "Pending Leaves",
-      value: leaveRequests.filter((l) => l.status === "pending").length,
-      change: "-2",
-      trend: "down",
-      icon: CalendarIcon,
-    },
-    {
-      title: "Avg Performance",
-      value: "4.5/5",
-      change: "+0.3",
-      trend: "up",
-      icon: Star,
-    },
-  ];
-
-  const aiSuggestions = [
-    {
-      type: "leave",
-      message:
-        "Grace Nwosu's sick leave request appears genuine based on medical documentation",
-      confidence: 92,
-      action: "Approve",
-    },
-    {
-      type: "recruitment",
-      message:
-        "Consider fast-tracking Senior Project Manager position due to upcoming projects",
-      confidence: 88,
-      action: "Review",
-    },
-    {
-      type: "performance",
-      message:
-        "Michael Adebayo shows improvement trend - consider for promotion",
-      confidence: 85,
-      action: "Evaluate",
-    },
-  ];
+  const totalEmployees = employees.length;
+  const activeEmployees = employees.filter(emp => emp.status === "active").length;
+  const onLeaveEmployees = employees.filter(emp => emp.status === "on-leave").length;
+  const pendingLeaveRequests = leaveRequests.filter(req => req.status === "pending").length;
+  const newApplications = jobApplications.filter(app => app.status === "new").length;
+  const upcomingInterviews = jobApplications.filter(app => app.status === "interview").length;
 
   return (
-    <DashboardThemeWrapper
-      title="Human Resources Management Center"
-      description="Comprehensive HR operations, employee management, and organizational development for JD Marc Limited."
+    <ModernDashboardLayout
+      user={user}
+      department="Human Resources"
+      themeColors={hrThemeColors}
     >
       <div className="space-y-6">
-        {/* Top Controls */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700"
-        >
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                placeholder="Search employees..."
-                className="pl-10 w-64"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            <Select
-              value={filterDepartment}
-              onValueChange={setFilterDepartment}
-            >
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Filter by department" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Departments</SelectItem>
-                {departments.map((dept) => (
-                  <SelectItem key={dept} value={dept}>
-                    {dept}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={() => startCall("human-resources")}
-              className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white"
-            >
-              <Video className="h-4 w-4 mr-2" />
-              HR Call
-            </Button>
-            <Button variant="outline" className="gap-2">
-              <RefreshCw className="h-4 w-4" />
-              Refresh
-            </Button>
-          </div>
-        </motion.div>
-
-        {/* HR KPI Cards */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-        >
-          {stats.map((stat, index) => (
-            <Card key={index} className="relative overflow-hidden">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                      {stat.title}
-                    </p>
-                    <p className="text-3xl font-bold text-slate-800 dark:text-slate-200">
-                      {stat.value}
-                    </p>
-                  </div>
-                  <div className="p-3 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full">
-                    <stat.icon className="h-6 w-6 text-white" />
-                  </div>
+        {/* HR Metrics Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card className="border-0 bg-white/90 backdrop-blur-sm shadow-lg">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600 mb-1">Total Employees</p>
+                  <p className="text-3xl font-bold text-gray-900">{totalEmployees}</p>
+                  <p className="text-sm text-green-600 flex items-center gap-1 mt-1">
+                    <TrendingUp className="h-3 w-3" />
+                    +5% from last month
+                  </p>
                 </div>
-                <div className="mt-2 flex items-center">
-                  <TrendingUp
-                    className={`h-4 w-4 mr-1 ${
-                      stat.trend === "up"
-                        ? "text-green-500"
-                        : stat.trend === "down"
-                          ? "text-red-500 rotate-180"
-                          : "text-gray-500"
-                    }`}
-                  />
-                  <span
-                    className={`text-sm ${
-                      stat.trend === "up"
-                        ? "text-green-600"
-                        : stat.trend === "down"
-                          ? "text-red-600"
-                          : "text-gray-600"
-                    }`}
-                  >
-                    {stat.change} vs last period
-                  </span>
+                <div className="p-3 bg-blue-100 rounded-full">
+                  <Users className="h-6 w-6 text-blue-600" />
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </motion.div>
-
-        {/* Main HR Tabs */}
-        <Tabs
-          value={activeTab}
-          onValueChange={setActiveTab}
-          className="space-y-6"
-        >
-          <TabsList className="grid w-full grid-cols-4 lg:w-fit lg:grid-cols-4">
-            <TabsTrigger value="core-hr" className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              Core HR
-            </TabsTrigger>
-            <TabsTrigger value="benefits" className="flex items-center gap-2">
-              <Heart className="h-4 w-4" />
-              Benefits
-            </TabsTrigger>
-            <TabsTrigger value="automation" className="flex items-center gap-2">
-              <Bot className="h-4 w-4" />
-              Automation
-            </TabsTrigger>
-            <TabsTrigger
-              value="performance"
-              className="flex items-center gap-2"
-            >
-              <Award className="h-4 w-4" />
-              Performance
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Core HR Tab */}
-          <TabsContent value="core-hr" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-              {/* Employee Records */}
-              <div className="lg:col-span-3 space-y-6">
-                <Card>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="flex items-center gap-2">
-                        <Users className={`h-5 w-5 ${theme.badge.text}`} />
-                        Employee Records
-                      </CardTitle>
-                      <Button
-                        size="sm"
-                        className="bg-gradient-to-r from-amber-500 to-orange-500"
-                      >
-                        <UserPlus className="h-4 w-4 mr-2" />
-                        Add Employee
-                      </Button>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {filteredEmployees.map((employee, index) => (
-                        <motion.div
-                          key={employee.id}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.3, delay: index * 0.05 }}
-                          className="p-4 border border-gray-200 dark:border-slate-600 rounded-lg"
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                              <div className="relative">
-                                <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full flex items-center justify-center text-white font-bold">
-                                  {employee.firstName[0]}
-                                  {employee.lastName[0]}
-                                </div>
-                                <div
-                                  className={`absolute -bottom-1 -right-1 w-4 h-4 ${getAvailabilityColor(
-                                    employee.availabilityStatus,
-                                  )} rounded-full border-2 border-white`}
-                                />
-                              </div>
-                              <div>
-                                <h3 className="font-semibold text-slate-800 dark:text-slate-200">
-                                  {employee.firstName} {employee.lastName}
-                                </h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
-                                  {employee.position} • {employee.department}
-                                </p>
-                                <div className="flex items-center gap-2 mt-1">
-                                  <Badge
-                                    className={getStatusColor(employee.status)}
-                                  >
-                                    {employee.status}
-                                  </Badge>
-                                  <div className="flex items-center gap-1">
-                                    <Star className="h-3 w-3 text-yellow-500" />
-                                    <span className="text-xs">
-                                      {employee.performanceRating}
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="text-right">
-                              <p className="font-medium text-slate-800 dark:text-slate-200">
-                                {employee.employeeId}
-                              </p>
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                Leave: {employee.leaveBalance} days
-                              </p>
-                              <div className="flex gap-1 mt-2">
-                                <Button size="sm" variant="outline">
-                                  <Eye className="h-3 w-3" />
-                                </Button>
-                                <Button size="sm" variant="outline">
-                                  <Edit className="h-3 w-3" />
-                                </Button>
-                                <Button size="sm" variant="outline">
-                                  <Phone className="h-3 w-3" />
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Leave Management */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <CalendarIcon className={`h-5 w-5 ${theme.badge.text}`} />
-                      Leave Management
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {leaveRequests.map((request, index) => (
-                        <div
-                          key={request.id}
-                          className="p-4 border border-gray-200 dark:border-slate-600 rounded-lg"
-                        >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <h4 className="font-semibold text-slate-800 dark:text-slate-200">
-                                {request.employeeName}
-                              </h4>
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                {request.type} leave • {request.days} days
-                              </p>
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                {new Date(
-                                  request.startDate,
-                                ).toLocaleDateString()}{" "}
-                                -{" "}
-                                {new Date(request.endDate).toLocaleDateString()}
-                              </p>
-                            </div>
-                            <div className="text-right">
-                              <Badge className={getStatusColor(request.status)}>
-                                {request.status}
-                              </Badge>
-                              {request.status === "pending" && (
-                                <div className="flex gap-1 mt-2">
-                                  <Button size="sm" variant="outline">
-                                    <CheckCircle className="h-3 w-3 text-green-600" />
-                                  </Button>
-                                  <Button size="sm" variant="outline">
-                                    <XCircle className="h-3 w-3 text-red-600" />
-                                  </Button>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Recruitment Tracker */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Briefcase className={`h-5 w-5 ${theme.badge.text}`} />
-                      Recruitment Workflow
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {recruitmentPositions.map((position, index) => (
-                        <div
-                          key={position.id}
-                          className="p-4 border border-gray-200 dark:border-slate-600 rounded-lg"
-                        >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <h4 className="font-semibold text-slate-800 dark:text-slate-200">
-                                {position.title}
-                              </h4>
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                {position.department} • {position.location}
-                              </p>
-                              <div className="flex gap-2 mt-2">
-                                <Badge
-                                  className={getStatusColor(position.status)}
-                                >
-                                  {position.status}
-                                </Badge>
-                                <Badge
-                                  className={getPriorityColor(
-                                    position.priority,
-                                  )}
-                                >
-                                  {position.priority} priority
-                                </Badge>
-                              </div>
-                            </div>
-                            <div className="text-right">
-                              <p className="font-bold text-lg text-slate-800 dark:text-slate-200">
-                                {position.applicants}
-                              </p>
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                applicants
-                              </p>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="mt-2"
-                              >
-                                <Eye className="h-3 w-3 mr-1" />
-                                View
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
               </div>
+            </CardContent>
+          </Card>
 
-              {/* Right Sidebar */}
-              <div className="space-y-6">
-                {/* Attendance Calendar */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <CalendarIcon className={`h-5 w-5 ${theme.badge.text}`} />
-                      Attendance Tracker
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <Calendar
-                      mode="single"
-                      selected={selectedDate}
-                      onSelect={setSelectedDate}
-                      className="rounded-md border"
-                    />
-                    <div className="mt-4 space-y-2">
-                      <div className="flex items-center justify-between text-sm">
-                        <span>Present Today</span>
-                        <span className="font-medium text-green-600">
-                          {
-                            employees.filter((e) => e.status === "active")
-                              .length
-                          }
-                          /{employees.length}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span>On Leave</span>
-                        <span className="font-medium text-blue-600">
-                          {
-                            employees.filter((e) => e.status === "on-leave")
-                              .length
-                          }
-                        </span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Contact Directory */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Phone className={`h-5 w-5 ${theme.badge.text}`} />
-                      Quick Contacts
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      {employees.slice(0, 4).map((employee) => (
-                        <div
-                          key={employee.id}
-                          className="flex items-center justify-between"
-                        >
-                          <div className="flex items-center gap-2">
-                            <div
-                              className={`w-2 h-2 rounded-full ${getAvailabilityColor(
-                                employee.availabilityStatus,
-                              )}`}
-                            />
-                            <span className="text-sm font-medium">
-                              {employee.firstName}
-                            </span>
-                          </div>
-                          <div className="flex gap-1">
-                            <Button size="sm" variant="ghost" className="p-1">
-                              <Phone className="h-3 w-3" />
-                            </Button>
-                            <Button size="sm" variant="ghost" className="p-1">
-                              <MessageSquare className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* HR Policies */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <BookOpen className={`h-5 w-5 ${theme.badge.text}`} />
-                      HR Updates
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      {hrPolicies.slice(0, 3).map((policy) => (
-                        <div
-                          key={policy.id}
-                          className="p-3 border border-gray-200 dark:border-slate-600 rounded-lg"
-                        >
-                          <h4 className="font-medium text-sm text-slate-800 dark:text-slate-200">
-                            {policy.title}
-                          </h4>
-                          <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                            {policy.summary}
-                          </p>
-                          <Badge
-                            className={`mt-2 ${getStatusColor(policy.status)}`}
-                          >
-                            {policy.status}
-                          </Badge>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+          <Card className="border-0 bg-white/90 backdrop-blur-sm shadow-lg">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600 mb-1">Active Employees</p>
+                  <p className="text-3xl font-bold text-gray-900">{activeEmployees}</p>
+                  <p className="text-sm text-gray-600 mt-1">{onLeaveEmployees} on leave</p>
+                </div>
+                <div className="p-3 bg-green-100 rounded-full">
+                  <UserCheck className="h-6 w-6 text-green-600" />
+                </div>
               </div>
-            </div>
-          </TabsContent>
+            </CardContent>
+          </Card>
 
-          {/* Benefits Tab */}
-          <TabsContent value="benefits" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Heart className="h-5 w-5 text-red-500" />
-                    Health Benefits
+          <Card className="border-0 bg-white/90 backdrop-blur-sm shadow-lg">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600 mb-1">Leave Requests</p>
+                  <p className="text-3xl font-bold text-gray-900">{pendingLeaveRequests}</p>
+                  <p className="text-sm text-yellow-600 mt-1">Pending approval</p>
+                </div>
+                <div className="p-3 bg-yellow-100 rounded-full">
+                  <Calendar className="h-6 w-6 text-yellow-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-0 bg-white/90 backdrop-blur-sm shadow-lg">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600 mb-1">New Applications</p>
+                  <p className="text-3xl font-bold text-gray-900">{newApplications}</p>
+                  <p className="text-sm text-purple-600 mt-1">{upcomingInterviews} interviews scheduled</p>
+                </div>
+                <div className="p-3 bg-purple-100 rounded-full">
+                  <UserPlus className="h-6 w-6 text-purple-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Main HR Dashboard Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Left Column */}
+          <div className="lg:col-span-8 space-y-6">
+            {/* Employee Management */}
+            <Card className="border-0 bg-white/90 backdrop-blur-sm shadow-lg">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle className="text-lg text-gray-900 flex items-center gap-2">
+                    <Users className="h-5 w-5 text-blue-600" />
+                    Employee Overview
                   </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span>Enrolled Employees</span>
-                      <span className="font-bold">
-                        {employees.length - 1}/{employees.length}
-                      </span>
-                    </div>
-                    <Progress value={85} className="h-2" />
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span>Medical Insurance</span>
-                        <span className="text-green-600">Active</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Dental Coverage</span>
-                        <span className="text-green-600">Active</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Life Insurance</span>
-                        <span className="text-green-600">Active</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Coffee className="h-5 w-5 text-amber-500" />
-                    Wellness Programs
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-amber-600">72%</p>
-                      <p className="text-sm text-gray-600">
-                        Participation Rate
-                      </p>
-                    </div>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span>Fitness Program</span>
-                        <span className="font-medium">12 enrolled</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Mental Health</span>
-                        <span className="font-medium">8 sessions</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Team Building</span>
-                        <span className="font-medium">Monthly</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <GraduationCap className="h-5 w-5 text-blue-500" />
-                    Learning & Development
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-blue-600">₦2.5M</p>
-                      <p className="text-sm text-gray-600">Training Budget</p>
-                    </div>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span>Courses Completed</span>
-                        <span className="font-medium">24</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Certifications</span>
-                        <span className="font-medium">8</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Conferences</span>
-                        <span className="font-medium">3 upcoming</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          {/* Automation Tab */}
-          <TabsContent value="automation" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Bot className={`h-5 w-5 ${theme.badge.text}`} />
-                  AI HR Assistant
-                </CardTitle>
+                  <p className="text-sm text-gray-600 mt-1">Current staff and their status</p>
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm">
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem>
+                      <UserPlus className="h-4 w-4 mr-2" />
+                      Add Employee
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Download className="h-4 w-4 mr-2" />
+                      Export List
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <FileText className="h-4 w-4 mr-2" />
+                      Generate Report
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {aiSuggestions.map((suggestion, index) => (
+                  {employees.map((employee) => (
                     <motion.div
-                      key={index}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="p-4 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-lg border border-amber-200 dark:border-amber-800"
+                      key={employee.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                     >
-                      <div className="flex items-start gap-3">
-                        <div className="p-2 bg-amber-500 rounded-full">
-                          <Bot className="h-4 w-4 text-white" />
+                      <div className="flex items-center gap-4">
+                        <Avatar className="h-12 w-12">
+                          <AvatarFallback className="bg-blue-100 text-blue-600">
+                            {employee.name.split(' ').map(n => n[0]).join('')}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <h4 className="font-semibold text-gray-900">{employee.name}</h4>
+                          <p className="text-sm text-gray-600">{employee.role}</p>
+                          <p className="text-xs text-gray-500">{employee.department}</p>
                         </div>
-                        <div className="flex-1">
-                          <p className="text-slate-800 dark:text-slate-200 font-medium">
-                            {suggestion.message}
-                          </p>
-                          <div className="flex items-center gap-2 mt-2">
-                            <Progress
-                              value={suggestion.confidence}
-                              className="h-2 flex-1"
-                            />
-                            <span className="text-sm font-medium text-amber-600">
-                              {suggestion.confidence}% confidence
-                            </span>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <div className="text-right">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Star className="h-4 w-4 text-yellow-500" />
+                            <span className="text-sm font-medium">{employee.performance}%</span>
                           </div>
+                          <Badge className={getStatusColor(employee.status)}>
+                            {employee.status.replace("-", " ")}
+                          </Badge>
                         </div>
-                        <Button size="sm" variant="outline">
-                          {suggestion.action}
-                        </Button>
+                        <div className="flex items-center gap-2">
+                          <Button variant="ghost" size="sm">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button variant="ghost" size="sm">
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                     </motion.div>
                   ))}
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
 
-          {/* Performance Tab */}
-          <TabsContent value="performance" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Award className={`h-5 w-5 ${theme.badge.text}`} />
-                    Performance Tracking
+            {/* Leave Requests */}
+            <Card className="border-0 bg-white/90 backdrop-blur-sm shadow-lg">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle className="text-lg text-gray-900 flex items-center gap-2">
+                    <Calendar className="h-5 w-5 text-blue-600" />
+                    Leave Requests
                   </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {performanceMetrics.map((metric, index) => (
-                      <div
-                        key={metric.id}
-                        className="p-4 border border-gray-200 dark:border-slate-600 rounded-lg"
-                      >
-                        <div className="flex items-center justify-between mb-3">
-                          <div>
-                            <h4 className="font-semibold text-slate-800 dark:text-slate-200">
-                              {metric.employeeName}
-                            </h4>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                              {metric.department} • {metric.period}
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <div className="flex items-center gap-1">
-                              <Star className="h-4 w-4 text-yellow-500" />
-                              <span className="font-bold">
-                                {metric.overallRating}
-                              </span>
-                            </div>
-                          </div>
+                  <p className="text-sm text-gray-600 mt-1">Pending and recent leave applications</p>
+                </div>
+                <Button variant="outline" size="sm">
+                  <Plus className="h-4 w-4 mr-2" />
+                  New Request
+                </Button>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {leaveRequests.map((request) => (
+                    <motion.div
+                      key={request.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className={`p-2 rounded-full ${getLeaveTypeColor(request.type).replace('text-', 'bg-').replace('-600', '-100')}`}>
+                          <Calendar className={`h-4 w-4 ${getLeaveTypeColor(request.type)}`} />
                         </div>
-
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                          <div>
-                            <p className="text-gray-600 dark:text-gray-400">
-                              KPI Score
-                            </p>
-                            <p className="font-medium">{metric.kpiScore}%</p>
-                          </div>
-                          <div>
-                            <p className="text-gray-600 dark:text-gray-400">
-                              Projects
-                            </p>
-                            <p className="font-medium">
-                              {metric.projectsCompleted}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-gray-600 dark:text-gray-400">
-                              Client Score
-                            </p>
-                            <p className="font-medium">
-                              {metric.clientSatisfaction}/5
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-gray-600 dark:text-gray-400">
-                              Team Score
-                            </p>
-                            <p className="font-medium">
-                              {metric.teamCollaboration}/5
-                            </p>
-                          </div>
+                        <div>
+                          <h4 className="font-semibold text-gray-900">{request.employeeName}</h4>
+                          <p className="text-sm text-gray-600 capitalize">{request.type} leave</p>
+                          <p className="text-xs text-gray-500">
+                            {new Date(request.startDate).toLocaleDateString()} - {new Date(request.endDate).toLocaleDateString()}
+                          </p>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                      <div className="flex items-center gap-3">
+                        <Badge className={getStatusColor(request.status)}>
+                          {request.status}
+                        </Badge>
+                        {request.status === "pending" && (
+                          <div className="flex items-center gap-2">
+                            <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white">
+                              <CheckCircle className="h-4 w-4 mr-1" />
+                              Approve
+                            </Button>
+                            <Button size="sm" variant="outline" className="border-red-500 text-red-500 hover:bg-red-50">
+                              <UserX className="h-4 w-4 mr-1" />
+                              Reject
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Performance Analytics</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-64 flex items-center justify-center bg-gray-50 dark:bg-slate-800 rounded-lg">
-                    <div className="text-center">
-                      <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-2" />
-                      <p className="text-gray-500">Performance Chart</p>
+          {/* Right Column */}
+          <div className="lg:col-span-4 space-y-6">
+            {/* Job Applications */}
+            <Card className="border-0 bg-white/90 backdrop-blur-sm shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-lg text-gray-900 flex items-center gap-2">
+                  <Briefcase className="h-5 w-5 text-blue-600" />
+                  Recent Applications
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {jobApplications.map((application) => (
+                    <div key={application.id} className="p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-start justify-between mb-2">
+                        <div>
+                          <h4 className="font-medium text-gray-900">{application.candidateName}</h4>
+                          <p className="text-sm text-gray-600">{application.position}</p>
+                        </div>
+                        <Badge className={getStatusColor(application.status)}>
+                          {application.status}
+                        </Badge>
+                      </div>
+                      <div className="text-xs text-gray-500 space-y-1">
+                        <p>Experience: {application.experience}</p>
+                        <p>Applied: {new Date(application.appliedDate).toLocaleDateString()}</p>
+                        <p>Source: {application.source}</p>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-        </Tabs>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
 
-        {/* HR Team Communication */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-        >
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <MessageSquare className={`h-5 w-5 ${theme.badge.text}`} />
-                HR Team Communication
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <p className="text-gray-600 dark:text-gray-400">
-                  Connect with HR team, conduct interviews, and staff meetings
-                </p>
-                <div className="flex gap-2">
+            {/* Performance Metrics */}
+            <Card className="border-0 bg-white/90 backdrop-blur-sm shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-lg text-gray-900 flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5 text-blue-600" />
+                  Department Performance
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {performanceMetrics.map((metric) => (
+                    <div key={metric.department} className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-medium text-gray-900 text-sm">{metric.department}</h4>
+                        <div className="flex items-center gap-1">
+                          <Star className="h-3 w-3 text-yellow-500" />
+                          <span className="text-sm font-medium">{metric.averageRating}</span>
+                        </div>
+                      </div>
+                      <div className="space-y-1">
+                        <div className="flex items-center justify-between text-xs text-gray-600">
+                          <span>Employees: {metric.employeeCount}</span>
+                          <span>Top Performers: {metric.topPerformers}</span>
+                        </div>
+                        <Progress value={(metric.averageRating / 5) * 100} className="h-2" />
+                        {metric.improvementNeeded > 0 && (
+                          <p className="text-xs text-yellow-600">
+                            {metric.improvementNeeded} need improvement
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Quick Actions */}
+            <Card className="border-0 bg-white/90 backdrop-blur-sm shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-lg text-gray-900 flex items-center gap-2">
+                  <Target className="h-5 w-5 text-blue-600" />
+                  Quick Actions
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
                   <Button
-                    onClick={() => startCall("human-resources")}
-                    className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
-                  >
-                    <Phone className="h-4 w-4 mr-2" />
-                    Voice Call
-                  </Button>
-                  <Button
-                    onClick={() => startCall("human-resources")}
-                    className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white"
+                    onClick={handleStartHRMeeting}
+                    disabled={isInCall}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                   >
                     <Video className="h-4 w-4 mr-2" />
-                    Interview Call
+                    {isInCall ? "In Meeting" : "Start HR Meeting"}
                   </Button>
-                  <Button variant="outline">
-                    <MessageSquare className="h-4 w-4 mr-2" />
-                    HR Chat
+                  <Button variant="outline" className="w-full border-green-600 text-green-600 hover:bg-green-50">
+                    <UserPlus className="h-4 w-4 mr-2" />
+                    Add New Employee
+                  </Button>
+                  <Button variant="outline" className="w-full border-purple-600 text-purple-600 hover:bg-purple-50">
+                    <Briefcase className="h-4 w-4 mr-2" />
+                    Post Job Opening
+                  </Button>
+                  <Button variant="outline" className="w-full border-orange-600 text-orange-600 hover:bg-orange-50">
+                    <FileText className="h-4 w-4 mr-2" />
+                    Generate Report
                   </Button>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
-    </DashboardThemeWrapper>
+    </ModernDashboardLayout>
   );
 }
