@@ -4,7 +4,7 @@ import { Server } from "socket.io";
 const router = express.Router();
 
 // Test Socket.IO broadcasting
-router.post("/broadcast", (req, res): void => {
+router.post("/broadcast", (req, res) => {
   try {
     const { event, data, room } = req.body;
     const io: Server = req.app.get('io');
@@ -49,7 +49,7 @@ router.post("/broadcast", (req, res): void => {
 });
 
 // Get Socket.IO connection stats
-router.get("/stats", (req, res): void => {
+router.get("/stats", (req, res) => {
   try {
     const io: Server = req.app.get('io');
 
@@ -82,7 +82,7 @@ router.get("/stats", (req, res): void => {
 });
 
 // Send notification to specific room
-router.post("/notify/:room", (req, res): void => {
+router.post("/notify/:room", (req, res) => {
   try {
     const { room } = req.params;
     const { type, message, data } = req.body;
