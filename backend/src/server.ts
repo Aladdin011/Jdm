@@ -9,6 +9,9 @@ import dotenv from "dotenv";
 // Load environment variables
 dotenv.config();
 
+// Import database connection
+import { connectDatabase, disconnectDatabase } from "./config/database";
+
 // Import routes
 import contactRoutes from "./routes/contact";
 import healthRoutes from "./routes/health";
@@ -109,11 +112,39 @@ app.use(
   },
 );
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 JD Marc API Server running on port ${PORT}`);
-  console.log(`📊 Environment: ${process.env.NODE_ENV || "development"}`);
-  console.log(`🌐 Server URL: http://localhost:${PORT}`);
+// Start server with database connection
+const startServer = async () => {
+  try {
+    // Connect to Hostinger MySQL database
+    await connectDatabase();
+
+    // Start Express server
+    app.listen(PORT, () => {
+      console.log(`🚀 JD Marc API Server running on port ${PORT}`);
+      console.log(`📊 Environment: ${process.env.NODE_ENV || "development"}`);
+      console.log(`🌐 API URL: ${process.env.NODE_ENV === 'production' ? 'https://jdmarc-backend-api.onrender.com' : `http://localhost:${PORT}`}`);
+      console.log('🎯 Ready to handle requests');
+    });
+  } catch (error) {
+    console.error('❌ Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+  console.log('\n🔄 Graceful shutdown initiated...');
+  await disconnectDatabase();
+  process.exit(0);
 });
+
+process.on('SIGTERM', async () => {
+  console.log('\n🔄 Graceful shutdown initiated...');
+  await disconnectDatabase();
+  process.exit(0);
+});
+
+// Start the server
+startServer();
 
 export default app;
