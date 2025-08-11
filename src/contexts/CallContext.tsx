@@ -33,9 +33,15 @@ interface CallState {
   } | null;
 }
 
+interface CallOptions {
+  title: string;
+  participants: string[];
+}
+
 interface CallContextType {
   callState: CallState;
-  startCall: (department: string) => void;
+  isInCall: boolean;
+  startCall: (callId: string, options?: CallOptions) => void;
   joinCall: (callId: string) => void;
   endCall: () => void;
   acceptIncomingCall: () => void;
@@ -79,19 +85,19 @@ export const CallProvider: React.FC<CallProviderProps> = ({ children }) => {
     new Map(),
   );
 
-  const startCall = (department: string) => {
-    const callId = `call_${department}_${Date.now()}`;
-
+  const startCall = (callId: string, options?: CallOptions) => {
     if (user) {
       const currentUserParticipant: CallParticipant = {
         id: user.id,
         name: `${user.firstName} ${user.lastName}`,
         email: user.email,
-        department: user.department || department,
+        department: user.department || "general",
         isVideoEnabled: true,
         isAudioEnabled: true,
         isScreenSharing: false,
       };
+
+      const department = options?.title || user.department || "general";
 
       setCallState({
         isInCall: true,
@@ -222,6 +228,7 @@ export const CallProvider: React.FC<CallProviderProps> = ({ children }) => {
 
   const value: CallContextType = {
     callState,
+    isInCall: callState.isInCall,
     startCall,
     joinCall,
     endCall,

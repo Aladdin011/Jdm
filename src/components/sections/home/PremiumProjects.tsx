@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   motion,
   useInView,
@@ -16,26 +16,27 @@ import {
   ArrowRight,
   ExternalLink,
   Play,
-  Filter,
+  Pause,
+  Volume2,
+  VolumeX,
+  Maximize2,
+  Settings,
   Grid3X3,
   List,
   Search,
   Star,
   Clock,
   CheckCircle,
+  ChevronLeft,
+  ChevronRight,
+  TrendingUp,
+  Activity,
 } from "lucide-react";
 import { useAppStore } from "@/stores/appStore";
+import { projects } from "@/data/projects";
+import { cn } from "@/lib/utils";
 
-// Project categories
-const categories = [
-  { id: "all", label: "All Projects", count: 24 },
-  { id: "residential", label: "Residential", count: 8 },
-  { id: "commercial", label: "Commercial", count: 7 },
-  { id: "infrastructure", label: "Infrastructure", count: 5 },
-  { id: "smart-cities", label: "Smart Cities", count: 4 },
-];
-
-// Featured projects data
+// Featured projects with enhanced data
 const featuredProjects = [
   {
     id: 1,
@@ -59,6 +60,8 @@ const featuredProjects = [
     },
     awards: ["LEED Platinum", "Smart City Award 2023"],
     timeline: "2021-2023",
+    rating: 4.9,
+    isLive: true,
   },
   {
     id: 2,
@@ -87,6 +90,8 @@ const featuredProjects = [
     },
     awards: ["Architecture Excellence"],
     timeline: "2022-2024",
+    rating: 4.7,
+    isLive: true,
   },
   {
     id: 3,
@@ -115,418 +120,404 @@ const featuredProjects = [
     },
     awards: ["Sustainable Development Award"],
     timeline: "2020-2022",
-  },
-  {
-    id: 4,
-    title: "Cross River Bridge",
-    category: "infrastructure",
-    location: "Cross River, Nigeria",
-    value: "$55M",
-    duration: "30 months",
-    status: "completed",
-    completion: 100,
-    image:
-      "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=800&q=80",
-    description:
-      "Major infrastructure project connecting communities with modern bridge engineering and smart monitoring systems.",
-    features: [
-      "Smart Monitoring",
-      "LED Lighting",
-      "Weather Systems",
-      "Traffic Management",
-    ],
-    stats: {
-      length: "2.5km",
-      capacity: "50,000 vehicles/day",
-      safety: "Zero incidents",
-      monitoring: "24/7 AI",
-    },
-    awards: ["Engineering Excellence", "Infrastructure Award"],
-    timeline: "2019-2022",
-  },
-  {
-    id: 5,
-    title: "Port Harcourt Mall",
-    category: "commercial",
-    location: "Port Harcourt, Nigeria",
-    value: "$22M",
-    duration: "15 months",
-    status: "completed",
-    completion: 100,
-    image:
-      "https://images.unsplash.com/photo-1519642055093-45c8770d0e8e?w=800&q=80",
-    description:
-      "Modern shopping and entertainment complex with sustainable design and community integration.",
-    features: ["Retail Spaces", "Entertainment", "Food Courts", "Parking"],
-    stats: {
-      stores: "150+",
-      visitors: "2M annually",
-      parking: "1,000 spaces",
-      restaurants: "25+",
-    },
-    awards: ["Retail Excellence"],
-    timeline: "2021-2022",
-  },
-  {
-    id: 6,
-    title: "Kaduna Housing Project",
-    category: "residential",
-    location: "Kaduna, Nigeria",
-    value: "$18M",
-    duration: "16 months",
-    status: "in-progress",
-    completion: 60,
-    image:
-      "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80",
-    description:
-      "Affordable housing initiative with modern design, energy efficiency, and community development focus.",
-    features: [
-      "Affordable Housing",
-      "Energy Efficient",
-      "Community Spaces",
-      "Schools",
-    ],
-    stats: {
-      units: "800",
-      affordability: "40% below market",
-      energy: "50% savings",
-      schools: "3 primary",
-    },
-    awards: [],
-    timeline: "2023-2024",
+    rating: 4.8,
+    isLive: false,
   },
 ];
 
-// Project card component
-const ProjectCard = ({
-  project,
-  index,
-  viewMode,
-}: {
-  project: (typeof featuredProjects)[0];
-  index: number;
-  viewMode: "grid" | "list";
-}) => {
+const ProjectDisplayCard = ({ project, isActive, onActivate }: any) => {
   const [isHovered, setIsHovered] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
-  const { trackUserInteraction } = useAppStore();
-
-  const handleProjectClick = () => {
-    trackUserInteraction(
-      `project-${project.title.toLowerCase().replace(/\s+/g, "-")}`,
-    );
-  };
-
-  const handleViewDetails = () => {
-    trackUserInteraction(`project-details-${project.id}`);
-  };
-
-  if (viewMode === "list") {
-    return (
-      <motion.div
-        ref={ref}
-        className="flex gap-6 p-6 bg-white rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 cursor-pointer"
-        initial={{ opacity: 0, x: -30 }}
-        animate={isInView ? { opacity: 1, x: 0 } : {}}
-        transition={{ duration: 0.6, delay: index * 0.1 }}
-        onClick={handleProjectClick}
-        whileHover={{ y: -4 }}
-      >
-        {/* Image */}
-        <div className="w-48 h-32 rounded-lg overflow-hidden flex-shrink-0">
-          <img
-            src={project.image}
-            alt={project.title}
-            className="w-full h-full object-cover"
-          />
-        </div>
-
-        {/* Content */}
-        <div className="flex-1 space-y-3">
-          <div className="flex items-start justify-between">
-            <div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                {project.title}
-              </h3>
-              <div className="flex items-center gap-4 text-sm text-gray-600">
-                <span className="flex items-center gap-1">
-                  <MapPin className="w-4 h-4" />
-                  {project.location}
-                </span>
-                <span className="flex items-center gap-1">
-                  <DollarSign className="w-4 h-4" />
-                  {project.value}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
-                  {project.timeline}
-                </span>
-              </div>
-            </div>
-            <div
-              className={`px-3 py-1 rounded-full text-xs font-medium ${
-                project.status === "completed"
-                  ? "bg-green-100 text-green-600"
-                  : "bg-blue-100 text-blue-600"
-              }`}
-            >
-              {project.status === "completed" ? "Completed" : "In Progress"}
-            </div>
-          </div>
-
-          <p className="text-gray-600 line-clamp-2">{project.description}</p>
-
-          <div className="flex items-center justify-between">
-            <div className="flex gap-2">
-              {project.features.slice(0, 3).map((feature, i) => (
-                <span
-                  key={i}
-                  className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded"
-                >
-                  {feature}
-                </span>
-              ))}
-              {project.features.length > 3 && (
-                <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
-                  +{project.features.length - 3}
-                </span>
-              )}
-            </div>
-            <button
-              onClick={handleViewDetails}
-              className="flex items-center gap-2 text-orange-600 hover:text-orange-700 font-medium text-sm"
-            >
-              View Details
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      </motion.div>
-    );
-  }
 
   return (
     <motion.div
-      ref={ref}
-      className="group bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden cursor-pointer"
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
+      className={cn(
+        "group relative bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden cursor-pointer transition-all duration-500",
+        isActive
+          ? "ring-2 ring-blue-500 shadow-2xl scale-105"
+          : "hover:shadow-xl hover:scale-102",
+      )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={handleProjectClick}
-      whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(0,0,0,0.1)" }}
+      onClick={onActivate}
+      whileHover={{ y: -4 }}
+      layout
     >
-      {/* Image Container */}
-      <div className="relative h-64 overflow-hidden">
+      {/* Project Image */}
+      <div className="relative h-48 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
         <motion.img
           src={project.image}
           alt={project.title}
           className="w-full h-full object-cover"
-          animate={{ scale: isHovered ? 1.1 : 1 }}
-          transition={{ duration: 0.6 }}
+          animate={{
+            scale: isHovered ? 1.1 : 1,
+            transition: { duration: 0.6 },
+          }}
         />
 
-        {/* Overlay */}
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
-          animate={{ opacity: isHovered ? 1 : 0.7 }}
-          transition={{ duration: 0.3 }}
-        />
-
-        {/* Status Badge */}
-        <div
-          className={`absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm ${
-            project.status === "completed"
-              ? "bg-green-500/90 text-white"
-              : "bg-blue-500/90 text-white"
-          }`}
-        >
-          {project.status === "completed" ? "Completed" : "In Progress"}
-        </div>
-
-        {/* Awards */}
-        {project.awards.length > 0 && (
-          <div className="absolute top-4 right-4">
-            <div className="w-8 h-8 bg-yellow-500/90 rounded-full flex items-center justify-center backdrop-blur-sm">
-              <Award className="w-4 h-4 text-white" />
+        {/* Live indicator */}
+        {project.isLive && (
+          <div className="absolute top-4 left-4">
+            <div className="flex items-center gap-2 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              <span className="text-xs font-medium text-gray-700">Live</span>
             </div>
           </div>
         )}
 
-        {/* Progress Bar for In-Progress Projects */}
+        {/* Status badge */}
+        <div className="absolute top-4 right-4">
+          <div
+            className={cn(
+              "px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm",
+              project.status === "completed"
+                ? "bg-green-500/90 text-white"
+                : "bg-blue-500/90 text-white",
+            )}
+          >
+            {project.status === "completed" ? "Completed" : "In Progress"}
+          </div>
+        </div>
+
+        {/* Hover controls */}
+        <motion.div
+          className="absolute inset-0 bg-black/40 flex items-center justify-center gap-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <motion.button
+            className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Play className="w-5 h-5 ml-0.5" />
+          </motion.button>
+          <motion.button
+            className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Maximize2 className="w-5 h-5" />
+          </motion.button>
+        </motion.div>
+
+        {/* Progress bar for in-progress projects */}
         {project.status === "in-progress" && (
           <div className="absolute bottom-4 left-4 right-4">
             <div className="flex items-center justify-between text-white text-xs mb-2">
               <span>Progress</span>
               <span>{project.completion}%</span>
             </div>
-            <div className="w-full bg-white/20 rounded-full h-2">
+            <div className="w-full bg-white/20 rounded-full h-1.5">
               <motion.div
-                className="h-2 bg-blue-500 rounded-full"
-                initial={{ width: 0 }}
+                className="h-1.5 bg-blue-400 rounded-full"
+                initial={{ width: "0%" }}
                 animate={{ width: `${project.completion}%` }}
-                transition={{ duration: 1, delay: 0.5 }}
+                transition={{ duration: 2, delay: 0.5 }}
               />
             </div>
           </div>
         )}
-
-        {/* Hover Actions */}
-        <motion.div
-          className="absolute inset-0 flex items-center justify-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isHovered ? 1 : 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <div className="flex gap-3">
-            <button
-              onClick={handleViewDetails}
-              className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors"
-            >
-              <ExternalLink className="w-5 h-5" />
-            </button>
-            <button className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors">
-              <Play className="w-5 h-5" />
-            </button>
-          </div>
-        </motion.div>
       </div>
 
-      {/* Content */}
-      <div className="p-6 space-y-4">
-        {/* Header */}
-        <div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-gray-900 transition-colors">
-            {project.title}
-          </h3>
-          <div className="flex items-center gap-4 text-sm text-gray-600">
-            <span className="flex items-center gap-1">
-              <MapPin className="w-4 h-4" />
-              {project.location}
-            </span>
-            <span className="flex items-center gap-1">
+      {/* Project Info */}
+      <div className="p-6">
+        <div className="space-y-3">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 group-hover:text-gray-800 transition-colors">
+              {project.title}
+            </h3>
+            <div className="flex items-center gap-4 text-sm text-gray-500 mt-1">
+              <span className="flex items-center gap-1">
+                <MapPin className="w-4 h-4" />
+                {project.location}
+              </span>
+              <span className="flex items-center gap-1">
+                <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                {project.rating}
+              </span>
+            </div>
+          </div>
+
+          <p className="text-sm text-gray-600 line-clamp-2">
+            {project.description}
+          </p>
+
+          {/* Features */}
+          <div className="flex flex-wrap gap-2">
+            {project.features.slice(0, 3).map((feature: string, i: number) => (
+              <span
+                key={i}
+                className="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-md font-medium"
+              >
+                {feature}
+              </span>
+            ))}
+            {project.features.length > 3 && (
+              <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md">
+                +{project.features.length - 3} more
+              </span>
+            )}
+          </div>
+
+          {/* Stats */}
+          <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+            <div className="flex items-center gap-1 text-sm font-semibold text-green-600">
               <DollarSign className="w-4 h-4" />
               {project.value}
-            </span>
-          </div>
-        </div>
-
-        {/* Description */}
-        <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
-          {project.description}
-        </p>
-
-        {/* Features */}
-        <div className="flex flex-wrap gap-2">
-          {project.features.slice(0, 3).map((feature, i) => (
-            <span
-              key={i}
-              className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded"
+            </div>
+            <motion.div
+              className="flex items-center gap-2 text-blue-600 font-medium text-sm group-hover:text-blue-700 transition-colors"
+              animate={{ x: isHovered ? 5 : 0 }}
+              transition={{ duration: 0.3 }}
             >
-              {feature}
-            </span>
-          ))}
-          {project.features.length > 3 && (
-            <span className="px-2 py-1 bg-orange-100 text-orange-600 text-xs rounded">
-              +{project.features.length - 3} more
-            </span>
-          )}
-        </div>
-
-        {/* Footer */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Calendar className="w-4 h-4" />
-            <span>{project.timeline}</span>
+              <span>View Project</span>
+              <ArrowRight className="w-4 h-4" />
+            </motion.div>
           </div>
+        </div>
+      </div>
+
+      {/* Active indicator */}
+      {isActive && (
+        <motion.div
+          className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-purple-500"
+          layoutId="activeIndicator"
+          transition={{ duration: 0.3 }}
+        />
+      )}
+    </motion.div>
+  );
+};
+
+const ProjectControls = ({ activeProject, onProjectChange }: any) => {
+  return (
+    <motion.div
+      className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6"
+      initial={{ opacity: 0, x: -30 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.8, delay: 0.3 }}
+    >
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-lg font-semibold text-gray-900">
+          Project Controls
+        </h3>
+        <motion.button
+          className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors"
+          whileHover={{ rotate: 180 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Settings className="w-4 h-4" />
+        </motion.button>
+      </div>
+
+      <div className="space-y-4">
+        {featuredProjects.map((project, index) => (
           <motion.div
-            className="flex items-center gap-2 text-orange-600 font-medium text-sm group-hover:text-orange-700 transition-colors"
-            animate={{ x: isHovered ? 5 : 0 }}
-            transition={{ duration: 0.3 }}
+            key={project.id}
+            className={cn(
+              "flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-300",
+              activeProject?.id === project.id
+                ? "bg-blue-50 border border-blue-200"
+                : "hover:bg-gray-50",
+            )}
+            onClick={() => onProjectChange(project)}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
-            <span>View Project</span>
-            <ArrowRight className="w-4 h-4" />
+            <div className="w-12 h-12 rounded-xl overflow-hidden bg-gray-100">
+              <img
+                src={project.image}
+                alt={project.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h4 className="font-medium text-gray-900 truncate">
+                {project.title}
+              </h4>
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <span>{project.location}</span>
+                {project.isLive && (
+                  <div className="flex items-center gap-1">
+                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                    <span className="text-xs text-green-600">Live</span>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <div
+                className={cn(
+                  "w-2 h-2 rounded-full",
+                  activeProject?.id === project.id
+                    ? "bg-green-500"
+                    : "bg-gray-300",
+                )}
+              />
+            </div>
           </motion.div>
+        ))}
+      </div>
+
+      {/* Navigation Controls */}
+      <div className="flex items-center justify-center gap-3 mt-6 pt-6 border-t border-gray-100">
+        <motion.button
+          className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </motion.button>
+        <motion.button
+          className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white hover:bg-blue-600 transition-colors"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Play className="w-5 h-5 ml-0.5" />
+        </motion.button>
+        <motion.button
+          className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <ChevronRight className="w-5 h-5" />
+        </motion.button>
+      </div>
+    </motion.div>
+  );
+};
+
+const ProjectStats = ({ activeProject }: any) => {
+  const stats = [
+    {
+      label: "Completion",
+      value: `${activeProject?.completion || 100}%`,
+      color: "text-green-500",
+      bgColor: "bg-green-500",
+    },
+    {
+      label: "Timeline",
+      value: activeProject?.duration || "24 months",
+      color: "text-blue-500",
+      bgColor: "bg-blue-500",
+    },
+    {
+      label: "Investment",
+      value: activeProject?.value || "$45M",
+      color: "text-purple-500",
+      bgColor: "bg-purple-500",
+    },
+    {
+      label: "Rating",
+      value: `${activeProject?.rating || 4.9}★`,
+      color: "text-yellow-500",
+      bgColor: "bg-yellow-500",
+    },
+  ];
+
+  return (
+    <motion.div
+      className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6"
+      initial={{ opacity: 0, x: 30 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.8, delay: 0.5 }}
+    >
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-lg font-semibold text-gray-900">Smart Analytics</h3>
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+          <span className="text-sm text-gray-500">Real-time</span>
+        </div>
+      </div>
+
+      <div className="space-y-6">
+        {stats.map((stat, index) => (
+          <motion.div
+            key={stat.label}
+            className="space-y-3"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600">{stat.label}</span>
+              <span className={cn("font-semibold", stat.color)}>
+                {stat.value}
+              </span>
+            </div>
+            <div className="w-full bg-gray-100 rounded-full h-2">
+              <motion.div
+                className={cn("h-2 rounded-full", stat.bgColor)}
+                initial={{ width: "0%" }}
+                animate={{
+                  width:
+                    stat.label === "Completion"
+                      ? `${activeProject?.completion || 100}%`
+                      : "85%",
+                }}
+                transition={{ duration: 1.5, delay: 0.8 + index * 0.2 }}
+              />
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Live Activity */}
+      <div className="mt-8 pt-6 border-t border-gray-100">
+        <h4 className="font-medium text-gray-900 mb-4 flex items-center gap-2">
+          <Activity className="w-4 h-4 text-blue-500" />
+          Live Activity
+        </h4>
+        <div className="space-y-3">
+          {[
+            { time: "2min ago", action: "Progress updated", type: "update" },
+            {
+              time: "1hr ago",
+              action: "Quality check passed",
+              type: "success",
+            },
+            {
+              time: "3hr ago",
+              action: "New milestone reached",
+              type: "milestone",
+            },
+          ].map((activity, index) => (
+            <motion.div
+              key={index}
+              className="flex items-center gap-3"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, delay: 1 + index * 0.1 }}
+            >
+              <div className="text-xs text-gray-500 w-16">{activity.time}</div>
+              <div
+                className={cn(
+                  "w-2 h-2 rounded-full",
+                  activity.type === "success"
+                    ? "bg-green-500"
+                    : activity.type === "milestone"
+                      ? "bg-purple-500"
+                      : "bg-blue-500",
+                )}
+              />
+              <div className="text-sm text-gray-700 flex-1">
+                {activity.action}
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </motion.div>
   );
 };
 
-// Filter and search component
-const FilterControls = ({
-  activeCategory,
-  onCategoryChange,
-  viewMode,
-  onViewModeChange,
-  searchTerm,
-  onSearchChange,
-}: {
-  activeCategory: string;
-  onCategoryChange: (category: string) => void;
-  viewMode: "grid" | "list";
-  onViewModeChange: (mode: "grid" | "list") => void;
-  searchTerm: string;
-  onSearchChange: (term: string) => void;
-}) => (
-  <div className="flex flex-col lg:flex-row gap-6 items-center justify-between mb-12">
-    {/* Search */}
-    <div className="relative flex-1 max-w-md">
-      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-      <input
-        type="text"
-        placeholder="Search projects..."
-        value={searchTerm}
-        onChange={(e) => onSearchChange(e.target.value)}
-        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
-      />
-    </div>
-
-    {/* Categories */}
-    <div className="flex gap-2 overflow-x-auto">
-      {categories.map((category) => (
-        <button
-          key={category.id}
-          onClick={() => onCategoryChange(category.id)}
-          className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-            activeCategory === category.id
-              ? "bg-orange-500 text-white"
-              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-          }`}
-        >
-          {category.label} ({category.count})
-        </button>
-      ))}
-    </div>
-
-    {/* View Mode Toggle */}
-    <div className="flex gap-2 bg-gray-100 rounded-lg p-1">
-      <button
-        onClick={() => onViewModeChange("grid")}
-        className={`p-2 rounded-md transition-colors ${
-          viewMode === "grid" ? "bg-white shadow-sm" : "hover:bg-gray-200"
-        }`}
-      >
-        <Grid3X3 className="w-5 h-5" />
-      </button>
-      <button
-        onClick={() => onViewModeChange("list")}
-        className={`p-2 rounded-md transition-colors ${
-          viewMode === "list" ? "bg-white shadow-sm" : "hover:bg-gray-200"
-        }`}
-      >
-        <List className="w-5 h-5" />
-      </button>
-    </div>
-  </div>
-);
-
 export default function PremiumProjects() {
-  const [activeCategory, setActiveCategory] = useState("all");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [activeProject, setActiveProject] = useState(featuredProjects[0]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -536,33 +527,34 @@ export default function PremiumProjects() {
 
   const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
 
-  // Filter projects
-  const filteredProjects = featuredProjects.filter((project) => {
-    const matchesCategory =
-      activeCategory === "all" || project.category === activeCategory;
-    const matchesSearch =
-      project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.description.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  // Auto-rotate projects
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % featuredProjects.length);
+      setActiveProject(
+        featuredProjects[(currentIndex + 1) % featuredProjects.length],
+      );
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [currentIndex]);
 
   return (
     <section
       ref={sectionRef}
-      className="py-24 bg-white relative overflow-hidden"
+      className="py-24 bg-gray-50 relative overflow-hidden"
     >
       {/* Background Elements */}
       <motion.div
-        className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-orange-200/30 to-red-200/30 rounded-full blur-3xl"
+        className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-blue-200/30 to-purple-200/30 rounded-full blur-3xl"
         style={{ y }}
       />
       <motion.div
-        className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-blue-200/20 to-purple-200/20 rounded-full blur-3xl"
+        className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-green-200/20 to-blue-200/20 rounded-full blur-3xl"
         style={{ y: y.get() * -0.5 }}
       />
 
-      <div className="container-fluid relative z-10">
+      <div className="container mx-auto px-6 relative z-10">
         {/* Section Header */}
         <motion.div
           className="text-center mb-16"
@@ -579,74 +571,208 @@ export default function PremiumProjects() {
             viewport={{ once: true }}
           >
             <Building2 className="w-4 h-4" />
-            Our Projects
+            Smart Projects Dashboard
           </motion.div>
 
-          <h2 className="text-heading-xl mb-6">
-            Transforming Africa's
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            Intelligent Project
             <br />
-            <span className="gradient-text">Urban Landscape</span>
+            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Management System
+            </span>
           </h2>
 
-          <p className="text-body-lg max-w-3xl mx-auto">
-            Explore our portfolio of groundbreaking construction projects that
-            showcase innovation, sustainability, and excellence across
-            residential, commercial, and infrastructure developments.
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Experience our advanced project monitoring and control system with
+            real-time analytics, smart automation, and comprehensive oversight
+            of all construction activities.
           </p>
         </motion.div>
 
-        {/* Filter Controls */}
-        <FilterControls
-          activeCategory={activeCategory}
-          onCategoryChange={setActiveCategory}
-          viewMode={viewMode}
-          onViewModeChange={setViewMode}
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-        />
+        {/* Smart Dashboard Interface */}
+        <motion.div
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+        >
+          {/* Left Panel - Project Controls */}
+          <div className="lg:col-span-3">
+            <ProjectControls
+              activeProject={activeProject}
+              onProjectChange={setActiveProject}
+            />
+          </div>
 
-        {/* Projects Grid/List */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={`${activeCategory}-${viewMode}-${searchTerm}`}
-            className={
-              viewMode === "grid"
-                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-                : "space-y-6"
-            }
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.6 }}
-          >
-            {filteredProjects.map((project, index) => (
-              <ProjectCard
+          {/* Center - Main Project Display */}
+          <div className="lg:col-span-6">
+            <motion.div
+              className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 relative">
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={activeProject.id}
+                    src={activeProject.image}
+                    alt={activeProject.title}
+                    className="w-full h-full object-cover"
+                    initial={{ opacity: 0, scale: 1.1 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.6 }}
+                  />
+                </AnimatePresence>
+
+                {/* Project Info Overlay */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                >
+                  <div className="p-8 text-white w-full">
+                    <motion.h3
+                      className="text-2xl font-bold mb-2"
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 0.6, delay: 0.8 }}
+                    >
+                      {activeProject.title}
+                    </motion.h3>
+                    <motion.div
+                      className="flex items-center gap-4 text-sm"
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 0.6, delay: 0.9 }}
+                    >
+                      <span className="flex items-center gap-1">
+                        <MapPin className="w-4 h-4" />
+                        {activeProject.location}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                        {activeProject.rating}
+                      </span>
+                      {activeProject.isLive && (
+                        <span className="flex items-center gap-1 px-2 py-1 bg-green-500/20 rounded-full">
+                          <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
+                          Live
+                        </span>
+                      )}
+                    </motion.div>
+                  </div>
+                </motion.div>
+
+                {/* Navigation Dots */}
+                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2">
+                  {featuredProjects.map((_, index) => (
+                    <motion.button
+                      key={index}
+                      className={cn(
+                        "h-2 rounded-full transition-all duration-300",
+                        index === currentIndex
+                          ? "bg-white w-8"
+                          : "bg-white/50 w-2",
+                      )}
+                      onClick={() => {
+                        setCurrentIndex(index);
+                        setActiveProject(featuredProjects[index]);
+                      }}
+                      whileHover={{ scale: 1.2 }}
+                      whileTap={{ scale: 0.8 }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-6">
+                <motion.div
+                  className="space-y-4"
+                  key={activeProject.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <p className="text-gray-600 leading-relaxed">
+                    {activeProject.description}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2">
+                    {activeProject.features.map(
+                      (feature: string, i: number) => (
+                        <span
+                          key={i}
+                          className="px-3 py-1 bg-blue-50 text-blue-600 text-sm rounded-lg font-medium"
+                        >
+                          {feature}
+                        </span>
+                      ),
+                    )}
+                  </div>
+
+                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <div className="flex items-center gap-4 text-sm text-gray-500">
+                      <span className="flex items-center gap-1">
+                        <Calendar className="w-4 h-4" />
+                        {activeProject.timeline}
+                      </span>
+                      <span className="flex items-center gap-1 font-semibold text-green-600">
+                        <DollarSign className="w-4 h-4" />
+                        {activeProject.value}
+                      </span>
+                    </div>
+
+                    <motion.button
+                      className="px-6 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors font-medium"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      View Details
+                    </motion.button>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Right Panel - Project Stats */}
+          <div className="lg:col-span-3">
+            <ProjectStats activeProject={activeProject} />
+          </div>
+        </motion.div>
+
+        {/* Project Gallery */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          viewport={{ once: true }}
+        >
+          <div className="text-center mb-12">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              Featured Projects
+            </h3>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Explore our portfolio of successful smart construction projects
+              with real-time monitoring and control systems.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {featuredProjects.map((project, index) => (
+              <ProjectDisplayCard
                 key={project.id}
                 project={project}
-                index={index}
-                viewMode={viewMode}
+                isActive={activeProject.id === project.id}
+                onActivate={() => setActiveProject(project)}
               />
             ))}
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Empty State */}
-        {filteredProjects.length === 0 && (
-          <motion.div
-            className="text-center py-16"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-          >
-            <Building2 className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">
-              No projects found
-            </h3>
-            <p className="text-gray-600">
-              Try adjusting your search or filter criteria
-            </p>
-          </motion.div>
-        )}
+          </div>
+        </motion.div>
 
         {/* CTA Section */}
         <motion.div
@@ -656,21 +782,29 @@ export default function PremiumProjects() {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <h3 className="text-2xl font-bold text-gray-800 mb-4">
-            Ready to Start Your Project?
+          <h3 className="text-2xl font-bold text-gray-900 mb-4">
+            Experience Smart Construction Management
           </h3>
           <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-            Let's discuss how we can bring your vision to life with our
-            expertise in construction and innovative solutions.
+            Join the future of construction with our intelligent project
+            management system and real-time monitoring capabilities.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="btn-primary-premium">
-              <span>Start Your Project</span>
-              <ArrowRight className="btn-icon" />
-            </button>
-            <button className="btn-secondary-premium">
-              <span>View All Projects</span>
-            </button>
+            <motion.button
+              className="px-8 py-4 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors font-semibold flex items-center gap-2 justify-center"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span>Start Smart Project</span>
+              <ArrowRight className="w-5 h-5" />
+            </motion.button>
+            <motion.button
+              className="px-8 py-4 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors font-semibold"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              View All Projects
+            </motion.button>
           </div>
         </motion.div>
       </div>
