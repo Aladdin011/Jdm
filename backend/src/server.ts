@@ -115,15 +115,20 @@ app.use(
 // Start server with database connection
 const startServer = async () => {
   try {
-    // Connect to Hostinger MySQL database
+    // Attempt to connect to Hostinger MySQL database
+    // This will not fail the server startup if database is unavailable
     await connectDatabase();
 
-    // Start Express server
+    // Start Express server regardless of database connection status
     app.listen(PORT, () => {
       console.log(`🚀 JD Marc API Server running on port ${PORT}`);
       console.log(`📊 Environment: ${process.env.NODE_ENV || "development"}`);
       console.log(`🌐 API URL: ${process.env.NODE_ENV === 'production' ? 'https://jdmarc-backend-api.onrender.com' : `http://localhost:${PORT}`}`);
       console.log('🎯 Ready to handle requests');
+
+      if (!process.env.DB_HOST || !process.env.DB_USER || !process.env.DB_PASSWORD) {
+        console.log('\n⚠️  Database not configured. Run: npm run verify-credentials');
+      }
     });
   } catch (error) {
     console.error('❌ Failed to start server:', error);
