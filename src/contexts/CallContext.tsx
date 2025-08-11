@@ -33,9 +33,15 @@ interface CallState {
   } | null;
 }
 
+interface CallOptions {
+  title: string;
+  participants: string[];
+}
+
 interface CallContextType {
   callState: CallState;
-  startCall: (department: string) => void;
+  isInCall: boolean;
+  startCall: (callId: string, options?: CallOptions) => void;
   joinCall: (callId: string) => void;
   endCall: () => void;
   acceptIncomingCall: () => void;
