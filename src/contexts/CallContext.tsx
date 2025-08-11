@@ -228,6 +228,7 @@ export const CallProvider: React.FC<CallProviderProps> = ({ children }) => {
 
   const value: CallContextType = {
     callState,
+    isInCall: callState.isInCall,
     startCall,
     joinCall,
     endCall,
