@@ -32,7 +32,7 @@ router.post("/broadcast", (req, res) => {
       console.log(`📡 Broadcasted ${event} to all clients`);
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: `Event '${event}' broadcasted successfully`,
       room: room || 'all clients',
@@ -66,7 +66,7 @@ router.get("/stats", (req, res) => {
       timestamp: new Date().toISOString()
     };
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       stats,
       message: "Socket.IO statistics retrieved successfully"
@@ -105,7 +105,7 @@ router.post("/notify/:room", (req, res) => {
     io.to(room).emit('notification', notification);
     console.log(`🔔 Notification sent to room: ${room}`);
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: `Notification sent to room '${room}'`,
       notification,
