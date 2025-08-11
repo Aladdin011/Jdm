@@ -41,7 +41,7 @@ router.post("/broadcast", (req, res) => {
 
   } catch (error) {
     console.error("Socket.IO broadcast error:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: "Failed to broadcast event"
     });
@@ -74,7 +74,7 @@ router.get("/stats", (req, res) => {
 
   } catch (error) {
     console.error("Socket.IO stats error:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: "Failed to retrieve Socket.IO statistics"
     });
@@ -114,7 +114,7 @@ router.post("/notify/:room", (req, res) => {
 
   } catch (error) {
     console.error("Socket.IO notification error:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: "Failed to send notification"
     });
