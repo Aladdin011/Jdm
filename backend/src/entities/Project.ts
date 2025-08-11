@@ -3,16 +3,16 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 @Entity('projects')
 export class Project {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({ type: 'varchar', length: 200 })
-  title: string;
+  title!: string;
 
   @Column({ type: 'text' })
-  description: string;
+  description!: string;
 
   @Column({ type: 'varchar', length: 100 })
-  category: string;
+  category!: string;
 
   @Column({ type: 'varchar', length: 200, nullable: true })
   location?: string;
@@ -21,7 +21,7 @@ export class Project {
   images?: string[];
 
   @Column({ type: 'enum', enum: ['planning', 'ongoing', 'completed', 'paused'], default: 'planning' })
-  status: string;
+  status!: string;
 
   @Column({ type: 'date', nullable: true })
   startDate?: Date;
@@ -39,11 +39,11 @@ export class Project {
   tags?: string;
 
   @Column({ type: 'boolean', default: true })
-  isPublic: boolean;
+  isPublic!: boolean;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 }

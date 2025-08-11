@@ -3,16 +3,16 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 @Entity('contact_submissions')
 export class Contact {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({ type: 'varchar', length: 100 })
-  firstName: string;
+  firstName!: string;
 
   @Column({ type: 'varchar', length: 100 })
-  lastName: string;
+  lastName!: string;
 
   @Column({ type: 'varchar', length: 255 })
-  email: string;
+  email!: string;
 
   @Column({ type: 'varchar', length: 20, nullable: true })
   phone?: string;
@@ -21,17 +21,17 @@ export class Contact {
   company?: string;
 
   @Column({ type: 'text' })
-  message: string;
+  message!: string;
 
   @Column({ type: 'varchar', length: 100, nullable: true })
   subject?: string;
 
   @Column({ type: 'enum', enum: ['pending', 'reviewed', 'responded'], default: 'pending' })
-  status: string;
+  status!: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 }

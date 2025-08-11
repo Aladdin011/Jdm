@@ -3,16 +3,16 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({ type: 'varchar', length: 100 })
-  firstName: string;
+  firstName!: string;
 
   @Column({ type: 'varchar', length: 100 })
-  lastName: string;
+  lastName!: string;
 
   @Column({ type: 'varchar', length: 255, unique: true })
-  email: string;
+  email!: string;
 
   @Column({ type: 'varchar', length: 20, nullable: true })
   phone?: string;
@@ -24,20 +24,20 @@ export class User {
   company?: string;
 
   @Column({ type: 'varchar', length: 255 })
-  password: string;
+  password!: string;
 
   @Column({ type: 'enum', enum: ['user', 'admin'], default: 'user' })
-  role: string;
+  role!: string;
 
   @Column({ type: 'boolean', default: true })
-  isActive: boolean;
+  isActive!: boolean;
 
   @Column({ type: 'datetime', nullable: true })
   lastLogin?: Date;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 }
