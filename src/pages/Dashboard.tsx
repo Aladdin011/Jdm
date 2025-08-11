@@ -40,6 +40,7 @@ import { projectAPI, activityAPI } from "@/services/api";
 import useAnalytics from "@/hooks/useAnalytics";
 
 // Import department-specific dashboards
+import AdminDashboard from "@/components/dashboards/AdminDashboard";
 import SecretariatDashboard from "@/components/dashboards/SecretariatDashboard";
 import BusinessDevelopmentDashboard from "@/components/dashboards/BusinessDevelopmentDashboard";
 import BusinessAdministrationDashboard from "@/components/dashboards/BusinessAdministrationDashboard";
