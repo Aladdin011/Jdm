@@ -85,13 +85,15 @@ export default function Dashboard() {
   const getDashboardComponent = () => {
     if (!user) return null;
 
-    // Admin users get secretariat dashboard
-    if (isAdmin || user.department === "secretariat-admin") {
-      return <SecretariatDashboard />;
+    // Admin users get admin dashboard
+    if (isAdmin) {
+      return <AdminDashboard />;
     }
 
     // Route based on department
     switch (user.department) {
+      case "secretariat-admin":
+        return <SecretariatDashboard />;
       case "business-development":
         return <BusinessDevelopmentDashboard />;
       case "business-administration":
