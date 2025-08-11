@@ -12,13 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 import {
   Eye,
@@ -30,20 +23,15 @@ import {
   MapPin,
   CheckCircle,
   AlertCircle,
-  Shield,
   ArrowRight,
   ArrowLeft,
-  Clock,
-  IdCard,
-  FileText,
-  Camera,
-  Send,
   Loader2,
+  Building2,
 } from "lucide-react";
 import PageTransition from "@/components/ui/PageTransition";
 import useAnalytics from "@/hooks/useAnalytics";
 
-type RegistrationStep = 1 | 2 | 3 | 4;
+type RegistrationStep = 1 | 2;
 
 interface FormData {
   firstName: string;
@@ -51,13 +39,9 @@ interface FormData {
   email: string;
   phone: string;
   location: string;
+  company: string;
   password: string;
   confirmPassword: string;
-  idType: string;
-  idNumber: string;
-  dateOfBirth: string;
-  gender: string;
-  otp: string;
 }
 
 export default function Register() {
@@ -70,20 +54,13 @@ export default function Register() {
     email: "",
     phone: "",
     location: "",
+    company: "",
     password: "",
     confirmPassword: "",
-    idType: "",
-    idNumber: "",
-    dateOfBirth: "",
-    gender: "",
-    otp: "",
   });
   const [passwordMatch, setPasswordMatch] = useState<boolean | null>(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [otpSent, setOtpSent] = useState(false);
-  const [otpTimer, setOtpTimer] = useState(0);
-  const [isVerifying, setIsVerifying] = useState(false);
 
   const { register, isLoading, isAuthenticated } = useAuth();
   const { trackBusinessEvent } = useAnalytics();
@@ -95,17 +72,6 @@ export default function Register() {
       navigate("/dashboard", { replace: true });
     }
   }, [isAuthenticated, navigate]);
-
-  // OTP Timer effect
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (otpTimer > 0) {
-      interval = setInterval(() => {
-        setOtpTimer((prev) => prev - 1);
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [otpTimer]);
 
   const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -160,33 +126,6 @@ export default function Register() {
         }
         return true;
 
-      case 3:
-        if (
-          !formData.idType ||
-          !formData.idNumber ||
-          !formData.dateOfBirth ||
-          !formData.gender
-        ) {
-          setError("Please complete your KYC information");
-          return false;
-        }
-        if (formData.idNumber.length < 5) {
-          setError("Please enter a valid ID number");
-          return false;
-        }
-        return true;
-
-      case 4:
-        if (!formData.otp) {
-          setError("Please enter the OTP sent to your email");
-          return false;
-        }
-        if (formData.otp.length !== 6) {
-          setError("OTP must be 6 digits");
-          return false;
-        }
-        return true;
-
       default:
         return false;
     }
@@ -194,10 +133,7 @@ export default function Register() {
 
   const nextStep = () => {
     if (validateStep(currentStep)) {
-      if (currentStep === 3) {
-        sendOTP();
-      }
-      setCurrentStep((prev) => Math.min(prev + 1, 4) as RegistrationStep);
+      setCurrentStep((prev) => Math.min(prev + 1, 2) as RegistrationStep);
     }
   };
 
@@ -206,47 +142,19 @@ export default function Register() {
     setError("");
   };
 
-  const sendOTP = async () => {
-    try {
-      // Simulate API call to send OTP
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setOtpSent(true);
-      setOtpTimer(300); // 5 minutes
-      setSuccess("OTP sent to your email address");
-    } catch (error) {
-      setError("Failed to send OTP. Please try again.");
-    }
-  };
-
-  const resendOTP = async () => {
-    if (otpTimer > 0) return;
-    await sendOTP();
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateStep(4)) return;
-
-    setIsVerifying(true);
+    if (!validateStep(2)) return;
 
     try {
-      // Simulate OTP verification
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      if (formData.otp !== "123456") {
-        // Mock OTP for demo
-        setError("Invalid OTP. Please check your email and try again.");
-        setIsVerifying(false);
-        return;
-      }
-
       const result = await register({
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
         phone: formData.phone,
         location: formData.location,
+        company: formData.company,
         password: formData.password,
         confirmPassword: formData.confirmPassword,
       });
@@ -261,20 +169,16 @@ export default function Register() {
         setError(result.error || "Registration failed");
       }
     } catch (error) {
-      setError("Verification failed. Please try again.");
-    } finally {
-      setIsVerifying(false);
+      setError("Registration failed. Please try again.");
     }
   };
 
   const stepTitles = {
     1: "Personal Information",
-    2: "Security Setup",
-    3: "Identity Verification",
-    4: "Email Verification",
+    2: "Account Setup",
   };
 
-  const progress = (currentStep / 4) * 100;
+  const progress = (currentStep / 2) * 100;
 
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
@@ -315,7 +219,7 @@ export default function Register() {
                   Join JD Marc Limited
                 </CardTitle>
                 <CardDescription className="text-arch-light-blue">
-                  Secure registration with identity verification
+                  Create your account to access our platform
                 </CardDescription>
               </motion.div>
             </CardHeader>
@@ -325,7 +229,7 @@ export default function Register() {
               <div className="mb-8">
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-sm font-medium text-arch-charcoal">
-                    Step {currentStep} of 4: {stepTitles[currentStep]}
+                    Step {currentStep} of 2: {stepTitles[currentStep]}
                   </span>
                   <span className="text-sm text-arch-blue-gray">
                     {Math.round(progress)}% Complete
@@ -335,7 +239,7 @@ export default function Register() {
                 {/* Step Indicators */}
                 <div className="flex justify-center mb-4">
                   <div className="flex items-center space-x-2">
-                    {[1, 2, 3, 4].map((step) => (
+                    {[1, 2].map((step) => (
                       <div key={step} className="flex items-center">
                         <div
                           className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300 ${
@@ -352,7 +256,7 @@ export default function Register() {
                             step
                           )}
                         </div>
-                        {step < 4 && (
+                        {step < 2 && (
                           <div
                             className={`w-12 h-0.5 transition-all duration-300 ${
                               step < currentStep
@@ -505,10 +409,31 @@ export default function Register() {
                           />
                         </div>
                       </div>
+
+                      <div className="space-y-2">
+                        <Label
+                          htmlFor="company"
+                          className="text-arch-charcoal font-medium"
+                        >
+                          Company/Organization (Optional)
+                        </Label>
+                        <div className="relative">
+                          <Building2 className="absolute left-3 top-3 h-5 w-5 text-arch-blue-gray" />
+                          <Input
+                            id="company"
+                            placeholder="Enter your company name"
+                            className="pl-11 h-12 border-arch-light-blue/50 focus:border-arch-orange focus:ring-arch-orange/20"
+                            value={formData.company}
+                            onChange={(e) =>
+                              handleInputChange("company", e.target.value)
+                            }
+                          />
+                        </div>
+                      </div>
                     </motion.div>
                   )}
 
-                  {/* Step 2: Security Setup */}
+                  {/* Step 2: Account Setup */}
                   {currentStep === 2 && (
                     <motion.div key="step2" {...fadeInUp} className="space-y-6">
                       <div className="text-center mb-6">
@@ -516,10 +441,10 @@ export default function Register() {
                           <Lock className="h-8 w-8 text-arch-orange" />
                         </div>
                         <h3 className="text-xl font-semibold text-arch-charcoal">
-                          Security Setup
+                          Account Setup
                         </h3>
                         <p className="text-arch-blue-gray text-sm mt-1">
-                          Secure your account with a strong password
+                          Complete your account details
                         </p>
                       </div>
 
@@ -671,230 +596,6 @@ export default function Register() {
                       </div>
                     </motion.div>
                   )}
-
-                  {/* Step 3: KYC Information */}
-                  {currentStep === 3 && (
-                    <motion.div key="step3" {...fadeInUp} className="space-y-6">
-                      <div className="text-center mb-6">
-                        <div className="w-16 h-16 bg-arch-orange/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                          <Shield className="h-8 w-8 text-arch-orange" />
-                        </div>
-                        <h3 className="text-xl font-semibold text-arch-charcoal">
-                          Identity Verification
-                        </h3>
-                        <p className="text-arch-blue-gray text-sm mt-1">
-                          Help us verify your identity for security
-                        </p>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label
-                            htmlFor="idType"
-                            className="text-arch-charcoal font-medium"
-                          >
-                            ID Type *
-                          </Label>
-                          <Select
-                            value={formData.idType}
-                            onValueChange={(value) =>
-                              handleInputChange("idType", value)
-                            }
-                          >
-                            <SelectTrigger className="h-12 border-arch-light-blue/50 focus:border-arch-orange">
-                              <SelectValue placeholder="Select ID type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="nin">
-                                National Identity Number (NIN)
-                              </SelectItem>
-                              <SelectItem value="bvn">
-                                Bank Verification Number (BVN)
-                              </SelectItem>
-                              <SelectItem value="passport">
-                                International Passport
-                              </SelectItem>
-                              <SelectItem value="drivers">
-                                Driver's License
-                              </SelectItem>
-                              <SelectItem value="voters">
-                                Voter's Card
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label
-                            htmlFor="idNumber"
-                            className="text-arch-charcoal font-medium"
-                          >
-                            ID Number *
-                          </Label>
-                          <div className="relative">
-                            <IdCard className="absolute left-3 top-3 h-5 w-5 text-arch-blue-gray" />
-                            <Input
-                              id="idNumber"
-                              placeholder="Enter your ID number"
-                              className="pl-11 h-12 border-arch-light-blue/50 focus:border-arch-orange focus:ring-arch-orange/20"
-                              value={formData.idNumber}
-                              onChange={(e) =>
-                                handleInputChange("idNumber", e.target.value)
-                              }
-                              required
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label
-                            htmlFor="dateOfBirth"
-                            className="text-arch-charcoal font-medium"
-                          >
-                            Date of Birth *
-                          </Label>
-                          <Input
-                            id="dateOfBirth"
-                            type="date"
-                            className="h-12 border-arch-light-blue/50 focus:border-arch-orange focus:ring-arch-orange/20"
-                            value={formData.dateOfBirth}
-                            onChange={(e) =>
-                              handleInputChange("dateOfBirth", e.target.value)
-                            }
-                            required
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label
-                            htmlFor="gender"
-                            className="text-arch-charcoal font-medium"
-                          >
-                            Gender *
-                          </Label>
-                          <Select
-                            value={formData.gender}
-                            onValueChange={(value) =>
-                              handleInputChange("gender", value)
-                            }
-                          >
-                            <SelectTrigger className="h-12 border-arch-light-blue/50 focus:border-arch-orange">
-                              <SelectValue placeholder="Select gender" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="male">Male</SelectItem>
-                              <SelectItem value="female">Female</SelectItem>
-                              <SelectItem value="other">Other</SelectItem>
-                              <SelectItem value="prefer-not-to-say">
-                                Prefer not to say
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <div className="flex items-start gap-3">
-                          <Shield className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                          <div>
-                            <h4 className="font-medium text-blue-900 mb-1">
-                              Why we need this information
-                            </h4>
-                            <p className="text-sm text-blue-700">
-                              We use your identity information to comply with
-                              security regulations and ensure the safety of our
-                              platform. Your data is encrypted and stored
-                              securely.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {/* Step 4: OTP Verification */}
-                  {currentStep === 4 && (
-                    <motion.div key="step4" {...fadeInUp} className="space-y-6">
-                      <div className="text-center mb-6">
-                        <div className="w-16 h-16 bg-arch-orange/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                          <Mail className="h-8 w-8 text-arch-orange" />
-                        </div>
-                        <h3 className="text-xl font-semibold text-arch-charcoal">
-                          Email Verification
-                        </h3>
-                        <p className="text-arch-blue-gray text-sm mt-1">
-                          We've sent a verification code to{" "}
-                          <strong>{formData.email}</strong>
-                        </p>
-                      </div>
-
-                      <div className="space-y-4">
-                        <div className="space-y-2">
-                          <Label
-                            htmlFor="otp"
-                            className="text-arch-charcoal font-medium"
-                          >
-                            Verification Code *
-                          </Label>
-                          <div className="relative">
-                            <Input
-                              id="otp"
-                              placeholder="Enter 6-digit code"
-                              className="h-12 text-center text-2xl tracking-widest border-arch-light-blue/50 focus:border-arch-orange focus:ring-arch-orange/20"
-                              value={formData.otp}
-                              onChange={(e) => {
-                                const value = e.target.value
-                                  .replace(/\D/g, "")
-                                  .slice(0, 6);
-                                handleInputChange("otp", value);
-                              }}
-                              maxLength={6}
-                              required
-                            />
-                          </div>
-                        </div>
-
-                        {otpTimer > 0 ? (
-                          <div className="text-center">
-                            <div className="flex items-center justify-center gap-2 text-arch-blue-gray">
-                              <Clock className="h-4 w-4" />
-                              <span className="text-sm">
-                                Resend code in {Math.floor(otpTimer / 60)}:
-                                {(otpTimer % 60).toString().padStart(2, "0")}
-                              </span>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="text-center">
-                            <button
-                              type="button"
-                              onClick={resendOTP}
-                              className="text-arch-orange hover:text-arch-rust font-medium text-sm transition-colors"
-                            >
-                              Didn't receive the code? Resend OTP
-                            </button>
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                        <div className="flex items-start gap-3">
-                          <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                          <div>
-                            <h4 className="font-medium text-yellow-900 mb-1">
-                              Demo Mode
-                            </h4>
-                            <p className="text-sm text-yellow-700">
-                              For demonstration purposes, use{" "}
-                              <strong>123456</strong> as the verification code.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
                 </AnimatePresence>
 
                 {/* Navigation Buttons */}
@@ -910,7 +611,7 @@ export default function Register() {
                     Previous
                   </Button>
 
-                  {currentStep < 4 ? (
+                  {currentStep < 2 ? (
                     <Button
                       type="button"
                       onClick={nextStep}
@@ -922,13 +623,13 @@ export default function Register() {
                   ) : (
                     <Button
                       type="submit"
-                      disabled={isLoading || isVerifying}
-                      className="flex items-center gap-2 bg-arch-orange hover:bg-arch-rust text-white min-w-[120px]"
+                      disabled={isLoading}
+                      className="flex items-center gap-2 bg-arch-orange hover:bg-arch-rust text-white min-w-[140px]"
                     >
-                      {isVerifying ? (
+                      {isLoading ? (
                         <>
                           <Loader2 className="h-4 w-4 animate-spin" />
-                          Verifying...
+                          Creating Account...
                         </>
                       ) : (
                         <>
