@@ -1,298 +1,220 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
-// Development test accounts
-const testAccounts = [
-  {
-    email: "admin@jdmarc.ng",
-    password: "admin123",
-    firstName: "Admin",
-    lastName: "User",
-    role: "admin" as const,
-    phone: "+234 808 000 0001",
-    location: "Lagos, Nigeria",
-    department: "Administration",
-  },
-  {
-    email: "user@jdmarc.ng",
-    password: "user123",
-    firstName: "Test",
-    lastName: "User",
-    role: "user" as const,
-    phone: "+234 808 000 0002",
-    location: "Abuja, Nigeria",
-    department: "General",
-  },
-];
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { apiCall } from "@/services/api";
 
-const getTestAccountByEmail = (email: string) => {
-  return testAccounts.find((account) => account.email === email);
-};
-
+// User interface
 interface User {
   id: string;
   email: string;
   firstName: string;
   lastName: string;
-  role: "user" | "admin";
+  role: "admin" | "user";
   company?: string;
   phone?: string;
   location?: string;
-  department?: string;
-  isActive: boolean;
-  lastLogin?: string;
-  createdAt: string;
-  updatedAt: string;
+  avatar?: string;
+  isVerified?: boolean;
+  lastLoginAt?: string;
+  createdAt?: string;
 }
 
+// Auth context interface
 interface AuthContextType {
   user: User | null;
-  token: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
   login: (
-    email: string,
-    password: string,
+    credentials: LoginCredentials,
   ) => Promise<{ success: boolean; error?: string; user?: User }>;
   register: (
     userData: RegisterData,
   ) => Promise<{ success: boolean; error?: string; user?: User }>;
-  logout: () => void;
-  updateUser: (
-    userData: Partial<User>,
+  forgotPassword: (
+    email: string,
   ) => Promise<{ success: boolean; error?: string }>;
-  isLoading: boolean;
-  isAuthenticated: boolean;
-  isAdmin: boolean;
-  refreshToken: () => Promise<boolean>;
+  resetPassword: (
+    email: string,
+    code: string,
+    newPassword: string,
+  ) => Promise<{ success: boolean; error?: string }>;
+  logout: () => void;
+  updateUser: (userData: Partial<User>) => Promise<void>;
+  refreshUser: () => Promise<void>;
 }
 
+// Login credentials interface
+interface LoginCredentials {
+  email: string;
+  password: string;
+  rememberMe?: boolean;
+}
+
+// Registration data interface
 interface RegisterData {
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
+  location: string;
   company?: string;
-  location?: string;
   password: string;
   confirmPassword: string;
 }
 
-interface ApiResponse<T = any> {
-  success: boolean;
-  data?: T;
-  message?: string;
-  error?: string;
-}
-
+// Create context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
+// Development mode flag
+const isDevelopmentMode = import.meta.env.MODE === "development";
 
-// API Configuration
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+// Mock users for development
+const mockUsers: User[] = [
+  {
+    id: "1",
+    email: "admin@jdmarcng.com",
+    firstName: "Admin",
+    lastName: "User",
+    role: "admin",
+    company: "JD Marc Limited",
+    phone: "+234 123 456 7890",
+    location: "Abuja, Nigeria",
+    isVerified: true,
+    lastLoginAt: new Date().toISOString(),
+    createdAt: "2023-01-01T00:00:00.000Z",
+  },
+  {
+    id: "2",
+    email: "user@example.com",
+    firstName: "John",
+    lastName: "Doe",
+    role: "user",
+    company: "Example Corp",
+    phone: "+234 987 654 3210",
+    location: "Lagos, Nigeria",
+    isVerified: true,
+    lastLoginAt: new Date().toISOString(),
+    createdAt: "2023-01-15T00:00:00.000Z",
+  },
+];
 
-// API Helper Functions
-const apiCall = async <T = any,>(
-  endpoint: string,
-  options: RequestInit = {},
-): Promise<ApiResponse<T>> => {
-  try {
-    const token = localStorage.getItem("jdmarc_token");
+// Storage keys
+const USER_STORAGE_KEY = "jdmarc_user";
+const TOKEN_STORAGE_KEY = "jdmarc_token";
 
-    // Prepare headers
-    const headers: Record<string, string> = {
-      "Content-Type": "application/json",
-      ...(token && { Authorization: `Bearer ${token}` }),
-      ...(options.headers as Record<string, string>),
-    };
-
-    // Prepare the fetch options
-    const fetchOptions: RequestInit = {
-      ...options,
-      headers,
-    };
-
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, fetchOptions);
-
-    // Read the response text once
-    let responseText: string;
-    try {
-      responseText = await response.text();
-    } catch (error) {
-      throw new Error("Failed to read response from server");
-    }
-
-    // Parse JSON if possible
-    let data: any;
-    try {
-      data = responseText ? JSON.parse(responseText) : {};
-    } catch (error) {
-      // If JSON parsing fails, treat as plain text response
-      data = { message: responseText };
-    }
-
-    // Check if response is ok after reading the body
-    if (!response.ok) {
-      const errorMessage =
-        data.message ||
-        data.error ||
-        responseText ||
-        `HTTP ${response.status}: ${response.statusText}`;
-      return {
-        success: false,
-        error: errorMessage,
-      };
-    }
-
-    return {
-      success: true,
-      data: data.data || data,
-      message: data.message,
-    };
-  } catch (error) {
-    console.error("API Error:", error);
-
-    // Handle specific network errors
-    if (error instanceof TypeError && error.message.includes("fetch")) {
-      return {
-        success: false,
-        error:
-          "Cannot connect to the backend server. Please ensure the server is running on port 5000.",
-      };
-    }
-
-    return {
-      success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "Network error. Please check your connection and try again.",
-    };
-  }
-};
-
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+// Auth Provider Component
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Initialize auth state from localStorage
   useEffect(() => {
-    const initializeAuth = async () => {
-      const storedToken = localStorage.getItem("jdmarc_token");
-      const storedUser = localStorage.getItem("jdmarc_user");
+    const initializeAuth = () => {
+      try {
+        const storedUser = localStorage.getItem(USER_STORAGE_KEY);
+        const storedToken = localStorage.getItem(TOKEN_STORAGE_KEY);
 
-      if (storedToken && storedUser) {
-        try {
+        if (storedUser && storedToken) {
           const parsedUser = JSON.parse(storedUser);
-          setToken(storedToken);
           setUser(parsedUser);
-        } catch (error) {
-          console.error("Error parsing stored user data:", error);
-          localStorage.removeItem("jdmarc_token");
-          localStorage.removeItem("jdmarc_user");
+          console.log("🔐 User session restored:", parsedUser.email);
         }
+      } catch (error) {
+        console.error("Failed to initialize auth:", error);
+        // Clear invalid stored data
+        localStorage.removeItem(USER_STORAGE_KEY);
+        localStorage.removeItem(TOKEN_STORAGE_KEY);
       }
-      setIsLoading(false);
     };
 
     initializeAuth();
   }, []);
 
+  // Store user data securely
+  const storeUserData = (userData: User, token: string) => {
+    try {
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
+      localStorage.setItem(TOKEN_STORAGE_KEY, token);
+      setUser(userData);
+    } catch (error) {
+      console.error("Failed to store user data:", error);
+    }
+  };
+
+  // Clear user data
+  const clearUserData = () => {
+    localStorage.removeItem(USER_STORAGE_KEY);
+    localStorage.removeItem(TOKEN_STORAGE_KEY);
+    setUser(null);
+  };
+
+  // Login function
   const login = async (
-    email: string,
-    password: string,
+    credentials: LoginCredentials,
   ): Promise<{ success: boolean; error?: string; user?: User }> => {
     setIsLoading(true);
+    setUser(null);
 
     try {
-      // Try API call first
-      const response = await apiCall<{ user: User; token: string }>(
-        "/auth/login",
-        {
-          method: "POST",
-          body: JSON.stringify({ email, password }),
-        },
-      );
+      // Try real API first
+      try {
+        const response = await apiCall<{ user: User; token: string }>(
+          "/auth/login",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              email: credentials.email,
+              password: credentials.password,
+              rememberMe: credentials.rememberMe,
+            }),
+          },
+        );
 
-      if (response.success && response.data) {
-        const { user: loginUser, token: loginToken } = response.data;
+        const { user: userData, token } = response;
 
-        setUser(loginUser);
-        setToken(loginToken);
-
-        localStorage.setItem("jdmarc_token", loginToken);
-        localStorage.setItem("jdmarc_user", JSON.stringify(loginUser));
-
+        storeUserData(userData, token);
         setIsLoading(false);
-        return { success: true, user: loginUser };
-      } else {
-        // API failed, use development mode
-        console.warn("Backend unavailable, using development mode for login");
 
-        // Test accounts authentication for development
+        return {
+          success: true,
+          user: userData,
+        };
+      } catch (apiError) {
+        console.warn(
+          "Backend unavailable, using development mode for login",
+        );
+
+        // Mock authentication for development when backend is unavailable
         await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API delay
 
-        // Check against test accounts
-        const testAccount = getTestAccountByEmail(email);
+        const mockUser = mockUsers.find(
+          (u) => u.email === credentials.email,
+        );
 
-        if (testAccount && testAccount.password === password) {
-          const authenticatedUser: User = {
-            id: Date.now().toString(),
-            email: testAccount.email,
-            firstName: testAccount.firstName,
-            lastName: testAccount.lastName,
-            role: testAccount.role,
-            company: "JD Marc Limited",
-            phone: testAccount.phone,
-            location: testAccount.location,
-            department: testAccount.department,
-            isActive: true,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
+        if (mockUser && credentials.password === "password123") {
+          const updatedUser = {
+            ...mockUser,
+            lastLoginAt: new Date().toISOString(),
           };
 
-          const authToken =
-            "test_token_" + testAccount.email.split("@")[0] + "_" + Date.now();
-
-          setUser(authenticatedUser);
-          setToken(authToken);
-
-          localStorage.setItem("jdmarc_token", authToken);
-          localStorage.setItem(
-            "jdmarc_user",
-            JSON.stringify(authenticatedUser),
-          );
-
+          const mockToken = `mock_token_${Date.now()}`;
+          storeUserData(updatedUser, mockToken);
           setIsLoading(false);
-          return { success: true, user: authenticatedUser };
-        } else {
-          setIsLoading(false);
+
           return {
-            success: false,
-            error: testAccount
-              ? "Invalid password. Please check your credentials and try again."
-              : "Account not found. Please check your email or contact support.",
+            success: true,
+            user: updatedUser,
           };
         }
+
+        setIsLoading(false);
+        return {
+          success: false,
+          error: "Invalid email or password",
+        };
       }
     } catch (error) {
       console.error("Login error:", error);
       setIsLoading(false);
+
       return {
         success: false,
         error: "Login failed. Please check your connection and try again.",
@@ -300,6 +222,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  // Register function
   const register = async (
     userData: RegisterData,
   ): Promise<{ success: boolean; error?: string; user?: User }> => {
@@ -316,27 +239,32 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
 
       // Try real API for registration first
-      const response = await apiCall<{ user: User; token: string }>(
-        "/auth/register",
-        {
-          method: "POST",
-          body: JSON.stringify(userData),
-        },
-      );
+      try {
+        const response = await apiCall<{ user: User; token: string }>(
+          "/auth/register",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              firstName: userData.firstName,
+              lastName: userData.lastName,
+              email: userData.email,
+              phone: userData.phone,
+              location: userData.location,
+              company: userData.company,
+              password: userData.password,
+            }),
+          },
+        );
 
-      if (response.success && response.data) {
-        const { user: newUser, token: newToken } = response.data;
-
-        setUser(newUser);
-        setToken(newToken);
-
-        localStorage.setItem("jdmarc_token", newToken);
-        localStorage.setItem("jdmarc_user", JSON.stringify(newUser));
-
+        const { user: newUser, token } = response;
+        storeUserData(newUser, token);
         setIsLoading(false);
-        return { success: true, user: newUser };
-      } else {
-        // API failed, use development mode
+
+        return {
+          success: true,
+          user: newUser,
+        };
+      } catch (apiError) {
         console.warn(
           "Backend unavailable, using development mode for registration",
         );
@@ -344,8 +272,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         // Mock registration for development when backend is unavailable
         await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate API delay
 
-        const mockUser: User = {
-          id: Date.now().toString(),
+        // Check if email already exists in mock users
+        const existingUser = mockUsers.find(
+          (u) => u.email === userData.email,
+        );
+
+        if (existingUser) {
+          setIsLoading(false);
+          return {
+            success: false,
+            error: "An account with this email already exists",
+          };
+        }
+
+        const newUser: User = {
+          id: `mock_${Date.now()}`,
           email: userData.email,
           firstName: userData.firstName,
           lastName: userData.lastName,
@@ -353,26 +294,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           company: userData.company,
           phone: userData.phone,
           location: userData.location,
-          department: undefined, // No department assigned initially
-          isActive: true,
+          isVerified: true, // Auto-verify in development
+          lastLoginAt: new Date().toISOString(),
           createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
         };
 
-        const mockToken = "dev_token_" + Date.now();
-
-        setUser(mockUser);
-        setToken(mockToken);
-
-        localStorage.setItem("jdmarc_token", mockToken);
-        localStorage.setItem("jdmarc_user", JSON.stringify(mockUser));
-
+        const mockToken = `mock_token_${Date.now()}`;
+        storeUserData(newUser, mockToken);
         setIsLoading(false);
-        return { success: true, user: mockUser };
+
+        return {
+          success: true,
+          user: newUser,
+        };
       }
     } catch (error) {
       console.error("Registration error:", error);
       setIsLoading(false);
+
       return {
         success: false,
         error:
@@ -381,103 +320,177 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const updateUser = async (
-    userData: Partial<User>,
+  // Forgot password function
+  const forgotPassword = async (
+    email: string,
   ): Promise<{ success: boolean; error?: string }> => {
-    if (!token) {
-      return { success: false, error: "Not authenticated" };
-    }
+    setIsLoading(true);
 
     try {
-      const response = await apiCall<User>("/auth/profile", {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(userData),
-      });
+      // Try real API first
+      try {
+        await apiCall("/auth/forgot-password", {
+          method: "POST",
+          body: JSON.stringify({ email }),
+        });
 
-      if (response.success && response.data) {
-        const updatedUser = response.data;
-        setUser(updatedUser);
-        localStorage.setItem("jdmarc_user", JSON.stringify(updatedUser));
+        setIsLoading(false);
         return { success: true };
-      } else {
-        return {
-          success: false,
-          error: response.error || "Failed to update profile",
-        };
+      } catch (apiError) {
+        console.warn(
+          "Backend unavailable, using development mode for forgot password",
+        );
+
+        // Mock forgot password for development
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        // Check if email exists in mock users
+        const userExists = mockUsers.find((u) => u.email === email);
+
+        setIsLoading(false);
+        if (userExists || isDevelopmentMode) {
+          return { success: true };
+        } else {
+          return {
+            success: false,
+            error: "No account found with this email address",
+          };
+        }
       }
     } catch (error) {
+      console.error("Forgot password error:", error);
+      setIsLoading(false);
+
       return {
         success: false,
-        error: "Failed to update profile. Please try again.",
+        error: "Failed to send reset email. Please try again.",
       };
     }
   };
 
-  const refreshToken = async (): Promise<boolean> => {
-    if (!token) return false;
+  // Reset password function
+  const resetPassword = async (
+    email: string,
+    code: string,
+    newPassword: string,
+  ): Promise<{ success: boolean; error?: string }> => {
+    setIsLoading(true);
 
     try {
-      const response = await apiCall<{ token: string }>("/auth/refresh", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      // Try real API first
+      try {
+        await apiCall("/auth/reset-password", {
+          method: "POST",
+          body: JSON.stringify({ email, code, newPassword }),
+        });
 
-      if (response.success && response.data) {
-        const newToken = response.data.token;
-        setToken(newToken);
-        localStorage.setItem("jdmarc_token", newToken);
-        return true;
-      }
-
-      return false;
-    } catch (error) {
-      console.error("Token refresh failed:", error);
-      return false;
-    }
-  };
-
-  const logout = () => {
-    // Try to call logout endpoint, but don't wait for it
-    if (token) {
-      apiCall("/auth/logout", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }).catch((error) => {
-        console.log(
-          "Logout API call failed (this is normal in dev mode):",
-          error,
+        setIsLoading(false);
+        return { success: true };
+      } catch (apiError) {
+        console.warn(
+          "Backend unavailable, using development mode for reset password",
         );
-      });
-    }
 
-    setUser(null);
-    setToken(null);
-    localStorage.removeItem("jdmarc_token");
-    localStorage.removeItem("jdmarc_user");
+        // Mock reset password for development
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        // In development mode, accept any 6-digit code
+        if (code.length === 6 || isDevelopmentMode) {
+          setIsLoading(false);
+          return { success: true };
+        } else {
+          setIsLoading(false);
+          return {
+            success: false,
+            error: "Invalid or expired reset code",
+          };
+        }
+      }
+    } catch (error) {
+      console.error("Reset password error:", error);
+      setIsLoading(false);
+
+      return {
+        success: false,
+        error: "Failed to reset password. Please try again.",
+      };
+    }
   };
 
+  // Logout function
+  const logout = () => {
+    try {
+      clearUserData();
+      console.log("🔐 User logged out successfully");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
+
+  // Update user function
+  const updateUser = async (userData: Partial<User>): Promise<void> => {
+    if (!user) return;
+
+    try {
+      // Try real API first
+      const response = await apiCall<{ user: User }>("/auth/profile", {
+        method: "PUT",
+        body: JSON.stringify(userData),
+      });
+
+      const { user: updatedUser } = response;
+      const token = localStorage.getItem(TOKEN_STORAGE_KEY) || "";
+      storeUserData(updatedUser, token);
+    } catch (error) {
+      console.warn("Backend unavailable, updating user locally");
+
+      // Mock update for development
+      const updatedUser = { ...user, ...userData };
+      const token = localStorage.getItem(TOKEN_STORAGE_KEY) || "";
+      storeUserData(updatedUser, token);
+    }
+  };
+
+  // Refresh user data
+  const refreshUser = async (): Promise<void> => {
+    if (!user) return;
+
+    try {
+      // Try real API first
+      const response = await apiCall<{ user: User }>("/auth/profile");
+      const { user: freshUser } = response;
+      const token = localStorage.getItem(TOKEN_STORAGE_KEY) || "";
+      storeUserData(freshUser, token);
+    } catch (error) {
+      console.warn("Backend unavailable, skipping user refresh");
+    }
+  };
+
+  // Context value
   const value: AuthContextType = {
     user,
-    token,
+    isAuthenticated: !!user,
+    isLoading,
     login,
     register,
+    forgotPassword,
+    resetPassword,
     logout,
     updateUser,
-    isLoading,
-    isAuthenticated: !!token && !!user,
-    isAdmin: user?.role === "admin",
-    refreshToken,
+    refreshUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
+}
+
+// Custom hook to use auth context
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+}
 
 // Export types for use in other components
-export type { User, RegisterData };
+export type { User, RegisterData, LoginCredentials };

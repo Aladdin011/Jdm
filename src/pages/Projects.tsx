@@ -28,272 +28,435 @@ import {
   MoreHorizontal,
   Star,
   ArrowUpRight,
+  Home,
+  Shield,
+  Camera,
+  Lock,
+  Activity,
+  Clock,
+  CheckCircle2,
+  User,
+  Zap,
+  Eye,
+  EyeOff,
+  Bell,
+  Wifi,
+  Battery,
+  AlertTriangle,
 } from "lucide-react";
 
-interface ProjectCardProps {
-  project: any;
-  index: number;
-  isActive: boolean;
-  onClick: () => void;
-}
+// Smart Home Security System Data
+const smartHomeData = {
+  main: {
+    title: "Smart Home Security Systems",
+    subtitle: "Advanced home automation and security monitoring",
+    status: "All Systems Active",
+    image: "https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F5fa4b5d3f7804229bfda526299de2f7e?format=webp&width=800",
+  },
+  cameras: [
+    {
+      id: 1,
+      name: "Camera 1",
+      location: "Front Door",
+      status: "active",
+      time: "12 pm - 6 pm",
+      thumbnail: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80",
+      isRecording: true,
+      signal: 95,
+    },
+    {
+      id: 2,
+      name: "Camera 2",
+      location: "Backyard",
+      status: "active",
+      time: "12 pm - 6 pm",
+      thumbnail: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&q=80",
+      isRecording: true,
+      signal: 87,
+    },
+    {
+      id: 3,
+      name: "Camera 3",
+      location: "Living Room",
+      status: "inactive",
+      time: "12 pm - 6 pm",
+      thumbnail: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&q=80",
+      isRecording: false,
+      signal: 92,
+    },
+  ],
+  locks: [
+    {
+      id: 1,
+      name: "Front Door Lock",
+      status: "locked",
+      battery: 60,
+      lastAccess: "2 hours ago",
+      location: "Main Entrance",
+    },
+    {
+      id: 2,
+      name: "Backyard Lock",
+      status: "locked",
+      battery: 45,
+      lastAccess: "5 hours ago", 
+      location: "Garden Gate",
+    },
+  ],
+  members: [
+    { id: 1, name: "John", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80", status: "online" },
+    { id: 2, name: "Sarah", avatar: "https://images.unsplash.com/photo-1494790108755-2616b7c7ad4c?w=100&q=80", status: "away" },
+    { id: 3, name: "Mike", avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&q=80", status: "home" },
+    { id: 4, name: "+3", avatar: "", status: "more" },
+  ],
+  flows: [
+    { id: 1, name: "1 Flow", color: "bg-green-500", active: true },
+    { id: 2, name: "2 Flow", color: "bg-blue-500", active: false },
+    { id: 3, name: "Garage", color: "bg-gray-500", active: false },
+  ],
+  activity: [
+    { time: "07:00", event: "Home - Back Door was Closed", type: "door" },
+    { time: "08:00", event: "Home - Back Door was Opened", type: "door" },
+  ],
+  calendar: {
+    currentDay: 17,
+    days: [11, 12, 13, 14, 15, 16, 17],
+    currentMonth: "Current Month",
+  },
+};
 
-const ProjectCard = ({
-  project,
-  index,
-  isActive,
-  onClick,
-}: ProjectCardProps) => {
-  const [isHovered, setIsHovered] = useState(false);
-
+const CameraCard = ({ camera, isActive, onClick }: any) => {
   return (
     <motion.div
       className={cn(
-        "relative bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden cursor-pointer transition-all duration-500",
-        isActive ? "ring-2 ring-blue-500 shadow-2xl" : "hover:shadow-xl",
+        "flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-300",
+        isActive ? "bg-blue-50 border border-blue-200" : "hover:bg-gray-50"
       )}
-      initial={{ opacity: 0, y: 50, scale: 0.9 }}
-      animate={{
-        opacity: 1,
-        y: 0,
-        scale: isActive ? 1.02 : 1,
-        transition: { duration: 0.6, delay: index * 0.1 },
-      }}
-      whileHover={{
-        y: -8,
-        transition: { duration: 0.3 },
-      }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
-      layout
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
     >
-      {/* Project Image */}
-      <div className="relative h-48 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
-        <motion.img
-          src={project.image}
-          alt={project.title}
+      <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-gray-100">
+        <img
+          src={camera.thumbnail}
+          alt={camera.name}
           className="w-full h-full object-cover"
-          animate={{
-            scale: isHovered ? 1.1 : 1,
-            transition: { duration: 0.6 },
-          }}
         />
-
-        {/* Overlay with controls */}
-        <motion.div
-          className="absolute inset-0 bg-black/40 flex items-center justify-center gap-3"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isHovered ? 1 : 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <motion.button
-            className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Play className="w-5 h-5 ml-0.5" />
-          </motion.button>
-          <motion.button
-            className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Maximize2 className="w-5 h-5" />
-          </motion.button>
-        </motion.div>
-
-        {/* Status indicator */}
-        <div className="absolute top-4 right-4">
-          <div className="flex items-center gap-2 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span className="text-xs font-medium text-gray-700">Active</span>
-          </div>
-        </div>
-
-        {/* Progress indicator */}
-        <div className="absolute bottom-4 left-4 right-4">
-          <div className="flex items-center justify-between text-white text-xs mb-2">
-            <span>Progress</span>
-            <span>100%</span>
-          </div>
-          <div className="w-full bg-white/20 rounded-full h-1.5">
-            <motion.div
-              className="h-1.5 bg-green-400 rounded-full"
-              initial={{ width: "0%" }}
-              animate={{ width: "100%" }}
-              transition={{ duration: 2, delay: 0.5 }}
-            />
-          </div>
+        {camera.isRecording && (
+          <div className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+        )}
+      </div>
+      <div className="flex-1 min-w-0">
+        <h4 className="font-medium text-gray-900 text-sm">{camera.name}</h4>
+        <p className="text-xs text-gray-500">{camera.time}</p>
+      </div>
+      <div className="flex items-center gap-2">
+        <div className={cn(
+          "w-2 h-2 rounded-full",
+          camera.status === "active" ? "bg-green-500" : "bg-gray-300"
+        )} />
+        <div className="flex items-center gap-1">
+          <Wifi className="w-3 h-3 text-gray-400" />
+          <span className="text-xs text-gray-500">{camera.signal}%</span>
         </div>
       </div>
-
-      {/* Project Info */}
-      <div className="p-6 space-y-4">
-        <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-1">
-            {project.title}
-          </h3>
-          <div className="flex items-center gap-4 text-sm text-gray-500">
-            <div className="flex items-center gap-1">
-              <MapPin className="w-4 h-4" />
-              {project.location}
-            </div>
-            <div className="flex items-center gap-1">
-              <Calendar className="w-4 h-4" />
-              {project.year}
-            </div>
-          </div>
-        </div>
-
-        <p className="text-sm text-gray-600 line-clamp-2">
-          {project.description}
-        </p>
-
-        {/* Project stats */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-          <div className="flex items-center gap-1 text-sm font-medium text-gray-700">
-            <DollarSign className="w-4 h-4 text-green-500" />
-            {project.value}
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1">
-              <Star className="w-4 h-4 text-yellow-400 fill-current" />
-              <span className="text-sm font-medium">4.9</span>
-            </div>
-            <motion.button
-              className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <ArrowUpRight className="w-4 h-4" />
-            </motion.button>
-          </div>
-        </div>
-      </div>
-
-      {/* Active project indicator */}
-      {isActive && (
-        <motion.div
-          className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-purple-500"
-          layoutId="activeIndicator"
-          transition={{ duration: 0.3 }}
-        />
-      )}
     </motion.div>
   );
 };
 
-const ProjectControls = ({ activeProject, onProjectChange, projects }: any) => {
+const LockCard = ({ lock }: any) => {
+  return (
+    <motion.div
+      className="p-4 bg-white rounded-xl border border-gray-200 hover:border-gray-300 transition-colors"
+      whileHover={{ scale: 1.02 }}
+    >
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <Lock className="w-5 h-5 text-gray-600" />
+          <span className="font-medium text-gray-900 text-sm">{lock.name}</span>
+        </div>
+        <div className={cn(
+          "w-3 h-3 rounded-full",
+          lock.status === "locked" ? "bg-green-500" : "bg-red-500"
+        )} />
+      </div>
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-xs">
+          <span className="text-gray-500">Battery</span>
+          <span className="font-medium">{lock.battery}%</span>
+        </div>
+        <div className="w-full bg-gray-100 rounded-full h-1.5">
+          <div 
+            className="h-1.5 bg-green-500 rounded-full transition-all duration-500"
+            style={{ width: `${lock.battery}%` }}
+          />
+        </div>
+        <p className="text-xs text-gray-500 mt-2">Last: {lock.lastAccess}</p>
+      </div>
+    </motion.div>
+  );
+};
+
+const MemberAvatar = ({ member, index }: any) => {
+  if (member.status === "more") {
+    return (
+      <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-xs font-medium text-gray-600">
+        +3
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative">
+      <img
+        src={member.avatar}
+        alt={member.name}
+        className="w-8 h-8 rounded-full object-cover"
+      />
+      <div className={cn(
+        "absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white",
+        member.status === "online" ? "bg-green-500" : 
+        member.status === "home" ? "bg-blue-500" : "bg-gray-400"
+      )} />
+    </div>
+  );
+};
+
+const SmartHomeControls = ({ activeCamera, onCameraChange }: any) => {
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">
-          Project Controls
-        </h3>
-        <button className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">
-          <Settings className="w-4 h-4" />
-        </button>
+        <h3 className="text-lg font-semibold text-gray-900">Cameras</h3>
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+          <span className="text-sm text-gray-600">{smartHomeData.cameras.filter(c => c.status === 'active').length}</span>
+        </div>
       </div>
 
-      <div className="space-y-4">
-        {projects.slice(0, 4).map((project: any, index: number) => (
-          <motion.div
-            key={project.id}
-            className={cn(
-              "flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-300",
-              activeProject?.id === project.id
-                ? "bg-blue-50 border border-blue-200"
-                : "hover:bg-gray-50",
-            )}
-            onClick={() => onProjectChange(project)}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <div className="w-12 h-12 rounded-xl overflow-hidden bg-gray-100">
-              <img
-                src={project.image}
-                alt={project.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="flex-1 min-w-0">
-              <h4 className="font-medium text-gray-900 truncate">
-                {project.title}
-              </h4>
-              <p className="text-sm text-gray-500">{project.location}</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <div
-                className={cn(
-                  "w-2 h-2 rounded-full",
-                  activeProject?.id === project.id
-                    ? "bg-green-500"
-                    : "bg-gray-300",
-                )}
-              />
-              {activeProject?.id === project.id && (
-                <motion.div
-                  className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Play className="w-3 h-3 text-white fill-current" />
-                </motion.div>
-              )}
-            </div>
-          </motion.div>
+      <div className="space-y-3 mb-8">
+        {smartHomeData.cameras.map((camera, index) => (
+          <CameraCard
+            key={camera.id}
+            camera={camera}
+            isActive={activeCamera?.id === camera.id}
+            onClick={() => onCameraChange(camera)}
+          />
         ))}
       </div>
 
-      {/* Navigation Controls */}
-      <div className="flex items-center justify-center gap-3 mt-6 pt-6 border-t border-gray-100">
-        <motion.button
-          className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </motion.button>
-        <motion.button
-          className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white hover:bg-blue-600 transition-colors"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <Play className="w-5 h-5 ml-0.5" />
-        </motion.button>
-        <motion.button
-          className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <ChevronRight className="w-5 h-5" />
-        </motion.button>
+      {/* Locks Section */}
+      <div className="border-t border-gray-100 pt-6">
+        <div className="flex items-center justify-between mb-4">
+          <h4 className="font-medium text-gray-900">Locks</h4>
+          <span className="text-sm text-gray-500">2</span>
+        </div>
+        <div className="space-y-3">
+          {smartHomeData.locks.map((lock) => (
+            <LockCard key={lock.id} lock={lock} />
+          ))}
+        </div>
       </div>
     </div>
   );
 };
 
-const ProjectStats = ({ activeProject }: any) => {
+const SmartHomeDisplay = ({ activeCamera }: any) => {
+  const [currentFlow, setCurrentFlow] = useState(0);
+
+  return (
+    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+      {/* Header */}
+      <div className="p-6 border-b border-gray-100">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+              <ChevronLeft className="w-4 h-4" />
+            </div>
+            <div>
+              <h2 className="font-semibold text-gray-900">Home</h2>
+              <p className="text-sm text-gray-500">401 Magnetic Drive Unit 2</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <Wifi className="w-4 h-4 text-gray-400" />
+              <span className="text-sm text-gray-600">Connect 8...</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Bell className="w-4 h-4 text-gray-400" />
+              <Settings className="w-4 h-4 text-gray-400" />
+              <MoreHorizontal className="w-4 h-4 text-gray-400" />
+            </div>
+            <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+              <span className="text-sm font-medium">SW</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="p-6">
+        <div className="grid grid-cols-12 gap-6">
+          {/* Left Section */}
+          <div className="col-span-4 space-y-4">
+            {/* Flow Controls */}
+            <div>
+              <h3 className="font-semibold text-gray-900 mb-4">Home</h3>
+              <div className="flex items-center gap-2 mb-4">
+                {smartHomeData.flows.map((flow, index) => (
+                  <button
+                    key={flow.id}
+                    onClick={() => setCurrentFlow(index)}
+                    className={cn(
+                      "px-4 py-2 rounded-xl text-sm font-medium transition-all",
+                      currentFlow === index 
+                        ? "bg-green-100 text-green-700 border border-green-200"
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    )}
+                  >
+                    {flow.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Backyard Section */}
+            <div className="space-y-3">
+              <h4 className="font-medium text-gray-900">Backyard</h4>
+              <div className="text-sm text-gray-600">Smart Home Security Systems</div>
+              
+              {/* Members */}
+              <div>
+                <div className="text-sm text-gray-600 mb-2">Members</div>
+                <div className="flex items-center gap-2">
+                  {smartHomeData.members.map((member, index) => (
+                    <MemberAvatar key={member.id} member={member} index={index} />
+                  ))}
+                </div>
+              </div>
+
+              {/* Activity */}
+              <div>
+                <div className="text-sm text-gray-600 mb-2">Activity</div>
+                <div className="space-y-2">
+                  {smartHomeData.activity.map((activity, index) => (
+                    <div key={index} className="text-xs text-gray-500">
+                      <span className="font-medium">{activity.time}</span> {activity.event}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Calendar */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-gray-600">Calendar</span>
+                  <span className="text-xs text-gray-500">{smartHomeData.calendar.currentMonth}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  {smartHomeData.calendar.days.map((day) => (
+                    <div
+                      key={day}
+                      className={cn(
+                        "w-6 h-6 rounded text-xs flex items-center justify-center",
+                        day === smartHomeData.calendar.currentDay
+                          ? "bg-blue-500 text-white"
+                          : "text-gray-600"
+                      )}
+                    >
+                      {day}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Center - House Visualization */}
+          <div className="col-span-8">
+            <div className="relative aspect-video bg-gray-50 rounded-xl overflow-hidden">
+              <img
+                src={smartHomeData.main.image}
+                alt="Smart Home"
+                className="w-full h-full object-cover"
+              />
+              
+              {/* Overlay Controls */}
+              <div className="absolute inset-0 bg-black/10">
+                {/* Camera indicators */}
+                <div className="absolute top-4 left-4 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white">
+                  <Camera className="w-6 h-6" />
+                </div>
+                <div className="absolute top-20 right-20 w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white">
+                  <Shield className="w-6 h-6" />
+                </div>
+                <div className="absolute bottom-20 left-20 w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white">
+                  <Lock className="w-6 h-6" />
+                </div>
+
+                {/* Status Panel */}
+                <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-xl p-4">
+                  <div className="text-sm font-medium text-gray-900 mb-2">System Status</div>
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 text-xs">
+                      <div className="w-2 h-2 bg-green-500 rounded-full" />
+                      <span>All systems active</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full" />
+                      <span>3 cameras online</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs">
+                      <div className="w-2 h-2 bg-purple-500 rounded-full" />
+                      <span>2 locks secured</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const SmartHomeStats = ({ activeCamera }: any) => {
   const stats = [
-    { label: "Completion", value: "100%", color: "text-green-500" },
     {
-      label: "Timeline",
-      value: `${activeProject?.duration || "18 months"}`,
-      color: "text-blue-500",
+      label: "Security Level",
+      value: "100%",
+      color: "text-green-500",
+      bgColor: "bg-green-500",
+      icon: Shield,
     },
     {
-      label: "Budget",
-      value: activeProject?.value || "₦5.2B",
+      label: "Camera Status",
+      value: "3/3 Online",
+      color: "text-blue-500", 
+      bgColor: "bg-blue-500",
+      icon: Camera,
+    },
+    {
+      label: "Lock Status",
+      value: "2/2 Secured",
       color: "text-purple-500",
+      bgColor: "bg-purple-500", 
+      icon: Lock,
     },
-    { label: "Rating", value: "4.9★", color: "text-yellow-500" },
+    {
+      label: "System Health",
+      value: "Excellent",
+      color: "text-green-500",
+      bgColor: "bg-green-500",
+      icon: Activity,
+    },
   ];
 
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">Project Stats</h3>
+        <h3 className="text-lg font-semibold text-gray-900">Smart Home Security Systems</h3>
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
           <span className="text-sm text-gray-500">Live</span>
@@ -301,69 +464,64 @@ const ProjectStats = ({ activeProject }: any) => {
       </div>
 
       <div className="space-y-6">
-        {stats.map((stat, index) => (
-          <motion.div
-            key={stat.label}
-            className="space-y-2"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">{stat.label}</span>
-              <span className={cn("font-semibold", stat.color)}>
-                {stat.value}
-              </span>
-            </div>
-            <div className="w-full bg-gray-100 rounded-full h-2">
-              <motion.div
-                className={cn("h-2 rounded-full", {
-                  "bg-green-500": stat.label === "Completion",
-                  "bg-blue-500": stat.label === "Timeline",
-                  "bg-purple-500": stat.label === "Budget",
-                  "bg-yellow-500": stat.label === "Rating",
-                })}
-                initial={{ width: "0%" }}
-                animate={{
-                  width: stat.label === "Completion" ? "100%" : "75%",
-                }}
-                transition={{ duration: 1.5, delay: 0.5 + index * 0.2 }}
-              />
-            </div>
-          </motion.div>
-        ))}
+        {stats.map((stat, index) => {
+          const IconComponent = stat.icon;
+          return (
+            <motion.div
+              key={stat.label}
+              className="space-y-3"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <IconComponent className={cn("w-4 h-4", stat.color)} />
+                  <span className="text-sm text-gray-600">{stat.label}</span>
+                </div>
+                <span className={cn("font-semibold", stat.color)}>
+                  {stat.value}
+                </span>
+              </div>
+              <div className="w-full bg-gray-100 rounded-full h-2">
+                <motion.div
+                  className={cn("h-2 rounded-full", stat.bgColor)}
+                  initial={{ width: "0%" }}
+                  animate={{ width: "95%" }}
+                  transition={{ duration: 1.5, delay: 0.5 + index * 0.2 }}
+                />
+              </div>
+            </motion.div>
+          );
+        })}
       </div>
 
-      {/* Activity Timeline */}
+      {/* Recent Activity */}
       <div className="mt-8 pt-6 border-t border-gray-100">
-        <h4 className="font-medium text-gray-900 mb-4">Recent Activity</h4>
+        <h4 className="font-medium text-gray-900 mb-4 flex items-center gap-2">
+          <Clock className="w-4 h-4 text-blue-500" />
+          Recent Activity
+        </h4>
         <div className="space-y-3">
           {[
-            { time: "07:00", action: "Project Started", status: "completed" },
-            {
-              time: "08:00",
-              action: "Foundation Complete",
-              status: "completed",
-            },
-            { time: "09:30", action: "Structure Phase", status: "active" },
+            { time: "2min ago", action: "Front door unlocked", type: "unlock" },
+            { time: "1hr ago", action: "Motion detected backyard", type: "motion" },
+            { time: "3hr ago", action: "Security system armed", type: "system" },
           ].map((activity, index) => (
             <motion.div
               key={index}
               className="flex items-center gap-3"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, delay: 0.5 + index * 0.1 }}
             >
-              <div className="text-sm text-gray-500">{activity.time}</div>
-              <div
-                className={cn(
-                  "w-2 h-2 rounded-full",
-                  activity.status === "completed"
-                    ? "bg-green-500"
-                    : "bg-blue-500",
-                )}
-              />
-              <div className="text-sm text-gray-700">{activity.action}</div>
+              <div className="text-xs text-gray-500 w-16">{activity.time}</div>
+              <div className={cn(
+                "w-2 h-2 rounded-full",
+                activity.type === "unlock" ? "bg-yellow-500" :
+                activity.type === "motion" ? "bg-red-500" : "bg-green-500"
+              )} />
+              <div className="text-sm text-gray-700 flex-1">{activity.action}</div>
             </motion.div>
           ))}
         </div>
@@ -374,7 +532,7 @@ const ProjectStats = ({ activeProject }: any) => {
 
 export default function Projects() {
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [activeProject, setActiveProject] = useState(projects[0]);
+  const [activeCamera, setActiveCamera] = useState(smartHomeData.cameras[0]);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: containerRef });
@@ -406,7 +564,7 @@ export default function Projects() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.1 }}
                 >
-                  Projects
+                  Smart Home Security Systems
                 </motion.h1>
                 <motion.p
                   className="text-gray-600 mt-1"
@@ -414,7 +572,7 @@ export default function Projects() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
                 >
-                  Smart project management and monitoring
+                  Advanced security monitoring and home automation
                 </motion.p>
               </div>
 
@@ -423,7 +581,7 @@ export default function Projects() {
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
                     type="text"
-                    placeholder="Search projects..."
+                    placeholder="Search devices..."
                     className="pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                   />
                 </div>
@@ -454,196 +612,45 @@ export default function Projects() {
                 </div>
               </div>
             </div>
-
-            {/* Category Filters */}
-            <motion.div
-              className="flex items-center gap-3 mt-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              {projectCategories.map((category, index) => (
-                <motion.button
-                  key={category.value}
-                  onClick={() => setSelectedCategory(category.value)}
-                  className={cn(
-                    "px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300",
-                    selectedCategory === category.value
-                      ? "bg-blue-500 text-white shadow-lg shadow-blue-500/25"
-                      : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200",
-                  )}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {category.label}
-                </motion.button>
-              ))}
-            </motion.div>
           </div>
         </motion.div>
 
-        {/* Main Content */}
+        {/* Main Smart Home Dashboard */}
         <div className="container mx-auto px-6 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Left Panel - Project Controls */}
+            {/* Left Panel - Smart Home Controls */}
             <motion.div
               className="lg:col-span-3"
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <ProjectControls
-                activeProject={activeProject}
-                onProjectChange={setActiveProject}
-                projects={filteredProjects}
+              <SmartHomeControls
+                activeCamera={activeCamera}
+                onCameraChange={setActiveCamera}
               />
             </motion.div>
 
-            {/* Center - Main Project Display */}
+            {/* Center - Main Smart Home Display */}
             <motion.div
               className="lg:col-span-6"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 relative">
-                  <img
-                    src={activeProject?.image || projects[0]?.image}
-                    alt={activeProject?.title || projects[0]?.title}
-                    className="w-full h-full object-cover"
-                  />
-
-                  {/* 3D Project Visualization Overlay */}
-                  <motion.div
-                    className="absolute inset-0 bg-black/20 flex items-center justify-center"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1, delay: 0.5 }}
-                  >
-                    <motion.div
-                      className="text-center text-white"
-                      initial={{ scale: 0.8, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ duration: 0.6, delay: 0.8 }}
-                    >
-                      <h2 className="text-3xl font-bold mb-2">
-                        {activeProject?.title || projects[0]?.title}
-                      </h2>
-                      <p className="text-lg opacity-90">
-                        {activeProject?.location || projects[0]?.location}
-                      </p>
-                    </motion.div>
-                  </motion.div>
-
-                  {/* Project Navigation Dots */}
-                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2">
-                    {filteredProjects.slice(0, 5).map((_, index) => (
-                      <motion.button
-                        key={index}
-                        className={cn(
-                          "w-2 h-2 rounded-full transition-all duration-300",
-                          index === 0 ? "bg-white w-8" : "bg-white/50",
-                        )}
-                        whileHover={{ scale: 1.2 }}
-                        whileTap={{ scale: 0.8 }}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                <div className="p-6">
-                  <motion.div
-                    className="space-y-4"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.6 }}
-                  >
-                    <p className="text-gray-600 leading-relaxed">
-                      {activeProject?.description || projects[0]?.description}
-                    </p>
-
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                      <div className="flex items-center gap-4 text-sm text-gray-500">
-                        <span className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4" />
-                          {activeProject?.year || projects[0]?.year}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <DollarSign className="w-4 h-4" />
-                          {activeProject?.value || projects[0]?.value}
-                        </span>
-                      </div>
-
-                      <motion.button
-                        className="px-6 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        View Details
-                      </motion.button>
-                    </div>
-                  </motion.div>
-                </div>
-              </div>
+              <SmartHomeDisplay activeCamera={activeCamera} />
             </motion.div>
 
-            {/* Right Panel - Project Stats */}
+            {/* Right Panel - Smart Home Stats */}
             <motion.div
               className="lg:col-span-3"
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
             >
-              <ProjectStats activeProject={activeProject} />
+              <SmartHomeStats activeCamera={activeCamera} />
             </motion.div>
           </div>
-
-          {/* Project Grid */}
-          <motion.div
-            className="mt-12"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-          >
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-xl font-semibold text-gray-900">
-                All Projects
-              </h2>
-              <div className="text-sm text-gray-500">
-                Showing {filteredProjects.length} of {projects.length} projects
-              </div>
-            </div>
-
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={selectedCategory}
-                className={cn(
-                  viewMode === "grid"
-                    ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                    : "space-y-4",
-                )}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 1.05 }}
-                transition={{ duration: 0.5 }}
-                style={{ y }}
-              >
-                {filteredProjects.map((project, index) => (
-                  <ProjectCard
-                    key={project.id}
-                    project={project}
-                    index={index}
-                    isActive={activeProject?.id === project.id}
-                    onClick={() => setActiveProject(project)}
-                  />
-                ))}
-              </motion.div>
-            </AnimatePresence>
-          </motion.div>
         </div>
       </div>
     </Layout>
