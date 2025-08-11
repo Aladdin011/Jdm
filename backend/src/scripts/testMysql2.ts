@@ -23,7 +23,6 @@ async function testMysql2Connection() {
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      ssl: false,
       timeout: 30000,
       charset: 'utf8mb4'
     });
@@ -39,11 +38,16 @@ async function testMysql2Connection() {
     console.log('ℹ️  Database info:', dbInfo);
 
     // Show tables
-    const [tables] = await connection.execute('SHOW TABLES');
+    const [tablesResult] = await connection.execute('SHOW TABLES');
+    const tables = tablesResult as any[];
     console.log('📋 Current tables:');
-    tables.forEach((table: any) => {
-      console.log('   -', Object.values(table)[0]);
-    });
+    if (Array.isArray(tables)) {
+      tables.forEach((table: any) => {
+        console.log('   -', Object.values(table)[0]);
+      });
+    } else {
+      console.log('   No tables found or unable to list tables');
+    }
 
     console.log('\n✅ MySQL2 connection test successful!');
     
