@@ -38,21 +38,21 @@ export class UserRepository {
 
   async updatePassword(id: number, hashedPassword: string): Promise<boolean> {
     const result = await this.repository.update(id, { password: hashedPassword });
-    return result.affected !== null && result.affected > 0;
+    return (result.affected ?? 0) > 0;
   }
 
   async deactivateUser(id: number): Promise<boolean> {
     const result = await this.repository.update(id, { isActive: false });
-    return result.affected !== null && result.affected > 0;
+    return (result.affected ?? 0) > 0;
   }
 
   async activateUser(id: number): Promise<boolean> {
     const result = await this.repository.update(id, { isActive: true });
-    return result.affected !== null && result.affected > 0;
+    return (result.affected ?? 0) > 0;
   }
 
   async delete(id: number): Promise<boolean> {
     const result = await this.repository.delete(id);
-    return result.affected !== null && result.affected > 0;
+    return (result.affected ?? 0) > 0;
   }
 }

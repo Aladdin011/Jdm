@@ -31,7 +31,7 @@ export class ContactRepository {
 
   async delete(id: number): Promise<boolean> {
     const result = await this.repository.delete(id);
-    return result.affected !== null && result.affected > 0;
+    return (result.affected ?? 0) > 0;
   }
 
   async findByEmail(email: string): Promise<Contact[]> {

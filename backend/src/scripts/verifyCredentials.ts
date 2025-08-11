@@ -82,4 +82,4 @@ function verifyDatabaseCredentials() {
   console.log('5. Check if your IP is whitelisted (if required)');
 }
 
-verifyCredentials();
+verifyDatabaseCredentials();
