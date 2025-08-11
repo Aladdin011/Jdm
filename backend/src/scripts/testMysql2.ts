@@ -23,7 +23,7 @@ async function testMysql2Connection() {
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      timeout: 30000,
+      connectTimeout: 30000,
       charset: 'utf8mb4'
     });
 
