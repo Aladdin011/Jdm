@@ -10,14 +10,17 @@ export const AppDataSource = new DataSource({
   entities: [__dirname + '/../entities/**/*.ts'],
   synchronize: process.env.NODE_ENV !== 'production', // Auto-create tables in development
   logging: process.env.NODE_ENV !== 'production',
-  ssl: process.env.NODE_ENV === 'production' ? {
-    rejectUnauthorized: false
-  } : false,
+  ssl: false, // Disable SSL for now to test basic connection
   extra: {
-    connectionLimit: 10,
-    acquireTimeout: 60000,
-    timeout: 60000,
-  }
+    connectionLimit: 5,
+    queueLimit: 0,
+    timeout: 30000,
+    acquireTimeout: 30000,
+    reconnect: true,
+    charset: 'utf8mb4'
+  },
+  connectTimeoutMS: 30000,
+  poolSize: 5
 });
 
 export const connectDatabase = async () => {
