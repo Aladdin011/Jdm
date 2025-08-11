@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { getTawkToEmbedUrl, TAWK_TO_CONFIG } from "@/config/tawkto";
 
 declare global {
   interface Window {
@@ -17,23 +18,37 @@ export default function ChatbotPlaceholder() {
       // Create and inject the Tawk.to script
       const script = document.createElement("script");
       script.async = true;
-      script.src = "https://embed.tawk.to/YOUR_TAWK_TO_PROPERTY_ID/YOUR_WIDGET_ID";
+      script.src = getTawkToEmbedUrl();
       script.charset = "UTF-8";
       script.setAttribute("crossorigin", "*");
-      
+
       // Insert the script
       const firstScript = document.getElementsByTagName("script")[0];
       if (firstScript && firstScript.parentNode) {
         firstScript.parentNode.insertBefore(script, firstScript);
       }
 
-      // Optional: Configure Tawk.to settings
+      // Configure Tawk.to settings after load
       window.Tawk_API.onLoad = function() {
         console.log("Tawk.to chat widget loaded");
+
+        // Apply custom styling if available
+        if (TAWK_TO_CONFIG.settings.backgroundColor) {
+          window.Tawk_API.setAttributes({
+            backgroundColor: TAWK_TO_CONFIG.settings.backgroundColor,
+            bubbleColor: TAWK_TO_CONFIG.settings.bubbleColor
+          });
+        }
       };
 
-      // Optional: Hide chat widget initially if needed
-      // window.Tawk_API.hideWidget();
+      // Position the widget
+      window.Tawk_API.onChatMaximized = function() {
+        console.log("Chat maximized");
+      };
+
+      window.Tawk_API.onChatMinimized = function() {
+        console.log("Chat minimized");
+      };
     }
 
     return () => {
