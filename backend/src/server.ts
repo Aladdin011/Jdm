@@ -19,6 +19,7 @@ import { setupSocketIO } from "./config/socket";
 // Import routes
 import contactRoutes from "./routes/contact";
 import healthRoutes from "./routes/health";
+import socketTestRoutes from "./routes/socket-test";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -86,6 +87,7 @@ app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 // API Routes
 app.use("/api/health", healthRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/socket", socketTestRoutes);
 
 // Root endpoint
 app.get("/", (req, res) => {
