@@ -3,8 +3,8 @@
 // You can find these values in your Tawk.to dashboard under Admin > Chat Widget
 
 export const TAWK_TO_CONFIG = {
-  PROPERTY_ID: process.env.VITE_TAWK_TO_PROPERTY_ID || "YOUR_TAWK_TO_PROPERTY_ID",
-  WIDGET_ID: process.env.VITE_TAWK_TO_WIDGET_ID || "YOUR_WIDGET_ID",
+  PROPERTY_ID: import.meta.env.VITE_TAWK_TO_PROPERTY_ID || "YOUR_TAWK_TO_PROPERTY_ID",
+  WIDGET_ID: import.meta.env.VITE_TAWK_TO_WIDGET_ID || "YOUR_WIDGET_ID",
   
   // Optional: Customize appearance and behavior
   settings: {
