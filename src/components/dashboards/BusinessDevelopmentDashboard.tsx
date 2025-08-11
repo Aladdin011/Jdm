@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
+import { useCall } from "@/contexts/CallContext";
+import ModernDashboardLayout from "./ModernDashboardLayout";
 import {
   Card,
   CardContent,
@@ -19,6 +22,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   TrendingUp,
   Users,
   DollarSign,
@@ -31,10 +40,11 @@ import {
   FileText,
   ArrowUpRight,
   Handshake,
+  MoreHorizontal,
+  Video,
+  Eye,
+  Edit,
 } from "lucide-react";
-import { useCall } from "@/contexts/CallContext";
-import DashboardThemeWrapper from "./DashboardThemeWrapper";
-import { getDepartmentTheme } from "@/utils/departmentThemes";
 
 interface Lead {
   id: string;
