@@ -371,7 +371,7 @@ export default function Login() {
             className="absolute inset-0 bg-cover bg-center"
             style={{
               backgroundImage:
-                "url('/images/projects/residential-1.JPG')",
+                "url('https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F3ea4e8ddcd314db6b491a8835cfb72ec?format=webp&width=800')",
             }}
           />
 
