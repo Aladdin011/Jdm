@@ -29,7 +29,7 @@ export const blogPosts = [
       <p>At JD Marc, we've successfully implemented these technologies across our African projects, resulting in 25% faster project completion times and 40% reduction in quality-related rework. The future of construction management is here, and it's transforming how we build Africa's infrastructure.</p>
     `,
     image:
-      "/images/blog/construction-tech.JPG",
+      "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: true,
   },
   {
@@ -61,7 +61,7 @@ export const blogPosts = [
       <p>JD Marc has pioneered the use of these advanced materials in our recent projects, demonstrating their effectiveness in African construction applications. Our Lagos Smart Office Complex features self-healing concrete foundations and smart glass facades, serving as a showcase for sustainable construction technology.</p>
     `,
     image:
-      "/images/blog/construction-safety.JPG",
+      "https://images.unsplash.com/photo-1530569673472-307dc017a82d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: true,
   },
   {
@@ -97,7 +97,7 @@ export const blogPosts = [
       <p>Our experience managing projects across Nigeria, Ghana, and Kenya has demonstrated that remote project management can actually improve efficiency when implemented with the right tools and processes. The key is balancing digital connectivity with local expertise and cultural understanding.</p>
     `,
     image:
-      "/images/blog/modern-architecture.JPG",
+      "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: false,
   },
   {
@@ -135,7 +135,7 @@ export const blogPosts = [
       <p>As climate change impacts intensify, green building certification becomes increasingly important for resilient infrastructure development. JD Marc continues to lead sustainable construction practices that protect both the environment and our clients' investments.</p>
     `,
     image:
-      "/images/blog/sustainability-building .JPG",
+      "https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: true,
   },
   {
@@ -167,7 +167,7 @@ export const blogPosts = [
       <p>At JD Marc, we believe that effective infrastructure policy must balance economic growth with environmental sustainability and social inclusion. Our projects across Nigeria demonstrate how this balance can be achieved through innovative engineering and community engagement.</p>
     `,
     image:
-      "/images/projects/commercial-1.JPG",
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: false,
   },
   {
@@ -200,7 +200,7 @@ export const blogPosts = [
       <p>The future of African urban development lies in embracing smart technologies while respecting local contexts and needs. JD Marc continues to pioneer solutions that make African cities more livable, sustainable, and economically vibrant.</p>
     `,
     image:
-      "/images/projects/industrial-1.JPG",
+      "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: false,
   },
   {
@@ -232,7 +232,7 @@ export const blogPosts = [
       <p>The successful completion of this project has positioned JD Marc as a leader in complex renovation projects, demonstrating our ability to deliver exceptional results under challenging conditions.</p>
     `,
     image:
-      "/images/projects/residential-1.JPG",
+      "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: false,
   },
   {
@@ -265,7 +265,7 @@ export const blogPosts = [
       <p>As we implement digital twin technology across our projects, JD Marc is setting new standards for construction excellence and infrastructure management in Africa.</p>
     `,
     image:
-      "/images/services/commercial.JPG",
+      "https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: false,
   },
   {
@@ -298,7 +298,7 @@ export const blogPosts = [
       <p>Investing in people is investing in Africa's future. JD Marc's commitment to capacity building ensures that our infrastructure legacy extends far beyond the projects we build.</p>
     `,
     image:
-      "/images/services/industrial.JPG",
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: false,
   },
   {
@@ -334,7 +334,7 @@ export const blogPosts = [
       <p>JD Marc is committed to leading this transformation by creating opportunities, removing barriers, and demonstrating that diverse teams deliver superior results in construction and engineering.</p>
     `,
     image:
-      "/images/services/residential.JPG",
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: false,
   },
 ];
