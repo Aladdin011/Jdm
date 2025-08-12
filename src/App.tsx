@@ -297,8 +297,8 @@ function App() {
                           </RouteWithSEO>
                         } 
                       />
-                      <Route 
-                        path="/blog" 
+                      <Route
+                        path="/blog"
                         element={
                           <RouteWithSEO seo={{
                             title: 'Construction Industry Blog & Insights | JD Marc Limited',
@@ -307,7 +307,19 @@ function App() {
                           }}>
                             <Blog />
                           </RouteWithSEO>
-                        } 
+                        }
+                      />
+                      <Route
+                        path="/blog/:category"
+                        element={
+                          <RouteWithSEO seo={{
+                            title: 'Construction Blog Categories | JD Marc Limited',
+                            description: 'Explore specific construction industry topics including technology, projects, industry insights, and company news.',
+                            keywords: 'construction blog categories, industry insights, project updates, construction technology, company news',
+                          }}>
+                            <Blog />
+                          </RouteWithSEO>
+                        }
                       />
                       <Route 
                         path="/login" 
