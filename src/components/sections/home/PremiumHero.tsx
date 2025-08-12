@@ -252,6 +252,7 @@ const PremiumHero = () => {
                     <motion.div variants={itemVariants}>
                       <div className="flex flex-col sm:flex-row gap-3">
                         <motion.button
+                          onClick={() => navigate('/register')}
                           className="group/btn relative px-8 py-4 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 text-white rounded-xl font-semibold shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 transition-all duration-300 overflow-hidden"
                           whileHover={{ scale: 1.02, y: -2 }}
                           whileTap={{ scale: 0.98 }}
