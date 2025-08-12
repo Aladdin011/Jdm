@@ -133,114 +133,176 @@ export const preloadCriticalImages = (imageUrls: string[]) => {
 export const trackWebVitals = () => {
   if (typeof window === 'undefined') return;
 
-  // Track FCP (First Contentful Paint)
-  const observer = new PerformanceObserver((list) => {
-    const entries = list.getEntries();
-    entries.forEach((entry) => {
-      if (entry.name === 'first-contentful-paint') {
-        console.log('FCP:', entry.startTime);
-        // Send to analytics
-        if (window.gtag) {
-          window.gtag('event', 'web_vitals', {
-            event_category: 'Performance',
-            event_label: 'First Contentful Paint',
-            value: Math.round(entry.startTime),
+  try {
+    // Check for PerformanceObserver support
+    if (!('PerformanceObserver' in window)) {
+      console.warn('PerformanceObserver not supported');
+      return;
+    }
+
+    // Track FCP (First Contentful Paint)
+    try {
+      const observer = new PerformanceObserver((list) => {
+        try {
+          const entries = list.getEntries();
+          entries.forEach((entry) => {
+            if (entry.name === 'first-contentful-paint') {
+              console.log('FCP:', entry.startTime);
+              // Send to analytics
+              if (window.gtag) {
+                window.gtag('event', 'web_vitals', {
+                  event_category: 'Performance',
+                  event_label: 'First Contentful Paint',
+                  value: Math.round(entry.startTime),
+                });
+              }
+            }
           });
+        } catch (error) {
+          console.warn('FCP tracking error:', error);
         }
-      }
-    });
-  });
-
-  observer.observe({ entryTypes: ['paint'] });
-
-  // Track LCP (Largest Contentful Paint)
-  const lcpObserver = new PerformanceObserver((list) => {
-    const entries = list.getEntries();
-    const lastEntry = entries[entries.length - 1];
-    console.log('LCP:', lastEntry.startTime);
-    
-    if (window.gtag) {
-      window.gtag('event', 'web_vitals', {
-        event_category: 'Performance',
-        event_label: 'Largest Contentful Paint',
-        value: Math.round(lastEntry.startTime),
       });
-    }
-  });
 
-  lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
-
-  // Track CLS (Cumulative Layout Shift)
-  let clsValue = 0;
-  const clsObserver = new PerformanceObserver((list) => {
-    for (const entry of list.getEntries()) {
-      if (!(entry as any).hadRecentInput) {
-        clsValue += (entry as any).value;
-      }
+      observer.observe({ entryTypes: ['paint'] });
+    } catch (error) {
+      console.warn('FCP observer setup failed:', error);
     }
-    console.log('CLS:', clsValue);
-    
-    if (window.gtag) {
-      window.gtag('event', 'web_vitals', {
-        event_category: 'Performance',
-        event_label: 'Cumulative Layout Shift',
-        value: Math.round(clsValue * 1000),
+
+    // Track LCP (Largest Contentful Paint)
+    try {
+      const lcpObserver = new PerformanceObserver((list) => {
+        try {
+          const entries = list.getEntries();
+          const lastEntry = entries[entries.length - 1];
+          console.log('LCP:', lastEntry.startTime);
+
+          if (window.gtag) {
+            window.gtag('event', 'web_vitals', {
+              event_category: 'Performance',
+              event_label: 'Largest Contentful Paint',
+              value: Math.round(lastEntry.startTime),
+            });
+          }
+        } catch (error) {
+          console.warn('LCP tracking error:', error);
+        }
       });
+
+      lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+    } catch (error) {
+      console.warn('LCP observer setup failed:', error);
     }
-  });
 
-  clsObserver.observe({ entryTypes: ['layout-shift'] });
+    // Track CLS (Cumulative Layout Shift)
+    try {
+      let clsValue = 0;
+      const clsObserver = new PerformanceObserver((list) => {
+        try {
+          for (const entry of list.getEntries()) {
+            if (!(entry as any).hadRecentInput) {
+              clsValue += (entry as any).value;
+            }
+          }
+          console.log('CLS:', clsValue);
 
-  // Track FID (First Input Delay)
-  const fidObserver = new PerformanceObserver((list) => {
-    const firstInput = list.getEntries()[0];
-    if (firstInput) {
-      const fid = firstInput.processingStart - firstInput.startTime;
-      console.log('FID:', fid);
-      
-      if (window.gtag) {
-        window.gtag('event', 'web_vitals', {
-          event_category: 'Performance',
-          event_label: 'First Input Delay',
-          value: Math.round(fid),
-        });
-      }
+          if (window.gtag) {
+            window.gtag('event', 'web_vitals', {
+              event_category: 'Performance',
+              event_label: 'Cumulative Layout Shift',
+              value: Math.round(clsValue * 1000),
+            });
+          }
+        } catch (error) {
+          console.warn('CLS tracking error:', error);
+        }
+      });
+
+      clsObserver.observe({ entryTypes: ['layout-shift'] });
+    } catch (error) {
+      console.warn('CLS observer setup failed:', error);
     }
-  });
 
-  fidObserver.observe({ entryTypes: ['first-input'] });
+    // Track FID (First Input Delay)
+    try {
+      const fidObserver = new PerformanceObserver((list) => {
+        try {
+          const firstInput = list.getEntries()[0];
+          if (firstInput) {
+            const fid = firstInput.processingStart - firstInput.startTime;
+            console.log('FID:', fid);
+
+            if (window.gtag) {
+              window.gtag('event', 'web_vitals', {
+                event_category: 'Performance',
+                event_label: 'First Input Delay',
+                value: Math.round(fid),
+              });
+            }
+          }
+        } catch (error) {
+          console.warn('FID tracking error:', error);
+        }
+      });
+
+      fidObserver.observe({ entryTypes: ['first-input'] });
+    } catch (error) {
+      console.warn('FID observer setup failed:', error);
+    }
+  } catch (error) {
+    console.warn('Web Vitals tracking initialization failed:', error);
+  }
 };
 
 // Resource hints for better performance
 export const addResourceHints = () => {
-  // DNS prefetch for external domains
-  const dnsPrefetchDomains = [
-    '//fonts.googleapis.com',
-    '//fonts.gstatic.com',
-    '//cdn.builder.io',
-    '//images.unsplash.com',
-  ];
+  try {
+    // DNS prefetch for external domains
+    const dnsPrefetchDomains = [
+      '//fonts.googleapis.com',
+      '//fonts.gstatic.com',
+      '//cdn.builder.io',
+      '//images.unsplash.com',
+    ];
 
-  dnsPrefetchDomains.forEach((domain) => {
-    const link = document.createElement('link');
-    link.rel = 'dns-prefetch';
-    link.href = domain;
-    document.head.appendChild(link);
-  });
+    dnsPrefetchDomains.forEach((domain) => {
+      try {
+        // Check if already exists
+        const existing = document.querySelector(`link[rel="dns-prefetch"][href="${domain}"]`);
+        if (!existing) {
+          const link = document.createElement('link');
+          link.rel = 'dns-prefetch';
+          link.href = domain;
+          document.head.appendChild(link);
+        }
+      } catch (error) {
+        console.warn(`Failed to add DNS prefetch for ${domain}:`, error);
+      }
+    });
 
-  // Preconnect to critical domains
-  const preconnectDomains = [
-    'https://fonts.googleapis.com',
-    'https://cdn.builder.io',
-  ];
+    // Preconnect to critical domains
+    const preconnectDomains = [
+      'https://fonts.googleapis.com',
+      'https://cdn.builder.io',
+    ];
 
-  preconnectDomains.forEach((domain) => {
-    const link = document.createElement('link');
-    link.rel = 'preconnect';
-    link.href = domain;
-    link.crossOrigin = 'anonymous';
-    document.head.appendChild(link);
-  });
+    preconnectDomains.forEach((domain) => {
+      try {
+        // Check if already exists
+        const existing = document.querySelector(`link[rel="preconnect"][href="${domain}"]`);
+        if (!existing) {
+          const link = document.createElement('link');
+          link.rel = 'preconnect';
+          link.href = domain;
+          link.crossOrigin = 'anonymous';
+          document.head.appendChild(link);
+        }
+      } catch (error) {
+        console.warn(`Failed to add preconnect for ${domain}:`, error);
+      }
+    });
+  } catch (error) {
+    console.warn('Resource hints setup failed:', error);
+  }
 };
 
 // Code splitting utilities
