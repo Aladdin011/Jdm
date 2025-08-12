@@ -151,7 +151,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
       alternateName: 'JD Marc Construction',
       description: seoData.description,
       url: 'https://jdmarcng.com',
-      logo: 'https://cdn.builder.io/api/v1/image/assets%2Fb9e926f9dca9498f8a0f99f9f9792da7%2F850832a345244408ac37832fa5cb7097?format=webp&width=800',
+      logo: 'https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F8c27ff3f82824383bd700bc3410cfa09?format=webp&width=800',
       image: seoData.image,
       foundingDate: '2007',
       founder: {
