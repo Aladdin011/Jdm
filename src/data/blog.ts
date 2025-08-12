@@ -1,7 +1,8 @@
 export const blogPosts = [
   {
     id: 1,
-    title: "The Future of Remote Construction Management: AI and IoT Transforming African Building Sites",
+    title:
+      "The Future of Remote Construction Management: AI and IoT Transforming African Building Sites",
     slug: "future-remote-construction-management-ai-iot-africa",
     date: "2024-03-15",
     author: "Engineering Team",
@@ -27,16 +28,18 @@ export const blogPosts = [
       
       <p>At JD Marc, we've successfully implemented these technologies across our African projects, resulting in 25% faster project completion times and 40% reduction in quality-related rework. The future of construction management is here, and it's transforming how we build Africa's infrastructure.</p>
     `,
-    image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+    image:
+      "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: true,
   },
   {
     id: 2,
-    title: "Smart Construction Materials: How Nanotechnology is Revolutionizing Building Durability",
+    title:
+      "Smart Construction Materials: How Nanotechnology is Revolutionizing Building Durability",
     slug: "smart-construction-materials-nanotechnology-durability",
     date: "2024-03-10",
     author: "Dr. Sarah Okafor",
-    category: "Construction Technology", 
+    category: "Construction Technology",
     excerpt:
       "Explore breakthrough nanomaterials that are making buildings stronger, more energy-efficient, and longer-lasting in Africa's challenging climate conditions.",
     content: `
@@ -57,12 +60,14 @@ export const blogPosts = [
       
       <p>JD Marc has pioneered the use of these advanced materials in our recent projects, demonstrating their effectiveness in African construction applications. Our Lagos Smart Office Complex features self-healing concrete foundations and smart glass facades, serving as a showcase for sustainable construction technology.</p>
     `,
-    image: "https://images.unsplash.com/photo-1530569673472-307dc017a82d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+    image:
+      "https://images.unsplash.com/photo-1530569673472-307dc017a82d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: true,
   },
   {
     id: 3,
-    title: "Remote Construction Project Management: Best Practices for African Teams",
+    title:
+      "Remote Construction Project Management: Best Practices for African Teams",
     slug: "remote-construction-project-management-african-teams",
     date: "2024-03-08",
     author: "Michael Adebayo",
@@ -91,12 +96,14 @@ export const blogPosts = [
       
       <p>Our experience managing projects across Nigeria, Ghana, and Kenya has demonstrated that remote project management can actually improve efficiency when implemented with the right tools and processes. The key is balancing digital connectivity with local expertise and cultural understanding.</p>
     `,
-    image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+    image:
+      "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: false,
   },
   {
     id: 4,
-    title: "Green Building Certification in Africa: A Comprehensive Guide to Sustainable Construction",
+    title:
+      "Green Building Certification in Africa: A Comprehensive Guide to Sustainable Construction",
     slug: "green-building-certification-africa-sustainable-construction",
     date: "2024-03-05",
     author: "Dr. Amina Hassan",
@@ -127,7 +134,8 @@ export const blogPosts = [
       
       <p>As climate change impacts intensify, green building certification becomes increasingly important for resilient infrastructure development. JD Marc continues to lead sustainable construction practices that protect both the environment and our clients' investments.</p>
     `,
-    image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+    image:
+      "https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: true,
   },
   {
@@ -158,12 +166,14 @@ export const blogPosts = [
       
       <p>At JD Marc, we believe that effective infrastructure policy must balance economic growth with environmental sustainability and social inclusion. Our projects across Nigeria demonstrate how this balance can be achieved through innovative engineering and community engagement.</p>
     `,
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+    image:
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: false,
   },
   {
     id: 6,
-    title: "Smart Cities Revolution: Building Digital Infrastructure for African Urban Centers",
+    title:
+      "Smart Cities Revolution: Building Digital Infrastructure for African Urban Centers",
     slug: "smart-cities-digital-infrastructure-african-urban-centers",
     date: "2024-02-28",
     author: "James Abel",
@@ -189,7 +199,8 @@ export const blogPosts = [
       
       <p>The future of African urban development lies in embracing smart technologies while respecting local contexts and needs. JD Marc continues to pioneer solutions that make African cities more livable, sustainable, and economically vibrant.</p>
     `,
-    image: "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+    image:
+      "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: false,
   },
   {
@@ -220,12 +231,14 @@ export const blogPosts = [
       
       <p>The successful completion of this project has positioned JD Marc as a leader in complex renovation projects, demonstrating our ability to deliver exceptional results under challenging conditions.</p>
     `,
-    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+    image:
+      "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: false,
   },
   {
     id: 8,
-    title: "Digital Twin Technology: Revolutionizing Construction Project Management",
+    title:
+      "Digital Twin Technology: Revolutionizing Construction Project Management",
     slug: "digital-twin-technology-construction-project-management",
     date: "2024-02-22",
     author: "James Abel",
@@ -251,12 +264,14 @@ export const blogPosts = [
       
       <p>As we implement digital twin technology across our projects, JD Marc is setting new standards for construction excellence and infrastructure management in Africa.</p>
     `,
-    image: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+    image:
+      "https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: false,
   },
   {
     id: 9,
-    title: "Building Local Capacity: JD Marc's Training and Development Programs",
+    title:
+      "Building Local Capacity: JD Marc's Training and Development Programs",
     slug: "building-local-capacity-training-development-programs",
     date: "2024-02-20",
     author: "Jude Onwudebe",
@@ -282,12 +297,14 @@ export const blogPosts = [
       
       <p>Investing in people is investing in Africa's future. JD Marc's commitment to capacity building ensures that our infrastructure legacy extends far beyond the projects we build.</p>
     `,
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+    image:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: false,
   },
   {
     id: 10,
-    title: "The Role of Women in African Construction: Breaking Barriers and Building Futures",
+    title:
+      "The Role of Women in African Construction: Breaking Barriers and Building Futures",
     slug: "women-african-construction-breaking-barriers-building-futures",
     date: "2024-02-18",
     author: "Engr. Funmi Adebayo",
@@ -316,7 +333,8 @@ export const blogPosts = [
       
       <p>JD Marc is committed to leading this transformation by creating opportunities, removing barriers, and demonstrating that diverse teams deliver superior results in construction and engineering.</p>
     `,
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+    image:
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: false,
   },
 ];
@@ -335,12 +353,14 @@ export const blogCategories = [
 ];
 
 // Featured articles for homepage
-export const featuredArticles = blogPosts.filter(post => post.featured).slice(0, 3);
+export const featuredArticles = blogPosts
+  .filter((post) => post.featured)
+  .slice(0, 3);
 
 // Popular tags for filtering
 export const popularTags = [
   "Construction Tech",
-  "AI in Construction", 
+  "AI in Construction",
   "Remote Management",
   "Innovation",
   "Africa Development",

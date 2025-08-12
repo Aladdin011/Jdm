@@ -75,13 +75,20 @@ const enhancedBlogPosts: BlogPost[] = blogPosts.map((post, index) => ({
 
 export default function Blog() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<BlogCategory | "All">("All");
+  const [selectedCategory, setSelectedCategory] = useState<
+    BlogCategory | "All"
+  >("All");
   const [selectedDate, setSelectedDate] = useState<string>("latest");
-  const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>(enhancedBlogPosts);
-  const [activeFilters, setActiveFilters] = useState<Record<string, string>>({});
+  const [filteredPosts, setFilteredPosts] =
+    useState<BlogPost[]>(enhancedBlogPosts);
+  const [activeFilters, setActiveFilters] = useState<Record<string, string>>(
+    {},
+  );
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [showDateDropdown, setShowDateDropdown] = useState(false);
-  const [bookmarkedPosts, setBookmarkedPosts] = useState<Set<number>>(new Set());
+  const [bookmarkedPosts, setBookmarkedPosts] = useState<Set<number>>(
+    new Set(),
+  );
   const [likedPosts, setLikedPosts] = useState<Set<number>>(new Set());
   const [visiblePosts, setVisiblePosts] = useState(9);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -94,7 +101,7 @@ export default function Blog() {
   const categories: (BlogCategory | "All")[] = [
     "All",
     "Construction Technology",
-    "Project Management", 
+    "Project Management",
     "Infrastructure Policy",
     "Smart Cities & Urban Innovation",
     "Behind-the-Scenes Projects",
@@ -137,9 +144,13 @@ export default function Blog() {
 
     // Date sorting
     if (selectedDate === "latest") {
-      filtered.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      filtered.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+      );
     } else if (selectedDate === "oldest") {
-      filtered.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      filtered.sort(
+        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+      );
     }
 
     setFilteredPosts(filtered);
@@ -193,9 +204,12 @@ export default function Blog() {
       newBookmarks.add(postId);
     }
     setBookmarkedPosts(newBookmarks);
-    
+
     // Save to localStorage
-    localStorage.setItem('bookmarked-articles', JSON.stringify(Array.from(newBookmarks)));
+    localStorage.setItem(
+      "bookmarked-articles",
+      JSON.stringify(Array.from(newBookmarks)),
+    );
   };
 
   const toggleLike = (postId: number) => {
@@ -211,18 +225,19 @@ export default function Blog() {
   const loadMorePosts = () => {
     setIsLoadingMore(true);
     setTimeout(() => {
-      setVisiblePosts(prev => prev + 6);
+      setVisiblePosts((prev) => prev + 6);
       setIsLoadingMore(false);
     }, 1000);
   };
 
-  const getFeaturedPost = () => filteredPosts.find(post => post.featured) || filteredPosts[0];
+  const getFeaturedPost = () =>
+    filteredPosts.find((post) => post.featured) || filteredPosts[0];
   const getVisiblePosts = () => filteredPosts.slice(0, visiblePosts);
   const hasMorePosts = filteredPosts.length > visiblePosts;
 
   return (
     <PageTransition>
-      <SEOHead 
+      <SEOHead
         title="Construction Insights & Industry Blog | JD Marc Limited"
         description="Expert insights on construction technology, project management, and infrastructure development in Africa. Read the latest from JD Marc's construction professionals."
         keywords="construction blog, infrastructure development, construction technology, project management, Africa construction, engineering insights"
@@ -232,16 +247,16 @@ export default function Blog() {
       <div className="min-h-screen bg-gray-50">
         {/* Premium Hero Section */}
         <section className="relative overflow-hidden">
-          <motion.div 
+          <motion.div
             className="absolute inset-0 bg-gradient-to-br from-[#051822] via-[#2D383E] to-[#7C5841]"
             style={{ y: heroY }}
           />
-          
+
           {/* Animated Background Elements */}
           <div className="absolute inset-0 overflow-hidden">
             <motion.div
               className="absolute top-10 right-10 w-72 h-72 bg-[#AA7452] rounded-full opacity-10 blur-3xl"
-              animate={{ 
+              animate={{
                 scale: [1, 1.2, 1],
                 rotate: [0, 180, 360],
               }}
@@ -249,7 +264,7 @@ export default function Blog() {
             />
             <motion.div
               className="absolute bottom-10 left-10 w-96 h-96 bg-[#D4C9C7] rounded-full opacity-5 blur-3xl"
-              animate={{ 
+              animate={{
                 scale: [1.2, 1, 1.2],
                 rotate: [360, 180, 0],
               }}
@@ -272,10 +287,12 @@ export default function Blog() {
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
                 <Construction className="w-5 h-5 text-[#AA7452]" />
-                <span className="text-[#AA7452] font-semibold text-sm">Construction Insights</span>
+                <span className="text-[#AA7452] font-semibold text-sm">
+                  Construction Insights
+                </span>
               </motion.div>
 
-              <motion.h1 
+              <motion.h1
                 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -287,15 +304,15 @@ export default function Blog() {
                 </span>
               </motion.h1>
 
-              <motion.p 
+              <motion.p
                 className="text-xl text-blue-100 mb-12 leading-relaxed max-w-3xl mx-auto"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.5 }}
               >
-                Discover the latest trends, innovations, and insights in African construction. 
-                From project management tips to industry analysis, we share knowledge that 
-                drives the construction revolution.
+                Discover the latest trends, innovations, and insights in African
+                construction. From project management tips to industry analysis,
+                we share knowledge that drives the construction revolution.
               </motion.p>
 
               {/* Advanced Search & Filter Bar */}
@@ -330,10 +347,14 @@ export default function Blog() {
                       <div className="flex items-center gap-2">
                         <Filter className="w-4 h-4" />
                         <span className="text-sm font-medium">
-                          {selectedCategory === "All" ? "Category" : selectedCategory}
+                          {selectedCategory === "All"
+                            ? "Category"
+                            : selectedCategory}
                         </span>
                       </div>
-                      <ChevronDown className={`w-4 h-4 transition-transform ${showCategoryDropdown ? 'rotate-180' : ''}`} />
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform ${showCategoryDropdown ? "rotate-180" : ""}`}
+                      />
                     </button>
 
                     {showCategoryDropdown && (
@@ -370,10 +391,13 @@ export default function Blog() {
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
                         <span className="text-sm font-medium">
-                          {dateFilters.find(d => d.value === selectedDate)?.label || "Date"}
+                          {dateFilters.find((d) => d.value === selectedDate)
+                            ?.label || "Date"}
                         </span>
                       </div>
-                      <ChevronDown className={`w-4 h-4 transition-transform ${showDateDropdown ? 'rotate-180' : ''}`} />
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform ${showDateDropdown ? "rotate-180" : ""}`}
+                      />
                     </button>
 
                     {showDateDropdown && (
@@ -408,16 +432,26 @@ export default function Blog() {
                 transition={{ duration: 0.8, delay: 0.9 }}
               >
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-[#AA7452] mb-2">150+</div>
-                  <div className="text-white/80 text-sm">Articles Published</div>
+                  <div className="text-3xl font-bold text-[#AA7452] mb-2">
+                    150+
+                  </div>
+                  <div className="text-white/80 text-sm">
+                    Articles Published
+                  </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-[#AA7452] mb-2">50K+</div>
+                  <div className="text-3xl font-bold text-[#AA7452] mb-2">
+                    50K+
+                  </div>
                   <div className="text-white/80 text-sm">Monthly Readers</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-[#AA7452] mb-2">25+</div>
-                  <div className="text-white/80 text-sm">Expert Contributors</div>
+                  <div className="text-3xl font-bold text-[#AA7452] mb-2">
+                    25+
+                  </div>
+                  <div className="text-white/80 text-sm">
+                    Expert Contributors
+                  </div>
                 </div>
               </motion.div>
             </motion.div>
@@ -429,7 +463,9 @@ export default function Blog() {
           <section className="py-6 bg-white border-b">
             <div className="container mx-auto px-4">
               <div className="flex flex-wrap items-center gap-4">
-                <span className="text-sm font-semibold text-gray-600">Active Filters:</span>
+                <span className="text-sm font-semibold text-gray-600">
+                  Active Filters:
+                </span>
                 <div className="flex flex-wrap gap-2">
                   {Object.entries(activeFilters).map(([type, value]) => (
                     <motion.div
@@ -473,7 +509,9 @@ export default function Blog() {
                   <Award className="w-4 h-4" />
                   Editor's Pick
                 </div>
-                <h2 className="text-3xl font-bold text-gray-900">Featured Article</h2>
+                <h2 className="text-3xl font-bold text-gray-900">
+                  Featured Article
+                </h2>
               </motion.div>
 
               <FeaturedPostCard
@@ -555,8 +593,12 @@ export default function Blog() {
                 transition={{ duration: 0.6 }}
               >
                 <BookOpen className="mx-auto mb-6 text-gray-400 w-16 h-16" />
-                <h3 className="text-2xl font-bold text-gray-600 mb-4">No articles found</h3>
-                <p className="text-gray-500 mb-6">Try adjusting your search terms or filters.</p>
+                <h3 className="text-2xl font-bold text-gray-600 mb-4">
+                  No articles found
+                </h3>
+                <p className="text-gray-500 mb-6">
+                  Try adjusting your search terms or filters.
+                </p>
                 <button
                   onClick={clearAllFilters}
                   className="px-6 py-3 bg-[#7C5841] text-white font-semibold rounded-xl hover:bg-[#AA7452] transition-colors"
@@ -597,8 +639,9 @@ export default function Blog() {
                       Stay Updated with Construction Insights
                     </h3>
                     <p className="text-gray-300 leading-relaxed">
-                      Get the latest articles, industry trends, and exclusive content 
-                      delivered directly to your inbox. Join 10,000+ construction professionals.
+                      Get the latest articles, industry trends, and exclusive
+                      content delivered directly to your inbox. Join 10,000+
+                      construction professionals.
                     </p>
                   </div>
                 </div>
@@ -620,8 +663,13 @@ export default function Blog() {
                       </button>
                     </div>
                     <p className="text-xs text-gray-400 text-center sm:text-left">
-                      No spam, unsubscribe at any time. 
-                      <a href="#" className="text-[#AA7452] hover:underline ml-1">Privacy Policy</a>
+                      No spam, unsubscribe at any time.
+                      <a
+                        href="#"
+                        className="text-[#AA7452] hover:underline ml-1"
+                      >
+                        Privacy Policy
+                      </a>
                     </p>
                   </form>
                 </div>
@@ -673,12 +721,14 @@ function FeaturedPostCard({
             <button
               onClick={() => onBookmark(post.id)}
               className={`w-10 h-10 rounded-full backdrop-blur-md border border-white/20 flex items-center justify-center transition-all ${
-                isBookmarked 
-                  ? 'bg-[#AA7452] text-white' 
-                  : 'bg-white/10 text-white hover:bg-white/20'
+                isBookmarked
+                  ? "bg-[#AA7452] text-white"
+                  : "bg-white/10 text-white hover:bg-white/20"
               }`}
             >
-              <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-current' : ''}`} />
+              <Bookmark
+                className={`w-4 h-4 ${isBookmarked ? "fill-current" : ""}`}
+              />
             </button>
           </div>
           <div className="absolute bottom-4 left-4 flex items-center gap-3 text-white">
@@ -700,13 +750,15 @@ function FeaturedPostCard({
                 <User className="w-6 h-6 text-white" />
               </div>
               <div>
-                <div className="font-semibold text-gray-900 text-sm">{post.author}</div>
+                <div className="font-semibold text-gray-900 text-sm">
+                  {post.author}
+                </div>
                 <div className="text-gray-500 text-xs flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
-                  {new Date(post.date).toLocaleDateString('en-US', { 
-                    month: 'long', 
-                    day: 'numeric', 
-                    year: 'numeric' 
+                  {new Date(post.date).toLocaleDateString("en-US", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
                   })}
                 </div>
               </div>
@@ -740,15 +792,15 @@ function FeaturedPostCard({
               <button
                 onClick={() => onLike(post.id)}
                 className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${
-                  isLiked 
-                    ? 'bg-red-50 text-red-600' 
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  isLiked
+                    ? "bg-red-50 text-red-600"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}
               >
-                <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
+                <Heart className={`w-4 h-4 ${isLiked ? "fill-current" : ""}`} />
                 <span className="text-sm font-medium">{post.likes}</span>
               </button>
-              
+
               <button
                 onClick={() => onShare(post)}
                 className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors"
@@ -802,7 +854,7 @@ function BlogPostCard({
           className="w-full h-48 object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-        
+
         <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
           <div className="px-2 py-1 bg-[#AA7452] text-white text-xs font-semibold rounded-full">
             {post.category}
@@ -810,12 +862,14 @@ function BlogPostCard({
           <button
             onClick={() => onBookmark(post.id)}
             className={`w-8 h-8 rounded-full backdrop-blur-md border border-white/20 flex items-center justify-center transition-all ${
-              isBookmarked 
-                ? 'bg-[#AA7452] text-white' 
-                : 'bg-white/10 text-white hover:bg-white/20'
+              isBookmarked
+                ? "bg-[#AA7452] text-white"
+                : "bg-white/10 text-white hover:bg-white/20"
             }`}
           >
-            <Bookmark className={`w-3 h-3 ${isBookmarked ? 'fill-current' : ''}`} />
+            <Bookmark
+              className={`w-3 h-3 ${isBookmarked ? "fill-current" : ""}`}
+            />
           </button>
         </div>
 
@@ -837,12 +891,14 @@ function BlogPostCard({
             <User className="w-4 h-4 text-white" />
           </div>
           <div>
-            <div className="font-medium text-gray-900 text-sm">{post.author}</div>
+            <div className="font-medium text-gray-900 text-sm">
+              {post.author}
+            </div>
             <div className="text-gray-500 text-xs flex items-center gap-1">
               <Calendar className="w-3 h-3" />
-              {new Date(post.date).toLocaleDateString('en-US', { 
-                month: 'short', 
-                day: 'numeric' 
+              {new Date(post.date).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
               })}
             </div>
           </div>
@@ -875,15 +931,15 @@ function BlogPostCard({
             <button
               onClick={() => onLike(post.id)}
               className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all ${
-                isLiked 
-                  ? 'bg-red-50 text-red-600' 
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                isLiked
+                  ? "bg-red-50 text-red-600"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
-              <Heart className={`w-3 h-3 ${isLiked ? 'fill-current' : ''}`} />
+              <Heart className={`w-3 h-3 ${isLiked ? "fill-current" : ""}`} />
               <span className="text-xs font-medium">{post.likes}</span>
             </button>
-            
+
             <button
               onClick={() => onShare(post)}
               className="flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors"
