@@ -44,7 +44,7 @@ const LoadingSpinner = () => (
           transition={{ duration: 2, repeat: Infinity }}
         >
           <img
-            src="https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2Fba1573c1dc3d409fb79b5c991706567b?format=webp&width=200"
+            src="https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F8c27ff3f82824383bd700bc3410cfa09?format=webp&width=200"
             alt="JD Marc Limited Logo"
             className="w-16 h-16 object-contain"
           />
