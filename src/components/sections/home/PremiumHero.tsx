@@ -267,6 +267,7 @@ const PremiumHero = () => {
                         </motion.button>
 
                         <motion.button
+                          onClick={() => navigate('/projects')}
                           className="group/btn relative px-8 py-4 bg-white/10 backdrop-blur-sm text-white rounded-xl font-semibold border border-white/20 hover:bg-white/15 hover:border-white/30 transition-all duration-300 overflow-hidden"
                           whileHover={{ scale: 1.02, y: -2 }}
                           whileTap={{ scale: 0.98 }}
