@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import {
   Sparkles,
   Play,
