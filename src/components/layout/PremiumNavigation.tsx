@@ -338,7 +338,7 @@ const MobileMenu = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
                             : "bg-gray-100 text-gray-600"
                         )}>
                           {item.label === 'Services' && <Construction className="w-5 h-5" />}
-                          {item.label === 'Solutions' && <Zap className="w-5 h-5" />}
+                          {item.label === 'Blog' && <Award className="w-5 h-5" />}
                           {item.label === 'Projects' && <Building2 className="w-5 h-5" />}
                           {item.label === 'About' && <Users className="w-5 h-5" />}
                         </div>
