@@ -3,6 +3,7 @@
 @import "./styles/glassmorphism.css";
 @import "./styles/black-vision.css";
 @import "./styles/premium-navigation.css";
+@import "./styles/homepage-design-system.css";
 
 @tailwind base;
 @tailwind components;
