@@ -10,8 +10,8 @@
     "test": "vitest --run",
     "format.fix": "prettier --write .",
     "typecheck": "tsc",
-    "deploy": "node deploy-to-hostinger.js",
-    "postinstall": "if [ \"$(uname)\" = \"Linux\" ]; then npm install @rollup/rollup-linux-x64-gnu @swc/core-linux-x64-gnu; fi"
+    "deploy": "node scripts/deploy.js",
+    "postinstall": "node -e \"process.platform === 'win32' || process.exit(1)\" || npm install @rollup/rollup-linux-x64-gnu @swc/core-linux-x64-gnu"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
