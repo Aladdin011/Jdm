@@ -94,7 +94,7 @@ const ServiceCard = ({ service, index }: { service: ServiceFeature; index: numbe
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Main Card */}
-      <div className="relative h-full bg-white rounded-3xl overflow-hidden border border-gray-100 group-hover:border-[var(--accent-light)]/30 transition-all duration-500 min-h-[600px]">
+      <div className="relative h-full bg-white rounded-3xl overflow-hidden border border-gray-100 group-hover:border-[#AA7452]/30 transition-all duration-500 min-h-[600px]">
         
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
@@ -104,14 +104,14 @@ const ServiceCard = ({ service, index }: { service: ServiceFeature; index: numbe
               backgroundImage: `url('${service.backgroundImage}')`,
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-[var(--primary-dark)]/90 via-[var(--secondary-dark)]/85 to-[var(--accent-warm)]/80 group-hover:from-[var(--primary-dark)]/95 group-hover:via-[var(--secondary-dark)]/90 group-hover:to-[var(--accent-warm)]/85 transition-all duration-500" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#051822]/90 via-[#2D383E]/85 to-[#7C5841]/80 group-hover:from-[#051822]/95 group-hover:via-[#2D383E]/90 group-hover:to-[#7C5841]/85 transition-all duration-500" />
         </div>
 
         {/* Premium Badge */}
         {service.premium && (
           <div className="absolute top-6 right-6 z-10">
             <motion.div
-              className="bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent-warm)] text-white px-4 py-2 rounded-full text-xs font-semibold flex items-center gap-2 shadow-lg"
+              className="bg-gradient-to-r from-[#AA7452] to-[#7C5841] text-white px-4 py-2 rounded-full text-xs font-semibold flex items-center gap-2 shadow-lg"
               initial={{ scale: 0 }}
               animate={isInView ? { scale: 1 } : {}}
               transition={{ duration: 0.5, delay: index * 0.15 + 0.5 }}
@@ -123,15 +123,15 @@ const ServiceCard = ({ service, index }: { service: ServiceFeature; index: numbe
         )}
 
         {/* Content */}
-        <div className="relative z-10 p-8 h-full flex flex-direction-column text-white">
+        <div className="relative z-10 p-8 h-full flex flex-col text-white">
           
           {/* Icon Section */}
           <div className="mb-6">
             <motion.div
-              className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-[var(--accent-light)] transition-all duration-300"
+              className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-[#AA7452] transition-all duration-300"
               whileHover={{ rotate: 10 }}
             >
-              <div className="text-[var(--accent-light)] group-hover:text-white transition-colors duration-300">
+              <div className="text-[#AA7452] group-hover:text-white transition-colors duration-300">
                 {service.icon}
               </div>
             </motion.div>
@@ -139,7 +139,7 @@ const ServiceCard = ({ service, index }: { service: ServiceFeature; index: numbe
 
           {/* Title and Description */}
           <div className="mb-6 flex-1">
-            <h3 className="text-2xl font-bold mb-4 group-hover:text-[var(--accent-light)] transition-colors duration-300">
+            <h3 className="text-2xl font-bold mb-4 group-hover:text-[#AA7452] transition-colors duration-300">
               {service.title}
             </h3>
             <p className="text-white/80 leading-relaxed mb-6">
@@ -156,7 +156,7 @@ const ServiceCard = ({ service, index }: { service: ServiceFeature; index: numbe
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ duration: 0.5, delay: (index * 0.15) + (idx * 0.1) + 0.5 }}
                 >
-                  <CheckCircle className="w-4 h-4 text-[var(--accent-light)] flex-shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-[#AA7452] flex-shrink-0" />
                   <span>{feature}</span>
                 </motion.div>
               ))}
@@ -167,11 +167,11 @@ const ServiceCard = ({ service, index }: { service: ServiceFeature; index: numbe
           {service.stats && (
             <div className="grid grid-cols-2 gap-4 mb-6 p-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
               <div className="text-center">
-                <div className="text-2xl font-bold text-[var(--accent-light)]">{service.stats.projects}+</div>
+                <div className="text-2xl font-bold text-[#AA7452]">{service.stats.projects}+</div>
                 <div className="text-xs text-white/70">Projects</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-[var(--accent-light)]">{service.stats.satisfaction}%</div>
+                <div className="text-2xl font-bold text-[#AA7452]">{service.stats.satisfaction}%</div>
                 <div className="text-xs text-white/70">Satisfaction</div>
               </div>
             </div>
@@ -179,7 +179,7 @@ const ServiceCard = ({ service, index }: { service: ServiceFeature; index: numbe
 
           {/* CTA Button */}
           <motion.button
-            className="w-full bg-white/10 backdrop-blur-md border border-white/20 text-white py-4 px-6 rounded-xl font-semibold hover:bg-[var(--accent-light)] hover:border-[var(--accent-light)] transition-all duration-300 flex items-center justify-center gap-2 group/btn"
+            className="w-full bg-white/10 backdrop-blur-md border border-white/20 text-white py-4 px-6 rounded-xl font-semibold hover:bg-[#AA7452] hover:border-[#AA7452] transition-all duration-300 flex items-center justify-center gap-2 group/btn"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => setIsExpanded(!isExpanded)}
@@ -200,7 +200,7 @@ const ServiceCard = ({ service, index }: { service: ServiceFeature; index: numbe
           style={{ height: isExpanded ? "auto" : 0 }}
         >
           <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-[var(--primary-dark)]">Recent Projects</h4>
+            <h4 className="text-lg font-semibold text-[#051822]">Recent Projects</h4>
             
             {/* Project Gallery */}
             <div className="grid grid-cols-3 gap-3">
@@ -209,15 +209,15 @@ const ServiceCard = ({ service, index }: { service: ServiceFeature; index: numbe
                   key={i}
                   className="aspect-square bg-gray-200 rounded-lg overflow-hidden"
                 >
-                  <div className="w-full h-full bg-gradient-to-br from-[var(--accent-light)]/20 to-[var(--accent-warm)]/20 flex items-center justify-center">
-                    <Eye className="w-6 h-6 text-[var(--accent-light)]" />
+                  <div className="w-full h-full bg-gradient-to-br from-[#AA7452]/20 to-[#7C5841]/20 flex items-center justify-center">
+                    <Eye className="w-6 h-6 text-[#AA7452]" />
                   </div>
                 </div>
               ))}
             </div>
 
             <motion.button
-              className="w-full bg-[var(--accent-light)] text-white py-3 px-6 rounded-lg font-medium hover:bg-[var(--accent-warm)] transition-colors duration-300"
+              className="w-full bg-[#AA7452] text-white py-3 px-6 rounded-lg font-medium hover:bg-[#7C5841] transition-colors duration-300"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -227,7 +227,7 @@ const ServiceCard = ({ service, index }: { service: ServiceFeature; index: numbe
         </motion.div>
 
         {/* Hover Effect Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent-light)]/5 to-[var(--accent-warm)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-3xl z-5"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-[#AA7452]/5 to-[#7C5841]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-3xl z-5"></div>
       </div>
     </motion.div>
   );
@@ -244,16 +244,16 @@ export default function PremiumServices() {
   const y = useTransform(scrollYProgress, [0, 1], [50, -50]);
 
   return (
-    <section ref={sectionRef} className="py-24 bg-[var(--bg-primary)] relative overflow-hidden">
+    <section ref={sectionRef} className="py-24 bg-[#FAFBFC] relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           style={{ y }}
-          className="absolute top-20 -left-40 w-80 h-80 bg-gradient-to-r from-[var(--accent-light)]/5 to-[var(--accent-warm)]/5 rounded-full blur-3xl"
+          className="absolute top-20 -left-40 w-80 h-80 bg-gradient-to-r from-[#AA7452]/5 to-[#7C5841]/5 rounded-full blur-3xl"
         />
         <motion.div
           style={{ y: y.get() * -0.5 }}
-          className="absolute bottom-20 -right-40 w-96 h-96 bg-gradient-to-r from-[var(--secondary-dark)]/5 to-[var(--primary-dark)]/5 rounded-full blur-3xl"
+          className="absolute bottom-20 -right-40 w-96 h-96 bg-gradient-to-r from-[#2D383E]/5 to-[#051822]/5 rounded-full blur-3xl"
         />
       </div>
 
@@ -267,7 +267,7 @@ export default function PremiumServices() {
         >
           {/* Badge */}
           <motion.div
-            className="inline-flex items-center gap-3 px-6 py-3 bg-[var(--accent-light)]/10 border border-[var(--accent-light)]/20 rounded-full text-[var(--accent-light)] font-medium mb-6"
+            className="inline-flex items-center gap-3 px-6 py-3 bg-[#AA7452]/10 border border-[#AA7452]/20 rounded-full text-[#AA7452] font-medium mb-6"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -278,14 +278,14 @@ export default function PremiumServices() {
 
           {/* Title */}
           <motion.h2
-            className="text-4xl md:text-6xl font-bold text-[var(--primary-dark)] mb-6"
+            className="text-4xl md:text-6xl font-bold text-[#051822] mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
             Comprehensive Construction
             <br />
-            <span className="bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent-warm)] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#AA7452] to-[#7C5841] bg-clip-text text-transparent">
               Solutions
             </span>
           </motion.h2>
@@ -326,18 +326,18 @@ export default function PremiumServices() {
             return (
               <motion.div 
                 key={metric.label} 
-                className="text-center p-6 bg-white rounded-2xl border border-gray-100 hover:border-[var(--accent-light)]/30 hover:shadow-lg transition-all duration-300"
+                className="text-center p-6 bg-white rounded-2xl border border-gray-100 hover:border-[#AA7452]/30 hover:shadow-lg transition-all duration-300"
                 whileHover={{ y: -4 }}
               >
-                <div className="w-12 h-12 bg-[var(--accent-light)]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <IconComponent className="w-6 h-6 text-[var(--accent-light)]" />
+                <div className="w-12 h-12 bg-[#AA7452]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <IconComponent className="w-6 h-6 text-[#AA7452]" />
                 </div>
-                <div className="text-2xl font-bold text-[var(--primary-dark)] mb-1">{metric.number}</div>
+                <div className="text-2xl font-bold text-[#051822] mb-1">{metric.number}</div>
                 <div className="text-sm text-gray-600">{metric.label}</div>
               </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
