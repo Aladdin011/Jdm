@@ -1,20 +1,20 @@
-import { useRef, useState } from 'react';
-import { motion, useInView, useScroll, useTransform } from 'framer-motion';
-import { 
-  Building2, 
-  Home, 
-  Factory, 
-  Cpu, 
-  Shield, 
-  Users, 
+import { useRef, useState } from "react";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import {
+  Building2,
+  Home,
+  Factory,
+  Cpu,
+  Shield,
+  Users,
   ArrowRight,
   Zap,
   CheckCircle,
   Star,
   Sparkles,
   TrendingUp,
-  Eye
-} from 'lucide-react';
+  Eye,
+} from "lucide-react";
 
 interface ServiceFeature {
   icon: React.ReactNode;
@@ -34,50 +34,62 @@ const services: ServiceFeature[] = [
   {
     icon: <Home className="w-8 h-8" />,
     title: "Residential Construction",
-    description: "Modern homes and residential complexes built with international standards and local expertise for comfortable living.",
+    description:
+      "Modern homes and residential complexes built with international standards and local expertise for comfortable living.",
     category: "residential",
     features: [
       "Custom Home Design",
-      "Smart Home Integration", 
+      "Smart Home Integration",
       "Sustainable Materials",
-      "Energy Efficiency"
+      "Energy Efficiency",
     ],
     premium: true,
     stats: { projects: 150, satisfaction: 98 },
-    backgroundImage: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&auto=format&fit=crop"
+    backgroundImage:
+      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&auto=format&fit=crop",
   },
   {
     icon: <Building2 className="w-8 h-8" />,
     title: "Commercial Buildings",
-    description: "Office complexes, retail spaces, and commercial infrastructure designed for business growth and operational efficiency.",
+    description:
+      "Office complexes, retail spaces, and commercial infrastructure designed for business growth and operational efficiency.",
     category: "commercial",
     features: [
       "Office Complexes",
       "Retail Spaces",
       "Mixed-Use Development",
-      "LEED Certification"
+      "LEED Certification",
     ],
     stats: { projects: 75, satisfaction: 96 },
-    backgroundImage: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&auto=format&fit=crop"
+    backgroundImage:
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&auto=format&fit=crop",
   },
   {
     icon: <Factory className="w-8 h-8" />,
     title: "Infrastructure Projects",
-    description: "Roads, bridges, and public infrastructure that form the backbone of Africa's development and connectivity.",
+    description:
+      "Roads, bridges, and public infrastructure that form the backbone of Africa's development and connectivity.",
     category: "infrastructure",
     features: [
       "Road Construction",
       "Bridge Engineering",
       "Public Facilities",
-      "Utility Systems"
+      "Utility Systems",
     ],
     premium: true,
     stats: { projects: 200, satisfaction: 99 },
-    backgroundImage: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=800&auto=format&fit=crop"
-  }
+    backgroundImage:
+      "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=800&auto=format&fit=crop",
+  },
 ];
 
-const ServiceCard = ({ service, index }: { service: ServiceFeature; index: number }) => {
+const ServiceCard = ({
+  service,
+  index,
+}: {
+  service: ServiceFeature;
+  index: number;
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -95,7 +107,6 @@ const ServiceCard = ({ service, index }: { service: ServiceFeature; index: numbe
     >
       {/* Main Card */}
       <div className="relative h-full bg-white rounded-3xl overflow-hidden border border-gray-100 group-hover:border-[#AA7452]/30 transition-all duration-500 min-h-[600px]">
-        
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <div
@@ -124,7 +135,6 @@ const ServiceCard = ({ service, index }: { service: ServiceFeature; index: numbe
 
         {/* Content */}
         <div className="relative z-10 p-8 h-full flex flex-col text-white">
-          
           {/* Icon Section */}
           <div className="mb-6">
             <motion.div
@@ -154,7 +164,10 @@ const ServiceCard = ({ service, index }: { service: ServiceFeature; index: numbe
                   className="flex items-center gap-3 text-sm text-white/70"
                   initial={{ opacity: 0, x: -10 }}
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.5, delay: (index * 0.15) + (idx * 0.1) + 0.5 }}
+                  transition={{
+                    duration: 0.5,
+                    delay: index * 0.15 + idx * 0.1 + 0.5,
+                  }}
                 >
                   <CheckCircle className="w-4 h-4 text-[#AA7452] flex-shrink-0" />
                   <span>{feature}</span>
@@ -167,11 +180,15 @@ const ServiceCard = ({ service, index }: { service: ServiceFeature; index: numbe
           {service.stats && (
             <div className="grid grid-cols-2 gap-4 mb-6 p-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
               <div className="text-center">
-                <div className="text-2xl font-bold text-[#AA7452]">{service.stats.projects}+</div>
+                <div className="text-2xl font-bold text-[#AA7452]">
+                  {service.stats.projects}+
+                </div>
                 <div className="text-xs text-white/70">Projects</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-[#AA7452]">{service.stats.satisfaction}%</div>
+                <div className="text-2xl font-bold text-[#AA7452]">
+                  {service.stats.satisfaction}%
+                </div>
                 <div className="text-xs text-white/70">Satisfaction</div>
               </div>
             </div>
@@ -193,15 +210,17 @@ const ServiceCard = ({ service, index }: { service: ServiceFeature; index: numbe
         <motion.div
           className="absolute inset-x-0 bottom-0 bg-white/95 backdrop-blur-xl border-t border-white/20 p-6 transition-all duration-500 overflow-hidden"
           initial={{ height: 0, opacity: 0 }}
-          animate={{ 
-            height: isExpanded ? "auto" : 0, 
-            opacity: isExpanded ? 1 : 0 
+          animate={{
+            height: isExpanded ? "auto" : 0,
+            opacity: isExpanded ? 1 : 0,
           }}
           style={{ height: isExpanded ? "auto" : 0 }}
         >
           <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-[#051822]">Recent Projects</h4>
-            
+            <h4 className="text-lg font-semibold text-[#051822]">
+              Recent Projects
+            </h4>
+
             {/* Project Gallery */}
             <div className="grid grid-cols-3 gap-3">
               {Array.from({ length: 3 }).map((_, i) => (
@@ -238,13 +257,16 @@ export default function PremiumServices() {
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start end", "end start"]
+    offset: ["start end", "end start"],
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [50, -50]);
 
   return (
-    <section ref={sectionRef} className="py-24 bg-[#FAFBFC] relative overflow-hidden">
+    <section
+      ref={sectionRef}
+      className="py-24 bg-[#FAFBFC] relative overflow-hidden"
+    >
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
@@ -297,7 +319,7 @@ export default function PremiumServices() {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            From residential projects to large-scale infrastructure, we deliver 
+            From residential projects to large-scale infrastructure, we deliver
             excellence across every construction vertical in Africa.
           </motion.p>
         </motion.div>
@@ -317,22 +339,28 @@ export default function PremiumServices() {
           transition={{ duration: 0.8, delay: 0.8 }}
         >
           {[
-            { number: "98.5%", label: "Project Success Rate", icon: CheckCircle },
+            {
+              number: "98.5%",
+              label: "Project Success Rate",
+              icon: CheckCircle,
+            },
             { number: "4.9/5", label: "Average Rating", icon: Star },
             { number: "24/7", label: "Platform Support", icon: Shield },
             { number: "50+", label: "Cities Served", icon: TrendingUp },
           ].map((metric, index) => {
             const IconComponent = metric.icon;
             return (
-              <motion.div 
-                key={metric.label} 
+              <motion.div
+                key={metric.label}
                 className="text-center p-6 bg-white rounded-2xl border border-gray-100 hover:border-[#AA7452]/30 hover:shadow-lg transition-all duration-300"
                 whileHover={{ y: -4 }}
               >
                 <div className="w-12 h-12 bg-[#AA7452]/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <IconComponent className="w-6 h-6 text-[#AA7452]" />
                 </div>
-                <div className="text-2xl font-bold text-[#051822] mb-1">{metric.number}</div>
+                <div className="text-2xl font-bold text-[#051822] mb-1">
+                  {metric.number}
+                </div>
                 <div className="text-sm text-gray-600">{metric.label}</div>
               </motion.div>
             );

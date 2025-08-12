@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { 
+import React, { useState, useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import {
   ArrowRight,
   Users,
   Building2,
@@ -13,9 +13,9 @@ import {
   Clock,
   Award,
   Sparkles,
-  Play
-} from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+  Play,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const CallToActionSection = () => {
   const navigate = useNavigate();
@@ -24,15 +24,30 @@ const CallToActionSection = () => {
   const [hoveredPath, setHoveredPath] = useState<string | null>(null);
 
   const workerBenefits = [
-    { icon: <CheckCircle className="w-5 h-5" />, text: "Access to premium projects" },
-    { icon: <Clock className="w-5 h-5" />, text: "Flexible remote work options" },
+    {
+      icon: <CheckCircle className="w-5 h-5" />,
+      text: "Access to premium projects",
+    },
+    {
+      icon: <Clock className="w-5 h-5" />,
+      text: "Flexible remote work options",
+    },
     { icon: <DollarSign className="w-5 h-5" />, text: "Secure payment system" },
   ];
 
   const clientBenefits = [
-    { icon: <Users className="w-5 h-5" />, text: "Vetted construction professionals" },
-    { icon: <TrendingUp className="w-5 h-5" />, text: "Real-time project management" },
-    { icon: <Award className="w-5 h-5" />, text: "Quality assurance guarantee" },
+    {
+      icon: <Users className="w-5 h-5" />,
+      text: "Vetted construction professionals",
+    },
+    {
+      icon: <TrendingUp className="w-5 h-5" />,
+      text: "Real-time project management",
+    },
+    {
+      icon: <Award className="w-5 h-5" />,
+      text: "Quality assurance guarantee",
+    },
   ];
 
   const socialProofStats = [
@@ -43,10 +58,9 @@ const CallToActionSection = () => {
 
   return (
     <section ref={sectionRef} className="relative py-24 overflow-hidden">
-      
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#051822] via-[#2D383E] to-[#7C5841]" />
-      
+
       {/* Background Pattern */}
       <div className="absolute inset-0">
         <div
@@ -64,7 +78,6 @@ const CallToActionSection = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-[#051822]/90 via-[#2D383E]/80 to-[#7C5841]/85" />
 
       <div className="container mx-auto px-6 lg:px-8 relative z-10">
-        
         {/* Main CTA Content */}
         <motion.div
           className="text-center mb-16"
@@ -91,7 +104,7 @@ const CallToActionSection = () => {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            Join thousands of construction professionals and clients who are 
+            Join thousands of construction professionals and clients who are
             building Africa's future through our innovative platform.
           </motion.p>
         </motion.div>
@@ -103,28 +116,29 @@ const CallToActionSection = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          
           {/* Workers Path */}
           <motion.div
             className="group relative"
-            onMouseEnter={() => setHoveredPath('workers')}
+            onMouseEnter={() => setHoveredPath("workers")}
             onMouseLeave={() => setHoveredPath(null)}
             whileHover={{ scale: 1.02, y: -4 }}
           >
             <div className="relative p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-500 overflow-hidden h-full">
-              
               {/* Background Gradient */}
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-cyan-500/5 group-hover:from-blue-500/10 group-hover:to-cyan-500/10 transition-all duration-500 rounded-3xl" />
-              
+
               {/* Floating Background Element */}
               <motion.div
                 className="absolute -top-8 -right-8 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-cyan-400/10 rounded-full blur-xl"
-                animate={hoveredPath === 'workers' ? { scale: 1.5, rotate: 180 } : { scale: 1, rotate: 0 }}
+                animate={
+                  hoveredPath === "workers"
+                    ? { scale: 1.5, rotate: 180 }
+                    : { scale: 1, rotate: 0 }
+                }
                 transition={{ duration: 0.6 }}
               />
 
               <div className="relative z-10 space-y-6">
-                
                 {/* Header */}
                 <div className="flex items-start gap-6">
                   <motion.div
@@ -134,8 +148,12 @@ const CallToActionSection = () => {
                     <Users className="w-8 h-8" />
                   </motion.div>
                   <div>
-                    <h3 className="text-2xl font-bold text-white mb-2">For Construction Workers</h3>
-                    <p className="text-white/70">Find quality projects, grow your career, and work remotely</p>
+                    <h3 className="text-2xl font-bold text-white mb-2">
+                      For Construction Workers
+                    </h3>
+                    <p className="text-white/70">
+                      Find quality projects, grow your career, and work remotely
+                    </p>
                   </div>
                 </div>
 
@@ -159,7 +177,7 @@ const CallToActionSection = () => {
 
                 {/* CTA Button */}
                 <motion.button
-                  onClick={() => navigate('/register/worker')}
+                  onClick={() => navigate("/register/worker")}
                   className="w-full bg-gradient-to-r from-blue-400 to-cyan-500 text-white py-4 px-8 rounded-xl font-semibold shadow-2xl hover:shadow-blue-500/30 transition-all duration-300 flex items-center justify-center gap-2 group/btn"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -178,24 +196,26 @@ const CallToActionSection = () => {
           {/* Clients Path */}
           <motion.div
             className="group relative"
-            onMouseEnter={() => setHoveredPath('clients')}
+            onMouseEnter={() => setHoveredPath("clients")}
             onMouseLeave={() => setHoveredPath(null)}
             whileHover={{ scale: 1.02, y: -4 }}
           >
             <div className="relative p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-500 overflow-hidden h-full">
-              
               {/* Background Gradient */}
               <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/5 group-hover:from-green-500/10 group-hover:to-emerald-500/10 transition-all duration-500 rounded-3xl" />
-              
+
               {/* Floating Background Element */}
               <motion.div
                 className="absolute -top-8 -right-8 w-32 h-32 bg-gradient-to-br from-green-400/10 to-emerald-400/10 rounded-full blur-xl"
-                animate={hoveredPath === 'clients' ? { scale: 1.5, rotate: 180 } : { scale: 1, rotate: 0 }}
+                animate={
+                  hoveredPath === "clients"
+                    ? { scale: 1.5, rotate: 180 }
+                    : { scale: 1, rotate: 0 }
+                }
                 transition={{ duration: 0.6 }}
               />
 
               <div className="relative z-10 space-y-6">
-                
                 {/* Header */}
                 <div className="flex items-start gap-6">
                   <motion.div
@@ -205,8 +225,13 @@ const CallToActionSection = () => {
                     <Building2 className="w-8 h-8" />
                   </motion.div>
                   <div>
-                    <h3 className="text-2xl font-bold text-white mb-2">For Clients & Companies</h3>
-                    <p className="text-white/70">Connect with skilled professionals and manage projects seamlessly</p>
+                    <h3 className="text-2xl font-bold text-white mb-2">
+                      For Clients & Companies
+                    </h3>
+                    <p className="text-white/70">
+                      Connect with skilled professionals and manage projects
+                      seamlessly
+                    </p>
                   </div>
                 </div>
 
@@ -230,7 +255,7 @@ const CallToActionSection = () => {
 
                 {/* CTA Button */}
                 <motion.button
-                  onClick={() => navigate('/register/client')}
+                  onClick={() => navigate("/register/client")}
                   className="w-full bg-gradient-to-r from-green-400 to-emerald-500 text-white py-4 px-8 rounded-xl font-semibold shadow-2xl hover:shadow-green-500/30 transition-all duration-300 flex items-center justify-center gap-2 group/btn"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -258,9 +283,9 @@ const CallToActionSection = () => {
           <div className="relative inline-block p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl">
             <div className="space-y-6">
               <p className="text-white/80 text-lg">Want to learn more first?</p>
-              
+
               <motion.button
-                onClick={() => navigate('/demo')}
+                onClick={() => navigate("/demo")}
                 className="inline-flex items-center gap-3 px-8 py-4 bg-white/10 backdrop-blur-xl border border-white/20 text-white rounded-xl font-semibold hover:bg-white/15 transition-all duration-300"
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.98 }}

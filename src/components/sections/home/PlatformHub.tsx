@@ -1,12 +1,12 @@
-import { useRef, useState } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import { 
-  Smartphone, 
-  Users, 
-  MapPin, 
-  Clock, 
-  DollarSign, 
-  Shield, 
+import { useRef, useState } from "react";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import {
+  Smartphone,
+  Users,
+  MapPin,
+  Clock,
+  DollarSign,
+  Shield,
   Zap,
   CheckCircle,
   ArrowRight,
@@ -21,55 +21,78 @@ import {
   Activity,
   Brain,
   Wifi,
-  Cpu
-} from 'lucide-react';
+  Cpu,
+} from "lucide-react";
 
 // Platform features data
 const platformFeatures = [
   {
     icon: <Brain className="w-6 h-6" />,
     title: "Smart Matching Algorithm",
-    description: "AI-powered system connects the right professionals with perfect projects",
-    color: "from-blue-400 to-cyan-400"
+    description:
+      "AI-powered system connects the right professionals with perfect projects",
+    color: "from-blue-400 to-cyan-400",
   },
   {
     icon: <MessageSquare className="w-6 h-6" />,
     title: "Real-time Communication",
-    description: "Instant messaging, video calls, and project updates keep everyone connected",
-    color: "from-green-400 to-emerald-400"
+    description:
+      "Instant messaging, video calls, and project updates keep everyone connected",
+    color: "from-green-400 to-emerald-400",
   },
   {
     icon: <Monitor className="w-6 h-6" />,
     title: "Project Management Suite",
-    description: "Comprehensive tools for planning, tracking, and delivering projects on time",
-    color: "from-purple-400 to-pink-400"
+    description:
+      "Comprehensive tools for planning, tracking, and delivering projects on time",
+    color: "from-purple-400 to-pink-400",
   },
   {
     icon: <Shield className="w-6 h-6" />,
     title: "Quality Assurance",
     description: "Built-in quality control and verification systems",
-    color: "from-orange-400 to-red-400"
+    color: "from-orange-400 to-red-400",
   },
   {
     icon: <DollarSign className="w-6 h-6" />,
     title: "Secure Payment Gateway",
     description: "Automated payments with milestone-based releases",
-    color: "from-yellow-400 to-orange-400"
+    color: "from-yellow-400 to-orange-400",
   },
   {
     icon: <BarChart3 className="w-6 h-6" />,
     title: "Performance Analytics",
     description: "Detailed insights and project performance metrics",
-    color: "from-indigo-400 to-blue-400"
-  }
+    color: "from-indigo-400 to-blue-400",
+  },
 ];
 
 // Platform stats
 const platformStats = [
-  { value: "1,200+", label: "Active Users", icon: <Users className="w-6 h-6" />, color: "from-blue-400 to-cyan-400" },
-  { value: "500+", label: "Projects", icon: <CheckCircle className="w-6 h-6" />, color: "from-green-400 to-emerald-400" },
-  { value: "₦2B+", label: "Project Value", icon: <DollarSign className="w-6 h-6" />, color: "from-yellow-400 to-orange-400" },
-  { value: "98%", label: "Success Rate", icon: <Star className="w-6 h-6" />, color: "from-purple-400 to-pink-400" }
+  {
+    value: "1,200+",
+    label: "Active Users",
+    icon: <Users className="w-6 h-6" />,
+    color: "from-blue-400 to-cyan-400",
+  },
+  {
+    value: "500+",
+    label: "Projects",
+    icon: <CheckCircle className="w-6 h-6" />,
+    color: "from-green-400 to-emerald-400",
+  },
+  {
+    value: "₦2B+",
+    label: "Project Value",
+    icon: <DollarSign className="w-6 h-6" />,
+    color: "from-yellow-400 to-orange-400",
+  },
+  {
+    value: "98%",
+    label: "Success Rate",
+    icon: <Star className="w-6 h-6" />,
+    color: "from-purple-400 to-pink-400",
+  },
 ];
 
 // Network Animation Component
@@ -146,7 +169,13 @@ const NetworkAnimation = () => {
 };
 
 // Glass Feature Card Component
-const GlassFeatureCard = ({ feature, index }: { feature: any; index: number }) => {
+const GlassFeatureCard = ({
+  feature,
+  index,
+}: {
+  feature: any;
+  index: number;
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, margin: "-50px" });
@@ -162,14 +191,17 @@ const GlassFeatureCard = ({ feature, index }: { feature: any; index: number }) =
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:border-white/20 shadow-2xl hover:shadow-3xl transition-all duration-500 overflow-hidden h-full">
-        
         {/* Gradient overlay */}
-        <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-5 group-hover:opacity-10 transition-opacity duration-500 rounded-2xl`} />
-        
+        <div
+          className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-5 group-hover:opacity-10 transition-opacity duration-500 rounded-2xl`}
+        />
+
         {/* Floating icon background */}
         <motion.div
           className={`absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-br ${feature.color} opacity-10 rounded-full blur-xl`}
-          animate={isHovered ? { scale: 1.2, rotate: 180 } : { scale: 1, rotate: 0 }}
+          animate={
+            isHovered ? { scale: 1.2, rotate: 180 } : { scale: 1, rotate: 0 }
+          }
           transition={{ duration: 0.6 }}
         />
 
@@ -177,10 +209,10 @@ const GlassFeatureCard = ({ feature, index }: { feature: any; index: number }) =
           {/* Icon */}
           <motion.div
             className={`w-14 h-14 rounded-xl bg-gradient-to-br ${feature.color} p-3 text-white shadow-lg backdrop-blur-sm`}
-            whileHover={{ 
-              scale: 1.1, 
+            whileHover={{
+              scale: 1.1,
               rotate: 10,
-              boxShadow: "0 20px 40px rgba(255, 255, 255, 0.1)"
+              boxShadow: "0 20px 40px rgba(255, 255, 255, 0.1)",
             }}
             transition={{ duration: 0.4 }}
           >
@@ -209,9 +241,7 @@ const GlassFeatureCard = ({ feature, index }: { feature: any; index: number }) =
         </div>
 
         {/* Glass shine effect */}
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out"
-        />
+        <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
       </div>
     </motion.div>
   );
@@ -221,25 +251,45 @@ const GlassFeatureCard = ({ feature, index }: { feature: any; index: number }) =
 const PlatformDemo = () => {
   const [activeTab, setActiveTab] = useState(0);
   const tabs = [
-    { name: "Workers", icon: <Users className="w-5 h-5" />, color: "from-blue-400 to-cyan-400" },
-    { name: "Clients", icon: <Monitor className="w-5 h-5" />, color: "from-green-400 to-emerald-400" },
-    { name: "Platform", icon: <Activity className="w-5 h-5" />, color: "from-purple-400 to-pink-400" },
+    {
+      name: "Workers",
+      icon: <Users className="w-5 h-5" />,
+      color: "from-blue-400 to-cyan-400",
+    },
+    {
+      name: "Clients",
+      icon: <Monitor className="w-5 h-5" />,
+      color: "from-green-400 to-emerald-400",
+    },
+    {
+      name: "Platform",
+      icon: <Activity className="w-5 h-5" />,
+      color: "from-purple-400 to-pink-400",
+    },
   ];
 
   const mockData = {
     workers: {
       title: "Worker Dashboard",
       projects: [
-        { name: "Commercial Plaza - Lagos", budget: "₦5,000,000", status: "Available" },
-        { name: "Residential Complex - Abuja", budget: "₦8,500,000", status: "Available" },
-      ]
+        {
+          name: "Commercial Plaza - Lagos",
+          budget: "₦5,000,000",
+          status: "Available",
+        },
+        {
+          name: "Residential Complex - Abuja",
+          budget: "₦8,500,000",
+          status: "Available",
+        },
+      ],
     },
     clients: {
-      title: "Client Dashboard", 
+      title: "Client Dashboard",
       projects: [
         { name: "Office Building Renovation", progress: 65, team: 8 },
         { name: "Warehouse Construction", progress: 30, team: 12 },
-      ]
+      ],
     },
     platform: {
       title: "Platform Analytics",
@@ -247,18 +297,17 @@ const PlatformDemo = () => {
         { label: "Active Projects", value: "1,245" },
         { label: "Connected Users", value: "3,567" },
         { label: "Success Rate", value: "98.5%" },
-      ]
-    }
+      ],
+    },
   };
 
   return (
     <div className="relative">
       {/* Glass container */}
       <div className="relative p-8 rounded-3xl backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl overflow-hidden">
-        
         {/* Background decoration */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#AA7452]/10 to-[#7C5841]/10 rounded-full blur-3xl" />
-        
+
         <div className="relative z-10">
           {/* Tab Navigation */}
           <div className="flex gap-2 mb-8 p-2 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
@@ -268,8 +317,8 @@ const PlatformDemo = () => {
                 onClick={() => setActiveTab(index)}
                 className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-medium transition-all duration-300 ${
                   activeTab === index
-                    ? 'bg-[#AA7452]/20 text-[#D4C9C7] border border-[#AA7452]/30'
-                    : 'text-white/70 hover:text-white hover:bg-white/5'
+                    ? "bg-[#AA7452]/20 text-[#D4C9C7] border border-[#AA7452]/30"
+                    : "text-white/70 hover:text-white hover:bg-white/5"
                 }`}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -291,18 +340,22 @@ const PlatformDemo = () => {
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-white">
-                {activeTab === 0 ? mockData.workers.title : 
-                 activeTab === 1 ? mockData.clients.title : 
-                 mockData.platform.title}
+                {activeTab === 0
+                  ? mockData.workers.title
+                  : activeTab === 1
+                    ? mockData.clients.title
+                    : mockData.platform.title}
               </h3>
               <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse" />
             </div>
-            
+
             {/* Dynamic content based on active tab */}
             <div className="space-y-4">
               {activeTab === 0 && (
                 <div className="space-y-3">
-                  <h4 className="text-sm font-medium text-white/80">Available Projects</h4>
+                  <h4 className="text-sm font-medium text-white/80">
+                    Available Projects
+                  </h4>
                   {mockData.workers.projects.map((project, i) => (
                     <motion.div
                       key={i}
@@ -312,8 +365,12 @@ const PlatformDemo = () => {
                       transition={{ delay: i * 0.1 }}
                     >
                       <div>
-                        <div className="text-white font-medium">{project.name}</div>
-                        <div className="text-[#AA7452] text-sm">{project.budget}</div>
+                        <div className="text-white font-medium">
+                          {project.name}
+                        </div>
+                        <div className="text-[#AA7452] text-sm">
+                          {project.budget}
+                        </div>
                       </div>
                       <button className="px-3 py-1 bg-[#AA7452] text-white text-sm rounded">
                         Apply
@@ -325,7 +382,9 @@ const PlatformDemo = () => {
 
               {activeTab === 1 && (
                 <div className="space-y-3">
-                  <h4 className="text-sm font-medium text-white/80">Active Projects</h4>
+                  <h4 className="text-sm font-medium text-white/80">
+                    Active Projects
+                  </h4>
                   {mockData.clients.projects.map((project, i) => (
                     <motion.div
                       key={i}
@@ -335,16 +394,22 @@ const PlatformDemo = () => {
                       transition={{ delay: i * 0.1 }}
                     >
                       <div className="flex justify-between items-center mb-2">
-                        <div className="text-white font-medium">{project.name}</div>
-                        <div className="text-sm text-white/70">{project.team} team members</div>
+                        <div className="text-white font-medium">
+                          {project.name}
+                        </div>
+                        <div className="text-sm text-white/70">
+                          {project.team} team members
+                        </div>
                       </div>
                       <div className="w-full bg-white/10 rounded-full h-2">
-                        <div 
+                        <div
                           className="bg-[#AA7452] h-2 rounded-full transition-all duration-1000"
                           style={{ width: `${project.progress}%` }}
                         />
                       </div>
-                      <div className="text-xs text-white/70 mt-1">{project.progress}% Complete</div>
+                      <div className="text-xs text-white/70 mt-1">
+                        {project.progress}% Complete
+                      </div>
                     </motion.div>
                   ))}
                 </div>
@@ -360,8 +425,12 @@ const PlatformDemo = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: i * 0.1 }}
                     >
-                      <div className="text-2xl font-bold text-[#AA7452] mb-1">{metric.value}</div>
-                      <div className="text-xs text-white/70">{metric.label}</div>
+                      <div className="text-2xl font-bold text-[#AA7452] mb-1">
+                        {metric.value}
+                      </div>
+                      <div className="text-xs text-white/70">
+                        {metric.label}
+                      </div>
                     </motion.div>
                   ))}
                 </div>
@@ -382,16 +451,16 @@ export default function PlatformHub() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start end", "end start"]
+    offset: ["start end", "end start"],
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [50, -50]);
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
 
   return (
-    <section 
-      id="platform" 
-      ref={sectionRef} 
+    <section
+      id="platform"
+      ref={sectionRef}
       className="relative py-32 overflow-hidden bg-gradient-to-br from-[#051822] via-[#2D383E] to-[#7C5841]"
     >
       {/* Network Animation Background */}
@@ -408,10 +477,10 @@ export default function PlatformHub() {
         transition={{
           duration: 12,
           repeat: Infinity,
-          ease: "easeInOut"
+          ease: "easeInOut",
         }}
       />
-      
+
       <motion.div
         className="absolute bottom-32 right-10 w-96 h-96 bg-gradient-to-r from-[#2D383E]/10 to-[#051822]/10 rounded-full blur-3xl"
         style={{ y: y.get() * -0.8 }}
@@ -423,18 +492,14 @@ export default function PlatformHub() {
           duration: 15,
           repeat: Infinity,
           ease: "easeInOut",
-          delay: 3
+          delay: 3,
         }}
       />
 
       <div className="container mx-auto px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          
           {/* Left Side: Platform Overview */}
-          <motion.div
-            style={{ opacity }}
-            className="text-white"
-          >
+          <motion.div style={{ opacity }} className="text-white">
             {/* Glass Badge */}
             <motion.div
               className="inline-flex items-center gap-3 px-6 py-3 bg-[#AA7452]/10 backdrop-blur-xl border border-[#AA7452]/20 text-[#D4C9C7] rounded-full text-sm font-medium mb-8 shadow-lg"
@@ -470,9 +535,10 @@ export default function PlatformHub() {
               transition={{ duration: 0.8, delay: 0.4 }}
               viewport={{ once: true }}
             >
-              Our innovative platform bridges the gap between skilled construction 
-              professionals and clients across Nigeria. Experience seamless remote 
-              collaboration that transforms how construction projects are managed.
+              Our innovative platform bridges the gap between skilled
+              construction professionals and clients across Nigeria. Experience
+              seamless remote collaboration that transforms how construction
+              projects are managed.
             </motion.p>
 
             {/* Platform Features */}
@@ -489,12 +555,18 @@ export default function PlatformHub() {
                   className="flex gap-4 p-4 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 hover:bg-white/10 transition-all duration-300"
                   whileHover={{ x: 8 }}
                 >
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} p-2.5 text-white flex-shrink-0`}>
+                  <div
+                    className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} p-2.5 text-white flex-shrink-0`}
+                  >
                     {feature.icon}
                   </div>
                   <div>
-                    <h4 className="text-lg font-semibold mb-2">{feature.title}</h4>
-                    <p className="text-white/70 text-sm">{feature.description}</p>
+                    <h4 className="text-lg font-semibold mb-2">
+                      {feature.title}
+                    </h4>
+                    <p className="text-white/70 text-sm">
+                      {feature.description}
+                    </p>
                   </div>
                 </motion.div>
               ))}
@@ -518,7 +590,7 @@ export default function PlatformHub() {
                   <ArrowRight className="w-5 h-5" />
                 </div>
               </motion.button>
-              
+
               <motion.button
                 className="px-8 py-4 bg-white/10 backdrop-blur-xl border border-white/20 text-white rounded-xl font-semibold hover:bg-white/15 transition-all duration-300"
                 whileHover={{ scale: 1.05, y: -2 }}
@@ -541,7 +613,9 @@ export default function PlatformHub() {
             >
               {platformStats.slice(0, 2).map((stat) => (
                 <div key={stat.label} className="text-center">
-                  <div className="text-2xl font-bold text-[#AA7452]">{stat.value}</div>
+                  <div className="text-2xl font-bold text-[#AA7452]">
+                    {stat.value}
+                  </div>
                   <div className="text-sm text-white/70">{stat.label}</div>
                 </div>
               ))}
@@ -569,7 +643,11 @@ export default function PlatformHub() {
           viewport={{ once: true }}
         >
           {platformFeatures.map((feature, index) => (
-            <GlassFeatureCard key={feature.title} feature={feature} index={index} />
+            <GlassFeatureCard
+              key={feature.title}
+              feature={feature}
+              index={index}
+            />
           ))}
         </motion.div>
       </div>

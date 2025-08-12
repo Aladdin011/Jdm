@@ -11,7 +11,7 @@ import {
   MapPin,
   Zap,
   Construction,
-  Clock
+  Clock,
 } from "lucide-react";
 
 // Enhanced animated counter with smooth easing
@@ -20,7 +20,7 @@ const AnimatedCounter = ({
   suffix = "",
   prefix = "",
   duration = 2.5,
-  isVisible = false
+  isVisible = false,
 }: {
   value: number;
   suffix?: string;
@@ -114,7 +114,7 @@ const BuildingModel = () => {
           animate={{ y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
         />
-        
+
         {/* Floor 2 */}
         <motion.div
           className="absolute bottom-16 left-1/3 w-28 h-16 bg-gradient-to-t from-[var(--accent-warm)] to-[var(--accent-light)] rounded-lg"
@@ -122,7 +122,7 @@ const BuildingModel = () => {
           animate={{ y: 0 }}
           transition={{ duration: 0.8, delay: 1.0 }}
         />
-        
+
         {/* Floor 3 */}
         <motion.div
           className="absolute bottom-28 left-1/2 transform -translate-x-1/2 w-24 h-12 bg-gradient-to-t from-[var(--accent-light)] to-[var(--neutral-light)] rounded-lg"
@@ -130,7 +130,7 @@ const BuildingModel = () => {
           animate={{ y: 0 }}
           transition={{ duration: 0.8, delay: 1.2 }}
         />
-        
+
         {/* Construction Crane */}
         <motion.div
           className="absolute top-8 right-8 w-2 h-32 bg-[var(--accent-light)] origin-bottom"
@@ -152,7 +152,9 @@ const BuildingModel = () => {
         <div className="flex items-center gap-2">
           <Zap className="w-4 h-4 text-[var(--accent-light)]" />
           <div>
-            <div className="text-xs font-medium text-white">Real-time Updates</div>
+            <div className="text-xs font-medium text-white">
+              Real-time Updates
+            </div>
             <div className="text-xs text-white/70">Live monitoring</div>
           </div>
         </div>
@@ -182,7 +184,9 @@ const BuildingModel = () => {
         <div className="flex items-center gap-2">
           <Award className="w-4 h-4 text-[var(--accent-light)]" />
           <div>
-            <div className="text-xs font-medium text-white">Quality Assured</div>
+            <div className="text-xs font-medium text-white">
+              Quality Assured
+            </div>
             <div className="text-xs text-white/70">Verified professionals</div>
           </div>
         </div>
@@ -195,7 +199,7 @@ const PremiumHero = () => {
   const heroRef = useRef(null);
   const navigate = useNavigate();
   const [statsInView, setStatsInView] = useState(false);
-  
+
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -272,7 +276,6 @@ const PremiumHero = () => {
       <div className="relative z-10 min-h-screen flex items-center">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            
             {/* Left Content */}
             <motion.div
               variants={containerVariants}
@@ -308,22 +311,38 @@ const PremiumHero = () => {
               {/* Description */}
               <motion.div variants={itemVariants}>
                 <p className="text-xl text-[var(--neutral-light)] leading-relaxed mb-8 max-w-2xl">
-                  Connect with skilled construction professionals across Nigeria through our 
-                  revolutionary remote platform. Quality craftsmanship meets digital innovation 
-                  to transform how we build modern Africa.
+                  Connect with skilled construction professionals across Nigeria
+                  through our revolutionary remote platform. Quality
+                  craftsmanship meets digital innovation to transform how we
+                  build modern Africa.
                 </p>
               </motion.div>
 
               {/* Interactive Stats */}
-              <motion.div 
+              <motion.div
                 ref={statsRef}
                 variants={itemVariants}
                 className="grid grid-cols-3 gap-6 mb-10"
               >
                 {[
-                  { icon: TrendingUp, value: 500, suffix: "+", label: "Projects Completed" },
-                  { icon: Users, value: 1200, suffix: "+", label: "Skilled Workers" },
-                  { icon: MapPin, value: 50, suffix: "+", label: "Cities Served" },
+                  {
+                    icon: TrendingUp,
+                    value: 500,
+                    suffix: "+",
+                    label: "Projects Completed",
+                  },
+                  {
+                    icon: Users,
+                    value: 1200,
+                    suffix: "+",
+                    label: "Skilled Workers",
+                  },
+                  {
+                    icon: MapPin,
+                    value: 50,
+                    suffix: "+",
+                    label: "Cities Served",
+                  },
                 ].map((stat, index) => (
                   <motion.div
                     key={stat.label}
@@ -332,14 +351,16 @@ const PremiumHero = () => {
                   >
                     <stat.icon className="w-6 h-6 text-[var(--accent-light)] mx-auto mb-2" />
                     <div className="text-2xl lg:text-3xl font-bold mb-1">
-                      <AnimatedCounter 
-                        value={stat.value} 
+                      <AnimatedCounter
+                        value={stat.value}
                         suffix={stat.suffix}
                         isVisible={statsInView}
                         duration={2.5}
                       />
                     </div>
-                    <div className="text-sm text-[var(--neutral-light)]">{stat.label}</div>
+                    <div className="text-sm text-[var(--neutral-light)]">
+                      {stat.label}
+                    </div>
                   </motion.div>
                 ))}
               </motion.div>
@@ -348,7 +369,7 @@ const PremiumHero = () => {
               <motion.div variants={itemVariants}>
                 <div className="flex flex-col sm:flex-row gap-4 mb-8">
                   <motion.button
-                    onClick={() => navigate('/register')}
+                    onClick={() => navigate("/register")}
                     className="group relative px-8 py-4 bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent-warm)] text-white rounded-2xl font-semibold overflow-hidden"
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
@@ -361,7 +382,7 @@ const PremiumHero = () => {
                   </motion.button>
 
                   <motion.button
-                    onClick={() => navigate('/projects')}
+                    onClick={() => navigate("/projects")}
                     className="group px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-2xl font-semibold hover:bg-white/20 transition-all duration-300"
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
@@ -384,7 +405,10 @@ const PremiumHero = () => {
                   </span>
                   <div className="flex items-center gap-6 opacity-60">
                     {Array.from({ length: 4 }).map((_, i) => (
-                      <div key={i} className="w-20 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                      <div
+                        key={i}
+                        className="w-20 h-8 bg-white/10 rounded-lg flex items-center justify-center"
+                      >
                         <div className="w-12 h-4 bg-white/20 rounded" />
                       </div>
                     ))}
