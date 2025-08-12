@@ -5,28 +5,34 @@
 ### ✅ KEPT LOCAL (Important Branding & Core Assets)
 
 #### 1. **Logos** - KEPT LOCAL ✅
+
 - **Login page logo**: `/images/brand/logo.svg`
-- **Register page logo**: `/images/brand/logo.svg` 
+- **Register page logo**: `/images/brand/logo.svg`
 - **ForgotPassword page logo**: `/images/brand/logo.svg`
 - **Reason**: Critical branding assets should load reliably
 
 #### 2. **Navigation/SEO Logos** - NEEDS TO STAY LOCAL
+
 - Files that may still have external logo URLs should use `/images/brand/logo.svg`
 
 ### ✅ RESTORED TO EXTERNAL (Placeholder/Demo Content)
 
 #### 1. **Blog Images** - RESTORED TO EXTERNAL ✅
+
 All 10 blog post images restored to Unsplash URLs:
+
 - Construction technology demos
-- Safety practice examples  
+- Safety practice examples
 - Architecture showcases
 - **Reason**: These are placeholder content images for demo purposes
 
 #### 2. **Login Background** - RESTORED TO EXTERNAL ✅
+
 - Login page background image restored to Builder.io URL
 - **Reason**: Decorative background, not critical branding
 
 #### 3. **Testimonials & Projects** - ALREADY EXTERNAL ✅
+
 - Testimonial avatars: Already using Unsplash URLs
 - Project images: Already using Unsplash URLs
 - Team photos: Already using Unsplash URLs
@@ -35,14 +41,16 @@ All 10 blog post images restored to Unsplash URLs:
 ### 🔄 CURRENT STATUS
 
 #### External URLs Still in Use (Good):
+
 - **Testimonials**: ~8 Unsplash avatar URLs
-- **Projects**: ~6 Unsplash project image URLs  
+- **Projects**: ~6 Unsplash project image URLs
 - **About page**: ~3 Unsplash team/construction images
 - **Blog posts**: 10 Unsplash article images (restored)
 - **Hero background**: Builder.io URL (still external)
 - **Login background**: Builder.io URL (restored)
 
 #### Local Assets in Use (Good):
+
 - **All logos**: `/images/brand/logo.svg`
 - **Critical branding elements**
 
@@ -68,7 +76,7 @@ All 10 blog post images restored to Unsplash URLs:
 ## Files Unchanged (Perfect as-is)
 
 - **`src/components/sections/home/PremiumTestimonials.tsx`** - Already external URLs
-- **`src/components/sections/home/PremiumProjects.tsx`** - Already external URLs  
+- **`src/components/sections/home/PremiumProjects.tsx`** - Already external URLs
 - **`src/pages/About.tsx`** - Already external URLs
 - **`src/pages/Register.tsx`** - Logo local (perfect)
 - **`src/pages/ForgotPassword.tsx`** - Logo local (perfect)
