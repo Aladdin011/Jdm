@@ -1,0 +1,388 @@
+// Performance optimization utilities
+
+// Image lazy loading with Intersection Observer
+export const createImageObserver = () => {
+  if (!('IntersectionObserver' in window)) {
+    // Fallback for older browsers
+    return null;
+  }
+
+  return new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const img = entry.target as HTMLImageElement;
+          if (img.dataset.src) {
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+            img.classList.remove('lazy');
+            img.classList.add('loaded');
+          }
+        }
+      });
+    },
+    {
+      root: null,
+      rootMargin: '50px',
+      threshold: 0.1,
+    }
+  );
+};
+
+// Debounce function for performance optimization
+export const debounce = <T extends (...args: any[]) => any>(
+  func: T,
+  delay: number
+): ((...args: Parameters<T>) => void) => {
+  let timeoutId: NodeJS.Timeout;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func(...args), delay);
+  };
+};
+
+// Throttle function for scroll events
+export const throttle = <T extends (...args: any[]) => any>(
+  func: T,
+  delay: number
+): ((...args: Parameters<T>) => void) => {
+  let lastCall = 0;
+  return (...args: Parameters<T>) => {
+    const now = Date.now();
+    if (now - lastCall >= delay) {
+      lastCall = now;
+      func(...args);
+    }
+  };
+};
+
+// RequestAnimationFrame throttle for smooth animations
+export const rafThrottle = <T extends (...args: any[]) => any>(
+  func: T
+): ((...args: Parameters<T>) => void) => {
+  let rafId: number | null = null;
+  return (...args: Parameters<T>) => {
+    if (rafId === null) {
+      rafId = requestAnimationFrame(() => {
+        func(...args);
+        rafId = null;
+      });
+    }
+  };
+};
+
+// Image optimization utilities
+export const getOptimizedImageUrl = (
+  url: string,
+  width?: number,
+  height?: number,
+  quality: number = 80,
+  format: 'webp' | 'jpg' | 'png' = 'webp'
+): string => {
+  // Check if it's a Builder.io CDN URL
+  if (url.includes('cdn.builder.io')) {
+    const params = new URLSearchParams();
+    if (width) params.set('width', width.toString());
+    if (height) params.set('height', height.toString());
+    params.set('quality', quality.toString());
+    params.set('format', format);
+    
+    return `${url}&${params.toString()}`;
+  }
+  
+  // For other URLs, return as-is (could be extended for other CDNs)
+  return url;
+};
+
+// Generate responsive image srcSet
+export const generateSrcSet = (
+  url: string,
+  sizes: number[] = [320, 640, 960, 1280, 1920]
+): string => {
+  return sizes
+    .map((size) => {
+      const optimizedUrl = getOptimizedImageUrl(url, size);
+      return `${optimizedUrl} ${size}w`;
+    })
+    .join(', ');
+};
+
+// Preload critical resources
+export const preloadResource = (
+  href: string,
+  as: 'image' | 'font' | 'script' | 'style',
+  crossorigin?: boolean
+) => {
+  const link = document.createElement('link');
+  link.rel = 'preload';
+  link.href = href;
+  link.as = as;
+  if (crossorigin) link.crossOrigin = 'anonymous';
+  document.head.appendChild(link);
+};
+
+// Preload critical images
+export const preloadCriticalImages = (imageUrls: string[]) => {
+  imageUrls.forEach((url) => {
+    const optimizedUrl = getOptimizedImageUrl(url, 1920);
+    preloadResource(optimizedUrl, 'image');
+  });
+};
+
+// Web Vitals tracking
+export const trackWebVitals = () => {
+  if (typeof window === 'undefined') return;
+
+  // Track FCP (First Contentful Paint)
+  const observer = new PerformanceObserver((list) => {
+    const entries = list.getEntries();
+    entries.forEach((entry) => {
+      if (entry.name === 'first-contentful-paint') {
+        console.log('FCP:', entry.startTime);
+        // Send to analytics
+        if (window.gtag) {
+          window.gtag('event', 'web_vitals', {
+            event_category: 'Performance',
+            event_label: 'First Contentful Paint',
+            value: Math.round(entry.startTime),
+          });
+        }
+      }
+    });
+  });
+
+  observer.observe({ entryTypes: ['paint'] });
+
+  // Track LCP (Largest Contentful Paint)
+  const lcpObserver = new PerformanceObserver((list) => {
+    const entries = list.getEntries();
+    const lastEntry = entries[entries.length - 1];
+    console.log('LCP:', lastEntry.startTime);
+    
+    if (window.gtag) {
+      window.gtag('event', 'web_vitals', {
+        event_category: 'Performance',
+        event_label: 'Largest Contentful Paint',
+        value: Math.round(lastEntry.startTime),
+      });
+    }
+  });
+
+  lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+
+  // Track CLS (Cumulative Layout Shift)
+  let clsValue = 0;
+  const clsObserver = new PerformanceObserver((list) => {
+    for (const entry of list.getEntries()) {
+      if (!(entry as any).hadRecentInput) {
+        clsValue += (entry as any).value;
+      }
+    }
+    console.log('CLS:', clsValue);
+    
+    if (window.gtag) {
+      window.gtag('event', 'web_vitals', {
+        event_category: 'Performance',
+        event_label: 'Cumulative Layout Shift',
+        value: Math.round(clsValue * 1000),
+      });
+    }
+  });
+
+  clsObserver.observe({ entryTypes: ['layout-shift'] });
+
+  // Track FID (First Input Delay)
+  const fidObserver = new PerformanceObserver((list) => {
+    const firstInput = list.getEntries()[0];
+    if (firstInput) {
+      const fid = firstInput.processingStart - firstInput.startTime;
+      console.log('FID:', fid);
+      
+      if (window.gtag) {
+        window.gtag('event', 'web_vitals', {
+          event_category: 'Performance',
+          event_label: 'First Input Delay',
+          value: Math.round(fid),
+        });
+      }
+    }
+  });
+
+  fidObserver.observe({ entryTypes: ['first-input'] });
+};
+
+// Resource hints for better performance
+export const addResourceHints = () => {
+  // DNS prefetch for external domains
+  const dnsPrefetchDomains = [
+    '//fonts.googleapis.com',
+    '//fonts.gstatic.com',
+    '//cdn.builder.io',
+    '//images.unsplash.com',
+  ];
+
+  dnsPrefetchDomains.forEach((domain) => {
+    const link = document.createElement('link');
+    link.rel = 'dns-prefetch';
+    link.href = domain;
+    document.head.appendChild(link);
+  });
+
+  // Preconnect to critical domains
+  const preconnectDomains = [
+    'https://fonts.googleapis.com',
+    'https://cdn.builder.io',
+  ];
+
+  preconnectDomains.forEach((domain) => {
+    const link = document.createElement('link');
+    link.rel = 'preconnect';
+    link.href = domain;
+    link.crossOrigin = 'anonymous';
+    document.head.appendChild(link);
+  });
+};
+
+// Code splitting utilities
+export const loadComponentAsync = <T>(
+  importFunc: () => Promise<{ default: T }>
+): Promise<T> => {
+  return importFunc().then((module) => module.default);
+};
+
+// Memory management
+export const cleanupEventListeners = (
+  element: Element | Window,
+  events: Array<{ type: string; listener: EventListener; options?: boolean | AddEventListenerOptions }>
+) => {
+  events.forEach(({ type, listener, options }) => {
+    element.removeEventListener(type, listener, options);
+  });
+};
+
+// Service Worker registration for PWA
+export const registerServiceWorker = async () => {
+  if ('serviceWorker' in navigator) {
+    try {
+      const registration = await navigator.serviceWorker.register('/sw.js');
+      console.log('Service Worker registered:', registration);
+      
+      // Check for updates
+      registration.addEventListener('updatefound', () => {
+        const newWorker = registration.installing;
+        if (newWorker) {
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed') {
+              // Show update notification to user
+              console.log('New content available, please refresh.');
+            }
+          });
+        }
+      });
+    } catch (error) {
+      console.error('Service Worker registration failed:', error);
+    }
+  }
+};
+
+// Cache management
+export const cacheResource = async (
+  cacheName: string,
+  resources: string[]
+): Promise<void> => {
+  if ('caches' in window) {
+    const cache = await caches.open(cacheName);
+    await cache.addAll(resources);
+  }
+};
+
+// Font loading optimization
+export const optimizeFontLoading = () => {
+  // Add font-display: swap to improve loading performance
+  const fontFaces = document.querySelectorAll('@font-face');
+  fontFaces.forEach((fontFace) => {
+    (fontFace as any).fontDisplay = 'swap';
+  });
+
+  // Preload critical fonts
+  const criticalFonts = [
+    'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap',
+  ];
+
+  criticalFonts.forEach((fontUrl) => {
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.as = 'style';
+    link.href = fontUrl;
+    document.head.appendChild(link);
+  });
+};
+
+// Critical CSS inlining
+export const inlineCriticalCSS = (css: string) => {
+  const style = document.createElement('style');
+  style.textContent = css;
+  document.head.appendChild(style);
+};
+
+// Performance monitoring
+export const measurePerformance = (name: string, fn: () => void) => {
+  const start = performance.now();
+  fn();
+  const end = performance.now();
+  console.log(`${name} took ${end - start} milliseconds`);
+};
+
+// Async script loading
+export const loadScript = (src: string): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = src;
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
+};
+
+// Bundle size analysis helper
+export const analyzeBundleSize = () => {
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Bundle analysis would be available in production build');
+  }
+};
+
+// Global performance configuration
+export const initializePerformanceOptimizations = () => {
+  // Add resource hints
+  addResourceHints();
+  
+  // Track web vitals
+  trackWebVitals();
+  
+  // Optimize font loading
+  optimizeFontLoading();
+  
+  // Register service worker in production
+  if (process.env.NODE_ENV === 'production') {
+    registerServiceWorker();
+  }
+  
+  // Preload critical images (customize based on your needs)
+  const criticalImages = [
+    'https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F6fe8dede446d44e5b3f61dac8e245b53?alt=media&token=2cd3aa20-e283-42dd-ad0a-b327725825be&apiKey=751ea84be0da437c8dd3f1bf04173189',
+  ];
+  
+  preloadCriticalImages(criticalImages);
+};
+
+// TypeScript declarations for global gtag
+declare global {
+  interface Window {
+    gtag?: (
+      command: string,
+      targetId: string,
+      config?: Record<string, any>
+    ) => void;
+  }
+}
