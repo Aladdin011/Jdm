@@ -2,9 +2,10 @@ name: Deploy to Hostinger
 
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, swoosh-home]
   pull_request:
-    branches: [main, master]
+    branches: [main, master, swoosh-home]
+  workflow_dispatch:
 
 jobs:
   deploy:
