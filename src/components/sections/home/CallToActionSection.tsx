@@ -1,521 +1,337 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import {
+import React, { useState, useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { 
   ArrowRight,
-  Phone,
-  Mail,
-  MapPin,
-  Clock,
-  Send,
-  CheckCircle,
-  Building,
-  Zap,
   Users,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Building2,
+  CheckCircle,
+  Calendar,
+  Zap,
+  Star,
+  TrendingUp,
+  DollarSign,
+  Clock,
+  Award,
+  Sparkles,
+  Play
+} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-const projectTypes = [
-  "Construction & Infrastructure",
-  "Solar Energy Solutions",
-  "Engineering Services",
-  "Project Consultation",
-  "Training & Development",
-  "Other",
-];
+const CallToActionSection = () => {
+  const navigate = useNavigate();
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const [hoveredPath, setHoveredPath] = useState<string | null>(null);
 
-const quickStats = [
-  {
-    icon: Building,
-    value: "150+",
-    label: "Projects Completed",
-    color: "from-orange-500 to-red-500",
-  },
-  {
-    icon: Zap,
-    value: "50MW+",
-    label: "Solar Capacity Installed",
-    color: "from-yellow-500 to-orange-500",
-  },
-  {
-    icon: Users,
-    value: "500+",
-    label: "Satisfied Clients",
-    color: "from-blue-500 to-cyan-500",
-  },
-];
+  const workerBenefits = [
+    { icon: <CheckCircle className="w-5 h-5" />, text: "Access to premium projects" },
+    { icon: <Clock className="w-5 h-5" />, text: "Flexible remote work options" },
+    { icon: <DollarSign className="w-5 h-5" />, text: "Secure payment system" },
+  ];
 
-export default function CallToActionSection() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    company: "",
-    projectType: "",
-    message: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const clientBenefits = [
+    { icon: <Users className="w-5 h-5" />, text: "Vetted construction professionals" },
+    { icon: <TrendingUp className="w-5 h-5" />, text: "Real-time project management" },
+    { icon: <Award className="w-5 h-5" />, text: "Quality assurance guarantee" },
+  ];
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSelectChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, projectType: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-
-    // Reset form after success
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        company: "",
-        projectType: "",
-        message: "",
-      });
-    }, 3000);
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.8,
-        staggerChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 60, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.8,
-        ease: [0.25, 0.46, 0.45, 0.94],
-      },
-    },
-  };
-
-  const cardVariants = {
-    hidden: { y: 100, opacity: 0, scale: 0.8 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 1,
-        ease: [0.25, 0.46, 0.45, 0.94],
-      },
-    },
-  };
+  const socialProofStats = [
+    { number: "5,000+", label: "Users joined this month" },
+    { number: "200+", label: "Projects launched weekly" },
+    { number: "₦2B+", label: "Project value managed" },
+  ];
 
   return (
-    <section className="relative py-20 bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 overflow-hidden">
-      {/* Background pattern */}
-      <div className="absolute inset-0 opacity-10">
+    <section ref={sectionRef} className="relative py-24 overflow-hidden">
+      
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#051822] via-[#2D383E] to-[#7C5841]" />
+      
+      {/* Background Pattern */}
+      <div className="absolute inset-0">
         <div
-          className={
-            'absolute inset-0 bg-[url(\'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="white" opacity="0.5"/><circle cx="25" cy="25" r="1" fill="white" opacity="0.3"/><circle cx="75" cy="75" r="1.5" fill="white" opacity="0.4"/></svg>\')] bg-repeat'
-          }
-        />
-      </div>
-
-      {/* Floating elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className="absolute top-20 left-10 w-32 h-32 bg-white/5 rounded-full"
-          animate={{
-            y: [-20, 20, -20],
-            x: [-10, 10, -10],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-        />
-        <motion.div
-          className="absolute bottom-20 right-10 w-20 h-20 bg-white/5 rounded-full"
-          animate={{
-            y: [20, -20, 20],
-            x: [10, -10, 10],
-          }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: "linear",
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage: `
+              radial-gradient(circle at 20% 80%, rgba(170,116,82,0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(212,201,199,0.1) 0%, transparent 50%)
+            `,
           }}
         />
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#051822]/90 via-[#2D383E]/80 to-[#7C5841]/85" />
+
+      <div className="container mx-auto px-6 lg:px-8 relative z-10">
+        
+        {/* Main CTA Content */}
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8 }}
         >
-          {/* Header */}
-          <motion.div variants={itemVariants} className="text-center mb-16">
-            <span
-              className="inline-block px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-full text-sm font-medium mb-6"
-              style={{ fontFamily: "'Inter', sans-serif" }}
-            >
-              Ready to Start Building?
-            </span>
-
-            <h2
-              className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight"
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
-              Let's Transform Your{" "}
-              <span className="text-yellow-300">Vision</span> Into Reality
-            </h2>
-
-            <p
-              className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed"
-              style={{ fontFamily: "'Inter', sans-serif" }}
-            >
-              Join hundreds of satisfied clients who have trusted JD Marc
-              Limited to deliver excellence in construction, engineering, and
-              solar solutions across Africa.
-            </p>
-          </motion.div>
-
-          {/* Quick stats */}
-          <motion.div
-            variants={itemVariants}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16"
+          <motion.h2
+            className="text-5xl lg:text-7xl font-bold text-white mb-8 leading-tight"
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
           >
-            {quickStats.map((stat, index) => (
+            Ready to Transform Your
+            <br />
+            <span className="bg-gradient-to-r from-[#AA7452] to-[#D4C9C7] bg-clip-text text-transparent">
+              Construction Experience?
+            </span>
+          </motion.h2>
+
+          <motion.p
+            className="text-xl text-white/80 max-w-4xl mx-auto leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            Join thousands of construction professionals and clients who are 
+            building Africa's future through our innovative platform.
+          </motion.p>
+        </motion.div>
+
+        {/* Dual Path CTA */}
+        <motion.div
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto mb-16"
+          initial={{ opacity: 0, y: 40 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.6 }}
+        >
+          
+          {/* Workers Path */}
+          <motion.div
+            className="group relative"
+            onMouseEnter={() => setHoveredPath('workers')}
+            onMouseLeave={() => setHoveredPath(null)}
+            whileHover={{ scale: 1.02, y: -4 }}
+          >
+            <div className="relative p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-500 overflow-hidden h-full">
+              
+              {/* Background Gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-cyan-500/5 group-hover:from-blue-500/10 group-hover:to-cyan-500/10 transition-all duration-500 rounded-3xl" />
+              
+              {/* Floating Background Element */}
               <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="text-center"
-              >
-                <div
-                  className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br ${stat.color} rounded-2xl mb-4 shadow-lg`}
-                >
-                  <stat.icon className="h-8 w-8 text-white" />
+                className="absolute -top-8 -right-8 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-cyan-400/10 rounded-full blur-xl"
+                animate={hoveredPath === 'workers' ? { scale: 1.5, rotate: 180 } : { scale: 1, rotate: 0 }}
+                transition={{ duration: 0.6 }}
+              />
+
+              <div className="relative z-10 space-y-6">
+                
+                {/* Header */}
+                <div className="flex items-start gap-6">
+                  <motion.div
+                    className="w-16 h-16 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-2xl flex items-center justify-center text-white shadow-lg"
+                    whileHover={{ scale: 1.1, rotate: 10 }}
+                  >
+                    <Users className="w-8 h-8" />
+                  </motion.div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-2">For Construction Workers</h3>
+                    <p className="text-white/70">Find quality projects, grow your career, and work remotely</p>
+                  </div>
                 </div>
-                <div
-                  className="text-3xl font-bold text-white mb-2"
-                  style={{ fontFamily: "'Playfair Display', serif" }}
-                >
-                  {stat.value}
+
+                {/* Benefits */}
+                <div className="space-y-3">
+                  {workerBenefits.map((benefit, index) => (
+                    <motion.div
+                      key={index}
+                      className="flex items-center gap-3 text-white/80"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={isInView ? { opacity: 1, x: 0 } : {}}
+                      transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
+                    >
+                      <div className="text-blue-400 flex-shrink-0">
+                        {benefit.icon}
+                      </div>
+                      <span>{benefit.text}</span>
+                    </motion.div>
+                  ))}
                 </div>
-                <p
-                  className="text-white/80"
-                  style={{ fontFamily: "'Inter', sans-serif" }}
+
+                {/* CTA Button */}
+                <motion.button
+                  onClick={() => navigate('/register/worker')}
+                  className="w-full bg-gradient-to-r from-blue-400 to-cyan-500 text-white py-4 px-8 rounded-xl font-semibold shadow-2xl hover:shadow-blue-500/30 transition-all duration-300 flex items-center justify-center gap-2 group/btn"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  {stat.label}
-                </p>
-              </motion.div>
-            ))}
+                  <span>Join as Worker</span>
+                  <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform duration-300" />
+                </motion.button>
+              </div>
+
+              {/* Corner Accents */}
+              <div className="absolute top-0 left-0 w-16 h-16 bg-gradient-to-br from-blue-400/20 to-transparent rounded-3xl" />
+              <div className="absolute bottom-0 right-0 w-20 h-20 bg-gradient-to-tl from-cyan-400/20 to-transparent rounded-3xl" />
+            </div>
           </motion.div>
 
-          {/* Main card */}
-          <motion.div variants={cardVariants} className="max-w-6xl mx-auto">
-            <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
-              <div className="grid lg:grid-cols-2">
-                {/* Contact form */}
-                <div className="p-8 md:p-12">
-                  <h3
-                    className="text-3xl font-bold text-white mb-6"
-                    style={{ fontFamily: "'Playfair Display', serif" }}
+          {/* Clients Path */}
+          <motion.div
+            className="group relative"
+            onMouseEnter={() => setHoveredPath('clients')}
+            onMouseLeave={() => setHoveredPath(null)}
+            whileHover={{ scale: 1.02, y: -4 }}
+          >
+            <div className="relative p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-500 overflow-hidden h-full">
+              
+              {/* Background Gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/5 group-hover:from-green-500/10 group-hover:to-emerald-500/10 transition-all duration-500 rounded-3xl" />
+              
+              {/* Floating Background Element */}
+              <motion.div
+                className="absolute -top-8 -right-8 w-32 h-32 bg-gradient-to-br from-green-400/10 to-emerald-400/10 rounded-full blur-xl"
+                animate={hoveredPath === 'clients' ? { scale: 1.5, rotate: 180 } : { scale: 1, rotate: 0 }}
+                transition={{ duration: 0.6 }}
+              />
+
+              <div className="relative z-10 space-y-6">
+                
+                {/* Header */}
+                <div className="flex items-start gap-6">
+                  <motion.div
+                    className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-lg"
+                    whileHover={{ scale: 1.1, rotate: 10 }}
                   >
-                    Start Your Project Today
-                  </h3>
+                    <Building2 className="w-8 h-8" />
+                  </motion.div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-2">For Clients & Companies</h3>
+                    <p className="text-white/70">Connect with skilled professionals and manage projects seamlessly</p>
+                  </div>
+                </div>
 
-                  <p
-                    className="text-white/80 mb-8"
-                    style={{ fontFamily: "'Inter', sans-serif" }}
-                  >
-                    Tell us about your project and we'll provide you with a
-                    comprehensive consultation and proposal within 24 hours.
-                  </p>
-
-                  {!isSubmitted ? (
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div>
-                          <Input
-                            type="text"
-                            name="name"
-                            placeholder="Your Name *"
-                            value={formData.name}
-                            onChange={handleInputChange}
-                            required
-                            className="bg-white/20 backdrop-blur-sm border-white/30 text-white placeholder:text-white/60 focus:border-white/50 cursor-text"
-                          />
-                        </div>
-                        <div>
-                          <Input
-                            type="email"
-                            name="email"
-                            placeholder="Email Address *"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            required
-                            className="bg-white/20 backdrop-blur-sm border-white/30 text-white placeholder:text-white/60 focus:border-white/50 cursor-text"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div>
-                          <Input
-                            type="tel"
-                            name="phone"
-                            placeholder="Phone Number"
-                            value={formData.phone}
-                            onChange={handleInputChange}
-                            className="bg-white/20 backdrop-blur-sm border-white/30 text-white placeholder:text-white/60 focus:border-white/50 cursor-text"
-                          />
-                        </div>
-                        <div>
-                          <Input
-                            type="text"
-                            name="company"
-                            placeholder="Company/Organization"
-                            value={formData.company}
-                            onChange={handleInputChange}
-                            className="bg-white/20 backdrop-blur-sm border-white/30 text-white placeholder:text-white/60 focus:border-white/50 cursor-text"
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <Select
-                          value={formData.projectType}
-                          onValueChange={handleSelectChange}
-                        >
-                          <SelectTrigger className="bg-white/20 backdrop-blur-sm border-white/30 text-white cursor-button">
-                            <SelectValue placeholder="Select Project Type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {projectTypes.map((type) => (
-                              <SelectItem key={type} value={type}>
-                                {type}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div>
-                        <Textarea
-                          name="message"
-                          placeholder="Tell us about your project requirements..."
-                          value={formData.message}
-                          onChange={handleInputChange}
-                          rows={4}
-                          className="bg-white/20 backdrop-blur-sm border-white/30 text-white placeholder:text-white/60 focus:border-white/50 resize-none cursor-text"
-                        />
-                      </div>
-
-                      <Button
-                        type="submit"
-                        size="lg"
-                        disabled={isSubmitting}
-                        className="w-full bg-white text-orange-600 hover:bg-white/90 font-semibold py-4 text-lg cursor-button"
-                      >
-                        {isSubmitting ? (
-                          <div className="flex items-center">
-                            <div className="w-5 h-5 border-2 border-orange-600 border-t-transparent rounded-full animate-spin mr-2" />
-                            Sending Message...
-                          </div>
-                        ) : (
-                          <div className="flex items-center">
-                            <Send className="mr-2 h-5 w-5" />
-                            Send Message
-                            <ArrowRight className="ml-2 h-5 w-5" />
-                          </div>
-                        )}
-                      </Button>
-                    </form>
-                  ) : (
+                {/* Benefits */}
+                <div className="space-y-3">
+                  {clientBenefits.map((benefit, index) => (
                     <motion.div
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="text-center py-12"
+                      key={index}
+                      className="flex items-center gap-3 text-white/80"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={isInView ? { opacity: 1, x: 0 } : {}}
+                      transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
                     >
-                      <div className="w-20 h-20 bg-green-500 rounded-full mx-auto mb-6 flex items-center justify-center">
-                        <CheckCircle className="h-10 w-10 text-white" />
+                      <div className="text-green-400 flex-shrink-0">
+                        {benefit.icon}
                       </div>
-                      <h4
-                        className="text-2xl font-bold text-white mb-4"
-                        style={{ fontFamily: "'Playfair Display', serif" }}
-                      >
-                        Message Sent Successfully!
-                      </h4>
-                      <p
-                        className="text-white/80"
-                        style={{ fontFamily: "'Inter', sans-serif" }}
-                      >
-                        Thank you for reaching out. We'll get back to you within
-                        24 hours.
-                      </p>
+                      <span>{benefit.text}</span>
                     </motion.div>
-                  )}
+                  ))}
                 </div>
 
-                {/* Contact information */}
-                <div className="bg-black/20 p-8 md:p-12 flex flex-col justify-center">
-                  <h4
-                    className="text-2xl font-bold text-white mb-8"
-                    style={{ fontFamily: "'Playfair Display', serif" }}
-                  >
-                    Get In Touch Directly
-                  </h4>
-
-                  <div className="space-y-6">
-                    <div className="flex items-start space-x-4">
-                      <div className="flex-shrink-0 w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                        <Phone className="h-6 w-6 text-white" />
-                      </div>
-                      <div>
-                        <h5
-                          className="text-lg font-semibold text-white mb-1"
-                          style={{ fontFamily: "'Inter', sans-serif" }}
-                        >
-                          Call Us
-                        </h5>
-                        <p
-                          className="text-white/80"
-                          style={{ fontFamily: "'Inter', sans-serif" }}
-                        >
-                          +234-803-706-5497
-                        </p>
-                        <p
-                          className="text-white/80"
-                          style={{ fontFamily: "'Inter', sans-serif" }}
-                        >
-                          +234-805-555-0123
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-4">
-                      <div className="flex-shrink-0 w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                        <Mail className="h-6 w-6 text-white" />
-                      </div>
-                      <div>
-                        <h5
-                          className="text-lg font-semibold text-white mb-1"
-                          style={{ fontFamily: "'Inter', sans-serif" }}
-                        >
-                          Email Us
-                        </h5>
-                        <p
-                          className="text-white/80"
-                          style={{ fontFamily: "'Inter', sans-serif" }}
-                        >
-                          info@jdmarcng.com
-                        </p>
-                        <p
-                          className="text-white/80"
-                          style={{ fontFamily: "'Inter', sans-serif" }}
-                        >
-                          projects@jdmarcng.com
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-4">
-                      <div className="flex-shrink-0 w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                        <MapPin className="h-6 w-6 text-white" />
-                      </div>
-                      <div>
-                        <h5
-                          className="text-lg font-semibold text-white mb-1"
-                          style={{ fontFamily: "'Inter', sans-serif" }}
-                        >
-                          Visit Our Office
-                        </h5>
-                        <p
-                          className="text-white/80"
-                          style={{ fontFamily: "'Inter', sans-serif" }}
-                        >
-                          123 Construction Avenue
-                          <br />
-                          Victoria Island, Lagos
-                          <br />
-                          Nigeria
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-4">
-                      <div className="flex-shrink-0 w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                        <Clock className="h-6 w-6 text-white" />
-                      </div>
-                      <div>
-                        <h5
-                          className="text-lg font-semibold text-white mb-1"
-                          style={{ fontFamily: "'Inter', sans-serif" }}
-                        >
-                          Business Hours
-                        </h5>
-                        <p
-                          className="text-white/80"
-                          style={{ fontFamily: "'Inter', sans-serif" }}
-                        >
-                          Mon - Fri: 8:00 AM - 6:00 PM
-                          <br />
-                          Sat: 9:00 AM - 4:00 PM
-                          <br />
-                          Sun: Emergency Only
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-8 pt-8 border-t border-white/20">
-                    <p
-                      className="text-white/60 text-sm"
-                      style={{ fontFamily: "'Inter', sans-serif" }}
-                    >
-                      🚀 Emergency projects? We're available 24/7 for urgent
-                      consultations
-                    </p>
-                  </div>
-                </div>
+                {/* CTA Button */}
+                <motion.button
+                  onClick={() => navigate('/register/client')}
+                  className="w-full bg-gradient-to-r from-green-400 to-emerald-500 text-white py-4 px-8 rounded-xl font-semibold shadow-2xl hover:shadow-green-500/30 transition-all duration-300 flex items-center justify-center gap-2 group/btn"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <span>Post Project</span>
+                  <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform duration-300" />
+                </motion.button>
               </div>
+
+              {/* Corner Accents */}
+              <div className="absolute top-0 left-0 w-16 h-16 bg-gradient-to-br from-green-400/20 to-transparent rounded-3xl" />
+              <div className="absolute bottom-0 right-0 w-20 h-20 bg-gradient-to-tl from-emerald-400/20 to-transparent rounded-3xl" />
             </div>
           </motion.div>
         </motion.div>
+
+        {/* Alternative Action */}
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 1.0 }}
+        >
+          {/* Glass CTA Container */}
+          <div className="relative inline-block p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl">
+            <div className="space-y-6">
+              <p className="text-white/80 text-lg">Want to learn more first?</p>
+              
+              <motion.button
+                onClick={() => navigate('/demo')}
+                className="inline-flex items-center gap-3 px-8 py-4 bg-white/10 backdrop-blur-xl border border-white/20 text-white rounded-xl font-semibold hover:bg-white/15 transition-all duration-300"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Calendar className="w-5 h-5" />
+                <span>Schedule a Demo</span>
+              </motion.button>
+            </div>
+
+            {/* Background decoration */}
+            <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-[#AA7452]/20 to-[#D4C9C7]/20 rounded-full blur-xl" />
+            <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-gradient-to-br from-purple-400/10 to-blue-400/10 rounded-full blur-xl" />
+          </div>
+        </motion.div>
+
+        {/* Social Proof Footer */}
+        <motion.div
+          className="border-t border-white/10 pt-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 1.2 }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            {socialProofStats.map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                className="text-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 1.4 + index * 0.1 }}
+              >
+                <div className="text-3xl lg:text-4xl font-bold text-[#AA7452] mb-2">
+                  {stat.number}
+                </div>
+                <div className="text-white/70">{stat.label}</div>
+                {index < socialProofStats.length - 1 && (
+                  <div className="hidden md:block absolute top-1/2 right-0 w-px h-12 bg-white/20 transform -translate-y-1/2" />
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Floating Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-[#AA7452]/30 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [-30, -150, -30],
+              x: [-15, 15, -15],
+              opacity: [0, 1, 0],
+              scale: [0.5, 1.5, 0.5],
+            }}
+            transition={{
+              duration: 10 + Math.random() * 5,
+              repeat: Infinity,
+              delay: Math.random() * 5,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
       </div>
     </section>
   );
-}
+};
+
+export default CallToActionSection;
