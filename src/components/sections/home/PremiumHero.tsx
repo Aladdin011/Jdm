@@ -2,14 +2,16 @@ import React, { useState, useRef, useEffect } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import {
-  Sparkles,
-  Play,
-  ChevronRight,
   ArrowRight,
+  Play,
   Building2,
   Users,
   Award,
   TrendingUp,
+  MapPin,
+  Zap,
+  Construction,
+  Clock
 } from "lucide-react";
 
 // Enhanced animated counter with smooth easing
@@ -18,18 +20,18 @@ const AnimatedCounter = ({
   suffix = "",
   prefix = "",
   duration = 2.5,
+  isVisible = false
 }: {
   value: number;
   suffix?: string;
   prefix?: string;
   duration?: number;
+  isVisible?: boolean;
 }) => {
   const [count, setCount] = useState(0);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, threshold: 0.5 });
 
   useEffect(() => {
-    if (!isInView) return;
+    if (!isVisible) return;
 
     let startTime: number;
     let animationFrame: number;
@@ -49,46 +51,43 @@ const AnimatedCounter = ({
 
     animationFrame = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationFrame);
-  }, [isInView, value, duration]);
+  }, [isVisible, value, duration]);
 
   return (
-    <div
-      ref={ref}
-      className="text-2xl lg:text-3xl font-bold text-white font-mono"
-    >
-      <span className="bg-gradient-to-r from-orange-300 to-amber-300 bg-clip-text text-transparent">
-        {prefix}
-        {count}
-        {suffix}
-      </span>
-    </div>
+    <span className="font-mono font-bold text-[var(--accent-light)]">
+      {prefix}
+      {count}
+      {suffix}
+    </span>
   );
 };
 
-// Floating particles component
-const FloatingParticles = () => {
-  const particles = Array.from({ length: 12 }, (_, i) => i);
+// Floating shapes component
+const FloatingShapes = () => {
+  const shapes = Array.from({ length: 4 }, (_, i) => i);
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {particles.map((i) => (
+      {shapes.map((i) => (
         <motion.div
           key={i}
-          className="absolute w-1 h-1 bg-blue-400/30 rounded-full"
+          className="absolute rounded-full bg-gradient-to-br from-[var(--neutral-light)]/5 to-[var(--accent-light)]/5"
           style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
+            width: [300, 200, 150, 100][i],
+            height: [300, 200, 150, 100][i],
+            top: ["10%", "70%", "30%", "50%"][i],
+            left: ["10%", "80%", "70%", "20%"][i],
           }}
           animate={{
-            y: [-20, -100, -20],
+            y: [-20, 20, -20],
             x: [-10, 10, -10],
-            opacity: [0, 1, 0],
-            scale: [1, 1.5, 1],
+            rotate: [0, 360],
+            scale: [1, 1.1, 1],
           }}
           transition={{
-            duration: 4 + Math.random() * 4,
+            duration: 20 + i * 2,
             repeat: Infinity,
-            delay: Math.random() * 4,
+            delay: i * 5,
             ease: "easeInOut",
           }}
         />
@@ -97,9 +96,106 @@ const FloatingParticles = () => {
   );
 };
 
+// 3D Building Model Component
+const BuildingModel = () => {
+  return (
+    <div className="relative w-80 h-80 mx-auto">
+      {/* Building Structure */}
+      <motion.div
+        className="absolute inset-0"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.2, delay: 0.5 }}
+      >
+        {/* Floor 1 */}
+        <motion.div
+          className="absolute bottom-0 left-1/4 w-32 h-20 bg-gradient-to-t from-[var(--secondary-dark)] to-[var(--accent-warm)] rounded-lg"
+          initial={{ y: 100 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+        />
+        
+        {/* Floor 2 */}
+        <motion.div
+          className="absolute bottom-16 left-1/3 w-28 h-16 bg-gradient-to-t from-[var(--accent-warm)] to-[var(--accent-light)] rounded-lg"
+          initial={{ y: 100 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.8, delay: 1.0 }}
+        />
+        
+        {/* Floor 3 */}
+        <motion.div
+          className="absolute bottom-28 left-1/2 transform -translate-x-1/2 w-24 h-12 bg-gradient-to-t from-[var(--accent-light)] to-[var(--neutral-light)] rounded-lg"
+          initial={{ y: 100 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.8, delay: 1.2 }}
+        />
+        
+        {/* Construction Crane */}
+        <motion.div
+          className="absolute top-8 right-8 w-2 h-32 bg-[var(--accent-light)] origin-bottom"
+          initial={{ rotate: -45, opacity: 0 }}
+          animate={{ rotate: 0, opacity: 1 }}
+          transition={{ duration: 1, delay: 1.5 }}
+        >
+          <div className="absolute -top-1 -left-6 w-14 h-1 bg-[var(--accent-light)]" />
+        </motion.div>
+      </motion.div>
+
+      {/* Floating Info Cards */}
+      <motion.div
+        className="absolute top-12 -left-8 p-3 bg-white/10 backdrop-blur-md rounded-xl border border-white/20"
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8, delay: 2 }}
+      >
+        <div className="flex items-center gap-2">
+          <Zap className="w-4 h-4 text-[var(--accent-light)]" />
+          <div>
+            <div className="text-xs font-medium text-white">Real-time Updates</div>
+            <div className="text-xs text-white/70">Live monitoring</div>
+          </div>
+        </div>
+      </motion.div>
+
+      <motion.div
+        className="absolute top-32 -right-8 p-3 bg-white/10 backdrop-blur-md rounded-xl border border-white/20"
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8, delay: 2.3 }}
+      >
+        <div className="flex items-center gap-2">
+          <Users className="w-4 h-4 text-[var(--accent-light)]" />
+          <div>
+            <div className="text-xs font-medium text-white">Remote Teams</div>
+            <div className="text-xs text-white/70">Global reach</div>
+          </div>
+        </div>
+      </motion.div>
+
+      <motion.div
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 p-3 bg-white/10 backdrop-blur-md rounded-xl border border-white/20"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 2.6 }}
+      >
+        <div className="flex items-center gap-2">
+          <Award className="w-4 h-4 text-[var(--accent-light)]" />
+          <div>
+            <div className="text-xs font-medium text-white">Quality Assured</div>
+            <div className="text-xs text-white/70">Verified professionals</div>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
 const PremiumHero = () => {
   const heroRef = useRef(null);
   const navigate = useNavigate();
+  const [statsInView, setStatsInView] = useState(false);
+  
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -109,9 +205,14 @@ const PremiumHero = () => {
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
-  // Scroll animation for pulling next section
-  const nextSectionY = useTransform(scrollYProgress, [0, 1], [100, 0]);
-  const nextSectionOpacity = useTransform(scrollYProgress, [0.5, 1], [0, 1]);
+  const statsRef = useRef(null);
+  const statsIsInView = useInView(statsRef, { threshold: 0.5, once: true });
+
+  useEffect(() => {
+    if (statsIsInView) {
+      setStatsInView(true);
+    }
+  }, [statsIsInView]);
 
   // Container variants for staggered animations
   const containerVariants = {
@@ -119,8 +220,8 @@ const PremiumHero = () => {
     visible: {
       opacity: 1,
       transition: {
-        delayChildren: 0.2,
-        staggerChildren: 0.15,
+        delayChildren: 0.3,
+        staggerChildren: 0.2,
       },
     },
   };
@@ -144,213 +245,186 @@ const PremiumHero = () => {
     },
   };
 
-  const glassVariants = {
-    hidden: {
-      opacity: 0,
-      scale: 0.8,
-      backdropFilter: "blur(0px)",
-    },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      backdropFilter: "blur(24px)",
-      transition: {
-        type: "spring",
-        damping: 20,
-        stiffness: 100,
-        duration: 1.2,
-      },
-    },
-  };
-
   return (
-    <>
-      <motion.section
-        ref={heroRef}
-        className="relative min-h-screen overflow-hidden"
-        style={{ y, opacity, scale }}
-      >
-        {/* Background Image */}
-        <div className="absolute inset-0 z-0">
-          <div
-            className="w-full h-full bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2Fb9e926f9dca9498f8a0f99f9f9792da7%2F8f98d79878704821ac687723d7e03126?format=webp&width=800')`,
-              filter: "brightness(0.9) contrast(1.1)",
-            }}
-          />
-        </div>
+    <motion.section
+      ref={heroRef}
+      className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[var(--primary-dark)] via-[var(--secondary-dark)] to-[var(--accent-warm)]"
+      style={{ y, opacity, scale }}
+    >
+      {/* Background Pattern */}
+      <div className="absolute inset-0">
+        <div
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage: `
+              radial-gradient(circle at 25% 25%, rgba(212,201,199,0.1) 0%, transparent 50%),
+              radial-gradient(circle at 75% 75%, rgba(170,116,82,0.1) 0%, transparent 50%),
+              linear-gradient(135deg, transparent 0%, rgba(45,56,62,0.1) 50%, transparent 100%)
+            `,
+          }}
+        />
+      </div>
 
-        {/* Dark overlay for content readability */}
-        <div className="absolute inset-0 bg-black/20 z-10" />
+      {/* Floating Shapes */}
+      <FloatingShapes />
 
-        {/* Content Container - Top Left Positioning */}
-        <div className="relative z-20 min-h-screen flex items-start pt-32 pl-8 lg:pl-16">
-          <div className="w-full max-w-md">
+      {/* Main Content */}
+      <div className="relative z-10 min-h-screen flex items-center">
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            
+            {/* Left Content */}
             <motion.div
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className="space-y-4"
+              className="text-white"
             >
-              {/* Company Badge */}
+              {/* Hero Badge */}
               <motion.div variants={itemVariants}>
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-orange-400/30 bg-orange-500/15 backdrop-blur-sm">
-                  <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
-                  <span className="text-orange-200 text-xs font-medium tracking-wide">
-                    Since 2007
+                <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/10 backdrop-blur-md border border-[var(--accent-light)]/30 mb-8">
+                  <div className="relative">
+                    <div className="w-2 h-2 bg-[var(--accent-light)] rounded-full"></div>
+                    <div className="absolute inset-0 w-2 h-2 bg-[var(--accent-light)] rounded-full animate-ping"></div>
+                  </div>
+                  <Construction className="w-5 h-5 text-[var(--accent-light)]" />
+                  <span className="text-sm font-medium text-[var(--accent-light)]">
+                    Leading African Construction
                   </span>
                 </div>
               </motion.div>
 
               {/* Main Title */}
               <motion.div variants={itemVariants}>
-                <h1 className="text-4xl lg:text-6xl font-bold text-white tracking-tight hero-title leading-tight">
-                  Building{" "}
-                  <span className="bg-gradient-to-r from-orange-300 via-amber-300 to-orange-400 bg-clip-text text-transparent">
-                    Tomorrow's
+                <h1 className="text-5xl lg:text-7xl font-black leading-tight mb-6">
+                  <span className="block">Building Africa's</span>
+                  <span className="block bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent-warm)] bg-clip-text text-transparent">
+                    Future Cities
                   </span>
-                  <br />
-                  Cities
+                  <span className="block">One Project at a Time</span>
                 </h1>
               </motion.div>
 
-              {/* Glassmorphism Container for Subtitle and CTA */}
-              <motion.div variants={glassVariants} className="relative group">
-                {/* Premium Glass Card */}
-                <div className="relative p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-black/40 via-black/30 to-black/20 border border-white/10 shadow-2xl shadow-black/50 overflow-hidden">
-                  {/* Subtle gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-amber-500/5 rounded-2xl" />
+              {/* Description */}
+              <motion.div variants={itemVariants}>
+                <p className="text-xl text-[var(--neutral-light)] leading-relaxed mb-8 max-w-2xl">
+                  Connect with skilled construction professionals across Nigeria through our 
+                  revolutionary remote platform. Quality craftsmanship meets digital innovation 
+                  to transform how we build modern Africa.
+                </p>
+              </motion.div>
 
-                  {/* Shimmer effect on hover */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent rotate-12 transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                  </div>
+              {/* Interactive Stats */}
+              <motion.div 
+                ref={statsRef}
+                variants={itemVariants}
+                className="grid grid-cols-3 gap-6 mb-10"
+              >
+                {[
+                  { icon: TrendingUp, value: 500, suffix: "+", label: "Projects Completed" },
+                  { icon: Users, value: 1200, suffix: "+", label: "Skilled Workers" },
+                  { icon: MapPin, value: 50, suffix: "+", label: "Cities Served" },
+                ].map((stat, index) => (
+                  <motion.div
+                    key={stat.label}
+                    className="text-center p-4 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 hover:bg-white/10 transition-all duration-300 cursor-pointer"
+                    whileHover={{ scale: 1.05, y: -4 }}
+                  >
+                    <stat.icon className="w-6 h-6 text-[var(--accent-light)] mx-auto mb-2" />
+                    <div className="text-2xl lg:text-3xl font-bold mb-1">
+                      <AnimatedCounter 
+                        value={stat.value} 
+                        suffix={stat.suffix}
+                        isVisible={statsInView}
+                        duration={2.5}
+                      />
+                    </div>
+                    <div className="text-sm text-[var(--neutral-light)]">{stat.label}</div>
+                  </motion.div>
+                ))}
+              </motion.div>
 
-                  {/* Content */}
-                  <div className="relative z-10 space-y-5">
-                    {/* Enhanced Subtitle */}
-                    <motion.div variants={itemVariants}>
-                      <div className="space-y-3">
-                        <p className="text-lg text-white/90 font-light leading-relaxed tracking-wide">
-                          Intelligent construction solutions for{" "}
-                          <span className="bg-gradient-to-r from-orange-300 to-amber-300 bg-clip-text text-transparent font-medium">
-                            Africa's urban transformation
-                          </span>
-                        </p>
+              {/* Advanced CTA Section */}
+              <motion.div variants={itemVariants}>
+                <div className="flex flex-col sm:flex-row gap-4 mb-8">
+                  <motion.button
+                    onClick={() => navigate('/register')}
+                    className="group relative px-8 py-4 bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent-warm)] text-white rounded-2xl font-semibold overflow-hidden"
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500" />
+                    <div className="relative flex items-center justify-center gap-2">
+                      <span>Join Our Platform</span>
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                    </div>
+                  </motion.button>
 
-                        {/* Decorative line */}
-                        <div className="flex items-center gap-2">
-                          <div className="h-px bg-gradient-to-r from-orange-400 to-amber-400 flex-1" />
-                          <div className="w-2 h-2 bg-gradient-to-r from-orange-400 to-amber-400 rounded-full" />
-                          <div className="h-px bg-gradient-to-r from-amber-400 to-orange-400 flex-1" />
-                        </div>
+                  <motion.button
+                    onClick={() => navigate('/projects')}
+                    className="group px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-2xl font-semibold hover:bg-white/20 transition-all duration-300"
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="w-6 h-6 rounded-full bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent-warm)] flex items-center justify-center">
+                        <Play className="w-3 h-3 text-white ml-0.5" />
                       </div>
-                    </motion.div>
-
-                    {/* Premium CTA Buttons */}
-                    <motion.div variants={itemVariants}>
-                      <div className="flex flex-col sm:flex-row gap-3">
-                        <motion.button
-                          onClick={() => navigate('/register')}
-                          className="group/btn relative px-8 py-4 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 text-white rounded-xl font-semibold shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 transition-all duration-300 overflow-hidden"
-                          whileHover={{ scale: 1.02, y: -2 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          {/* Button shine effect */}
-                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-500" />
-
-                          <div className="relative flex items-center justify-center gap-2">
-                            <span className="font-semibold">Get Started</span>
-                            <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
-                          </div>
-                        </motion.button>
-
-                        <motion.button
-                          onClick={() => navigate('/projects')}
-                          className="group/btn relative px-8 py-4 bg-white/10 backdrop-blur-sm text-white rounded-xl font-semibold border border-white/20 hover:bg-white/15 hover:border-white/30 transition-all duration-300 overflow-hidden"
-                          whileHover={{ scale: 1.02, y: -2 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          {/* Button glow effect */}
-                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
-
-                          <div className="relative flex items-center justify-center gap-2">
-                            <div className="w-5 h-5 rounded-full bg-gradient-to-r from-orange-400 to-amber-400 flex items-center justify-center shadow-lg shadow-orange-400/30">
-                              <Play className="w-2.5 h-2.5 text-white ml-0.5" />
-                            </div>
-                            <span className="font-semibold">View Projects</span>
-                          </div>
-                        </motion.button>
-                      </div>
-                    </motion.div>
-                  </div>
-
-                  {/* Corner accents */}
-                  <div className="absolute top-0 left-0 w-16 h-16 bg-gradient-to-br from-orange-400/20 to-transparent rounded-2xl" />
-                  <div className="absolute bottom-0 right-0 w-20 h-20 bg-gradient-to-tl from-amber-400/20 to-transparent rounded-2xl" />
+                      <span>Watch Demo</span>
+                    </div>
+                  </motion.button>
                 </div>
               </motion.div>
 
-              {/* Premium Stats Card */}
+              {/* Trust Indicators */}
               <motion.div variants={itemVariants}>
-                <div className="p-4 rounded-xl backdrop-blur-md bg-white/5 border border-white/10 shadow-lg">
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="text-center group">
-                      <div className="p-2 rounded-lg bg-orange-500/10 mb-2 transition-all duration-300 group-hover:bg-orange-500/20">
-                        <AnimatedCounter value={500} suffix="+" />
+                <div className="text-center sm:text-left">
+                  <span className="text-sm text-[var(--neutral-mid)] mb-4 block">
+                    Trusted by leading companies
+                  </span>
+                  <div className="flex items-center gap-6 opacity-60">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <div key={i} className="w-20 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                        <div className="w-12 h-4 bg-white/20 rounded" />
                       </div>
-                      <div className="text-white/70 text-xs font-medium uppercase tracking-wider">
-                        Projects
-                      </div>
-                    </div>
-                    <div className="text-center group">
-                      <div className="p-2 rounded-lg bg-amber-500/10 mb-2 transition-all duration-300 group-hover:bg-amber-500/20">
-                        <AnimatedCounter value={15} suffix="+" />
-                      </div>
-                      <div className="text-white/70 text-xs font-medium uppercase tracking-wider">
-                        Years
-                      </div>
-                    </div>
-                    <div className="text-center group">
-                      <div className="p-2 rounded-lg bg-orange-500/10 mb-2 transition-all duration-300 group-hover:bg-orange-500/20">
-                        <AnimatedCounter value={50} prefix="$" suffix="M+" />
-                      </div>
-                      <div className="text-white/70 text-xs font-medium uppercase tracking-wider">
-                        Value
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
               </motion.div>
             </motion.div>
+
+            {/* Right Visual */}
+            <motion.div
+              className="relative"
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1, delay: 0.5 }}
+            >
+              <BuildingModel />
+            </motion.div>
           </div>
         </div>
+      </div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          className="absolute bottom-8 right-8 text-white/60 text-xs writing-vertical-rl scroll-indicator"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2, duration: 0.8 }}
-        >
-          <motion.span
-            animate={{ y: [0, 5, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            SCROLL
-          </motion.span>
-        </motion.div>
-      </motion.section>
-
-      {/* Next Section Preview (pulled by scroll) */}
+      {/* Scroll Indicator */}
       <motion.div
-        className="relative z-30"
-        style={{ y: nextSectionY, opacity: nextSectionOpacity }}
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/60"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2, duration: 0.8 }}
       >
-        <div className="h-20 bg-white"></div>
+        <div className="flex flex-col items-center gap-2">
+          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
+            <motion.div
+              className="w-1 h-3 bg-white/50 rounded-full mt-2"
+              animate={{ y: [0, 8, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+          </div>
+          <span className="text-xs font-medium">Scroll to explore</span>
+        </div>
       </motion.div>
-    </>
+    </motion.section>
   );
 };
 
