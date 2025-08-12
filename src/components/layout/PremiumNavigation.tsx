@@ -74,32 +74,32 @@ const navItems: NavItem[] = [
     ]
   },
   {
-    label: 'Solutions',
-    href: '/platform',
+    label: 'Blog',
+    href: '/blog',
     subItems: [
-      { 
-        label: 'Project Management', 
-        href: '/platform/projects', 
-        description: 'Advanced project tracking & coordination',
+      {
+        label: 'Industry Insights',
+        href: '/blog/industry',
+        description: 'Latest construction & infrastructure trends',
         icon: <Target className="w-5 h-5" />
       },
-      { 
-        label: 'Team Collaboration', 
-        href: '/platform/teams', 
-        description: 'Real-time team communication tools',
-        icon: <Users className="w-5 h-5" />
+      {
+        label: 'Project Updates',
+        href: '/blog/projects',
+        description: 'Behind-the-scenes project coverage',
+        icon: <Building2 className="w-5 h-5" />
       },
-      { 
-        label: 'Quality Assurance', 
-        href: '/platform/analytics', 
-        description: 'Comprehensive quality control systems',
-        icon: <Shield className="w-5 h-5" />
+      {
+        label: 'Technology & Innovation',
+        href: '/blog/technology',
+        description: 'Smart construction & sustainable building',
+        icon: <Zap className="w-5 h-5" />
       },
-      { 
-        label: 'Global Procurement', 
-        href: '/platform/procurement', 
-        description: 'International sourcing & supply chain',
-        icon: <Globe className="w-5 h-5" />
+      {
+        label: 'Company News',
+        href: '/blog/news',
+        description: 'JD Marc Limited updates & announcements',
+        icon: <Award className="w-5 h-5" />
       },
     ]
   },
