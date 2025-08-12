@@ -521,12 +521,16 @@ export default function PremiumNavigation() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
           >
-            <motion.div 
-              className="w-12 h-12 bg-gradient-to-r from-[#AA7452] to-[#7C5841] rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300"
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.8 }}
+            <motion.div
+              className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300 border border-white/20"
+              whileHover={{ scale: 1.1 }}
+              transition={{ duration: 0.3 }}
             >
-              <Construction className="w-6 h-6 text-white" />
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2Fba1573c1dc3d409fb79b5c991706567b?format=webp&width=200"
+                alt="JD Marc Limited Logo"
+                className="w-10 h-10 object-contain"
+              />
             </motion.div>
             <div className="hidden sm:block">
               <div className="text-white font-black text-2xl group-hover:text-[#D4C9C7] transition-colors">
