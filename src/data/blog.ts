@@ -1,10 +1,141 @@
 export const blogPosts = [
   {
     id: 1,
+    title: "The Future of Remote Construction Management: AI and IoT Transforming African Building Sites",
+    slug: "future-remote-construction-management-ai-iot-africa",
+    date: "2024-03-15",
+    author: "Engineering Team",
+    category: "Construction Technology",
+    excerpt:
+      "Discover how cutting-edge technology is revolutionizing construction project management across Africa. From AI-powered quality control to IoT sensors monitoring structural integrity, explore the innovations shaping tomorrow's construction landscape.",
+    content: `
+      <p>The construction industry in Africa is experiencing a digital transformation that's reshaping how we approach project management, quality control, and workforce coordination. Advanced technologies like Artificial Intelligence (AI) and Internet of Things (IoT) are no longer futuristic concepts but practical tools driving efficiency and innovation across construction sites.</p>
+      
+      <h2>AI-Powered Quality Control Systems</h2>
+      <p>Modern construction projects now leverage AI algorithms to analyze real-time data from construction sites, identifying potential quality issues before they become costly problems. Computer vision systems can detect structural anomalies, monitor concrete curing processes, and ensure compliance with engineering specifications.</p>
+      
+      <h2>IoT Sensors for Structural Monitoring</h2>
+      <ul>
+        <li><strong>Temperature and Humidity Monitoring</strong>: Real-time environmental data for optimal concrete curing</li>
+        <li><strong>Structural Health Monitoring</strong>: Continuous assessment of load-bearing elements</li>
+        <li><strong>Equipment Tracking</strong>: GPS-enabled monitoring of construction machinery and tools</li>
+        <li><strong>Safety Compliance</strong>: Automated detection of safety violations and hazardous conditions</li>
+      </ul>
+      
+      <h2>Remote Project Management Benefits</h2>
+      <p>The integration of AI and IoT technologies enables construction managers to oversee multiple projects across different locations without compromising quality or safety. Real-time dashboards provide comprehensive insights into project progress, resource utilization, and potential bottlenecks.</p>
+      
+      <p>At JD Marc, we've successfully implemented these technologies across our African projects, resulting in 25% faster project completion times and 40% reduction in quality-related rework. The future of construction management is here, and it's transforming how we build Africa's infrastructure.</p>
+    `,
+    image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+    featured: true,
+  },
+  {
+    id: 2,
+    title: "Smart Construction Materials: How Nanotechnology is Revolutionizing Building Durability",
+    slug: "smart-construction-materials-nanotechnology-durability",
+    date: "2024-03-10",
+    author: "Dr. Sarah Okafor",
+    category: "Construction Technology", 
+    excerpt:
+      "Explore breakthrough nanomaterials that are making buildings stronger, more energy-efficient, and longer-lasting in Africa's challenging climate conditions.",
+    content: `
+      <p>Nanotechnology is revolutionizing the construction industry by introducing smart materials that adapt to environmental conditions, self-heal minor damages, and provide enhanced durability. These innovations are particularly valuable in Africa's diverse climate zones, from humid coastal regions to arid interior landscapes.</p>
+      
+      <h2>Self-Healing Concrete</h2>
+      <p>One of the most promising developments is self-healing concrete embedded with dormant bacteria that activate when cracks appear. These microorganisms produce limestone to seal cracks automatically, extending the lifespan of concrete structures by up to 200%.</p>
+      
+      <h2>Smart Glass and Energy Efficiency</h2>
+      <p>Electrochromic glass windows can automatically adjust their opacity based on sunlight intensity, reducing cooling costs by up to 30% in African climates. This technology is particularly beneficial for commercial buildings in cities like Lagos, Nairobi, and Cairo.</p>
+      
+      <h2>Advanced Insulation Materials</h2>
+      <ul>
+        <li><strong>Aerogel Insulation</strong>: Ultra-lightweight material with exceptional thermal properties</li>
+        <li><strong>Phase Change Materials</strong>: Store and release thermal energy to maintain comfortable temperatures</li>
+        <li><strong>Reflective Coatings</strong>: Nanoscale particles that reflect heat and UV radiation</li>
+      </ul>
+      
+      <p>JD Marc has pioneered the use of these advanced materials in our recent projects, demonstrating their effectiveness in African construction applications. Our Lagos Smart Office Complex features self-healing concrete foundations and smart glass facades, serving as a showcase for sustainable construction technology.</p>
+    `,
+    image: "https://images.unsplash.com/photo-1530569673472-307dc017a82d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+    featured: true,
+  },
+  {
+    id: 3,
+    title: "Remote Construction Project Management: Best Practices for African Teams",
+    slug: "remote-construction-project-management-african-teams",
+    date: "2024-03-08",
+    author: "Michael Adebayo",
+    category: "Project Management",
+    excerpt:
+      "Master the art of managing construction projects remotely with proven strategies, digital tools, and communication frameworks designed for African construction teams.",
+    content: `
+      <p>The shift towards remote construction project management has accelerated across Africa, driven by the need for efficient coordination across vast distances and the lessons learned from global connectivity challenges. Successful remote management requires a combination of digital tools, clear communication protocols, and adaptive leadership strategies.</p>
+      
+      <h2>Digital Infrastructure Requirements</h2>
+      <p>Effective remote construction management starts with robust digital infrastructure. Cloud-based project management platforms, real-time communication tools, and mobile-optimized applications ensure seamless connectivity between project sites and management teams.</p>
+      
+      <h2>Communication Frameworks</h2>
+      <ul>
+        <li><strong>Daily Stand-ups</strong>: Video conferences with site supervisors and key personnel</li>
+        <li><strong>Progress Dashboards</strong>: Real-time project status updates accessible to all stakeholders</li>
+        <li><strong>Digital Documentation</strong>: Cloud-based storage for drawings, specifications, and reports</li>
+        <li><strong>Mobile Reporting</strong>: Field teams can upload photos, videos, and status reports instantly</li>
+      </ul>
+      
+      <h2>Quality Assurance in Remote Settings</h2>
+      <p>Maintaining quality standards while managing remotely requires innovative approaches including drone surveys, IoT monitoring systems, and digital inspection checklists. Regular virtual site visits complement physical inspections to ensure comprehensive oversight.</p>
+      
+      <h2>Training and Development</h2>
+      <p>Remote management success depends on well-trained local teams capable of independent decision-making. JD Marc invests heavily in training programs that develop technical skills and leadership capabilities among African construction professionals.</p>
+      
+      <p>Our experience managing projects across Nigeria, Ghana, and Kenya has demonstrated that remote project management can actually improve efficiency when implemented with the right tools and processes. The key is balancing digital connectivity with local expertise and cultural understanding.</p>
+    `,
+    image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+    featured: false,
+  },
+  {
+    id: 4,
+    title: "Green Building Certification in Africa: A Comprehensive Guide to Sustainable Construction",
+    slug: "green-building-certification-africa-sustainable-construction",
+    date: "2024-03-05",
+    author: "Dr. Amina Hassan",
+    category: "Sustainability & Climate Engineering",
+    excerpt:
+      "Navigate the landscape of green building certifications in Africa and discover how sustainable construction practices are creating healthier, more efficient buildings.",
+    content: `
+      <p>Green building certification has gained significant momentum across Africa as governments, developers, and communities recognize the importance of sustainable construction practices. Understanding the certification landscape helps stakeholders make informed decisions about environmental standards and long-term building performance.</p>
+      
+      <h2>Major Certification Systems in Africa</h2>
+      <p>Several international and regional certification systems operate across African markets, each with specific criteria and benefits:</p>
+      
+      <ul>
+        <li><strong>LEED (Leadership in Energy and Environmental Design)</strong>: Global standard widely recognized across African markets</li>
+        <li><strong>Green Star Africa</strong>: Regional adaptation of Green Star rating system</li>
+        <li><strong>EDGE (Excellence in Design for Greater Efficiencies)</strong>: IFC-developed standard for emerging markets</li>
+        <li><strong>BREEAM</strong>: British standard with growing African presence</li>
+      </ul>
+      
+      <h2>Key Sustainability Criteria</h2>
+      <p>African green building certifications typically focus on water efficiency, energy performance, materials selection, and indoor environmental quality. These criteria address specific regional challenges including water scarcity, extreme temperatures, and limited renewable energy infrastructure.</p>
+      
+      <h2>Economic Benefits</h2>
+      <p>Certified green buildings in Africa demonstrate measurable benefits including 20-30% reduction in energy costs, 40% reduction in water consumption, and increased property values. These savings are particularly significant given rising utility costs across the continent.</p>
+      
+      <h2>JD Marc's Sustainability Leadership</h2>
+      <p>Our commitment to sustainable construction has resulted in multiple certified projects across West Africa. The Cross River Ecotourism Center achieved EDGE certification, demonstrating that sustainable design can be both environmentally responsible and economically viable in African contexts.</p>
+      
+      <p>As climate change impacts intensify, green building certification becomes increasingly important for resilient infrastructure development. JD Marc continues to lead sustainable construction practices that protect both the environment and our clients' investments.</p>
+    `,
+    image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+    featured: true,
+  },
+  {
+    id: 5,
     title: "Infrastructure Policy in Nigeria: Shaping Africa's Future",
-    slug: "infrastructure-policy-nigeria-africa",
-    date: "2024-01-15",
-    author: "Engr. Donatus Oduopara, Chief Technical Director",
+    slug: "infrastructure-policy-nigeria-africa-future",
+    date: "2024-03-01",
+    author: "Engr. Donatus Oduopara",
     category: "Infrastructure Policy",
     excerpt:
       "Analyzing Nigeria's infrastructure policy framework and its impact on Pan-African development, exploring opportunities for sustainable growth across the continent.",
@@ -27,16 +158,15 @@ export const blogPosts = [
       
       <p>At JD Marc, we believe that effective infrastructure policy must balance economic growth with environmental sustainability and social inclusion. Our projects across Nigeria demonstrate how this balance can be achieved through innovative engineering and community engagement.</p>
     `,
-    image: "/images/blog-infrastructure-policy.jpg",
-    featured: true,
+    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+    featured: false,
   },
   {
-    id: 2,
-    title:
-      "Smart Cities Revolution: Building Digital Infrastructure for African Urban Centers",
-    slug: "smart-cities-urban-innovation-africa",
-    date: "2024-01-08",
-    author: "James Abel, Project Director",
+    id: 6,
+    title: "Smart Cities Revolution: Building Digital Infrastructure for African Urban Centers",
+    slug: "smart-cities-digital-infrastructure-african-urban-centers",
+    date: "2024-02-28",
+    author: "James Abel",
     category: "Smart Cities & Urban Innovation",
     excerpt:
       "Exploring how smart city technologies are transforming African urban centers, from IoT integration to sustainable urban planning solutions.",
@@ -59,15 +189,15 @@ export const blogPosts = [
       
       <p>The future of African urban development lies in embracing smart technologies while respecting local contexts and needs. JD Marc continues to pioneer solutions that make African cities more livable, sustainable, and economically vibrant.</p>
     `,
-    image: "/images/blog-smart-cities.jpg",
-    featured: true,
+    image: "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+    featured: false,
   },
   {
-    id: 3,
+    id: 7,
     title: "Behind the Scenes: Port Harcourt Airport Hotel Transformation",
-    slug: "port-harcourt-airport-hotel-project",
-    date: "2023-12-20",
-    author: "Jude Onwudebe, Chief Executive Officer",
+    slug: "port-harcourt-airport-hotel-transformation-behind-scenes",
+    date: "2024-02-25",
+    author: "Jude Onwudebe",
     category: "Behind-the-Scenes Projects",
     excerpt:
       "An inside look at the challenges and innovations behind the successful renovation of Port Harcourt Airport Hotel, showcasing JD Marc's project management excellence.",
@@ -90,47 +220,15 @@ export const blogPosts = [
       
       <p>The successful completion of this project has positioned JD Marc as a leader in complex renovation projects, demonstrating our ability to deliver exceptional results under challenging conditions.</p>
     `,
-    image: "/images/blog-hotel-project.jpg",
+    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: false,
   },
   {
-    id: 4,
-    title: "Climate-Resilient Construction: Building for Africa's Future",
-    slug: "sustainability-climate-engineering-africa",
-    date: "2023-12-10",
-    author: "Engr. Donatus Oduopara, Chief Technical Director",
-    category: "Sustainability & Climate Engineering",
-    excerpt:
-      "Exploring sustainable construction practices and climate-resilient design principles that are essential for Africa's infrastructure development.",
-    content: `
-      <p>Climate change poses significant challenges to African infrastructure development. At JD Marc, we're pioneering climate-resilient construction techniques that not only withstand environmental challenges but also contribute to climate mitigation efforts.</p>
-      
-      <h2>Understanding Africa's Climate Challenges</h2>
-      <p>African construction projects must account for extreme weather events, rising temperatures, flooding, and drought. Our engineering approach incorporates these factors from the design phase through construction and maintenance.</p>
-      
-      <h2>Sustainable Construction Practices</h2>
-      <ul>
-        <li><strong>Local Material Utilization</strong>: Reducing transportation emissions and supporting local economies</li>
-        <li><strong>Energy-Efficient Design</strong>: Passive cooling, natural lighting, and renewable energy integration</li>
-        <li><strong>Water Management Systems</strong>: Rainwater harvesting and greywater recycling</li>
-        <li><strong>Green Building Certification</strong>: Pursuing international sustainability standards</li>
-      </ul>
-      
-      <h2>Innovation in Practice</h2>
-      <p>Our Cross River Ecotourism Center project exemplifies climate-resilient construction, featuring sustainable materials, renewable energy systems, and design elements that harmonize with the natural environment while providing economic opportunities for local communities.</p>
-      
-      <p>The future of African construction must be sustainable. JD Marc is committed to leading this transformation through innovative engineering, responsible resource use, and climate-conscious design principles.</p>
-    `,
-    image: "/images/blog-sustainability.jpg",
-    featured: true,
-  },
-  {
-    id: 5,
-    title:
-      "Digital Twin Technology: Revolutionizing Construction Project Management",
-    slug: "emerging-trends-civil-engineering-digital-twins",
-    date: "2023-11-25",
-    author: "James Abel, Project Director",
+    id: 8,
+    title: "Digital Twin Technology: Revolutionizing Construction Project Management",
+    slug: "digital-twin-technology-construction-project-management",
+    date: "2024-02-22",
+    author: "James Abel",
     category: "Emerging Trends in Civil Engineering",
     excerpt:
       "How digital twin technology is transforming construction project management, from design visualization to predictive maintenance in African infrastructure projects.",
@@ -153,17 +251,16 @@ export const blogPosts = [
       
       <p>As we implement digital twin technology across our projects, JD Marc is setting new standards for construction excellence and infrastructure management in Africa.</p>
     `,
-    image: "/images/blog-digital-twins.jpg",
+    image: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: false,
   },
   {
-    id: 6,
-    title:
-      "Building Local Capacity: JD Marc's Training and Development Programs",
-    slug: "building-local-capacity-training-programs",
-    date: "2023-11-15",
-    author: "Jude Onwudebe, Chief Executive Officer",
-    category: "Behind-the-Scenes Projects",
+    id: 9,
+    title: "Building Local Capacity: JD Marc's Training and Development Programs",
+    slug: "building-local-capacity-training-development-programs",
+    date: "2024-02-20",
+    author: "Jude Onwudebe",
+    category: "Remote Collaboration",
     excerpt:
       "Exploring JD Marc's commitment to building local construction capacity through comprehensive training programs and knowledge transfer initiatives.",
     content: `
@@ -185,22 +282,76 @@ export const blogPosts = [
       
       <p>Investing in people is investing in Africa's future. JD Marc's commitment to capacity building ensures that our infrastructure legacy extends far beyond the projects we build.</p>
     `,
-    image: "/images/blog-training.jpg",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+    featured: false,
+  },
+  {
+    id: 10,
+    title: "The Role of Women in African Construction: Breaking Barriers and Building Futures",
+    slug: "women-african-construction-breaking-barriers-building-futures",
+    date: "2024-02-18",
+    author: "Engr. Funmi Adebayo",
+    category: "Africa Development",
+    excerpt:
+      "Examining the growing role of women in Africa's construction industry and JD Marc's initiatives to promote gender equality in engineering and project management.",
+    content: `
+      <p>The construction industry across Africa is experiencing a significant transformation as more women enter engineering, project management, and technical roles. This shift brings diverse perspectives, innovative solutions, and enhanced project outcomes that benefit the entire industry.</p>
+      
+      <h2>Current Landscape</h2>
+      <p>While women remain underrepresented in construction, African countries are showing promising growth in female participation. Countries like Rwanda and South Africa lead with progressive policies and educational programs that encourage women in STEM fields.</p>
+      
+      <h2>JD Marc's Gender Equality Initiatives</h2>
+      <ul>
+        <li><strong>Women in Engineering Scholarship Program</strong>: Supporting female engineering students across Nigeria</li>
+        <li><strong>Mentorship Networks</strong>: Connecting experienced female professionals with emerging talent</li>
+        <li><strong>Leadership Development</strong>: Fast-tracking qualified women into management positions</li>
+        <li><strong>Safe Work Environments</strong>: Implementing policies that ensure equality and safety</li>
+      </ul>
+      
+      <h2>Success Stories</h2>
+      <p>Our recent Lagos Mixed-Use Development was led by an all-female project management team, delivering the project 15% ahead of schedule and under budget. This success demonstrates the value of diverse leadership in complex construction projects.</p>
+      
+      <h2>Future Outlook</h2>
+      <p>As Africa's infrastructure needs continue to grow, the industry requires all available talent to meet these challenges. Women bring essential skills in project management, stakeholder engagement, and innovative problem-solving that are crucial for successful infrastructure development.</p>
+      
+      <p>JD Marc is committed to leading this transformation by creating opportunities, removing barriers, and demonstrating that diverse teams deliver superior results in construction and engineering.</p>
+    `,
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     featured: false,
   },
 ];
 
 export const blogCategories = [
   { value: "all", label: "All Posts" },
-  {
-    value: "infrastructure-policy",
-    label: "Infrastructure Policy in Nigeria & Africa",
-  },
+  { value: "construction-technology", label: "Construction Technology" },
+  { value: "project-management", label: "Project Management" },
+  { value: "infrastructure-policy", label: "Infrastructure Policy" },
   { value: "smart-cities", label: "Smart Cities & Urban Innovation" },
-  {
-    value: "behind-the-scenes",
-    label: "Behind-the-Scenes on JD Marc Projects",
-  },
+  { value: "behind-the-scenes", label: "Behind-the-Scenes Projects" },
   { value: "sustainability", label: "Sustainability & Climate Engineering" },
   { value: "emerging-trends", label: "Emerging Trends in Civil Engineering" },
+  { value: "remote-collaboration", label: "Remote Collaboration" },
+  { value: "africa-development", label: "Africa Development" },
+];
+
+// Featured articles for homepage
+export const featuredArticles = blogPosts.filter(post => post.featured).slice(0, 3);
+
+// Popular tags for filtering
+export const popularTags = [
+  "Construction Tech",
+  "AI in Construction", 
+  "Remote Management",
+  "Innovation",
+  "Africa Development",
+  "Sustainability",
+  "Smart Cities",
+  "Infrastructure",
+  "Engineering",
+  "Project Management",
+  "Digital Transformation",
+  "Green Building",
+  "Nanotechnology",
+  "IoT",
+  "Building Materials",
 ];
