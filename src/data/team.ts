@@ -3,7 +3,8 @@ export const teamMembers = [
     id: 1,
     name: "Jude Onwudebe",
     title: "Chief Executive Officer",
-    image: "/images/team-jude.jpg",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2Ffe6352e25d224f47b8ebec7c5ae8e6ec?format=webp&width=800",
     bio: "20+ years of construction and real estate experience. MSc Finance & Management (Sussex), BSc Economics. Co-founder of JD Marc and Xtranet Properties, leading the company's strategic vision for Pan-African infrastructure development.",
   },
   {

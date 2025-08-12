@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import {
   Sparkles,
   Play,
@@ -98,6 +99,7 @@ const FloatingParticles = () => {
 
 const PremiumHero = () => {
   const heroRef = useRef(null);
+  const navigate = useNavigate();
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -250,6 +252,7 @@ const PremiumHero = () => {
                     <motion.div variants={itemVariants}>
                       <div className="flex flex-col sm:flex-row gap-3">
                         <motion.button
+                          onClick={() => navigate('/register')}
                           className="group/btn relative px-8 py-4 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 text-white rounded-xl font-semibold shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 transition-all duration-300 overflow-hidden"
                           whileHover={{ scale: 1.02, y: -2 }}
                           whileTap={{ scale: 0.98 }}
@@ -264,6 +267,7 @@ const PremiumHero = () => {
                         </motion.button>
 
                         <motion.button
+                          onClick={() => navigate('/projects')}
                           className="group/btn relative px-8 py-4 bg-white/10 backdrop-blur-sm text-white rounded-xl font-semibold border border-white/20 hover:bg-white/15 hover:border-white/30 transition-all duration-300 overflow-hidden"
                           whileHover={{ scale: 1.02, y: -2 }}
                           whileTap={{ scale: 0.98 }}

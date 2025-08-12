@@ -383,12 +383,16 @@ export default function Footer() {
             className="text-center mb-16"
           >
             <div className="flex items-center justify-center gap-4 mb-6">
-              <motion.div 
-                className="w-16 h-16 bg-gradient-to-r from-[#AA7452] to-[#7C5841] rounded-3xl flex items-center justify-center shadow-2xl"
-                whileHover={{ rotate: 360, scale: 1.1 }}
-                transition={{ duration: 0.8 }}
+              <motion.div
+                className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-3xl flex items-center justify-center shadow-2xl border border-white/20"
+                whileHover={{ scale: 1.1 }}
+                transition={{ duration: 0.3 }}
               >
-                <Construction className="w-8 h-8 text-white" />
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F8c27ff3f82824383bd700bc3410cfa09?format=webp&width=200"
+                  alt="JD Marc Limited Logo"
+                  className="w-12 h-12 object-contain"
+                />
               </motion.div>
               <div>
                 <h2 className="text-3xl font-black text-white">JD Marc Limited</h2>

@@ -74,32 +74,32 @@ const navItems: NavItem[] = [
     ]
   },
   {
-    label: 'Solutions',
-    href: '/platform',
+    label: 'Blog',
+    href: '/blog',
     subItems: [
-      { 
-        label: 'Project Management', 
-        href: '/platform/projects', 
-        description: 'Advanced project tracking & coordination',
+      {
+        label: 'Industry Insights',
+        href: '/blog/industry',
+        description: 'Latest construction & infrastructure trends',
         icon: <Target className="w-5 h-5" />
       },
-      { 
-        label: 'Team Collaboration', 
-        href: '/platform/teams', 
-        description: 'Real-time team communication tools',
-        icon: <Users className="w-5 h-5" />
+      {
+        label: 'Project Updates',
+        href: '/blog/projects',
+        description: 'Behind-the-scenes project coverage',
+        icon: <Building2 className="w-5 h-5" />
       },
-      { 
-        label: 'Quality Assurance', 
-        href: '/platform/analytics', 
-        description: 'Comprehensive quality control systems',
-        icon: <Shield className="w-5 h-5" />
+      {
+        label: 'Technology & Innovation',
+        href: '/blog/technology',
+        description: 'Smart construction & sustainable building',
+        icon: <Zap className="w-5 h-5" />
       },
-      { 
-        label: 'Global Procurement', 
-        href: '/platform/procurement', 
-        description: 'International sourcing & supply chain',
-        icon: <Globe className="w-5 h-5" />
+      {
+        label: 'Company News',
+        href: '/blog/news',
+        description: 'JD Marc Limited updates & announcements',
+        icon: <Award className="w-5 h-5" />
       },
     ]
   },
@@ -292,8 +292,12 @@ const MobileMenu = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
               {/* Enhanced Header */}
               <div className="flex items-center justify-between mb-12">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-[#AA7452] to-[#7C5841] rounded-2xl flex items-center justify-center">
-                    <Construction className="w-6 h-6 text-white" />
+                  <div className="w-12 h-12 bg-gradient-to-r from-[#AA7452]/10 to-[#7C5841]/10 rounded-2xl flex items-center justify-center border border-[#AA7452]/20">
+                    <img
+                      src="https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F8c27ff3f82824383bd700bc3410cfa09?format=webp&width=200"
+                      alt="JD Marc Limited Logo"
+                      className="w-10 h-10 object-contain"
+                    />
                   </div>
                   <div>
                     <div className="text-xl font-black text-[#051822]">JD Marc</div>
@@ -338,7 +342,7 @@ const MobileMenu = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
                             : "bg-gray-100 text-gray-600"
                         )}>
                           {item.label === 'Services' && <Construction className="w-5 h-5" />}
-                          {item.label === 'Solutions' && <Zap className="w-5 h-5" />}
+                          {item.label === 'Blog' && <Award className="w-5 h-5" />}
                           {item.label === 'Projects' && <Building2 className="w-5 h-5" />}
                           {item.label === 'About' && <Users className="w-5 h-5" />}
                         </div>
@@ -521,12 +525,16 @@ export default function PremiumNavigation() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
           >
-            <motion.div 
-              className="w-12 h-12 bg-gradient-to-r from-[#AA7452] to-[#7C5841] rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300"
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.8 }}
+            <motion.div
+              className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300 border border-white/20"
+              whileHover={{ scale: 1.1 }}
+              transition={{ duration: 0.3 }}
             >
-              <Construction className="w-6 h-6 text-white" />
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F8c27ff3f82824383bd700bc3410cfa09?format=webp&width=200"
+                alt="JD Marc Limited Logo"
+                className="w-10 h-10 object-contain"
+              />
             </motion.div>
             <div className="hidden sm:block">
               <div className="text-white font-black text-2xl group-hover:text-[#D4C9C7] transition-colors">

@@ -39,17 +39,15 @@ const LoadingSpinner = () => (
         transition={{ duration: 0.6 }}
       >
         <motion.div
-          className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#AA7452] to-[#7C5841] flex items-center justify-center shadow-2xl"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-0 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center shadow-2xl border border-white/20"
+          animate={{ scale: [1, 1.05, 1] }}
+          transition={{ duration: 2, repeat: Infinity }}
         >
-          <motion.div
-            className="text-white text-2xl font-bold"
-            animate={{ scale: [1, 1.1, 1] }}
-            transition={{ duration: 1, repeat: Infinity }}
-          >
-            JD
-          </motion.div>
+          <img
+            src="https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F8c27ff3f82824383bd700bc3410cfa09?format=webp&width=200"
+            alt="JD Marc Limited Logo"
+            className="w-16 h-16 object-contain"
+          />
         </motion.div>
         
         {/* Orbiting elements */}
@@ -297,8 +295,8 @@ function App() {
                           </RouteWithSEO>
                         } 
                       />
-                      <Route 
-                        path="/blog" 
+                      <Route
+                        path="/blog"
                         element={
                           <RouteWithSEO seo={{
                             title: 'Construction Industry Blog & Insights | JD Marc Limited',
@@ -307,7 +305,19 @@ function App() {
                           }}>
                             <Blog />
                           </RouteWithSEO>
-                        } 
+                        }
+                      />
+                      <Route
+                        path="/blog/:category"
+                        element={
+                          <RouteWithSEO seo={{
+                            title: 'Construction Blog Categories | JD Marc Limited',
+                            description: 'Explore specific construction industry topics including technology, projects, industry insights, and company news.',
+                            keywords: 'construction blog categories, industry insights, project updates, construction technology, company news',
+                          }}>
+                            <Blog />
+                          </RouteWithSEO>
+                        }
                       />
                       <Route 
                         path="/login" 
