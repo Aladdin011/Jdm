@@ -13,6 +13,16 @@ export default function ChatbotPlaceholder() {
   const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
+    // Debug configuration in development
+    debugTawkConfig();
+
+    // Check if Tawk.to should be enabled
+    if (!isTawkToEnabled()) {
+      console.warn("⚠️ Tawk.to is not enabled. Check your configuration.");
+      setLoadError(true);
+      return;
+    }
+
     // Check if Tawk.to is already loaded
     if (window.Tawk_API && isLoaded) {
       return;
