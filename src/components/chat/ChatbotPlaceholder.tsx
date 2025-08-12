@@ -107,10 +107,18 @@ export default function ChatbotPlaceholder() {
           console.log("👋 Chat conversation ended");
         };
 
+        // Get and validate the embed URL
+        const embedUrl = getTawkToEmbedUrl();
+        if (!embedUrl) {
+          console.error("❌ Cannot initialize Tawk.to: Invalid embed URL");
+          setLoadError(true);
+          return;
+        }
+
         // Create and configure the script element
         scriptElement = document.createElement("script");
         scriptElement.async = true;
-        scriptElement.src = getTawkToEmbedUrl();
+        scriptElement.src = embedUrl;
         scriptElement.charset = "UTF-8";
         scriptElement.setAttribute("crossorigin", "*");
 
