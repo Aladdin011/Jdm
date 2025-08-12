@@ -298,24 +298,49 @@ export const cacheResource = async (
 
 // Font loading optimization
 export const optimizeFontLoading = () => {
-  // Add font-display: swap to improve loading performance
-  const fontFaces = document.querySelectorAll('@font-face');
-  fontFaces.forEach((fontFace) => {
-    (fontFace as any).fontDisplay = 'swap';
-  });
+  try {
+    // Preload critical fonts with font-display: swap already included in URL
+    const criticalFonts = [
+      'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap',
+    ];
 
-  // Preload critical fonts
-  const criticalFonts = [
-    'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap',
-  ];
+    criticalFonts.forEach((fontUrl) => {
+      // Check if the font is already preloaded
+      const existingPreload = document.querySelector(`link[href="${fontUrl}"]`);
+      if (!existingPreload) {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'style';
+        link.href = fontUrl;
+        link.crossOrigin = 'anonymous';
+        document.head.appendChild(link);
 
-  criticalFonts.forEach((fontUrl) => {
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'style';
-    link.href = fontUrl;
-    document.head.appendChild(link);
-  });
+        // Also add the actual stylesheet
+        const styleLink = document.createElement('link');
+        styleLink.rel = 'stylesheet';
+        styleLink.href = fontUrl;
+        styleLink.crossOrigin = 'anonymous';
+        document.head.appendChild(styleLink);
+      }
+    });
+
+    // Add font-display: swap via CSS for any custom fonts
+    const fontDisplayCSS = `
+      @font-face {
+        font-display: swap;
+      }
+    `;
+
+    const existingFontStyle = document.querySelector('#font-display-optimization');
+    if (!existingFontStyle) {
+      const style = document.createElement('style');
+      style.id = 'font-display-optimization';
+      style.textContent = fontDisplayCSS;
+      document.head.appendChild(style);
+    }
+  } catch (error) {
+    console.warn('Font loading optimization failed:', error);
+  }
 };
 
 // Critical CSS inlining
