@@ -441,26 +441,50 @@ export const analyzeBundleSize = () => {
 
 // Global performance configuration
 export const initializePerformanceOptimizations = () => {
-  // Add resource hints
-  addResourceHints();
-  
-  // Track web vitals
-  trackWebVitals();
-  
-  // Optimize font loading
-  optimizeFontLoading();
-  
-  // Register service worker in production
-  if (process.env.NODE_ENV === 'production') {
-    registerServiceWorker();
+  try {
+    // Add resource hints
+    try {
+      addResourceHints();
+    } catch (error) {
+      console.warn('Resource hints setup failed:', error);
+    }
+
+    // Track web vitals
+    try {
+      trackWebVitals();
+    } catch (error) {
+      console.warn('Web vitals tracking setup failed:', error);
+    }
+
+    // Optimize font loading
+    try {
+      optimizeFontLoading();
+    } catch (error) {
+      console.warn('Font loading optimization failed:', error);
+    }
+
+    // Register service worker in production
+    if (process.env.NODE_ENV === 'production') {
+      try {
+        registerServiceWorker();
+      } catch (error) {
+        console.warn('Service worker registration failed:', error);
+      }
+    }
+
+    // Preload critical images (customize based on your needs)
+    try {
+      const criticalImages = [
+        'https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F6fe8dede446d44e5b3f61dac8e245b53?alt=media&token=2cd3aa20-e283-42dd-ad0a-b327725825be&apiKey=751ea84be0da437c8dd3f1bf04173189',
+      ];
+
+      preloadCriticalImages(criticalImages);
+    } catch (error) {
+      console.warn('Critical images preload failed:', error);
+    }
+  } catch (error) {
+    console.warn('Performance optimizations initialization failed:', error);
   }
-  
-  // Preload critical images (customize based on your needs)
-  const criticalImages = [
-    'https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F6fe8dede446d44e5b3f61dac8e245b53?alt=media&token=2cd3aa20-e283-42dd-ad0a-b327725825be&apiKey=751ea84be0da437c8dd3f1bf04173189',
-  ];
-  
-  preloadCriticalImages(criticalImages);
 };
 
 // TypeScript declarations for global gtag
