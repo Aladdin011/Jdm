@@ -99,6 +99,7 @@ const FloatingParticles = () => {
 
 const PremiumHero = () => {
   const heroRef = useRef(null);
+  const navigate = useNavigate();
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
