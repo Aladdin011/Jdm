@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getTawkToEmbedUrl, TAWK_TO_CONFIG } from "@/config/tawkto";
+import { getTawkToEmbedUrl, TAWK_TO_CONFIG, isTawkToEnabled, debugTawkConfig } from "@/config/tawkto";
 
 declare global {
   interface Window {
