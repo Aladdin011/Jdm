@@ -2,34 +2,34 @@ export const blogPosts = [
   {
     id: 1,
     title:
-      "The Future of Remote Construction Management: AI and IoT Transforming African Building Sites",
-    slug: "future-remote-construction-management-ai-iot-africa",
+      "Modern Construction Techniques: Building Africa's Infrastructure with Advanced Methods",
+    slug: "modern-construction-techniques-africa-infrastructure",
     date: "2024-03-15",
     author: "Engineering Team",
     category: "Construction Technology",
     excerpt:
-      "Discover how cutting-edge technology is revolutionizing construction project management across Africa. From AI-powered quality control to IoT sensors monitoring structural integrity, explore the innovations shaping tomorrow's construction landscape.",
+      "Explore how JD Marc Limited employs cutting-edge construction techniques to deliver world-class infrastructure projects across Africa. From prefabricated components to sustainable building methods, discover the innovations driving our success.",
     content: `
-      <p>The construction industry in Africa is experiencing a digital transformation that's reshaping how we approach project management, quality control, and workforce coordination. Advanced technologies like Artificial Intelligence (AI) and Internet of Things (IoT) are no longer futuristic concepts but practical tools driving efficiency and innovation across construction sites.</p>
-      
-      <h2>AI-Powered Quality Control Systems</h2>
-      <p>Modern construction projects now leverage AI algorithms to analyze real-time data from construction sites, identifying potential quality issues before they become costly problems. Computer vision systems can detect structural anomalies, monitor concrete curing processes, and ensure compliance with engineering specifications.</p>
-      
-      <h2>IoT Sensors for Structural Monitoring</h2>
+      <p>The construction landscape in Africa is evolving rapidly, with modern techniques enabling faster, more efficient, and sustainable building practices. At JD Marc Limited, we've embraced these advanced methods to deliver exceptional infrastructure projects across the continent.</p>
+
+      <h2>Prefabricated Construction Systems</h2>
+      <p>Prefabrication has revolutionized our approach to large-scale projects. By manufacturing building components in controlled environments, we achieve superior quality control, reduce waste, and significantly accelerate project timelines. Our Port Harcourt Commercial Complex utilized 70% prefabricated elements, completing construction 6 months ahead of schedule.</p>
+
+      <h2>Advanced Concrete Technologies</h2>
       <ul>
-        <li><strong>Temperature and Humidity Monitoring</strong>: Real-time environmental data for optimal concrete curing</li>
-        <li><strong>Structural Health Monitoring</strong>: Continuous assessment of load-bearing elements</li>
-        <li><strong>Equipment Tracking</strong>: GPS-enabled monitoring of construction machinery and tools</li>
-        <li><strong>Safety Compliance</strong>: Automated detection of safety violations and hazardous conditions</li>
+        <li><strong>High-Performance Concrete</strong>: Enhanced durability for African climate conditions</li>
+        <li><strong>Self-Compacting Concrete</strong>: Improved structural integrity and faster placement</li>
+        <li><strong>Fiber-Reinforced Concrete</strong>: Increased tensile strength and crack resistance</li>
+        <li><strong>Waterproof Concrete Systems</strong>: Essential for coastal and high-humidity environments</li>
       </ul>
-      
-      <h2>Remote Project Management Benefits</h2>
-      <p>The integration of AI and IoT technologies enables construction managers to oversee multiple projects across different locations without compromising quality or safety. Real-time dashboards provide comprehensive insights into project progress, resource utilization, and potential bottlenecks.</p>
-      
-      <p>At JD Marc, we've successfully implemented these technologies across our African projects, resulting in 25% faster project completion times and 40% reduction in quality-related rework. The future of construction management is here, and it's transforming how we build Africa's infrastructure.</p>
+
+      <h2>Steel Frame and Modular Construction</h2>
+      <p>Steel frame construction offers exceptional strength-to-weight ratios and design flexibility. Our modular approach allows for rapid assembly while maintaining architectural sophistication. This technique has been particularly successful in our educational and healthcare facility projects.</p>
+
+      <p>JD Marc's commitment to modern construction techniques has resulted in over 200 successful projects across West Africa. Our focus on innovation, quality, and efficiency continues to set new standards for African infrastructure development.</p>
     `,
     image:
-      "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+      "/images/projects/construction-site-crane-workers.jpg",
     featured: true,
   },
   {
