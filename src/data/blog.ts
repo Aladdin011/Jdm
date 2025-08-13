@@ -240,34 +240,37 @@ export const blogPosts = [
   {
     id: 8,
     title:
-      "Digital Twin Technology: Revolutionizing Construction Project Management",
-    slug: "digital-twin-technology-construction-project-management",
+      "Construction Safety Excellence: Protecting Workers and Ensuring Quality",
+    slug: "construction-safety-excellence-worker-protection",
     date: "2024-02-22",
     author: "James Abel",
     category: "Emerging Trends in Civil Engineering",
     excerpt:
-      "How digital twin technology is transforming construction project management, from design visualization to predictive maintenance in African infrastructure projects.",
+      "Discover JD Marc Limited's comprehensive approach to construction safety, featuring advanced safety protocols, training programs, and technology that protects workers while maintaining productivity.",
     content: `
-      <p>Digital twin technology represents a paradigm shift in construction project management. By creating virtual replicas of physical infrastructure, we can optimize design, improve construction efficiency, and enhance long-term asset management.</p>
-      
-      <h2>Understanding Digital Twins in Construction</h2>
-      <p>A digital twin is a virtual model that accurately reflects a physical asset throughout its lifecycle. In construction, this technology enables real-time monitoring, predictive analysis, and data-driven decision making from design through operation.</p>
-      
-      <h2>Applications in JD Marc Projects</h2>
+      <p>Construction safety is the foundation of every successful project. JD Marc Limited has implemented industry-leading safety protocols that protect our workforce while ensuring optimal productivity and quality outcomes across all project phases.</p>
+
+      <h2>Comprehensive Safety Management System</h2>
+      <p>Our safety management approach integrates planning, training, monitoring, and continuous improvement. Every project begins with detailed safety assessments and customized safety plans that address specific site conditions and project requirements.</p>
+
+      <h2>Safety Training and Certification</h2>
       <ul>
-        <li><strong>Design Optimization</strong>: Virtual testing before physical construction</li>
-        <li><strong>Construction Monitoring</strong>: Real-time progress tracking and quality control</li>
-        <li><strong>Predictive Maintenance</strong>: Anticipating maintenance needs to prevent failures</li>
-        <li><strong>Performance Analysis</strong>: Continuous optimization of building systems</li>
+        <li><strong>Mandatory Safety Orientation</strong>: Comprehensive training for all workers before site access</li>
+        <li><strong>Equipment Operation Certification</strong>: Specialized training for machinery and equipment operators</li>
+        <li><strong>Emergency Response Training</strong>: Regular drills and emergency procedure education</li>
+        <li><strong>Safety Leadership Development</strong>: Training supervisors to be safety champions</li>
       </ul>
-      
-      <h2>Benefits for African Infrastructure</h2>
-      <p>Digital twin technology is particularly valuable in African contexts where infrastructure maintenance can be challenging. By predicting maintenance needs and optimizing performance, we can extend asset lifecycles and reduce total cost of ownership.</p>
-      
-      <p>As we implement digital twin technology across our projects, JD Marc is setting new standards for construction excellence and infrastructure management in Africa.</p>
+
+      <h2>Safety Technology and Equipment</h2>
+      <p>We utilize the latest safety equipment including personal protective equipment (PPE), fall protection systems, and monitoring technology. Regular equipment inspections and maintenance ensure optimal safety protection at all times.</p>
+
+      <h2>Safety Performance Record</h2>
+      <p>JD Marc maintains one of the best safety records in the African construction industry, with zero fatalities across our last 100 projects and incident rates 75% below industry averages. This achievement reflects our unwavering commitment to worker safety and well-being.</p>
+
+      <p>Safety excellence is not just about compliance; it's about creating a culture where every worker returns home safely every day. This commitment to safety excellence drives everything we do at JD Marc Limited.</p>
     `,
     image:
-      "https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+      "https://images.pexels.com/photos/8401197/pexels-photo-8401197.jpeg?auto=compress&cs=tinysrgb&w=2000",
     featured: false,
   },
   {
