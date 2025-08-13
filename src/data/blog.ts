@@ -204,34 +204,37 @@ export const blogPosts = [
   },
   {
     id: 7,
-    title: "Behind the Scenes: Port Harcourt Airport Hotel Transformation",
-    slug: "port-harcourt-airport-hotel-transformation-behind-scenes",
+    title: "Project Showcase: Cross River State Government Complex Construction Excellence",
+    slug: "cross-river-government-complex-construction-showcase",
     date: "2024-02-25",
     author: "Jude Onwudebe",
     category: "Behind-the-Scenes Projects",
     excerpt:
-      "An inside look at the challenges and innovations behind the successful renovation of Port Harcourt Airport Hotel, showcasing JD Marc's project management excellence.",
+      "Take an inside look at the construction of the Cross River State Government Complex, showcasing JD Marc's expertise in large-scale governmental infrastructure projects.",
     content: `
-      <p>The Port Harcourt Airport Hotel renovation project presented unique challenges that tested our team's creativity, technical expertise, and project management skills. This behind-the-scenes look reveals how JD Marc transformed a dated facility into a world-class hospitality destination.</p>
-      
-      <h2>Project Challenges</h2>
-      <p>Working within an operational airport environment required meticulous planning and coordination. We had to maintain hotel operations during renovation, manage noise restrictions due to proximity to runways, and ensure all work met strict airport security protocols.</p>
-      
-      <h2>Innovative Solutions</h2>
+      <p>The Cross River State Government Complex stands as one of JD Marc Limited's flagship projects, demonstrating our capability to deliver large-scale governmental infrastructure that meets the highest standards of functionality, durability, and architectural excellence.</p>
+
+      <h2>Project Scope and Scale</h2>
+      <p>This 50,000 square meter complex includes multiple administrative buildings, conference facilities, parking structures, and landscaped areas. The project required coordination of over 300 workers and 50 subcontractors while maintaining strict quality and safety standards.</p>
+
+      <h2>Construction Innovations</h2>
       <ul>
-        <li><strong>Phased Construction Approach</strong>: Renovating sections while maintaining operations</li>
-        <li><strong>Acoustic Engineering</strong>: Advanced soundproofing for aircraft noise mitigation</li>
-        <li><strong>Smart Building Integration</strong>: Automated systems for energy efficiency</li>
-        <li><strong>Cultural Design Elements</strong>: Incorporating local Niger Delta cultural motifs</li>
+        <li><strong>Reinforced Concrete Frame</strong>: Designed for durability in tropical climate conditions</li>
+        <li><strong>Advanced HVAC Systems</strong>: Energy-efficient climate control for large-scale buildings</li>
+        <li><strong>Seismic-Resistant Design</strong>: Enhanced structural stability and safety features</li>
+        <li><strong>Local Material Integration</strong>: Incorporating regional stone and timber elements</li>
       </ul>
-      
-      <h2>Lessons Learned</h2>
-      <p>This project reinforced the importance of stakeholder communication and adaptive project management. Regular coordination with airport authorities, hotel management, and local communities ensured smooth project execution despite complex operational requirements.</p>
-      
-      <p>The successful completion of this project has positioned JD Marc as a leader in complex renovation projects, demonstrating our ability to deliver exceptional results under challenging conditions.</p>
+
+      <h2>Quality Assurance Excellence</h2>
+      <p>Our quality management system ensured every aspect of construction met international standards. Regular inspections, material testing, and progress monitoring maintained consistency throughout the 18-month construction period.</p>
+
+      <h2>Community Impact</h2>
+      <p>Beyond construction excellence, this project created 400 local jobs and supported numerous local suppliers. Our commitment to community engagement included skills training programs for local workers and apprenticeship opportunities.</p>
+
+      <p>Completed on schedule and within budget, the Cross River State Government Complex exemplifies JD Marc's ability to deliver complex infrastructure projects that serve communities for decades. The project has received recognition for its architectural design and construction quality.</p>
     `,
     image:
-      "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+      "/images/projects/government-complex-construction.jpg",
     featured: false,
   },
   {
