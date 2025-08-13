@@ -276,34 +276,37 @@ export const blogPosts = [
   {
     id: 9,
     title:
-      "Building Local Capacity: JD Marc's Training and Development Programs",
-    slug: "building-local-capacity-training-development-programs",
+      "Skilled Workforce Development: Empowering African Construction Professionals",
+    slug: "skilled-workforce-development-african-construction",
     date: "2024-02-20",
     author: "Jude Onwudebe",
     category: "Remote Collaboration",
     excerpt:
-      "Exploring JD Marc's commitment to building local construction capacity through comprehensive training programs and knowledge transfer initiatives.",
+      "Learn how JD Marc Limited's workforce development initiatives are creating skilled construction professionals and building local capacity across African markets.",
     content: `
-      <p>Sustainable infrastructure development requires more than just building projects; it requires building people. JD Marc's training and development programs are designed to transfer knowledge, build local capacity, and create lasting impact in African communities.</p>
-      
-      <h2>Our Training Philosophy</h2>
-      <p>We believe that successful infrastructure development must be accompanied by human capital development. Our programs combine international best practices with local knowledge to create skilled professionals who can lead Africa's infrastructure transformation.</p>
-      
-      <h2>Program Components</h2>
+      <p>Developing skilled construction professionals is essential for Africa's infrastructure growth. JD Marc Limited has established comprehensive workforce development programs that provide training, mentorship, and career advancement opportunities for construction professionals across the continent.</p>
+
+      <h2>Technical Skills Development</h2>
+      <p>Our technical training programs cover all aspects of modern construction including concrete work, steel fabrication, electrical systems, plumbing, and specialized equipment operation. Participants receive hands-on training using industry-standard equipment and techniques.</p>
+
+      <h2>Apprenticeship and Mentorship Programs</h2>
       <ul>
-        <li><strong>Technical Skills Training</strong>: Construction techniques, equipment operation, and safety protocols</li>
-        <li><strong>Project Management Certification</strong>: International project management standards and practices</li>
-        <li><strong>Digital Technology Training</strong>: BIM, GIS, and smart construction technologies</li>
-        <li><strong>Leadership Development</strong>: Building the next generation of African construction leaders</li>
+        <li><strong>Structured Apprenticeships</strong>: 24-month programs combining classroom learning with practical experience</li>
+        <li><strong>Master Craftsman Training</strong>: Advanced skills development for experienced workers</li>
+        <li><strong>Supervision and Leadership</strong>: Developing the next generation of site supervisors</li>
+        <li><strong>Cross-Training Opportunities</strong>: Expanding skills across multiple construction disciplines</li>
       </ul>
-      
-      <h2>Measuring Impact</h2>
-      <p>Over the past five years, our training programs have certified over 500 construction professionals across Nigeria. Many graduates have gone on to lead their own projects or start construction companies, multiplying the impact of our capacity-building efforts.</p>
-      
-      <p>Investing in people is investing in Africa's future. JD Marc's commitment to capacity building ensures that our infrastructure legacy extends far beyond the projects we build.</p>
+
+      <h2>Career Advancement Support</h2>
+      <p>We provide ongoing support for career advancement including continuing education opportunities, professional certification assistance, and leadership development programs. Many of our trainees have advanced to senior positions within JD Marc and the broader construction industry.</p>
+
+      <h2>Community Impact</h2>
+      <p>Our workforce development programs have trained over 1,200 construction professionals across West Africa. These skilled workers contribute to their local communities by participating in infrastructure projects and often establishing their own construction businesses.</p>
+
+      <p>Investing in workforce development creates a multiplier effect that benefits the entire construction industry. JD Marc's commitment to human capital development ensures sustainable growth for Africa's construction sector.</p>
     `,
     image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+      "https://images.pexels.com/photos/7937720/pexels-photo-7937720.jpeg?auto=compress&cs=tinysrgb&w=2000",
     featured: false,
   },
   {
