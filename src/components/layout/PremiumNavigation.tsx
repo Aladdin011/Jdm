@@ -294,9 +294,9 @@ const MobileMenu = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-gradient-to-r from-[#AA7452]/10 to-[#7C5841]/10 rounded-2xl flex items-center justify-center border border-[#AA7452]/20">
                     <img
-                      src="https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F8c27ff3f82824383bd700bc3410cfa09?format=webp&width=200"
-                      alt="JD Marc Limited Logo"
-                      className="w-10 h-10 object-contain"
+                      src="https://cdn.builder.io/api/v1/image/assets%2Fbd53220f2be44e7b823f6284706cc662%2F74072840a2e04ede8037ff70b072ee1d?format=webp&width=200"
+                      alt="JD Marc Limited Professional Logo"
+                      className="w-10 h-10 object-contain drop-shadow-lg"
                     />
                   </div>
                   <div>
@@ -531,9 +531,9 @@ export default function PremiumNavigation() {
               transition={{ duration: 0.3 }}
             >
               <img
-                src="https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F8c27ff3f82824383bd700bc3410cfa09?format=webp&width=200"
-                alt="JD Marc Limited Logo"
-                className="w-10 h-10 object-contain"
+                src="https://cdn.builder.io/api/v1/image/assets%2Fbd53220f2be44e7b823f6284706cc662%2F74072840a2e04ede8037ff70b072ee1d?format=webp&width=200"
+                alt="JD Marc Limited Professional Logo"
+                className="w-10 h-10 object-contain drop-shadow-lg"
               />
             </motion.div>
             <div className="hidden sm:block">
