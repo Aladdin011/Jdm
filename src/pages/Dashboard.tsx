@@ -111,7 +111,27 @@ export default function Dashboard() {
         return <DigitalMarketingDashboard />;
       default:
         // General dashboard for users without specific department assignment
-        return null;
+        return (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h1 className="text-3xl font-bold text-gray-900">Welcome, {user.firstName}</h1>
+              <Badge variant="outline">General User</Badge>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center">
+                    <Project className="h-8 w-8 text-blue-600" />
+                    <div className="ml-4">
+                      <p className="text-sm font-medium text-gray-600">Total Projects</p>
+                      <p className="text-2xl font-bold">{stats.totalProjects}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        );
     }
   };
 
