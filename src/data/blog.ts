@@ -35,33 +35,34 @@ export const blogPosts = [
   {
     id: 2,
     title:
-      "Smart Construction Materials: How Nanotechnology is Revolutionizing Building Durability",
-    slug: "smart-construction-materials-nanotechnology-durability",
+      "Quality Construction Materials: Building Durable Infrastructure for African Conditions",
+    slug: "quality-construction-materials-african-infrastructure",
     date: "2024-03-10",
     author: "Dr. Sarah Okafor",
     category: "Construction Technology",
     excerpt:
-      "Explore breakthrough nanomaterials that are making buildings stronger, more energy-efficient, and longer-lasting in Africa's challenging climate conditions.",
+      "Discover how JD Marc Limited selects and utilizes premium construction materials designed to withstand Africa's diverse climate conditions while ensuring long-lasting structural integrity.",
     content: `
-      <p>Nanotechnology is revolutionizing the construction industry by introducing smart materials that adapt to environmental conditions, self-heal minor damages, and provide enhanced durability. These innovations are particularly valuable in Africa's diverse climate zones, from humid coastal regions to arid interior landscapes.</p>
-      
-      <h2>Self-Healing Concrete</h2>
-      <p>One of the most promising developments is self-healing concrete embedded with dormant bacteria that activate when cracks appear. These microorganisms produce limestone to seal cracks automatically, extending the lifespan of concrete structures by up to 200%.</p>
-      
-      <h2>Smart Glass and Energy Efficiency</h2>
-      <p>Electrochromic glass windows can automatically adjust their opacity based on sunlight intensity, reducing cooling costs by up to 30% in African climates. This technology is particularly beneficial for commercial buildings in cities like Lagos, Nairobi, and Cairo.</p>
-      
-      <h2>Advanced Insulation Materials</h2>
+      <p>Selecting the right construction materials is crucial for building durable infrastructure that can withstand Africa's diverse climate conditions. At JD Marc Limited, our materials engineering expertise ensures every project uses optimal materials for longevity, performance, and cost-effectiveness.</p>
+
+      <h2>Climate-Resistant Concrete Solutions</h2>
+      <p>Our concrete specifications are tailored to specific regional conditions. In coastal areas, we use sulfate-resistant cement to combat saltwater exposure. For inland projects, we focus on high-strength formulations that handle temperature variations and moisture changes effectively.</p>
+
+      <h2>Premium Steel and Reinforcement</h2>
+      <p>We source high-grade steel reinforcement that meets international standards while being suitable for tropical conditions. Our steel selection process includes corrosion resistance testing and load-bearing capacity verification to ensure structural integrity throughout the building's lifespan.</p>
+
+      <h2>Sustainable Material Choices</h2>
       <ul>
-        <li><strong>Aerogel Insulation</strong>: Ultra-lightweight material with exceptional thermal properties</li>
-        <li><strong>Phase Change Materials</strong>: Store and release thermal energy to maintain comfortable temperatures</li>
-        <li><strong>Reflective Coatings</strong>: Nanoscale particles that reflect heat and UV radiation</li>
+        <li><strong>Locally-Sourced Aggregates</strong>: Supporting local economies while reducing transportation costs</li>
+        <li><strong>Recycled Steel Components</strong>: Environmental responsibility without compromising quality</li>
+        <li><strong>Natural Insulation Materials</strong>: Using local materials for effective thermal management</li>
+        <li><strong>Low-VOC Finishes</strong>: Ensuring healthy indoor environments</li>
       </ul>
-      
-      <p>JD Marc has pioneered the use of these advanced materials in our recent projects, demonstrating their effectiveness in African construction applications. Our Lagos Smart Office Complex features self-healing concrete foundations and smart glass facades, serving as a showcase for sustainable construction technology.</p>
+
+      <p>Our material selection process has contributed to the success of over 150 projects across Nigeria and West Africa. The Cross River State Government Complex, built with our premium material specifications, continues to show excellent performance after 8 years of operation, demonstrating the value of proper material selection.</p>
     `,
     image:
-      "https://images.unsplash.com/photo-1530569673472-307dc017a82d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+      "/images/projects/construction-materials-steel-concrete.jpg",
     featured: true,
   },
   {
