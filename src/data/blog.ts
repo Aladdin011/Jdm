@@ -29,7 +29,7 @@ export const blogPosts = [
       <p>JD Marc's commitment to modern construction techniques has resulted in over 200 successful projects across West Africa. Our focus on innovation, quality, and efficiency continues to set new standards for African infrastructure development.</p>
     `,
     image:
-      "/images/projects/construction-site-crane-workers.jpg",
+      "https://images.pexels.com/photos/8961068/pexels-photo-8961068.jpeg?auto=compress&cs=tinysrgb&w=2000",
     featured: true,
   },
   {
@@ -62,7 +62,7 @@ export const blogPosts = [
       <p>Our material selection process has contributed to the success of over 150 projects across Nigeria and West Africa. The Cross River State Government Complex, built with our premium material specifications, continues to show excellent performance after 8 years of operation, demonstrating the value of proper material selection.</p>
     `,
     image:
-      "/images/projects/construction-materials-steel-concrete.jpg",
+      "https://images.pexels.com/photos/11931932/pexels-photo-11931932.jpeg?auto=compress&cs=tinysrgb&w=2000",
     featured: true,
   },
   {
@@ -98,7 +98,7 @@ export const blogPosts = [
       <p>Over the past decade, JD Marc's project management methodologies have achieved a 98% on-time completion rate and 95% budget adherence across more than 200 projects. This track record demonstrates the effectiveness of our systematic approach to construction project management.</p>
     `,
     image:
-      "/images/projects/project-management-construction-site.jpg",
+      "https://images.pexels.com/photos/7937676/pexels-photo-7937676.jpeg?auto=compress&cs=tinysrgb&w=2000",
     featured: false,
   },
   {
@@ -134,7 +134,7 @@ export const blogPosts = [
       <p>JD Marc's sustainable construction practices have been implemented across 80+ projects, resulting in average energy savings of 30% and water consumption reductions of 25% compared to conventional construction. Our Abuja Green Office Complex serves as a model for sustainable commercial development in West Africa.</p>
     `,
     image:
-      "/images/projects/sustainable-building-solar-panels.jpg",
+      "https://images.pexels.com/photos/12923395/pexels-photo-12923395.jpeg?auto=compress&cs=tinysrgb&w=2000",
     featured: true,
   },
   {
@@ -234,7 +234,7 @@ export const blogPosts = [
       <p>Completed on schedule and within budget, the Cross River State Government Complex exemplifies JD Marc's ability to deliver complex infrastructure projects that serve communities for decades. The project has received recognition for its architectural design and construction quality.</p>
     `,
     image:
-      "/images/projects/government-complex-construction.jpg",
+      "https://images.pexels.com/photos/14237672/pexels-photo-14237672.jpeg?auto=compress&cs=tinysrgb&w=2000",
     featured: false,
   },
   {
