@@ -444,22 +444,23 @@ const PremiumHero = () => {
         </div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Scroll Indicator - Enhanced Glassmorphism */}
       <motion.div
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/60"
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/80"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 2, duration: 0.8 }}
       >
-        <div className="flex flex-col items-center gap-2">
-          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
+        <div className="flex flex-col items-center gap-3 p-4 bg-white/5 backdrop-blur-xl rounded-3xl border border-white/20 shadow-[0_8px_32px_0_rgba(255,255,255,0.1)]">
+          <div className="w-8 h-12 border-2 border-white/40 rounded-full flex justify-center backdrop-blur-sm shadow-inner">
             <motion.div
-              className="w-1 h-3 bg-white/50 rounded-full mt-2"
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
+              className="w-1.5 h-4 bg-gradient-to-b from-[var(--accent-light)] to-[var(--accent-warm)] rounded-full mt-2 shadow-lg"
+              animate={{ y: [0, 12, 0] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
             />
           </div>
-          <span className="text-xs font-medium">Scroll to explore</span>
+          <span className="text-xs font-semibold tracking-wider">Scroll to explore</span>
+          <div className="w-6 h-0.5 bg-gradient-to-r from-transparent via-white/40 to-transparent rounded-full"></div>
         </div>
       </motion.div>
     </motion.section>
