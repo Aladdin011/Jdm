@@ -376,28 +376,29 @@ const PremiumHero = () => {
                 <div className="flex flex-col sm:flex-row gap-4 mb-8">
                   <motion.button
                     onClick={() => navigate("/register")}
-                    className="group relative px-8 py-4 bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent-warm)] text-white rounded-2xl font-semibold overflow-hidden"
-                    whileHover={{ scale: 1.02, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="group relative px-10 py-5 bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent-warm)] text-white rounded-3xl font-bold overflow-hidden shadow-[0_16px_32px_0_rgba(170,116,82,0.4)] hover:shadow-[0_20px_40px_0_rgba(170,116,82,0.6)]"
+                    whileHover={{ scale: 1.05, y: -4 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500" />
-                    <div className="relative flex items-center justify-center gap-2">
-                      <span>Join Our Platform</span>
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-3xl" />
+                    <div className="relative flex items-center justify-center gap-3">
+                      <span className="text-lg">Join Our Platform</span>
+                      <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300 drop-shadow-lg" />
                     </div>
                   </motion.button>
 
                   <motion.button
                     onClick={() => navigate("/projects")}
-                    className="group px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-2xl font-semibold hover:bg-white/20 transition-all duration-300"
-                    whileHover={{ scale: 1.02, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="group px-10 py-5 bg-white/5 backdrop-blur-xl border border-white/30 text-white rounded-3xl font-bold hover:bg-white/15 shadow-[0_8px_32px_0_rgba(255,255,255,0.1)] hover:shadow-[0_16px_64px_0_rgba(255,255,255,0.2)] transition-all duration-500"
+                    whileHover={{ scale: 1.05, y: -4 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <div className="flex items-center justify-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent-warm)] flex items-center justify-center">
-                        <Play className="w-3 h-3 text-white ml-0.5" />
+                    <div className="flex items-center justify-center gap-3">
+                      <div className="w-8 h-8 rounded-2xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent-warm)] flex items-center justify-center shadow-lg">
+                        <Play className="w-4 h-4 text-white ml-0.5 drop-shadow-sm" />
                       </div>
-                      <span>Watch Demo</span>
+                      <span className="text-lg">Watch Demo</span>
                     </div>
                   </motion.button>
                 </div>
