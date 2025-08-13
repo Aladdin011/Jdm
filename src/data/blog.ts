@@ -104,39 +104,37 @@ export const blogPosts = [
   {
     id: 4,
     title:
-      "Green Building Certification in Africa: A Comprehensive Guide to Sustainable Construction",
-    slug: "green-building-certification-africa-sustainable-construction",
+      "Sustainable Construction Practices: Building Environmentally Responsible Infrastructure",
+    slug: "sustainable-construction-practices-environmental-infrastructure",
     date: "2024-03-05",
     author: "Dr. Amina Hassan",
     category: "Sustainability & Climate Engineering",
     excerpt:
-      "Navigate the landscape of green building certifications in Africa and discover how sustainable construction practices are creating healthier, more efficient buildings.",
+      "Explore JD Marc Limited's commitment to sustainable construction practices that reduce environmental impact while delivering high-performance buildings across Africa.",
     content: `
-      <p>Green building certification has gained significant momentum across Africa as governments, developers, and communities recognize the importance of sustainable construction practices. Understanding the certification landscape helps stakeholders make informed decisions about environmental standards and long-term building performance.</p>
-      
-      <h2>Major Certification Systems in Africa</h2>
-      <p>Several international and regional certification systems operate across African markets, each with specific criteria and benefits:</p>
-      
+      <p>Environmental responsibility is integral to modern construction practices. JD Marc Limited has implemented comprehensive sustainable construction strategies that minimize environmental impact while maximizing building performance and longevity.</p>
+
+      <h2>Energy-Efficient Design Principles</h2>
+      <p>Our sustainable approach begins with energy-efficient design that takes advantage of natural lighting, ventilation, and local climate conditions. Building orientation, window placement, and insulation strategies are optimized to reduce energy consumption throughout the building's lifecycle.</p>
+
+      <h2>Water Conservation Systems</h2>
       <ul>
-        <li><strong>LEED (Leadership in Energy and Environmental Design)</strong>: Global standard widely recognized across African markets</li>
-        <li><strong>Green Star Africa</strong>: Regional adaptation of Green Star rating system</li>
-        <li><strong>EDGE (Excellence in Design for Greater Efficiencies)</strong>: IFC-developed standard for emerging markets</li>
-        <li><strong>BREEAM</strong>: British standard with growing African presence</li>
+        <li><strong>Rainwater Harvesting</strong>: Collecting and storing rainwater for non-potable uses</li>
+        <li><strong>Greywater Recycling</strong>: Treating and reusing wastewater for irrigation and cooling</li>
+        <li><strong>Low-Flow Fixtures</strong>: Reducing water consumption without compromising functionality</li>
+        <li><strong>Permeable Surfaces</strong>: Allowing natural groundwater recharge</li>
       </ul>
-      
-      <h2>Key Sustainability Criteria</h2>
-      <p>African green building certifications typically focus on water efficiency, energy performance, materials selection, and indoor environmental quality. These criteria address specific regional challenges including water scarcity, extreme temperatures, and limited renewable energy infrastructure.</p>
-      
-      <h2>Economic Benefits</h2>
-      <p>Certified green buildings in Africa demonstrate measurable benefits including 20-30% reduction in energy costs, 40% reduction in water consumption, and increased property values. These savings are particularly significant given rising utility costs across the continent.</p>
-      
-      <h2>JD Marc's Sustainability Leadership</h2>
-      <p>Our commitment to sustainable construction has resulted in multiple certified projects across West Africa. The Cross River Ecotourism Center achieved EDGE certification, demonstrating that sustainable design can be both environmentally responsible and economically viable in African contexts.</p>
-      
-      <p>As climate change impacts intensify, green building certification becomes increasingly important for resilient infrastructure development. JD Marc continues to lead sustainable construction practices that protect both the environment and our clients' investments.</p>
+
+      <h2>Waste Reduction and Management</h2>
+      <p>Construction waste reduction is achieved through careful planning, material optimization, and recycling programs. We work with suppliers to minimize packaging waste and implement on-site recycling for concrete, steel, and other materials.</p>
+
+      <h2>Local Material Sourcing</h2>
+      <p>Using locally-sourced materials reduces transportation emissions while supporting local economies. Our material selection prioritizes regional suppliers and considers the environmental impact of extraction, processing, and transportation.</p>
+
+      <p>JD Marc's sustainable construction practices have been implemented across 80+ projects, resulting in average energy savings of 30% and water consumption reductions of 25% compared to conventional construction. Our Abuja Green Office Complex serves as a model for sustainable commercial development in West Africa.</p>
     `,
     image:
-      "https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+      "/images/projects/sustainable-building-solar-panels.jpg",
     featured: true,
   },
   {
