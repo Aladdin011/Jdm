@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { SEOHead, pageSEO } from "@/components/SEO/SEOHead";
 import { initializePerformanceOptimizations, createImageObserver } from "@/utils/performance";
 import { motion, AnimatePresence } from "framer-motion";
+import PrivateRoute from "@/components/auth/PrivateRoute";
 
 // Lazy load components for better performance
 const Home = lazy(() => import("@/pages/Home"));
@@ -343,17 +344,19 @@ function App() {
                           </RouteWithSEO>
                         } 
                       />
-                      <Route 
-                        path="/dashboard" 
+                      <Route
+                        path="/dashboard"
                         element={
-                          <RouteWithSEO seo={{
-                            title: 'Client Dashboard - JD Marc Limited',
-                            description: 'Manage your construction projects, track progress, and access all project resources in your personalized dashboard.',
-                            keywords: 'client dashboard, project management, construction progress, project portal',
-                          }}>
-                            <Dashboard />
-                          </RouteWithSEO>
-                        } 
+                          <PrivateRoute>
+                            <RouteWithSEO seo={{
+                              title: 'Client Dashboard - JD Marc Limited',
+                              description: 'Manage your construction projects, track progress, and access all project resources in your personalized dashboard.',
+                              keywords: 'client dashboard, project management, construction progress, project portal',
+                            }}>
+                              <Dashboard />
+                            </RouteWithSEO>
+                          </PrivateRoute>
+                        }
                       />
                       <Route 
                         path="/forgot-password" 

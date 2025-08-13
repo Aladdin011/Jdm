@@ -255,18 +255,29 @@ const PremiumHero = () => {
       className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[var(--primary-dark)] via-[var(--secondary-dark)] to-[var(--accent-warm)]"
       style={{ y, opacity, scale }}
     >
-      {/* Background Pattern */}
+      {/* Enhanced Background with Glassmorphism Layers */}
       <div className="absolute inset-0">
+        {/* Primary gradient overlay */}
         <div
-          className="absolute inset-0 opacity-30"
+          className="absolute inset-0 opacity-40"
           style={{
             backgroundImage: `
-              radial-gradient(circle at 25% 25%, rgba(212,201,199,0.1) 0%, transparent 50%),
-              radial-gradient(circle at 75% 75%, rgba(170,116,82,0.1) 0%, transparent 50%),
-              linear-gradient(135deg, transparent 0%, rgba(45,56,62,0.1) 50%, transparent 100%)
+              radial-gradient(circle at 20% 30%, rgba(212,201,199,0.15) 0%, transparent 60%),
+              radial-gradient(circle at 80% 20%, rgba(170,116,82,0.12) 0%, transparent 50%),
+              radial-gradient(circle at 40% 80%, rgba(124,88,65,0.1) 0%, transparent 40%),
+              linear-gradient(135deg, transparent 0%, rgba(45,56,62,0.15) 50%, transparent 100%)
             `,
           }}
         />
+
+        {/* Glassmorphism floating panels */}
+        <div className="absolute top-20 left-10 w-32 h-32 bg-white/5 backdrop-blur-3xl rounded-3xl border border-white/10 shadow-[0_8px_32px_0_rgba(170,116,82,0.3)] rotate-12 animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-24 h-24 bg-white/3 backdrop-blur-2xl rounded-2xl border border-white/20 shadow-[0_4px_16px_0_rgba(212,201,199,0.4)] -rotate-6 animate-pulse delay-1000"></div>
+        <div className="absolute bottom-32 left-20 w-20 h-20 bg-white/4 backdrop-blur-xl rounded-3xl border border-white/15 shadow-[0_6px_24px_0_rgba(124,88,65,0.35)] rotate-45 animate-pulse delay-2000"></div>
+
+        {/* Ambient light effects */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-radial from-[var(--accent-light)]/10 to-transparent blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-gradient-radial from-[var(--accent-warm)]/8 to-transparent blur-2xl animate-pulse delay-1000"></div>
       </div>
 
       {/* Floating Shapes */}
@@ -283,17 +294,20 @@ const PremiumHero = () => {
               animate="visible"
               className="text-white"
             >
-              {/* Hero Badge */}
+              {/* Hero Badge - Enhanced Glassmorphism */}
               <motion.div variants={itemVariants}>
-                <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/10 backdrop-blur-md border border-[var(--accent-light)]/30 mb-8">
+                <div className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_0_rgba(170,116,82,0.37)] mb-8 hover:bg-white/10 transition-all duration-300">
                   <div className="relative">
-                    <div className="w-2 h-2 bg-[var(--accent-light)] rounded-full"></div>
-                    <div className="absolute inset-0 w-2 h-2 bg-[var(--accent-light)] rounded-full animate-ping"></div>
+                    <div className="w-3 h-3 bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent-warm)] rounded-full shadow-lg"></div>
+                    <div className="absolute inset-0 w-3 h-3 bg-[var(--accent-light)] rounded-full animate-ping opacity-60"></div>
+                    <div className="absolute inset-0 w-3 h-3 bg-[var(--accent-light)] rounded-full animate-pulse"></div>
                   </div>
-                  <Construction className="w-5 h-5 text-[var(--accent-light)]" />
-                  <span className="text-sm font-medium text-[var(--accent-light)]">
-                    Leading African Construction
+                  <Construction className="w-6 h-6 text-[var(--accent-light)] drop-shadow-lg" />
+                  <span className="text-sm font-semibold text-[var(--accent-light)] tracking-wide">
+                    Leading African Construction Excellence
                   </span>
+                  <div className="w-px h-6 bg-gradient-to-b from-transparent via-white/30 to-transparent"></div>
+                  <span className="text-xs text-white/70 font-medium">Since 2015</span>
                 </div>
               </motion.div>
 
@@ -346,11 +360,13 @@ const PremiumHero = () => {
                 ].map((stat, index) => (
                   <motion.div
                     key={stat.label}
-                    className="text-center p-4 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 hover:bg-white/10 transition-all duration-300 cursor-pointer"
-                    whileHover={{ scale: 1.05, y: -4 }}
+                    className="text-center p-6 bg-white/5 backdrop-blur-xl rounded-3xl border border-white/20 shadow-[0_8px_32px_0_rgba(45,56,62,0.4)] hover:shadow-[0_16px_64px_0_rgba(170,116,82,0.3)] hover:bg-white/10 transition-all duration-500 cursor-pointer"
+                    whileHover={{ scale: 1.08, y: -8 }}
                   >
-                    <stat.icon className="w-6 h-6 text-[var(--accent-light)] mx-auto mb-2" />
-                    <div className="text-2xl lg:text-3xl font-bold mb-1">
+                    <div className="w-12 h-12 bg-gradient-to-br from-[var(--accent-light)]/20 to-[var(--accent-warm)]/20 rounded-2xl flex items-center justify-center mx-auto mb-3 backdrop-blur-sm">
+                      <stat.icon className="w-7 h-7 text-[var(--accent-light)] drop-shadow-lg" />
+                    </div>
+                    <div className="text-3xl lg:text-4xl font-black mb-2 bg-gradient-to-r from-white to-[var(--neutral-light)] bg-clip-text text-transparent">
                       <AnimatedCounter
                         value={stat.value}
                         suffix={stat.suffix}
@@ -358,9 +374,10 @@ const PremiumHero = () => {
                         duration={2.5}
                       />
                     </div>
-                    <div className="text-sm text-[var(--neutral-light)]">
+                    <div className="text-sm text-[var(--neutral-light)] font-medium tracking-wide">
                       {stat.label}
                     </div>
+                    <div className="mt-3 w-8 h-0.5 bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent-warm)] mx-auto rounded-full"></div>
                   </motion.div>
                 ))}
               </motion.div>
@@ -370,48 +387,56 @@ const PremiumHero = () => {
                 <div className="flex flex-col sm:flex-row gap-4 mb-8">
                   <motion.button
                     onClick={() => navigate("/register")}
-                    className="group relative px-8 py-4 bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent-warm)] text-white rounded-2xl font-semibold overflow-hidden"
-                    whileHover={{ scale: 1.02, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="group relative px-10 py-5 bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent-warm)] text-white rounded-3xl font-bold overflow-hidden shadow-[0_16px_32px_0_rgba(170,116,82,0.4)] hover:shadow-[0_20px_40px_0_rgba(170,116,82,0.6)]"
+                    whileHover={{ scale: 1.05, y: -4 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500" />
-                    <div className="relative flex items-center justify-center gap-2">
-                      <span>Join Our Platform</span>
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-3xl" />
+                    <div className="relative flex items-center justify-center gap-3">
+                      <span className="text-lg">Join Our Platform</span>
+                      <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300 drop-shadow-lg" />
                     </div>
                   </motion.button>
 
                   <motion.button
                     onClick={() => navigate("/projects")}
-                    className="group px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-2xl font-semibold hover:bg-white/20 transition-all duration-300"
-                    whileHover={{ scale: 1.02, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="group px-10 py-5 bg-white/5 backdrop-blur-xl border border-white/30 text-white rounded-3xl font-bold hover:bg-white/15 shadow-[0_8px_32px_0_rgba(255,255,255,0.1)] hover:shadow-[0_16px_64px_0_rgba(255,255,255,0.2)] transition-all duration-500"
+                    whileHover={{ scale: 1.05, y: -4 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <div className="flex items-center justify-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent-warm)] flex items-center justify-center">
-                        <Play className="w-3 h-3 text-white ml-0.5" />
+                    <div className="flex items-center justify-center gap-3">
+                      <div className="w-8 h-8 rounded-2xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent-warm)] flex items-center justify-center shadow-lg">
+                        <Play className="w-4 h-4 text-white ml-0.5 drop-shadow-sm" />
                       </div>
-                      <span>Watch Demo</span>
+                      <span className="text-lg">Watch Demo</span>
                     </div>
                   </motion.button>
                 </div>
               </motion.div>
 
-              {/* Trust Indicators */}
+              {/* Trust Indicators - Enhanced */}
               <motion.div variants={itemVariants}>
                 <div className="text-center sm:text-left">
-                  <span className="text-sm text-[var(--neutral-mid)] mb-4 block">
-                    Trusted by leading companies
+                  <span className="text-sm text-[var(--neutral-light)] mb-6 block font-medium tracking-wide">
+                    Trusted by leading companies across Africa
                   </span>
-                  <div className="flex items-center gap-6 opacity-60">
+                  <div className="flex items-center gap-4 flex-wrap">
                     {Array.from({ length: 4 }).map((_, i) => (
-                      <div
+                      <motion.div
                         key={i}
-                        className="w-20 h-8 bg-white/10 rounded-lg flex items-center justify-center"
+                        className="w-24 h-12 bg-white/5 backdrop-blur-xl rounded-2xl flex items-center justify-center border border-white/10 shadow-[0_4px_16px_0_rgba(255,255,255,0.1)] hover:bg-white/10 transition-all duration-300"
+                        whileHover={{ scale: 1.05, y: -2 }}
                       >
-                        <div className="w-12 h-4 bg-white/20 rounded" />
-                      </div>
+                        <div className="w-16 h-6 bg-gradient-to-r from-white/20 to-white/40 rounded-lg flex items-center justify-center">
+                          <div className="w-12 h-3 bg-white/30 rounded backdrop-blur-sm" />
+                        </div>
+                      </motion.div>
                     ))}
+                  </div>
+                  <div className="mt-4 flex items-center gap-2 text-xs text-[var(--neutral-mid)]">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span>Verified partnerships • Active since 2015</span>
                   </div>
                 </div>
               </motion.div>
@@ -430,22 +455,23 @@ const PremiumHero = () => {
         </div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Scroll Indicator - Enhanced Glassmorphism */}
       <motion.div
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/60"
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/80"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 2, duration: 0.8 }}
       >
-        <div className="flex flex-col items-center gap-2">
-          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
+        <div className="flex flex-col items-center gap-3 p-4 bg-white/5 backdrop-blur-xl rounded-3xl border border-white/20 shadow-[0_8px_32px_0_rgba(255,255,255,0.1)]">
+          <div className="w-8 h-12 border-2 border-white/40 rounded-full flex justify-center backdrop-blur-sm shadow-inner">
             <motion.div
-              className="w-1 h-3 bg-white/50 rounded-full mt-2"
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
+              className="w-1.5 h-4 bg-gradient-to-b from-[var(--accent-light)] to-[var(--accent-warm)] rounded-full mt-2 shadow-lg"
+              animate={{ y: [0, 12, 0] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
             />
           </div>
-          <span className="text-xs font-medium">Scroll to explore</span>
+          <span className="text-xs font-semibold tracking-wider">Scroll to explore</span>
+          <div className="w-6 h-0.5 bg-gradient-to-r from-transparent via-white/40 to-transparent rounded-full"></div>
         </div>
       </motion.div>
     </motion.section>

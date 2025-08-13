@@ -2,27 +2,31 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 // Google Analytics configuration
-const GA_TRACKING_ID = "G-XXXXXXXXXX"; // Replace with your actual GA4 tracking ID
+const GA_TRACKING_ID = process.env.VITE_GA_TRACKING_ID || ""; // Use environment variable
 
 // Initialize Google Analytics
 export const initGA = () => {
-  if (typeof window !== "undefined") {
-    // Ensure dataLayer exists
-    window.dataLayer = window.dataLayer || [];
+  if (typeof window !== "undefined" && GA_TRACKING_ID && GA_TRACKING_ID !== "G-XXXXXXXXXX") {
+    try {
+      // Ensure dataLayer exists
+      window.dataLayer = window.dataLayer || [];
 
-    // If gtag isn't available yet, wait for it
-    if (!window.gtag) {
-      // Set up a minimal gtag function if script hasn't loaded yet
-      window.gtag = function(...args: any[]) {
-        window.dataLayer.push(args);
-      };
+      // If gtag isn't available yet, wait for it
+      if (!window.gtag) {
+        // Set up a minimal gtag function if script hasn't loaded yet
+        window.gtag = function(...args: any[]) {
+          window.dataLayer.push(args);
+        };
+      }
+
+      // Configure with initial page view
+      window.gtag("config", GA_TRACKING_ID, {
+        page_title: document.title,
+        page_location: window.location.href,
+      });
+    } catch (error) {
+      console.warn("Analytics initialization failed:", error);
     }
-
-    // Configure with initial page view
-    window.gtag("config", GA_TRACKING_ID, {
-      page_title: document.title,
-      page_location: window.location.href,
-    });
   }
 };
 
