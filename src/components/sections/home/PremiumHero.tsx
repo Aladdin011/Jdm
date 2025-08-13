@@ -255,18 +255,29 @@ const PremiumHero = () => {
       className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[var(--primary-dark)] via-[var(--secondary-dark)] to-[var(--accent-warm)]"
       style={{ y, opacity, scale }}
     >
-      {/* Background Pattern */}
+      {/* Enhanced Background with Glassmorphism Layers */}
       <div className="absolute inset-0">
+        {/* Primary gradient overlay */}
         <div
-          className="absolute inset-0 opacity-30"
+          className="absolute inset-0 opacity-40"
           style={{
             backgroundImage: `
-              radial-gradient(circle at 25% 25%, rgba(212,201,199,0.1) 0%, transparent 50%),
-              radial-gradient(circle at 75% 75%, rgba(170,116,82,0.1) 0%, transparent 50%),
-              linear-gradient(135deg, transparent 0%, rgba(45,56,62,0.1) 50%, transparent 100%)
+              radial-gradient(circle at 20% 30%, rgba(212,201,199,0.15) 0%, transparent 60%),
+              radial-gradient(circle at 80% 20%, rgba(170,116,82,0.12) 0%, transparent 50%),
+              radial-gradient(circle at 40% 80%, rgba(124,88,65,0.1) 0%, transparent 40%),
+              linear-gradient(135deg, transparent 0%, rgba(45,56,62,0.15) 50%, transparent 100%)
             `,
           }}
         />
+
+        {/* Glassmorphism floating panels */}
+        <div className="absolute top-20 left-10 w-32 h-32 bg-white/5 backdrop-blur-3xl rounded-3xl border border-white/10 shadow-[0_8px_32px_0_rgba(170,116,82,0.3)] rotate-12 animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-24 h-24 bg-white/3 backdrop-blur-2xl rounded-2xl border border-white/20 shadow-[0_4px_16px_0_rgba(212,201,199,0.4)] -rotate-6 animate-pulse delay-1000"></div>
+        <div className="absolute bottom-32 left-20 w-20 h-20 bg-white/4 backdrop-blur-xl rounded-3xl border border-white/15 shadow-[0_6px_24px_0_rgba(124,88,65,0.35)] rotate-45 animate-pulse delay-2000"></div>
+
+        {/* Ambient light effects */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-radial from-[var(--accent-light)]/10 to-transparent blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-gradient-radial from-[var(--accent-warm)]/8 to-transparent blur-2xl animate-pulse delay-1000"></div>
       </div>
 
       {/* Floating Shapes */}
