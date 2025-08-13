@@ -349,11 +349,13 @@ const PremiumHero = () => {
                 ].map((stat, index) => (
                   <motion.div
                     key={stat.label}
-                    className="text-center p-4 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 hover:bg-white/10 transition-all duration-300 cursor-pointer"
-                    whileHover={{ scale: 1.05, y: -4 }}
+                    className="text-center p-6 bg-white/5 backdrop-blur-xl rounded-3xl border border-white/20 shadow-[0_8px_32px_0_rgba(45,56,62,0.4)] hover:shadow-[0_16px_64px_0_rgba(170,116,82,0.3)] hover:bg-white/10 transition-all duration-500 cursor-pointer"
+                    whileHover={{ scale: 1.08, y: -8 }}
                   >
-                    <stat.icon className="w-6 h-6 text-[var(--accent-light)] mx-auto mb-2" />
-                    <div className="text-2xl lg:text-3xl font-bold mb-1">
+                    <div className="w-12 h-12 bg-gradient-to-br from-[var(--accent-light)]/20 to-[var(--accent-warm)]/20 rounded-2xl flex items-center justify-center mx-auto mb-3 backdrop-blur-sm">
+                      <stat.icon className="w-7 h-7 text-[var(--accent-light)] drop-shadow-lg" />
+                    </div>
+                    <div className="text-3xl lg:text-4xl font-black mb-2 bg-gradient-to-r from-white to-[var(--neutral-light)] bg-clip-text text-transparent">
                       <AnimatedCounter
                         value={stat.value}
                         suffix={stat.suffix}
@@ -361,9 +363,10 @@ const PremiumHero = () => {
                         duration={2.5}
                       />
                     </div>
-                    <div className="text-sm text-[var(--neutral-light)]">
+                    <div className="text-sm text-[var(--neutral-light)] font-medium tracking-wide">
                       {stat.label}
                     </div>
+                    <div className="mt-3 w-8 h-0.5 bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent-warm)] mx-auto rounded-full"></div>
                   </motion.div>
                 ))}
               </motion.div>
