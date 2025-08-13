@@ -283,17 +283,20 @@ const PremiumHero = () => {
               animate="visible"
               className="text-white"
             >
-              {/* Hero Badge */}
+              {/* Hero Badge - Enhanced Glassmorphism */}
               <motion.div variants={itemVariants}>
-                <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/10 backdrop-blur-md border border-[var(--accent-light)]/30 mb-8">
+                <div className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_0_rgba(170,116,82,0.37)] mb-8 hover:bg-white/10 transition-all duration-300">
                   <div className="relative">
-                    <div className="w-2 h-2 bg-[var(--accent-light)] rounded-full"></div>
-                    <div className="absolute inset-0 w-2 h-2 bg-[var(--accent-light)] rounded-full animate-ping"></div>
+                    <div className="w-3 h-3 bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent-warm)] rounded-full shadow-lg"></div>
+                    <div className="absolute inset-0 w-3 h-3 bg-[var(--accent-light)] rounded-full animate-ping opacity-60"></div>
+                    <div className="absolute inset-0 w-3 h-3 bg-[var(--accent-light)] rounded-full animate-pulse"></div>
                   </div>
-                  <Construction className="w-5 h-5 text-[var(--accent-light)]" />
-                  <span className="text-sm font-medium text-[var(--accent-light)]">
-                    Leading African Construction
+                  <Construction className="w-6 h-6 text-[var(--accent-light)] drop-shadow-lg" />
+                  <span className="text-sm font-semibold text-[var(--accent-light)] tracking-wide">
+                    Leading African Construction Excellence
                   </span>
+                  <div className="w-px h-6 bg-gradient-to-b from-transparent via-white/30 to-transparent"></div>
+                  <span className="text-xs text-white/70 font-medium">Since 2015</span>
                 </div>
               </motion.div>
 
