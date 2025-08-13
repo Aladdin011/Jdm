@@ -404,21 +404,28 @@ const PremiumHero = () => {
                 </div>
               </motion.div>
 
-              {/* Trust Indicators */}
+              {/* Trust Indicators - Enhanced */}
               <motion.div variants={itemVariants}>
                 <div className="text-center sm:text-left">
-                  <span className="text-sm text-[var(--neutral-mid)] mb-4 block">
-                    Trusted by leading companies
+                  <span className="text-sm text-[var(--neutral-light)] mb-6 block font-medium tracking-wide">
+                    Trusted by leading companies across Africa
                   </span>
-                  <div className="flex items-center gap-6 opacity-60">
+                  <div className="flex items-center gap-4 flex-wrap">
                     {Array.from({ length: 4 }).map((_, i) => (
-                      <div
+                      <motion.div
                         key={i}
-                        className="w-20 h-8 bg-white/10 rounded-lg flex items-center justify-center"
+                        className="w-24 h-12 bg-white/5 backdrop-blur-xl rounded-2xl flex items-center justify-center border border-white/10 shadow-[0_4px_16px_0_rgba(255,255,255,0.1)] hover:bg-white/10 transition-all duration-300"
+                        whileHover={{ scale: 1.05, y: -2 }}
                       >
-                        <div className="w-12 h-4 bg-white/20 rounded" />
-                      </div>
+                        <div className="w-16 h-6 bg-gradient-to-r from-white/20 to-white/40 rounded-lg flex items-center justify-center">
+                          <div className="w-12 h-3 bg-white/30 rounded backdrop-blur-sm" />
+                        </div>
+                      </motion.div>
                     ))}
+                  </div>
+                  <div className="mt-4 flex items-center gap-2 text-xs text-[var(--neutral-mid)]">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span>Verified partnerships • Active since 2015</span>
                   </div>
                 </div>
               </motion.div>
