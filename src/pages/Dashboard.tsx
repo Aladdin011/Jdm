@@ -69,7 +69,7 @@ interface ActivityItem {
 }
 
 export default function Dashboard() {
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, logout } = useAuth();
   const { trackBusinessEvent } = useAnalytics();
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [activities, setActivities] = useState<ActivityItem[]>([]);
