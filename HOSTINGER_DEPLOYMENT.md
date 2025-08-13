@@ -19,7 +19,7 @@ Your JD Marc frontend is now built and ready for Hostinger deployment!
 
 1. **Login to Hostinger Control Panel**
 
-   - Go to your hosting dashboard
+   - Go to your hosting /7dashboard
    - Click "File Manager"
 
 2. **Upload Files**
@@ -168,7 +168,7 @@ After uploading, test these features:
 For future updates:
 
 1. **Make changes to your code**
-2. **Run build:** `npm run build`
+2. **Run build:** ` bebynpm run build`
 3. **Upload new `dist/` contents** to `public_html/`
 4. **Clear browser cache** to see changes
 
