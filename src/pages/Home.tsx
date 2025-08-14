@@ -215,40 +215,13 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const { scrollY } = useScroll();
 
-  // Enhanced state management with construction focus - with error handling
+  // Enhanced state management with construction focus - simplified
   const {
     setMousePosition: setStoreMousePosition,
     setScrollProgress,
     trackUserInteraction,
     updateUserActivity,
   } = useAppStore();
-
-  // Advanced features - with try/catch error handling
-  let personalization, adaptContent, calculateScore, animations;
-  try {
-    const personalizationHook = usePersonalization();
-    personalization = personalizationHook.personalization;
-    adaptContent = personalizationHook.adaptContent;
-
-    const leadScoringHook = useLeadScoring();
-    calculateScore = leadScoringHook.calculateScore;
-
-    animations = useAdvancedAnimations();
-  } catch (error) {
-    console.warn('Advanced features failed to initialize:', error);
-    // Provide fallbacks
-    personalization = null;
-    adaptContent = () => {};
-    calculateScore = () => 0;
-    animations = null;
-  }
-
-  // Performance monitoring - with error handling
-  try {
-    usePerformanceMonitoring();
-  } catch (error) {
-    console.warn('Performance monitoring failed to initialize:', error);
-  }
 
   // Enhanced parallax effects
   const heroY = useTransform(scrollY, [0, 800], [0, 200]);
