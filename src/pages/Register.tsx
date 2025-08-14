@@ -210,7 +210,7 @@ export default function Register() {
                   className="inline-block mb-4 hover:opacity-80 transition-opacity"
                 >
                   <img
-                    src="/images/brand/logo.svg"
+                    src="/images/brand/logo.jpg"
                     alt="JD Marc Limited Logo"
                     className="h-12 w-auto mx-auto filter brightness-0 invert"
                   />
