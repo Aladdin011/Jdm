@@ -11,9 +11,7 @@ import PremiumTestimonials from "@/components/sections/home/PremiumTestimonials"
 import CallToActionSection from "@/components/sections/home/CallToActionSection";
 import BlogPreview from "@/components/sections/home/BlogPreview";
 import { CustomCursor } from "@/components/ui/CustomCursor";
-import { useAppStore, usePerformanceMonitoring } from "@/stores/appStore";
-import { usePersonalization, useLeadScoring } from "@/lib/personalization";
-import { useAdvancedAnimations } from "@/lib/advancedAnimations";
+import { useAppStore } from "@/stores/appStore";
 import { Construction, Zap, Building2 } from "lucide-react";
 
 // Enhanced page transition variants with construction theme
