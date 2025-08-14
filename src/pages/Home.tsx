@@ -257,28 +257,32 @@ export default function Home() {
   const heroOpacity = useTransform(scrollY, [0, 400], [1, 0.3]);
   const heroScale = useTransform(scrollY, [0, 800], [1, 1.1]);
 
-  // Apply construction-themed CSS variables
+  // Apply construction-themed CSS variables - with error handling
   useEffect(() => {
-    const root = document.documentElement;
-    
-    // Construction color system
-    root.style.setProperty('--primary-dark', '#051822');
-    root.style.setProperty('--secondary-dark', '#2D383E');
-    root.style.setProperty('--accent-warm', '#7C5841');
-    root.style.setProperty('--accent-light', '#AA7452');
-    root.style.setProperty('--neutral-mid', '#969A9E');
-    root.style.setProperty('--neutral-light', '#D4C9C7');
-    root.style.setProperty('--construction-white', '#FFFFFF');
-    
-    // Enhanced gradients
-    root.style.setProperty('--hero-gradient', 'linear-gradient(135deg, #051822 0%, #2D383E 50%, #7C5841 100%)');
-    root.style.setProperty('--card-gradient', 'linear-gradient(145deg, #D4C9C7 0%, rgba(212,201,199,0.8) 100%)');
-    root.style.setProperty('--accent-gradient', 'linear-gradient(90deg, #AA7452 0%, #7C5841 100%)');
-    
-    // Premium shadows
-    root.style.setProperty('--shadow-soft', '0 8px 32px rgba(5, 24, 34, 0.12)');
-    root.style.setProperty('--shadow-medium', '0 16px 64px rgba(5, 24, 34, 0.16)');
-    root.style.setProperty('--shadow-strong', '0 24px 80px rgba(5, 24, 34, 0.24)');
+    try {
+      const root = document.documentElement;
+
+      // Construction color system
+      root.style.setProperty('--primary-dark', '#051822');
+      root.style.setProperty('--secondary-dark', '#2D383E');
+      root.style.setProperty('--accent-warm', '#7C5841');
+      root.style.setProperty('--accent-light', '#AA7452');
+      root.style.setProperty('--neutral-mid', '#969A9E');
+      root.style.setProperty('--neutral-light', '#D4C9C7');
+      root.style.setProperty('--construction-white', '#FFFFFF');
+
+      // Enhanced gradients
+      root.style.setProperty('--hero-gradient', 'linear-gradient(135deg, #051822 0%, #2D383E 50%, #7C5841 100%)');
+      root.style.setProperty('--card-gradient', 'linear-gradient(145deg, #D4C9C7 0%, rgba(212,201,199,0.8) 100%)');
+      root.style.setProperty('--accent-gradient', 'linear-gradient(90deg, #AA7452 0%, #7C5841 100%)');
+
+      // Premium shadows
+      root.style.setProperty('--shadow-soft', '0 8px 32px rgba(5, 24, 34, 0.12)');
+      root.style.setProperty('--shadow-medium', '0 16px 64px rgba(5, 24, 34, 0.16)');
+      root.style.setProperty('--shadow-strong', '0 24px 80px rgba(5, 24, 34, 0.24)');
+    } catch (error) {
+      console.warn('Failed to apply CSS variables:', error);
+    }
   }, []);
 
   // Enhanced mouse tracking with performance optimization
