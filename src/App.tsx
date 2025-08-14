@@ -9,6 +9,7 @@ import { SEOHead, pageSEO } from "@/components/SEO/SEOHead";
 import { initializePerformanceOptimizations, createImageObserver } from "@/utils/performance";
 import { motion, AnimatePresence } from "framer-motion";
 import PrivateRoute from "@/components/auth/PrivateRoute";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 // Lazy load components for better performance
 const Home = lazy(() => import("@/pages/Home"));
