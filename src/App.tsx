@@ -6,7 +6,10 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { CallProvider } from "@/contexts/CallContext";
 import { Toaster } from "@/components/ui/toaster";
 import { SEOHead, pageSEO } from "@/components/SEO/SEOHead";
-import { initializePerformanceOptimizations, createImageObserver } from "@/utils/performance";
+import {
+  initializePerformanceOptimizations,
+  createImageObserver,
+} from "@/utils/performance";
 import { motion, AnimatePresence } from "framer-motion";
 import PrivateRoute from "@/components/auth/PrivateRoute";
 import ErrorBoundary from "@/components/ErrorBoundary";
@@ -26,10 +29,11 @@ const ForgotPassword = lazy(() => import("@/pages/ForgotPassword"));
 
 // Enhanced loading component
 const LoadingSpinner = () => (
-  <div 
+  <div
     className="fixed inset-0 z-50 flex items-center justify-center"
     style={{
-      background: "linear-gradient(135deg, #051822 0%, #2D383E 50%, #7C5841 100%)"
+      background:
+        "linear-gradient(135deg, #051822 0%, #2D383E 50%, #7C5841 100%)",
     }}
   >
     <div className="text-center">
@@ -51,7 +55,7 @@ const LoadingSpinner = () => (
             className="w-16 h-16 object-contain"
           />
         </motion.div>
-        
+
         {/* Orbiting elements */}
         {[0, 120, 240].map((angle, i) => (
           <motion.div
@@ -86,7 +90,7 @@ const LoadingSpinner = () => (
       >
         JD Marc Limited
       </motion.h2>
-      
+
       <motion.p
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -128,13 +132,26 @@ const ErrorFallback = ({ error }: { error: Error }) => (
   <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
     <div className="text-center max-w-md mx-auto">
       <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
-        <svg className="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+        <svg
+          className="w-10 h-10 text-red-600"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+          />
         </svg>
       </div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-4">Something went wrong</h2>
+      <h2 className="text-2xl font-bold text-gray-900 mb-4">
+        Something went wrong
+      </h2>
       <p className="text-gray-600 mb-6">
-        We're sorry, but something unexpected happened. Please try refreshing the page.
+        We're sorry, but something unexpected happened. Please try refreshing
+        the page.
       </p>
       <button
         onClick={() => window.location.reload()}
@@ -142,9 +159,11 @@ const ErrorFallback = ({ error }: { error: Error }) => (
       >
         Refresh Page
       </button>
-      {process.env.NODE_ENV === 'development' && (
+      {process.env.NODE_ENV === "development" && (
         <details className="mt-6 text-left">
-          <summary className="cursor-pointer text-gray-500 text-sm">Error Details</summary>
+          <summary className="cursor-pointer text-gray-500 text-sm">
+            Error Details
+          </summary>
           <pre className="mt-2 text-xs text-red-600 bg-red-50 p-3 rounded overflow-auto">
             {error.message}
           </pre>
@@ -155,11 +174,11 @@ const ErrorFallback = ({ error }: { error: Error }) => (
 );
 
 // Route component with SEO
-const RouteWithSEO = ({ 
-  children, 
-  seo 
-}: { 
-  children: React.ReactNode; 
+const RouteWithSEO = ({
+  children,
+  seo,
+}: {
+  children: React.ReactNode;
   seo: typeof pageSEO.home;
 }) => (
   <>
@@ -193,7 +212,7 @@ function App() {
     // Initialize image lazy loading
     const imageObserver = createImageObserver();
     if (imageObserver) {
-      const lazyImages = document.querySelectorAll('img[data-src]');
+      const lazyImages = document.querySelectorAll("img[data-src]");
       lazyImages.forEach((img) => {
         imageObserver.observe(img);
       });
@@ -201,30 +220,30 @@ function App() {
 
     // Add critical CSS variables
     const root = document.documentElement;
-    root.style.setProperty('--primary-dark', '#051822');
-    root.style.setProperty('--secondary-dark', '#2D383E');
-    root.style.setProperty('--accent-warm', '#7C5841');
-    root.style.setProperty('--accent-light', '#AA7452');
-    root.style.setProperty('--neutral-mid', '#969A9E');
-    root.style.setProperty('--neutral-light', '#D4C9C7');
-    root.style.setProperty('--construction-white', '#FFFFFF');
+    root.style.setProperty("--primary-dark", "#051822");
+    root.style.setProperty("--secondary-dark", "#2D383E");
+    root.style.setProperty("--accent-warm", "#7C5841");
+    root.style.setProperty("--accent-light", "#AA7452");
+    root.style.setProperty("--neutral-mid", "#969A9E");
+    root.style.setProperty("--neutral-light", "#D4C9C7");
+    root.style.setProperty("--construction-white", "#FFFFFF");
 
     // Performance monitoring
-    if ('performance' in window && 'measure' in performance) {
+    if ("performance" in window && "measure" in performance) {
       // Measure app initialization time
-      performance.mark('app-start');
-      
+      performance.mark("app-start");
+
       setTimeout(() => {
-        performance.mark('app-ready');
-        performance.measure('app-initialization', 'app-start', 'app-ready');
-        
-        const measure = performance.getEntriesByName('app-initialization')[0];
+        performance.mark("app-ready");
+        performance.measure("app-initialization", "app-start", "app-ready");
+
+        const measure = performance.getEntriesByName("app-initialization")[0];
         console.log(`App initialization took ${measure.duration.toFixed(2)}ms`);
-        
+
         // Send to analytics if available
         if (window.gtag) {
-          window.gtag('event', 'timing_complete', {
-            name: 'app_initialization',
+          window.gtag("event", "timing_complete", {
+            name: "app_initialization",
             value: Math.round(measure.duration),
           });
         }
@@ -242,159 +261,190 @@ function App() {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AuthProvider>
-          <CallProvider>
-            <BrowserRouter>
-              <div className="App">
-                <AnimatePresence mode="wait">
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <Routes>
-                      <Route 
-                        path="/" 
-                        element={
-                          <RouteWithSEO seo={pageSEO.home}>
-                            <Home />
-                          </RouteWithSEO>
-                        } 
-                      />
-                      <Route 
-                        path="/about" 
-                        element={
-                          <RouteWithSEO seo={pageSEO.about}>
-                            <About />
-                          </RouteWithSEO>
-                        } 
-                      />
-                      <Route 
-                        path="/services" 
-                        element={
-                          <RouteWithSEO seo={pageSEO.services}>
-                            <Services />
-                          </RouteWithSEO>
-                        } 
-                      />
-                      <Route 
-                        path="/services/:category" 
-                        element={
-                          <RouteWithSEO seo={pageSEO.services}>
-                            <Services />
-                          </RouteWithSEO>
-                        } 
-                      />
-                      <Route 
-                        path="/projects" 
-                        element={
-                          <RouteWithSEO seo={pageSEO.projects}>
-                            <Projects />
-                          </RouteWithSEO>
-                        } 
-                      />
-                      <Route 
-                        path="/contact" 
-                        element={
-                          <RouteWithSEO seo={pageSEO.contact}>
-                            <Contact />
-                          </RouteWithSEO>
-                        } 
-                      />
-                      <Route
-                        path="/blog"
-                        element={
-                          <RouteWithSEO seo={{
-                            title: 'Construction Industry Blog & Insights | JD Marc Limited',
-                            description: 'Stay updated with the latest construction industry trends, project insights, and expert analysis from JD Marc Limited.',
-                            keywords: 'construction blog, industry insights, building trends, project updates, construction news Africa',
-                          }}>
-                            <Blog />
-                          </RouteWithSEO>
-                        }
-                      />
-                      <Route
-                        path="/blog/:category"
-                        element={
-                          <RouteWithSEO seo={{
-                            title: 'Construction Blog Categories | JD Marc Limited',
-                            description: 'Explore specific construction industry topics including technology, projects, industry insights, and company news.',
-                            keywords: 'construction blog categories, industry insights, project updates, construction technology, company news',
-                          }}>
-                            <Blog />
-                          </RouteWithSEO>
-                        }
-                      />
-                      <Route 
-                        path="/login" 
-                        element={
-                          <RouteWithSEO seo={{
-                            title: 'Login - JD Marc Limited Client Portal',
-                            description: 'Access your JD Marc Limited client portal to manage projects, view progress, and communicate with our team.',
-                            keywords: 'client login, project portal, construction management, client access',
-                          }}>
-                            <Login />
-                          </RouteWithSEO>
-                        } 
-                      />
-                      <Route 
-                        path="/register" 
-                        element={
-                          <RouteWithSEO seo={{
-                            title: 'Register - Join JD Marc Limited Client Portal',
-                            description: 'Create your JD Marc Limited client account to start your construction project and access our premium services.',
-                            keywords: 'client registration, new account, construction services, project management',
-                          }}>
-                            <Register />
-                          </RouteWithSEO>
-                        } 
-                      />
-                      <Route
-                        path="/dashboard"
-                        element={
-                          <PrivateRoute>
-                            <RouteWithSEO seo={{
-                              title: 'Client Dashboard - JD Marc Limited',
-                              description: 'Manage your construction projects, track progress, and access all project resources in your personalized dashboard.',
-                              keywords: 'client dashboard, project management, construction progress, project portal',
-                            }}>
-                              <Dashboard />
+        <ThemeProvider>
+          <AuthProvider>
+            <CallProvider>
+              <BrowserRouter>
+                <div className="App">
+                  <AnimatePresence mode="wait">
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <Routes>
+                        <Route
+                          path="/"
+                          element={
+                            <RouteWithSEO seo={pageSEO.home}>
+                              <Home />
                             </RouteWithSEO>
-                          </PrivateRoute>
-                        }
-                      />
-                      <Route 
-                        path="/forgot-password" 
-                        element={
-                          <RouteWithSEO seo={{
-                            title: 'Reset Password - JD Marc Limited',
-                            description: 'Reset your JD Marc Limited account password to regain access to your client portal and project management tools.',
-                            keywords: 'password reset, account recovery, client portal access',
-                          }}>
-                            <ForgotPassword />
-                          </RouteWithSEO>
-                        } 
-                      />
-                      <Route 
-                        path="*" 
-                        element={
-                          <RouteWithSEO seo={{
-                            title: 'Page Not Found - JD Marc Limited',
-                            description: 'The page you are looking for could not be found. Visit our homepage to explore JD Marc Limited construction services.',
-                            keywords: '404, page not found, JD Marc Limited',
-                          }}>
-                            <NotFound />
-                          </RouteWithSEO>
-                        } 
-                      />
-                    </Routes>
-                  </Suspense>
-                </AnimatePresence>
-                
-                {/* Global toast notifications */}
-                <Toaster />
-              </div>
-            </BrowserRouter>
-          </CallProvider>
-        </AuthProvider>
-      </ThemeProvider>
+                          }
+                        />
+                        <Route
+                          path="/about"
+                          element={
+                            <RouteWithSEO seo={pageSEO.about}>
+                              <About />
+                            </RouteWithSEO>
+                          }
+                        />
+                        <Route
+                          path="/services"
+                          element={
+                            <RouteWithSEO seo={pageSEO.services}>
+                              <Services />
+                            </RouteWithSEO>
+                          }
+                        />
+                        <Route
+                          path="/services/:category"
+                          element={
+                            <RouteWithSEO seo={pageSEO.services}>
+                              <Services />
+                            </RouteWithSEO>
+                          }
+                        />
+                        <Route
+                          path="/projects"
+                          element={
+                            <RouteWithSEO seo={pageSEO.projects}>
+                              <Projects />
+                            </RouteWithSEO>
+                          }
+                        />
+                        <Route
+                          path="/contact"
+                          element={
+                            <RouteWithSEO seo={pageSEO.contact}>
+                              <Contact />
+                            </RouteWithSEO>
+                          }
+                        />
+                        <Route
+                          path="/blog"
+                          element={
+                            <RouteWithSEO
+                              seo={{
+                                title:
+                                  "Construction Industry Blog & Insights | JD Marc Limited",
+                                description:
+                                  "Stay updated with the latest construction industry trends, project insights, and expert analysis from JD Marc Limited.",
+                                keywords:
+                                  "construction blog, industry insights, building trends, project updates, construction news Africa",
+                              }}
+                            >
+                              <Blog />
+                            </RouteWithSEO>
+                          }
+                        />
+                        <Route
+                          path="/blog/:category"
+                          element={
+                            <RouteWithSEO
+                              seo={{
+                                title:
+                                  "Construction Blog Categories | JD Marc Limited",
+                                description:
+                                  "Explore specific construction industry topics including technology, projects, industry insights, and company news.",
+                                keywords:
+                                  "construction blog categories, industry insights, project updates, construction technology, company news",
+                              }}
+                            >
+                              <Blog />
+                            </RouteWithSEO>
+                          }
+                        />
+                        <Route
+                          path="/login"
+                          element={
+                            <RouteWithSEO
+                              seo={{
+                                title: "Login - JD Marc Limited Client Portal",
+                                description:
+                                  "Access your JD Marc Limited client portal to manage projects, view progress, and communicate with our team.",
+                                keywords:
+                                  "client login, project portal, construction management, client access",
+                              }}
+                            >
+                              <Login />
+                            </RouteWithSEO>
+                          }
+                        />
+                        <Route
+                          path="/register"
+                          element={
+                            <RouteWithSEO
+                              seo={{
+                                title:
+                                  "Register - Join JD Marc Limited Client Portal",
+                                description:
+                                  "Create your JD Marc Limited client account to start your construction project and access our premium services.",
+                                keywords:
+                                  "client registration, new account, construction services, project management",
+                              }}
+                            >
+                              <Register />
+                            </RouteWithSEO>
+                          }
+                        />
+                        <Route
+                          path="/dashboard"
+                          element={
+                            <PrivateRoute>
+                              <RouteWithSEO
+                                seo={{
+                                  title: "Client Dashboard - JD Marc Limited",
+                                  description:
+                                    "Manage your construction projects, track progress, and access all project resources in your personalized dashboard.",
+                                  keywords:
+                                    "client dashboard, project management, construction progress, project portal",
+                                }}
+                              >
+                                <Dashboard />
+                              </RouteWithSEO>
+                            </PrivateRoute>
+                          }
+                        />
+                        <Route
+                          path="/forgot-password"
+                          element={
+                            <RouteWithSEO
+                              seo={{
+                                title: "Reset Password - JD Marc Limited",
+                                description:
+                                  "Reset your JD Marc Limited account password to regain access to your client portal and project management tools.",
+                                keywords:
+                                  "password reset, account recovery, client portal access",
+                              }}
+                            >
+                              <ForgotPassword />
+                            </RouteWithSEO>
+                          }
+                        />
+                        <Route
+                          path="*"
+                          element={
+                            <RouteWithSEO
+                              seo={{
+                                title: "Page Not Found - JD Marc Limited",
+                                description:
+                                  "The page you are looking for could not be found. Visit our homepage to explore JD Marc Limited construction services.",
+                                keywords:
+                                  "404, page not found, JD Marc Limited",
+                              }}
+                            >
+                              <NotFound />
+                            </RouteWithSEO>
+                          }
+                        />
+                      </Routes>
+                    </Suspense>
+                  </AnimatePresence>
+
+                  {/* Global toast notifications */}
+                  <Toaster />
+                </div>
+              </BrowserRouter>
+            </CallProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   );
