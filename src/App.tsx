@@ -241,27 +241,164 @@ function App() {
     };
   }, []);
 
-  console.log("App rendering...");
-
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #051822 0%, #2D383E 100%)',
-      color: '#D4C9C7',
-      padding: '2rem',
-      fontFamily: 'Inter, sans-serif'
-    }}>
-      <h1 style={{ fontSize: '3rem', marginBottom: '1rem', color: '#AA7452' }}>
-        JD Marc Limited
-      </h1>
-      <p style={{ fontSize: '1.25rem', marginBottom: '2rem' }}>
-        Building Africa's Future - Construction Excellence Since 2007
-      </p>
-      <div style={{ background: 'rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '8px' }}>
-        <p>Welcome to our construction company website!</p>
-        <p>This is a test page to ensure the application is loading correctly.</p>
-      </div>
-    </div>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <AuthProvider>
+            <CallProvider>
+              <BrowserRouter>
+                <div className="App">
+                  <AnimatePresence mode="wait">
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <Routes>
+                        <Route
+                          path="/"
+                          element={
+                            <RouteWithSEO seo={pageSEO.home}>
+                              <Home />
+                            </RouteWithSEO>
+                          }
+                        />
+                        <Route
+                          path="/about"
+                          element={
+                            <RouteWithSEO seo={pageSEO.about}>
+                              <About />
+                            </RouteWithSEO>
+                          }
+                        />
+                        <Route
+                          path="/services"
+                          element={
+                            <RouteWithSEO seo={pageSEO.services}>
+                              <Services />
+                            </RouteWithSEO>
+                          }
+                        />
+                        <Route
+                          path="/services/:category"
+                          element={
+                            <RouteWithSEO seo={pageSEO.services}>
+                              <Services />
+                            </RouteWithSEO>
+                          }
+                        />
+                        <Route
+                          path="/projects"
+                          element={
+                            <RouteWithSEO seo={pageSEO.projects}>
+                              <Projects />
+                            </RouteWithSEO>
+                          }
+                        />
+                        <Route
+                          path="/contact"
+                          element={
+                            <RouteWithSEO seo={pageSEO.contact}>
+                              <Contact />
+                            </RouteWithSEO>
+                          }
+                        />
+                        <Route
+                          path="/blog"
+                          element={
+                            <RouteWithSEO seo={{
+                              title: 'Construction Industry Blog & Insights | JD Marc Limited',
+                              description: 'Stay updated with the latest construction industry trends, project insights, and expert analysis from JD Marc Limited.',
+                              keywords: 'construction blog, industry insights, building trends, project updates, construction news Africa',
+                            }}>
+                              <Blog />
+                            </RouteWithSEO>
+                          }
+                        />
+                        <Route
+                          path="/blog/:category"
+                          element={
+                            <RouteWithSEO seo={{
+                              title: 'Construction Blog Categories | JD Marc Limited',
+                              description: 'Explore specific construction industry topics including technology, projects, industry insights, and company news.',
+                              keywords: 'construction blog categories, industry insights, project updates, construction technology, company news',
+                            }}>
+                              <Blog />
+                            </RouteWithSEO>
+                          }
+                        />
+                        <Route
+                          path="/login"
+                          element={
+                            <RouteWithSEO seo={{
+                              title: 'Login - JD Marc Limited Client Portal',
+                              description: 'Access your JD Marc Limited client portal to manage projects, view progress, and communicate with our team.',
+                              keywords: 'client login, project portal, construction management, client access',
+                            }}>
+                              <Login />
+                            </RouteWithSEO>
+                          }
+                        />
+                        <Route
+                          path="/register"
+                          element={
+                            <RouteWithSEO seo={{
+                              title: 'Register - Join JD Marc Limited Client Portal',
+                              description: 'Create your JD Marc Limited client account to start your construction project and access our premium services.',
+                              keywords: 'client registration, new account, construction services, project management',
+                            }}>
+                              <Register />
+                            </RouteWithSEO>
+                          }
+                        />
+                        <Route
+                          path="/dashboard"
+                          element={
+                            <PrivateRoute>
+                              <RouteWithSEO seo={{
+                                title: 'Client Dashboard - JD Marc Limited',
+                                description: 'Manage your construction projects, track progress, and access all project resources in your personalized dashboard.',
+                                keywords: 'client dashboard, project management, construction progress, project portal',
+                              }}>
+                                <Dashboard />
+                              </RouteWithSEO>
+                            </PrivateRoute>
+                          }
+                        />
+                        <Route
+                          path="/forgot-password"
+                          element={
+                            <RouteWithSEO seo={{
+                              title: 'Reset Password - JD Marc Limited',
+                              description: 'Reset your JD Marc Limited account password to regain access to your client portal and project management tools.',
+                              keywords: 'password reset, account recovery, client portal access',
+                            }}>
+                              <ForgotPassword />
+                            </RouteWithSEO>
+                          }
+                        />
+                        <Route
+                          path="*"
+                          element={
+                            <RouteWithSEO seo={{
+                              title: 'Page Not Found - JD Marc Limited',
+                              description: 'The page you are looking for could not be found. Visit our homepage to explore JD Marc Limited construction services.',
+                              keywords: '404, page not found, JD Marc Limited',
+                            }}>
+                              <NotFound />
+                            </RouteWithSEO>
+                          }
+                        />
+                      </Routes>
+                    </Suspense>
+                  </AnimatePresence>
+
+                  {/* Global toast notifications */}
+                  <Toaster />
+                </div>
+              </BrowserRouter>
+            </CallProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 
