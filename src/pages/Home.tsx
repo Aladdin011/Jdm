@@ -11,9 +11,7 @@ import PremiumTestimonials from "@/components/sections/home/PremiumTestimonials"
 import CallToActionSection from "@/components/sections/home/CallToActionSection";
 import BlogPreview from "@/components/sections/home/BlogPreview";
 import { CustomCursor } from "@/components/ui/CustomCursor";
-import { useAppStore, usePerformanceMonitoring } from "@/stores/appStore";
-import { usePersonalization, useLeadScoring } from "@/lib/personalization";
-import { useAdvancedAnimations } from "@/lib/advancedAnimations";
+import { useAppStore } from "@/stores/appStore";
 import { Construction, Zap, Building2 } from "lucide-react";
 
 // Enhanced page transition variants with construction theme
@@ -217,7 +215,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const { scrollY } = useScroll();
 
-  // Enhanced state management with construction focus
+  // Enhanced state management with construction focus - simplified
   const {
     setMousePosition: setStoreMousePosition,
     setScrollProgress,
@@ -225,91 +223,115 @@ export default function Home() {
     updateUserActivity,
   } = useAppStore();
 
-  // Advanced features
-  const { personalization, adaptContent } = usePersonalization();
-  const { calculateScore } = useLeadScoring();
-  const animations = useAdvancedAnimations();
-
-  // Performance monitoring
-  usePerformanceMonitoring();
-
   // Enhanced parallax effects
   const heroY = useTransform(scrollY, [0, 800], [0, 200]);
   const heroOpacity = useTransform(scrollY, [0, 400], [1, 0.3]);
   const heroScale = useTransform(scrollY, [0, 800], [1, 1.1]);
 
-  // Apply construction-themed CSS variables
+  // Apply construction-themed CSS variables - with error handling
   useEffect(() => {
-    const root = document.documentElement;
-    
-    // Construction color system
-    root.style.setProperty('--primary-dark', '#051822');
-    root.style.setProperty('--secondary-dark', '#2D383E');
-    root.style.setProperty('--accent-warm', '#7C5841');
-    root.style.setProperty('--accent-light', '#AA7452');
-    root.style.setProperty('--neutral-mid', '#969A9E');
-    root.style.setProperty('--neutral-light', '#D4C9C7');
-    root.style.setProperty('--construction-white', '#FFFFFF');
-    
-    // Enhanced gradients
-    root.style.setProperty('--hero-gradient', 'linear-gradient(135deg, #051822 0%, #2D383E 50%, #7C5841 100%)');
-    root.style.setProperty('--card-gradient', 'linear-gradient(145deg, #D4C9C7 0%, rgba(212,201,199,0.8) 100%)');
-    root.style.setProperty('--accent-gradient', 'linear-gradient(90deg, #AA7452 0%, #7C5841 100%)');
-    
-    // Premium shadows
-    root.style.setProperty('--shadow-soft', '0 8px 32px rgba(5, 24, 34, 0.12)');
-    root.style.setProperty('--shadow-medium', '0 16px 64px rgba(5, 24, 34, 0.16)');
-    root.style.setProperty('--shadow-strong', '0 24px 80px rgba(5, 24, 34, 0.24)');
+    try {
+      const root = document.documentElement;
+
+      // Construction color system
+      root.style.setProperty('--primary-dark', '#051822');
+      root.style.setProperty('--secondary-dark', '#2D383E');
+      root.style.setProperty('--accent-warm', '#7C5841');
+      root.style.setProperty('--accent-light', '#AA7452');
+      root.style.setProperty('--neutral-mid', '#969A9E');
+      root.style.setProperty('--neutral-light', '#D4C9C7');
+      root.style.setProperty('--construction-white', '#FFFFFF');
+
+      // Enhanced gradients
+      root.style.setProperty('--hero-gradient', 'linear-gradient(135deg, #051822 0%, #2D383E 50%, #7C5841 100%)');
+      root.style.setProperty('--card-gradient', 'linear-gradient(145deg, #D4C9C7 0%, rgba(212,201,199,0.8) 100%)');
+      root.style.setProperty('--accent-gradient', 'linear-gradient(90deg, #AA7452 0%, #7C5841 100%)');
+
+      // Premium shadows
+      root.style.setProperty('--shadow-soft', '0 8px 32px rgba(5, 24, 34, 0.12)');
+      root.style.setProperty('--shadow-medium', '0 16px 64px rgba(5, 24, 34, 0.16)');
+      root.style.setProperty('--shadow-strong', '0 24px 80px rgba(5, 24, 34, 0.24)');
+    } catch (error) {
+      console.warn('Failed to apply CSS variables:', error);
+    }
   }, []);
 
-  // Enhanced mouse tracking with performance optimization
+  // Enhanced mouse tracking with performance optimization - with error handling
   useEffect(() => {
     let rafId: number;
-    
-    const updateMousePosition = (e: MouseEvent) => {
-      rafId = requestAnimationFrame(() => {
-        const position = { x: e.clientX, y: e.clientY };
-        setMousePosition(position);
-        setStoreMousePosition(position);
-      });
-    };
 
-    const handleUserActivity = () => {
-      updateUserActivity();
-    };
+    try {
+      const updateMousePosition = (e: MouseEvent) => {
+        try {
+          rafId = requestAnimationFrame(() => {
+            const position = { x: e.clientX, y: e.clientY };
+            setMousePosition(position);
+            if (setStoreMousePosition) setStoreMousePosition(position);
+          });
+        } catch (error) {
+          console.warn('Mouse position update failed:', error);
+        }
+      };
 
-    const handleScroll = () => {
-      const progress = window.scrollY / (document.body.scrollHeight - window.innerHeight);
-      setScrollProgress(progress);
-      trackUserInteraction("scroll");
-    };
+      const handleUserActivity = () => {
+        try {
+          if (updateUserActivity) updateUserActivity();
+        } catch (error) {
+          console.warn('User activity tracking failed:', error);
+        }
+      };
 
-    window.addEventListener("mousemove", updateMousePosition, { passive: true });
-    window.addEventListener("click", handleUserActivity);
-    window.addEventListener("keydown", handleUserActivity);
-    window.addEventListener("scroll", handleScroll, { passive: true });
+      const handleScroll = () => {
+        try {
+          const progress = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+          if (setScrollProgress) setScrollProgress(progress);
+          if (trackUserInteraction) trackUserInteraction("scroll");
+        } catch (error) {
+          console.warn('Scroll tracking failed:', error);
+        }
+      };
 
-    // Enhanced loading simulation with construction theme
-    const startTime = performance.now();
-    const timer = setTimeout(() => {
-      const loadTime = performance.now() - startTime;
-      setIsLoading(false);
-      trackUserInteraction("page-loaded");
+      window.addEventListener("mousemove", updateMousePosition, { passive: true });
+      window.addEventListener("click", handleUserActivity);
+      window.addEventListener("keydown", handleUserActivity);
+      window.addEventListener("scroll", handleScroll, { passive: true });
 
-      // Performance analytics
-      if (loadTime > 3000) {
-        trackUserInteraction("slow-page-load");
-      }
-    }, 2000); // Increased for better animation showcase
+      // Enhanced loading simulation with construction theme
+      const startTime = performance.now();
+      const timer = setTimeout(() => {
+        try {
+          const loadTime = performance.now() - startTime;
+          setIsLoading(false);
+          if (trackUserInteraction) trackUserInteraction("page-loaded");
 
-    return () => {
-      window.removeEventListener("mousemove", updateMousePosition);
-      window.removeEventListener("click", handleUserActivity);
-      window.removeEventListener("keydown", handleUserActivity);
-      window.removeEventListener("scroll", handleScroll);
-      if (rafId) cancelAnimationFrame(rafId);
-      clearTimeout(timer);
-    };
+          // Performance analytics
+          if (loadTime > 3000 && trackUserInteraction) {
+            trackUserInteraction("slow-page-load");
+          }
+        } catch (error) {
+          console.warn('Loading completion tracking failed:', error);
+          setIsLoading(false); // Still hide loading screen
+        }
+      }, 2000); // Increased for better animation showcase
+
+      return () => {
+        try {
+          window.removeEventListener("mousemove", updateMousePosition);
+          window.removeEventListener("click", handleUserActivity);
+          window.removeEventListener("keydown", handleUserActivity);
+          window.removeEventListener("scroll", handleScroll);
+          if (rafId) cancelAnimationFrame(rafId);
+          clearTimeout(timer);
+        } catch (error) {
+          console.warn('Event listener cleanup failed:', error);
+        }
+      };
+    } catch (error) {
+      console.warn('Event listener setup failed:', error);
+      // Still set loading to false after timeout as fallback
+      const fallbackTimer = setTimeout(() => setIsLoading(false), 3000);
+      return () => clearTimeout(fallbackTimer);
+    }
   }, [setStoreMousePosition, setScrollProgress, trackUserInteraction, updateUserActivity]);
 
   // Enhanced loading screen
