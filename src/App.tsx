@@ -12,7 +12,7 @@ import PrivateRoute from "@/components/auth/PrivateRoute";
 import ErrorBoundary from "@/components/ErrorBoundary";
 
 // Lazy load components for better performance
-const Home = lazy(() => import("@/pages/Home"));
+const Home = lazy(() => import("@/components/SimpleFallback"));
 const About = lazy(() => import("@/pages/About"));
 const Services = lazy(() => import("@/pages/Services"));
 const Projects = lazy(() => import("@/pages/Projects"));
