@@ -1,3 +1,14 @@
+/* Import Modern Design System - must come first */
+@import "./styles/modern-design-system.css";
+@import "./styles/glassmorphism.css";
+@import "./styles/black-vision.css";
+@import "./styles/premium-navigation.css";
+@import "./styles/homepage-design-system.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Emergency CSS to ensure basic styling loads */
 * {
   margin: 0;
@@ -16,17 +27,6 @@ body {
 #root {
   min-height: 100vh;
 }
-
-/* Import Modern Design System */
-@import "./styles/modern-design-system.css";
-@import "./styles/glassmorphism.css";
-@import "./styles/black-vision.css";
-@import "./styles/premium-navigation.css";
-@import "./styles/homepage-design-system.css";
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 @layer base {
   :root {
