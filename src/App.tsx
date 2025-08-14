@@ -11,8 +11,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import PrivateRoute from "@/components/auth/PrivateRoute";
 import ErrorBoundary from "@/components/ErrorBoundary";
 
-console.log("App.tsx loading...");
-
 // Lazy load components for better performance
 const Home = lazy(() => import("@/pages/Home"));
 const About = lazy(() => import("@/pages/About"));
