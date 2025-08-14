@@ -285,54 +285,82 @@ export default function Home() {
     }
   }, []);
 
-  // Enhanced mouse tracking with performance optimization
+  // Enhanced mouse tracking with performance optimization - with error handling
   useEffect(() => {
     let rafId: number;
-    
-    const updateMousePosition = (e: MouseEvent) => {
-      rafId = requestAnimationFrame(() => {
-        const position = { x: e.clientX, y: e.clientY };
-        setMousePosition(position);
-        setStoreMousePosition(position);
-      });
-    };
 
-    const handleUserActivity = () => {
-      updateUserActivity();
-    };
+    try {
+      const updateMousePosition = (e: MouseEvent) => {
+        try {
+          rafId = requestAnimationFrame(() => {
+            const position = { x: e.clientX, y: e.clientY };
+            setMousePosition(position);
+            if (setStoreMousePosition) setStoreMousePosition(position);
+          });
+        } catch (error) {
+          console.warn('Mouse position update failed:', error);
+        }
+      };
 
-    const handleScroll = () => {
-      const progress = window.scrollY / (document.body.scrollHeight - window.innerHeight);
-      setScrollProgress(progress);
-      trackUserInteraction("scroll");
-    };
+      const handleUserActivity = () => {
+        try {
+          if (updateUserActivity) updateUserActivity();
+        } catch (error) {
+          console.warn('User activity tracking failed:', error);
+        }
+      };
 
-    window.addEventListener("mousemove", updateMousePosition, { passive: true });
-    window.addEventListener("click", handleUserActivity);
-    window.addEventListener("keydown", handleUserActivity);
-    window.addEventListener("scroll", handleScroll, { passive: true });
+      const handleScroll = () => {
+        try {
+          const progress = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+          if (setScrollProgress) setScrollProgress(progress);
+          if (trackUserInteraction) trackUserInteraction("scroll");
+        } catch (error) {
+          console.warn('Scroll tracking failed:', error);
+        }
+      };
 
-    // Enhanced loading simulation with construction theme
-    const startTime = performance.now();
-    const timer = setTimeout(() => {
-      const loadTime = performance.now() - startTime;
-      setIsLoading(false);
-      trackUserInteraction("page-loaded");
+      window.addEventListener("mousemove", updateMousePosition, { passive: true });
+      window.addEventListener("click", handleUserActivity);
+      window.addEventListener("keydown", handleUserActivity);
+      window.addEventListener("scroll", handleScroll, { passive: true });
 
-      // Performance analytics
-      if (loadTime > 3000) {
-        trackUserInteraction("slow-page-load");
-      }
-    }, 2000); // Increased for better animation showcase
+      // Enhanced loading simulation with construction theme
+      const startTime = performance.now();
+      const timer = setTimeout(() => {
+        try {
+          const loadTime = performance.now() - startTime;
+          setIsLoading(false);
+          if (trackUserInteraction) trackUserInteraction("page-loaded");
 
-    return () => {
-      window.removeEventListener("mousemove", updateMousePosition);
-      window.removeEventListener("click", handleUserActivity);
-      window.removeEventListener("keydown", handleUserActivity);
-      window.removeEventListener("scroll", handleScroll);
-      if (rafId) cancelAnimationFrame(rafId);
-      clearTimeout(timer);
-    };
+          // Performance analytics
+          if (loadTime > 3000 && trackUserInteraction) {
+            trackUserInteraction("slow-page-load");
+          }
+        } catch (error) {
+          console.warn('Loading completion tracking failed:', error);
+          setIsLoading(false); // Still hide loading screen
+        }
+      }, 2000); // Increased for better animation showcase
+
+      return () => {
+        try {
+          window.removeEventListener("mousemove", updateMousePosition);
+          window.removeEventListener("click", handleUserActivity);
+          window.removeEventListener("keydown", handleUserActivity);
+          window.removeEventListener("scroll", handleScroll);
+          if (rafId) cancelAnimationFrame(rafId);
+          clearTimeout(timer);
+        } catch (error) {
+          console.warn('Event listener cleanup failed:', error);
+        }
+      };
+    } catch (error) {
+      console.warn('Event listener setup failed:', error);
+      // Still set loading to false after timeout as fallback
+      const fallbackTimer = setTimeout(() => setIsLoading(false), 3000);
+      return () => clearTimeout(fallbackTimer);
+    }
   }, [setStoreMousePosition, setScrollProgress, trackUserInteraction, updateUserActivity]);
 
   // Enhanced loading screen
