@@ -385,7 +385,7 @@ export default function Login() {
               {/* JD MARC Logo */}
               <div className="mb-8">
                 <img
-                  src="/images/brand/logo.svg"
+                  src="/images/brand/logo.jpg"
                   alt="JD Marc Limited Logo"
                   className="h-16 w-auto filter brightness-0 invert"
                 />
