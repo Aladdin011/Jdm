@@ -240,7 +240,8 @@ function App() {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
           <CallProvider>
@@ -394,7 +395,8 @@ function App() {
           </CallProvider>
         </AuthProvider>
       </ThemeProvider>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 
