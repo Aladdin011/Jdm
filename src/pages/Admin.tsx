@@ -294,8 +294,14 @@ export default function Admin() {
     );
   }
 
+  useEffect(() => {
+    document.body.classList.add('modern-admin');
+    return () => document.body.classList.remove('modern-admin');
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#EAE6DF] to-[#C2CCC5]">
+      <link rel="stylesheet" href="/src/styles/modern-admin.css" />
       {/* Header */}
       <div className="bg-white shadow-sm border-b border-[#A7967E]/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
