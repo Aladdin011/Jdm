@@ -29,6 +29,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAppStore } from '@/stores/appStore';
 import { useTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
+import SmartLogo from '@/components/ui/SmartLogo';
 
 interface NavItem {
   label: string;
