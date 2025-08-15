@@ -22,8 +22,27 @@
     />
     <meta property="og:type" content="website" />
     <link rel="icon" type="image/x-icon" href="./favicon.ico" />
-    <title>JD Marc</title>
+        <title>JD Marc</title>
 
+    <script>
+      (function() {
+        var attempts = 0; var maxAttempts = 20; // ~2s
+        function tryInit() {
+          try {
+            var er = window.eruda;
+            if (er && typeof er.init === 'function') {
+              try { er.init(); } catch(e) {}
+              return;
+            }
+          } catch (e) {}
+          if (++attempts < maxAttempts) setTimeout(tryInit, 100);
+        }
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', tryInit, { once: true });
+        }
+        tryInit();
+      })();
+    </script>
     <script type="module" crossorigin src="./assets/index-CyYdcpMP.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-xN5BElgZ.css">
   </head>
