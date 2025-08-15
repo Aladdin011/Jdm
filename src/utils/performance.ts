@@ -326,7 +326,12 @@ export const cleanupEventListeners = (
 export const registerServiceWorker = async () => {
   if ('serviceWorker' in navigator) {
     try {
-      const registration = await navigator.serviceWorker.register('/sw.js');
+      const swPath = (import.meta as any).env?.BASE_URL
+        ? (import.meta as any).env.BASE_URL + 'sw.js'
+        : (window as any).__vite_base__
+          ? (window as any).__vite_base__ + 'sw.js'
+          : '/sw.js';
+      const registration = await navigator.serviceWorker.register(swPath);
       console.log('Service Worker registered:', registration);
       
       // Check for updates

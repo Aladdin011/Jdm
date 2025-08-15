@@ -6,13 +6,10 @@ const STATIC_CACHE = 'jdmarc-static-v1.0.0';
 const DYNAMIC_CACHE = 'jdmarc-dynamic-v1.0.0';
 const IMAGE_CACHE = 'jdmarc-images-v1.0.0';
 
-// Static assets to cache
+// Static assets to cache (avoid CRA paths; keep only assets that exist)
 const STATIC_ASSETS = [
-  '/',
-  '/static/js/bundle.js',
-  '/static/css/main.css',
-  '/manifest.json',
-  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap',
+  './manifest.json',
+  './favicon.ico',
 ];
 
 // Critical images to cache
@@ -143,8 +140,8 @@ async function handleDocumentRequest(request) {
       return cachedResponse;
     }
     
-    // If no cache, return offline page
-    return caches.match('/') || new Response('Offline', { 
+    // If no cache and app is in subfolder, try relative index.html
+    return caches.match('index.html') || new Response('Offline', { 
       status: 503, 
       statusText: 'Service Unavailable' 
     });

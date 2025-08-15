@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 // Google Analytics configuration
-const GA_TRACKING_ID = process.env.VITE_GA_TRACKING_ID || ""; // Use environment variable
+const GA_TRACKING_ID = (import.meta as any).env?.VITE_GA_TRACKING_ID || "";
 
 // Initialize Google Analytics
 export const initGA = () => {
