@@ -530,13 +530,11 @@ export default function PremiumNavigation() {
               whileHover={{ scale: 1.1 }}
               transition={{ duration: 0.3 }}
             >
-              <img
-                src="/images/brand/logo.jpg"
+              <SmartLogo
+                size="md"
+                variant="light"
                 alt="JD Marc Limited Professional Logo"
-                className="w-12 h-12 object-contain drop-shadow-lg rounded-lg"
-                onError={(e) => {
-                  e.currentTarget.src = "https://cdn.builder.io/api/v1/image/assets%2Fbd53220f2be44e7b823f6284706cc662%2F74072840a2e04ede8037ff70b072ee1d?format=webp&width=200";
-                }}
+                className="drop-shadow-lg"
               />
             </motion.div>
             <div className="hidden sm:block">
