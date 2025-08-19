@@ -16,12 +16,12 @@ const SmartLogo: React.FC<SmartLogoProps> = ({
   const [hasWebpFailed, setHasWebpFailed] = useState(false);
   const [hasJpgFailed, setHasJpgFailed] = useState(false);
 
-  // Size classes mapping
+  // Size classes mapping - properly scaled for containers
   const sizeClasses = {
-    sm: 'w-8 h-8',
-    md: 'w-12 h-12', 
-    lg: 'w-16 h-16',
-    xl: 'w-20 h-20'
+    sm: 'w-6 h-6',     // 24px - for small contexts
+    md: 'w-10 h-10',   // 40px - for navigation (fits better in 56px container)
+    lg: 'w-14 h-14',   // 56px - for larger contexts
+    xl: 'w-20 h-20'    // 80px - for hero sections
   };
 
   // Image sources priority: WebP → JPEG → CDN fallback
