@@ -530,6 +530,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const value: AuthContextType = {
     user,
     isAuthenticated: !!user,
+    isAdmin: !!user && user.role === "admin",
     isLoading,
     login,
     register,
