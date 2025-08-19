@@ -527,7 +527,7 @@ export default function PremiumNavigation() {
             whileTap={{ scale: 0.98 }}
           >
             <motion.div
-              className="w-14 h-14 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300 border border-white/20"
+              className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300 border border-white/20"
               whileHover={{ scale: 1.1 }}
               transition={{ duration: 0.3 }}
             >
