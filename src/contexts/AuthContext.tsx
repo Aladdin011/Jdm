@@ -238,16 +238,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           user: userData,
         };
       } catch (apiError) {
-        console.warn(
-          "Backend unavailable, using development mode for login",
-        );
+        console.warn("Backend unavailable, using development mode for login");
 
         // Mock authentication for development when backend is unavailable
         await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API delay
 
-        const mockUser = mockUsers.find(
-          (u) => u.email === credentials.email,
-        );
+        const mockUser = mockUsers.find((u) => u.email === credentials.email);
 
         if (mockUser && credentials.password === "password123") {
           const updatedUser = {
@@ -333,9 +329,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate API delay
 
         // Check if email already exists in mock users
-        const existingUser = mockUsers.find(
-          (u) => u.email === userData.email,
-        );
+        const existingUser = mockUsers.find((u) => u.email === userData.email);
 
         if (existingUser) {
           setIsLoading(false);
