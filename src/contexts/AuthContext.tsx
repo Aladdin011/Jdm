@@ -15,6 +15,7 @@ interface User {
   isVerified?: boolean;
   lastLoginAt?: string;
   createdAt?: string;
+  department?: string;
 }
 
 // Auth context interface
