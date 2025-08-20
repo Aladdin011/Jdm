@@ -28,6 +28,7 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAppStore } from "@/stores/appStore";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import SmartLogo from "@/components/ui/SmartLogo";
 
