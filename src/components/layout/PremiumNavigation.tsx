@@ -462,13 +462,13 @@ const MobileMenu = ({
                 {!isAuthenticated && (
                   <>
                     <motion.button
-                      onClick={handleAutoLogin}
+                      onClick={() => handleNavClick("/login", "Login")}
                       className="w-full flex items-center justify-center gap-3 p-4 border-2 border-[#AA7452] rounded-2xl text-[#AA7452] hover:bg-[#AA7452] hover:text-white font-bold transition-all duration-300"
                       whileHover={{ scale: 1.02, y: -2 }}
                       whileTap={{ scale: 0.98 }}
                     >
                       <LogIn className="w-5 h-5" />
-                      <span>Auto Sign In</span>
+                      <span>Sign In</span>
                     </motion.button>
                     <motion.button
                       onClick={() => handleNavClick("/register", "Register")}
