@@ -657,22 +657,36 @@ export default function PremiumNavigation() {
             </motion.div>
 
             {/* Enhanced Auth Buttons */}
-            <motion.button
-              onClick={() => handleNavClick("/login", "Login")}
-              className="btn-secondary px-6 py-3 bg-transparent border-2 border-white/30 rounded-2xl text-white hover:text-[#051822] hover:bg-white hover:border-white transition-all duration-300 font-medium"
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Sign In
-            </motion.button>
-            <motion.button
-              onClick={() => handleNavClick("/register", "Register")}
-              className="btn-primary px-6 py-3 bg-gradient-to-r from-[#AA7452] to-[#7C5841] text-white rounded-2xl hover:shadow-lg hover:shadow-[#AA7452]/30 transition-all duration-300 font-bold"
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Get Started
-            </motion.button>
+            {!isAuthenticated && (
+              <>
+                <motion.button
+                  onClick={handleAutoLogin}
+                  className="btn-secondary px-6 py-3 bg-transparent border-2 border-white/30 rounded-2xl text-white hover:text-[#051822] hover:bg-white hover:border-white transition-all duration-300 font-medium"
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Auto Sign In
+                </motion.button>
+                <motion.button
+                  onClick={() => handleNavClick("/register", "Register")}
+                  className="btn-primary px-6 py-3 bg-gradient-to-r from-[#AA7452] to-[#7C5841] text-white rounded-2xl hover:shadow-lg hover:shadow-[#AA7452]/30 transition-all duration-300 font-bold"
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Get Started
+                </motion.button>
+              </>
+            )}
+            {isAuthenticated && (
+              <motion.button
+                onClick={() => handleNavClick("/dashboard", "Dashboard")}
+                className="btn-primary px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-2xl hover:shadow-lg hover:shadow-green-600/30 transition-all duration-300 font-bold"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Go to Dashboard
+              </motion.button>
+            )}
           </div>
 
           {/* Enhanced Mobile Menu Toggle */}
