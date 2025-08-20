@@ -538,7 +538,6 @@ export default function PremiumNavigation() {
     navigate(href);
   };
 
-
   const handleDropdownToggle = (label: string) => {
     setActiveDropdown(activeDropdown === label ? null : label);
   };
