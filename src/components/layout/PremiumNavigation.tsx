@@ -459,24 +459,39 @@ const MobileMenu = ({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
               >
-                <motion.button
-                  onClick={() => handleNavClick("/login", "Login")}
-                  className="w-full flex items-center justify-center gap-3 p-4 border-2 border-[#AA7452] rounded-2xl text-[#AA7452] hover:bg-[#AA7452] hover:text-white font-bold transition-all duration-300"
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <LogIn className="w-5 h-5" />
-                  <span>Sign In</span>
-                </motion.button>
-                <motion.button
-                  onClick={() => handleNavClick("/register", "Register")}
-                  className="w-full flex items-center justify-center gap-3 p-4 bg-gradient-to-r from-[#AA7452] to-[#7C5841] text-white rounded-2xl hover:shadow-lg hover:shadow-[#AA7452]/30 font-bold transition-all duration-300"
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <UserPlus className="w-5 h-5" />
-                  <span>Get Started</span>
-                </motion.button>
+                {!isAuthenticated && (
+                  <>
+                    <motion.button
+                      onClick={handleAutoLogin}
+                      className="w-full flex items-center justify-center gap-3 p-4 border-2 border-[#AA7452] rounded-2xl text-[#AA7452] hover:bg-[#AA7452] hover:text-white font-bold transition-all duration-300"
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <LogIn className="w-5 h-5" />
+                      <span>Auto Sign In</span>
+                    </motion.button>
+                    <motion.button
+                      onClick={() => handleNavClick("/register", "Register")}
+                      className="w-full flex items-center justify-center gap-3 p-4 bg-gradient-to-r from-[#AA7452] to-[#7C5841] text-white rounded-2xl hover:shadow-lg hover:shadow-[#AA7452]/30 font-bold transition-all duration-300"
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <UserPlus className="w-5 h-5" />
+                      <span>Get Started</span>
+                    </motion.button>
+                  </>
+                )}
+                {isAuthenticated && (
+                  <motion.button
+                    onClick={() => handleNavClick("/dashboard", "Dashboard")}
+                    className="w-full flex items-center justify-center gap-3 p-4 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-2xl hover:shadow-lg hover:shadow-green-600/30 font-bold transition-all duration-300"
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Building2 className="w-5 h-5" />
+                    <span>Go to Dashboard</span>
+                  </motion.button>
+                )}
               </motion.div>
             </div>
           </motion.div>
