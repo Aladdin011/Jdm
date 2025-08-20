@@ -523,6 +523,26 @@ export default function PremiumNavigation() {
     navigate(href);
   };
 
+  const handleAutoLogin = async () => {
+    trackUserInteraction('auto-login-clicked');
+
+    // Auto-login with admin user
+    const result = await login({
+      email: "admin@jdmarcng.com",
+      password: "password123",
+      rememberMe: true
+    });
+
+    if (result.success) {
+      console.log('Auto-login successful!');
+      navigate('/dashboard');
+    } else {
+      console.error('Auto-login failed:', result.error);
+      // Fallback to login page if auto-login fails
+      navigate('/login');
+    }
+  };
+
   const handleDropdownToggle = (label: string) => {
     setActiveDropdown(activeDropdown === label ? null : label);
   };
