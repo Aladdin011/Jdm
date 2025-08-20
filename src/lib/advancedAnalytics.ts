@@ -154,40 +154,54 @@ export class AdvancedAnalyticsEngine {
     try {
       // Click tracking with heat mapping - throttled to prevent spam
       let lastClickTime = 0;
-      const CLICK_THROTTLE_MS = 500; // Minimum time between tracked clicks
+      let lastClickElement: HTMLElement | null = null;
+      const CLICK_THROTTLE_MS = 1000; // Increased throttle time
 
       document.addEventListener('click', (event) => {
         try {
           const now = Date.now();
-          if (now - lastClickTime < CLICK_THROTTLE_MS) {
-            return; // Throttle rapid clicks
+          const target = event.target as HTMLElement;
+
+          // Enhanced throttling: check both time and element
+          if ((now - lastClickTime < CLICK_THROTTLE_MS) && lastClickElement === target) {
+            return; // Throttle rapid clicks on same element
           }
-          lastClickTime = now;
 
           // Only track significant interactions
-          const target = event.target as HTMLElement;
           if (this.shouldTrackElement(target)) {
+            lastClickTime = now;
+            lastClickElement = target;
             this.trackInteraction('click', event);
           }
         } catch (error) {
-          console.warn('Click tracking error:', error);
+          // Reduce console noise - only log severe errors
+          if (error instanceof Error && error.message.includes('Cannot read')) {
+            console.warn('Click tracking error:', error.message);
+          }
         }
       }, { passive: true });
 
-      // Scroll depth tracking
+      // Scroll depth tracking - throttled
       let maxScrollDepth = 0;
+      let scrollTimeout: NodeJS.Timeout | null = null;
+
       document.addEventListener('scroll', () => {
-        try {
-          const scrollDepth = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
-          if (scrollDepth > maxScrollDepth) {
-            maxScrollDepth = scrollDepth;
-            if (scrollDepth % 25 === 0) { // Track at 25%, 50%, 75%, 100%
+        if (scrollTimeout) return; // Throttle scroll events
+
+        scrollTimeout = setTimeout(() => {
+          try {
+            const scrollHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+            const scrollDepth = Math.round((window.scrollY / (scrollHeight - window.innerHeight)) * 100);
+
+            if (scrollDepth > maxScrollDepth && scrollDepth % 25 === 0 && scrollDepth <= 100) {
+              maxScrollDepth = scrollDepth;
               this.trackEvent('engagement', 'scroll_depth', { depth: scrollDepth });
             }
+          } catch (error) {
+            // Silent fail for scroll tracking
           }
-        } catch (error) {
-          console.warn('Scroll tracking error:', error);
-        }
+          scrollTimeout = null;
+        }, 250); // 250ms throttle
       }, { passive: true });
 
       // Form interaction tracking
@@ -217,13 +231,25 @@ export class AdvancedAnalyticsEngine {
   }
   
   private shouldTrackElement(element: HTMLElement): boolean {
+    if (!element || !element.tagName) return false;
+
+    // Skip tracking for certain elements to reduce noise
+    const skipElements = ['HTML', 'BODY', 'DIV', 'SPAN', 'SVG', 'PATH'];
+    if (skipElements.includes(element.tagName)) return false;
+
     // Only track meaningful interactions
     const trackableElements = ['BUTTON', 'A', 'INPUT', 'SELECT', 'TEXTAREA'];
     const hasClickHandler = element.onclick || element.getAttribute('data-track') === 'true';
     const isTrackableTag = trackableElements.includes(element.tagName);
     const hasRole = element.getAttribute('role') === 'button' || element.getAttribute('role') === 'link';
+    const hasAriaLabel = element.getAttribute('aria-label');
 
-    return isTrackableTag || hasClickHandler || hasRole;
+    // Additional check for disabled elements
+    if (element.hasAttribute('disabled') || element.getAttribute('aria-disabled') === 'true') {
+      return false;
+    }
+
+    return isTrackableTag || hasClickHandler || hasRole || hasAriaLabel;
   }
 
   private trackInteraction(type: string, event: Event) {
@@ -450,24 +476,37 @@ export class AdvancedAnalyticsEngine {
   }
   
   private sendToAnalytics(event: any) {
-    // In a real implementation, send to your analytics service
-    // Examples: Google Analytics, Mixpanel, Amplitude, etc.
+    try {
+      // In a real implementation, send to your analytics service
+      // Examples: Google Analytics, Mixpanel, Amplitude, etc.
 
-    // Google Analytics 4 example:
-    if (typeof gtag !== 'undefined') {
-      gtag('event', event.action, {
-        event_category: event.category,
-        event_label: event.data?.element || '',
-        value: event.data?.value || 0,
-        custom_parameter_1: event.sessionId,
-      });
-    }
+      // Google Analytics 4 example:
+      if (typeof gtag !== 'undefined') {
+        gtag('event', event.action, {
+          event_category: event.category,
+          event_label: event.data?.element || '',
+          value: event.data?.value || 0,
+          custom_parameter_1: event.sessionId,
+        });
+      }
 
-    // Reduced console logging for development - only important events
-    if (process.env.NODE_ENV === 'development') {
-      const importantCategories = ['conversion', 'error', 'navigation', 'ab_test'];
-      if (importantCategories.includes(event.category)) {
-        console.log('Analytics Event:', event);
+      // Minimal console logging for development - only critical events
+      if (process.env.NODE_ENV === 'development') {
+        const criticalCategories = ['error', 'conversion'];
+        const importantActions = ['javascript_error', 'contact_form_submit', 'phone_click'];
+
+        if (criticalCategories.includes(event.category) || importantActions.includes(event.action)) {
+          console.log('Analytics Event:', {
+            category: event.category,
+            action: event.action,
+            timestamp: event.timestamp.toISOString()
+          });
+        }
+      }
+    } catch (error) {
+      // Silent fail for analytics to not break the app
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Analytics send failed:', error);
       }
     }
   }
