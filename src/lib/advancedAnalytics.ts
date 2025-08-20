@@ -253,32 +253,79 @@ export class AdvancedAnalyticsEngine {
   }
 
   private trackInteraction(type: string, event: Event) {
-    const target = event.target as HTMLElement;
-    const element = this.getElementSelector(target);
+    try {
+      const target = event.target as HTMLElement;
+      if (!target) return;
 
-    const interactionData = {
-      type,
-      element,
-      timestamp: new Date(),
-      coordinates: type === 'click' ? {
-        x: (event as MouseEvent).clientX,
-        y: (event as MouseEvent).clientY
-      } : undefined,
-      value: (target as HTMLInputElement).value || target.textContent?.slice(0, 100),
-    };
+      const element = this.getElementSelector(target);
+      if (!element) return;
 
-    this.trackEvent('interaction', type, interactionData);
+      const interactionData = {
+        type,
+        element,
+        timestamp: new Date(),
+        coordinates: type === 'click' && event instanceof MouseEvent ? {
+          x: event.clientX || 0,
+          y: event.clientY || 0
+        } : undefined,
+        value: this.getSafeElementValue(target),
+      };
 
-    // Update app store
-    const { trackUserInteraction } = useAppStore.getState();
-    trackUserInteraction(`${type}-${element}`);
+      this.trackEvent('interaction', type, interactionData);
+
+      // Update app store safely
+      try {
+        const { trackUserInteraction } = useAppStore.getState();
+        if (trackUserInteraction) {
+          trackUserInteraction(`${type}-${element}`);
+        }
+      } catch (storeError) {
+        // Silent fail for store updates
+      }
+    } catch (error) {
+      // Silent fail for interaction tracking
+    }
+  }
+
+  private getSafeElementValue(element: HTMLElement): string {
+    try {
+      if (element instanceof HTMLInputElement) {
+        return element.value?.slice(0, 100) || '';
+      }
+      if (element instanceof HTMLTextAreaElement) {
+        return element.value?.slice(0, 100) || '';
+      }
+      return element.textContent?.slice(0, 100) || '';
+    } catch {
+      return '';
+    }
   }
   
   private getElementSelector(element: HTMLElement): string {
-    // Create a unique selector for the element
-    if (element.id) return `#${element.id}`;
-    if (element.className) return `.${element.className.split(' ')[0]}`;
-    return element.tagName.toLowerCase();
+    try {
+      if (!element || !element.tagName) return 'unknown';
+
+      // Create a unique selector for the element
+      if (element.id && typeof element.id === 'string') {
+        return `#${element.id}`;
+      }
+
+      if (element.className && typeof element.className === 'string') {
+        const firstClass = element.className.trim().split(' ')[0];
+        if (firstClass) {
+          return `.${firstClass}`;
+        }
+      }
+
+      // Check for data attributes
+      if (element.getAttribute && element.getAttribute('data-testid')) {
+        return `[data-testid="${element.getAttribute('data-testid')}"]`;
+      }
+
+      return element.tagName.toLowerCase();
+    } catch {
+      return 'unknown';
+    }
   }
   
   // Navigation and Page View Tracking
@@ -455,24 +502,35 @@ export class AdvancedAnalyticsEngine {
   
   // Core tracking method
   trackEvent(category: string, action: string, data?: any) {
-    const event = {
-      category,
-      action,
-      data,
-      timestamp: new Date(),
-      sessionId: this.sessionId,
-      userId: this.userId,
-      page: window.location.pathname,
-      userAgent: navigator.userAgent,
-    };
-    
-    this.events.push(event);
-    
-    // Send to analytics service (implement your preferred analytics service)
-    this.sendToAnalytics(event);
-    
-    // Update app store if relevant
-    this.updateAppStore(event);
+    try {
+      if (!category || !action) return;
+
+      const event = {
+        category: String(category),
+        action: String(action),
+        data: data || {},
+        timestamp: new Date(),
+        sessionId: this.sessionId,
+        userId: this.userId,
+        page: window.location?.pathname || '',
+        userAgent: navigator?.userAgent || '',
+      };
+
+      // Prevent event overflow
+      if (this.events.length > 1000) {
+        this.events = this.events.slice(-500); // Keep last 500 events
+      }
+
+      this.events.push(event);
+
+      // Send to analytics service (implement your preferred analytics service)
+      this.sendToAnalytics(event);
+
+      // Update app store if relevant
+      this.updateAppStore(event);
+    } catch (error) {
+      // Silent fail for event tracking to not break the app
+    }
   }
   
   private sendToAnalytics(event: any) {
@@ -512,13 +570,20 @@ export class AdvancedAnalyticsEngine {
   }
   
   private updateAppStore(event: any) {
-    const { updateAnalytics } = useAppStore.getState();
-    
-    // Update relevant analytics in app store
-    if (event.category === 'engagement') {
-      updateAnalytics({
-        lastInteraction: event.timestamp
-      });
+    try {
+      const state = useAppStore.getState();
+      if (!state || !state.updateAnalytics) return;
+
+      const { updateAnalytics } = state;
+
+      // Update relevant analytics in app store
+      if (event.category === 'engagement') {
+        updateAnalytics({
+          lastInteraction: event.timestamp
+        });
+      }
+    } catch (error) {
+      // Silent fail for app store updates
     }
   }
   
