@@ -495,6 +495,7 @@ export default function PremiumNavigation() {
   const navigate = useNavigate();
   const { trackUserInteraction } = useAppStore();
   const { theme, setTheme, actualTheme } = useTheme();
+  const { login, isAuthenticated } = useAuth();
 
   // Apply construction color system
   useEffect(() => {
