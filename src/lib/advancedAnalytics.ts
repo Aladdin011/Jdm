@@ -152,10 +152,23 @@ export class AdvancedAnalyticsEngine {
   // User Interaction Tracking
   private setupUserInteractionTracking() {
     try {
-      // Click tracking with heat mapping
+      // Click tracking with heat mapping - throttled to prevent spam
+      let lastClickTime = 0;
+      const CLICK_THROTTLE_MS = 500; // Minimum time between tracked clicks
+
       document.addEventListener('click', (event) => {
         try {
-          this.trackInteraction('click', event);
+          const now = Date.now();
+          if (now - lastClickTime < CLICK_THROTTLE_MS) {
+            return; // Throttle rapid clicks
+          }
+          lastClickTime = now;
+
+          // Only track significant interactions
+          const target = event.target as HTMLElement;
+          if (this.shouldTrackElement(target)) {
+            this.trackInteraction('click', event);
+          }
         } catch (error) {
           console.warn('Click tracking error:', error);
         }
@@ -203,23 +216,33 @@ export class AdvancedAnalyticsEngine {
     }
   }
   
+  private shouldTrackElement(element: HTMLElement): boolean {
+    // Only track meaningful interactions
+    const trackableElements = ['BUTTON', 'A', 'INPUT', 'SELECT', 'TEXTAREA'];
+    const hasClickHandler = element.onclick || element.getAttribute('data-track') === 'true';
+    const isTrackableTag = trackableElements.includes(element.tagName);
+    const hasRole = element.getAttribute('role') === 'button' || element.getAttribute('role') === 'link';
+
+    return isTrackableTag || hasClickHandler || hasRole;
+  }
+
   private trackInteraction(type: string, event: Event) {
     const target = event.target as HTMLElement;
     const element = this.getElementSelector(target);
-    
+
     const interactionData = {
       type,
       element,
       timestamp: new Date(),
-      coordinates: type === 'click' ? { 
-        x: (event as MouseEvent).clientX, 
-        y: (event as MouseEvent).clientY 
+      coordinates: type === 'click' ? {
+        x: (event as MouseEvent).clientX,
+        y: (event as MouseEvent).clientY
       } : undefined,
       value: (target as HTMLInputElement).value || target.textContent?.slice(0, 100),
     };
-    
+
     this.trackEvent('interaction', type, interactionData);
-    
+
     // Update app store
     const { trackUserInteraction } = useAppStore.getState();
     trackUserInteraction(`${type}-${element}`);
@@ -429,7 +452,7 @@ export class AdvancedAnalyticsEngine {
   private sendToAnalytics(event: any) {
     // In a real implementation, send to your analytics service
     // Examples: Google Analytics, Mixpanel, Amplitude, etc.
-    
+
     // Google Analytics 4 example:
     if (typeof gtag !== 'undefined') {
       gtag('event', event.action, {
@@ -439,10 +462,13 @@ export class AdvancedAnalyticsEngine {
         custom_parameter_1: event.sessionId,
       });
     }
-    
-    // Console logging for development
+
+    // Reduced console logging for development - only important events
     if (process.env.NODE_ENV === 'development') {
-      console.log('Analytics Event:', event);
+      const importantCategories = ['conversion', 'error', 'navigation', 'ab_test'];
+      if (importantCategories.includes(event.category)) {
+        console.log('Analytics Event:', event);
+      }
     }
   }
   
