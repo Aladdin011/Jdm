@@ -656,12 +656,12 @@ export default function PremiumNavigation() {
             {!isAuthenticated && (
               <>
                 <motion.button
-                  onClick={handleAutoLogin}
+                  onClick={() => handleNavClick("/login", "Login")}
                   className="btn-secondary px-6 py-3 bg-transparent border-2 border-white/30 rounded-2xl text-white hover:text-[#051822] hover:bg-white hover:border-white transition-all duration-300 font-medium"
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  Auto Sign In
+                  Sign In
                 </motion.button>
                 <motion.button
                   onClick={() => handleNavClick("/register", "Register")}
