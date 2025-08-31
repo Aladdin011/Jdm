@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 // API Configuration
 const API_BASE_URL = import.meta.env.DEV
-  ? 'http://localhost:5003/api'  // Development mode - local backend
+  ? 'http://localhost:5004/api'  // Development mode - local backend
   : 'https://jdmarc-backend-api.onrender.com/api'; // Production mode - deployed backend
 // Use https for production backend to avoid mixed content issues
 const TOKEN_STORAGE_KEY =

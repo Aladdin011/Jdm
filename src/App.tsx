@@ -54,7 +54,7 @@ const LoadingSpinner = () => (
             alt="JD Marc Limited Logo"
             className="w-20 h-20 object-contain rounded-lg"
             onError={(e) => {
-              e.currentTarget.src = "https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F8c27ff3f82824383bd700bc3410cfa09?format=webp&width=200";
+              e.currentTarget.src = "./images/brand/logo.svg";
             }}
           />
         </motion.div>
@@ -196,7 +196,7 @@ const queryClient = new QueryClient({
     queries: {
       retry: 3,
       staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 10 * 60 * 1000, // 10 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
       refetchOnWindowFocus: false,
       refetchOnMount: true,
       refetchOnReconnect: true,

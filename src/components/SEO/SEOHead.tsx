@@ -17,7 +17,7 @@ const defaultSEO = {
   title: 'JD Marc Limited - Premier Construction & Infrastructure Development in Africa',
   description: 'Leading construction company in Africa providing residential, commercial, and infrastructure development services. 15+ years of excellence building Africa\'s future cities.',
   keywords: 'construction, infrastructure, Africa, Nigeria, residential construction, commercial buildings, smart cities, urban planning, project management',
-  image: 'https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F6fe8dede446d44e5b3f61dac8e245b53?alt=media&token=2cd3aa20-e283-42dd-ad0a-b327725825be&apiKey=751ea84be0da437c8dd3f1bf04173189',
+  image: './images/brand/logo.svg',
   url: 'https://jdmarcng.com',
   type: 'website' as const,
   author: 'JD Marc Limited',
