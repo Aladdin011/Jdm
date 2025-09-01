@@ -20,7 +20,7 @@ const socket_test_1 = __importDefault(require("./routes/socket-test"));
 const auth_1 = __importDefault(require("./routes/auth"));
 const projects_1 = __importDefault(require("./routes/projects"));
 const app = (0, express_1.default)();
-const PORT = process.env.PORT || 5002;
+const PORT = process.env.PORT || 5004;
 const server = http_1.default.createServer(app);
 const io = (0, socket_1.setupSocketIO)(server);
 app.set('io', io);
@@ -38,20 +38,26 @@ app.use((0, helmet_1.default)({
 const allowedOrigins = [
     'http://localhost:3000',
     'http://localhost:5173',
+    'http://localhost:8080',
     'http://jdmarcng.com',
     'https://jdmarcng.com',
     'https://www.jdmarcng.com'
 ];
+console.log('Allowed CORS origins:', allowedOrigins);
 app.use((0, cors_1.default)({
     origin: function (origin, callback) {
-        if (!origin)
+        console.log('CORS request from origin:', origin);
+        if (!origin) {
+            console.log('No origin, allowing request');
             return callback(null, true);
-        if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
+        }
+        if (allowedOrigins.includes(origin)) {
+            console.log('Origin allowed:', origin);
             callback(null, true);
         }
         else {
             console.log('CORS blocked origin:', origin);
-            callback(null, true);
+            callback(new Error(`Origin ${origin} not allowed by CORS`));
         }
     },
     credentials: true,
@@ -61,10 +67,19 @@ app.use((0, cors_1.default)({
 }));
 app.options('*', (0, cors_1.default)());
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+    const origin = req.headers.origin;
+    console.log('Setting CORS headers for origin:', origin);
+    if (origin && allowedOrigins.includes(origin)) {
+        res.header('Access-Control-Allow-Origin', origin);
+        console.log('Set Access-Control-Allow-Origin to:', origin);
+    }
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
     res.header('Access-Control-Allow-Credentials', 'true');
+    if (req.method === 'OPTIONS') {
+        res.status(200).end();
+        return;
+    }
     next();
 });
 const limiter = (0, express_rate_limit_1.default)({
@@ -92,6 +107,30 @@ app.get("/", (req, res) => {
         version: "1.0.0",
         status: "running",
         timestamp: new Date().toISOString(),
+        port: PORT,
+        environment: process.env.NODE_ENV || "development",
+        cors: {
+            allowedOrigins,
+            currentOrigin: req.headers.origin
+        }
+    });
+});
+app.get("/health", (req, res) => {
+    res.json({
+        status: "healthy",
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        environment: process.env.NODE_ENV || "development"
+    });
+});
+app.get("/api/cors-test", (req, res) => {
+    const origin = req.headers.origin;
+    console.log('CORS test request from origin:', origin);
+    res.json({
+        message: "CORS test successful",
+        origin: origin,
+        allowedOrigins: allowedOrigins,
+        timestamp: new Date().toISOString(),
     });
 });
 app.use("*", (req, res) => {
@@ -115,12 +154,15 @@ const startServer = async () => {
         server.listen(PORT, () => {
             console.log(`🚀 JD Marc API Server running on port ${PORT}`);
             console.log(`📊 Environment: ${process.env.NODE_ENV || "development"}`);
+            console.log(`🔧 Process ID: ${process.pid}`);
+            console.log(`🌍 Host: ${process.env.HOST || "0.0.0.0"}`);
             const baseUrl = process.env.NODE_ENV === 'production'
                 ? 'https://jdmarc-backend-api.onrender.com'
                 : `http://localhost:${PORT}`;
             console.log(`🌐 API URL: ${baseUrl}`);
             console.log(`🔄 WebSocket enabled: ${baseUrl.replace('http', 'ws')}`);
             console.log('🎯 Ready to handle requests and real-time connections');
+            console.log(`🔒 CORS Origins: ${allowedOrigins.join(', ')}`);
             if (!process.env.DB_HOST || !process.env.DB_USER || !process.env.DB_PASSWORD) {
                 console.log('\n⚠️  Database not configured. Run: npm run verify-credentials');
             }

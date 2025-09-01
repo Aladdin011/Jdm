@@ -1,7 +1,7 @@
 {
-  "name": "JD Marc Limited - Construction Excellence",
-  "short_name": "JD Marc",
-  "description": "Premier construction and infrastructure development company in Africa. Building the future with innovative solutions and uncompromising quality.",
+  "name": "Builder Aura Field",
+  "short_name": "Builder Aura",
+  "description": "Building innovative solutions with uncompromising quality.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#051822",
@@ -67,7 +67,7 @@
       "sizes": "375x812",
       "type": "image/png",
       "platform": "narrow",
-      "label": "JD Marc Homepage on Mobile"
+      "label": "Builder Aura Homepage on Mobile"
     },
     {
       "src": "/screenshots/mobile-projects.png",
@@ -81,7 +81,7 @@
       "sizes": "1920x1080",
       "type": "image/png",
       "platform": "wide",
-      "label": "JD Marc Homepage on Desktop"
+      "label": "Builder Aura Homepage on Desktop"
     },
     {
       "src": "/screenshots/desktop-services.png",
@@ -95,7 +95,7 @@
     {
       "name": "Contact Us",
       "short_name": "Contact",
-      "description": "Get in touch with JD Marc for your construction needs",
+      "description": "Get in touch with us for your construction needs",
       "url": "/contact",
       "icons": [
         {
@@ -156,7 +156,7 @@
   },
   "protocol_handlers": [
     {
-      "protocol": "web+jdmarc",
+      "protocol": "web+builder",
       "url": "/handle?action=%s"
     }
   ],

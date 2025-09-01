@@ -9,7 +9,7 @@ export default function DevelopmentModeIndicator() {
 
   useEffect(() => {
     // Check if we're in development mode by detecting mock tokens
-    const token = localStorage.getItem("jdmarc_token");
+    const token = localStorage.getItem("builder_aura_token");
     const isDevMode =
       token?.startsWith("dev_token_") || token?.startsWith("mock_");
 

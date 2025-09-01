@@ -1,10 +1,10 @@
 // Service Worker for JD Marc Limited
 // Provides offline functionality and performance optimizations
 
-const CACHE_NAME = 'jdmarc-v1.0.0';
-const STATIC_CACHE = 'jdmarc-static-v1.0.0';
-const DYNAMIC_CACHE = 'jdmarc-dynamic-v1.0.0';
-const IMAGE_CACHE = 'jdmarc-images-v1.0.0';
+const CACHE_NAME = 'builder-aura-v1.0.0';
+const STATIC_CACHE = 'builder-aura-static-v1.0.0';
+const DYNAMIC_CACHE = 'builder-aura-dynamic-v1.0.0';
+const IMAGE_CACHE = 'builder-aura-images-v1.0.0';
 
 // Static assets to cache (avoid CRA paths; keep only assets that exist)
 const STATIC_ASSETS = [
@@ -74,7 +74,7 @@ self.addEventListener('fetch', (event) => {
   
   // Skip cross-origin requests and chrome-extension requests
   if (!url.origin.includes('localhost') && 
-      !url.origin.includes('jdmarcng.com') && 
+      !url.origin.includes('builder-aura-field.onrender.com') && 
       !url.origin.includes('cdn.builder.io') && 
       !url.origin.includes('images.unsplash.com') &&
       !url.origin.includes('fonts.googleapis.com') &&

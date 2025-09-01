@@ -28,7 +28,7 @@ export const cspConfig = {
   ],
   'connect-src': [
     "'self'",
-    'https://api.jdmarc.com',
+    'https://builder-aura-field.onrender.com',
     'https://www.google-analytics.com',
     'https://vitals.vercel-analytics.com'
   ],
@@ -404,7 +404,7 @@ export class SecureFormHandler {
 
 // CSRF Protection
 class CSRFProtection {
-  private tokenKey = 'jdmarc_csrf_token';
+  private tokenKey = 'builder_aura_csrf_token';
 
   generateToken(): string {
     const token = this.generateRandomString(32);

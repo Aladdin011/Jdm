@@ -127,7 +127,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
     updateMetaTag('business:contact_data:country_name', 'Nigeria');
     updateMetaTag('business:contact_data:email', 'info@jdmarcng.com');
     updateMetaTag('business:contact_data:phone_number', '+234-803-706-5497');
-    updateMetaTag('business:contact_data:website', 'https://jdmarcng.com');
+    updateMetaTag('business:contact_data:website', 'https://builder-aura-field.onrender.com');
 
     // Create canonical link
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
@@ -150,8 +150,8 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
       name: 'JD Marc Limited',
       alternateName: 'JD Marc Construction',
       description: seoData.description,
-      url: 'https://jdmarcng.com',
-      logo: 'https://jdmarcng.com/images/brand/logo.jpg',
+      url: 'https://builder-aura-field.onrender.com',
+      logo: 'https://builder-aura-field.onrender.com/images/brand/logo.jpg',
       image: seoData.image,
       foundingDate: '2007',
       founder: {
@@ -184,12 +184,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
           areaServed: 'GB'
         }
       ],
-      sameAs: [
-        'https://facebook.com/jdmarc',
-        'https://twitter.com/jdmarc',
-        'https://linkedin.com/company/jdmarc',
-        'https://instagram.com/jdmarc'
-      ],
+      sameAs: [],
       serviceArea: {
         '@type': 'Place',
         name: 'Africa'

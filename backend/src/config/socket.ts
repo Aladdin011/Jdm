@@ -5,9 +5,7 @@ export const setupSocketIO = (server: HttpServer) => {
   const allowedOrigins = [
     'http://localhost:3000',
     'http://localhost:5173',
-    'http://jdmarcng.com',
-    'https://jdmarcng.com',
-    'https://www.jdmarcng.com'
+    'https://builder-aura-field.onrender.com'
   ];
 
   const io = new Server(server, {

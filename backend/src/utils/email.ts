@@ -96,8 +96,8 @@ export const sendContactEmail = async (
         
         <p>In the meantime, feel free to:</p>
         <ul>
-          <li>Explore our <a href="https://jdmarcng.com/projects" style="color: #EE690B;">portfolio of completed projects</a></li>
-          <li>Learn more <a href="https://jdmarcng.com/about" style="color: #EE690B;">about our company</a></li>
+          <li>Explore our <a href="https://builder-aura-field.onrender.com/projects" style="color: #EE690B;">portfolio of completed projects</a></li>
+          <li>Learn more <a href="https://builder-aura-field.onrender.com/about" style="color: #EE690B;">about our company</a></li>
           <li>Contact us directly at <a href="tel:+2349291399" style="color: #EE690B;">+234 9 291 3991</a></li>
         </ul>
         
@@ -108,7 +108,7 @@ export const sendContactEmail = async (
       <div style="background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 12px;">
         <p>JD Marc Limited | Abuja, Nigeria<br>
         Email: info@jdmarcng.com | Phone: +234 9 291 3991<br>
-        Website: <a href="https://jdmarcng.com" style="color: #EE690B;">jdmarcng.com</a></p>
+        Website: <a href="https://builder-aura-field.onrender.com" style="color: #EE690B;">builder-aura-field.onrender.com</a></p>
       </div>
     </div>
   `;

@@ -251,8 +251,8 @@ export default function Footer() {
       country: "Nigeria",
       address: "Plot 107, Ahmadu Bello Way, Abuja",
       phone: "+234 (0)8037 065497",
-      email: "info@jdmarcng.com",
-      website: "www.jdmarcng.com",
+      email: "info@builder-aura-field.onrender.com",
+    website: "builder-aura-field.onrender.com",
       hours: "Monday - Friday: 8:00 AM - 6:00 PM",
       description: "Main operations center",
     },
@@ -261,8 +261,8 @@ export default function Footer() {
       country: "United Kingdom",
       address: "71-75 Shelton Street, London WC2H 9RQ",
       phone: "+44 (0)7760954844",
-      email: "info@jdmarc.co.uk",
-      website: "www.jdmarc.co.uk",
+      email: "uk@builder-aura-field.onrender.com",
+    website: "builder-aura-field.onrender.com",
       hours: "Monday - Friday: 9:00 AM - 5:00 PM GMT",
       description: "International partnerships hub",
     },
@@ -271,7 +271,7 @@ export default function Footer() {
       country: "United States",
       address: "125 Park Avenue, New York, NY 10017",
       phone: "+1 (212) 456-7890",
-      email: "usa@jdmarc.com",
+      email: "usa@builder-aura-field.onrender.com",
       website: "Coming Soon",
       hours: "Monday - Friday: 9:00 AM - 5:00 PM EST",
       description: "Global procurement center",
@@ -308,25 +308,25 @@ export default function Footer() {
   const socialLinks = [
     { 
       icon: Facebook, 
-      href: "https://facebook.com/jdmarc", 
+      href: "#", 
       label: "Facebook",
       color: "hover:text-blue-400"
     },
     { 
       icon: Twitter, 
-      href: "https://twitter.com/jdmarc", 
+      href: "#", 
       label: "Twitter",
       color: "hover:text-sky-400"
     },
     { 
       icon: Instagram, 
-      href: "https://instagram.com/jdmarc", 
+      href: "#", 
       label: "Instagram",
       color: "hover:text-pink-400"
     },
     { 
       icon: Linkedin, 
-      href: "https://linkedin.com/company/jdmarc", 
+      href: "#", 
       label: "LinkedIn",
       color: "hover:text-blue-400"
     },

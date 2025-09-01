@@ -87,6 +87,7 @@ router.post('/register', (req, res) => {
             lastName,
             role: 'user',
             company: company || '',
+            department: 'general',
             isVerified: false,
         };
         console.log('New user registered:', newUser);

@@ -10,33 +10,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  User,
-  FolderOpen as Project,
+  FolderOpen,
   Clock,
   CheckCircle,
-  AlertCircle,
   Upload,
   MessageSquare,
-  BarChart3,
-  Calendar,
-  Phone,
-  Mail,
-  MapPin,
-  Building,
-  Settings,
   FileText,
-  TrendingUp,
-  Users,
-  Activity,
-  Target,
-  Shield,
-  DollarSign,
-  Megaphone,
+  Settings,
   Plus,
   ArrowRight,
+  Activity,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { projectAPI, activityAPI } from "@/services/api";
 import useAnalytics from "@/hooks/useAnalytics";
 import PageTransition from "@/components/ui/PageTransition";
 
@@ -72,35 +57,52 @@ export default function GeneralDashboard() {
   });
   const [isLoading, setIsLoading] = useState(true);
 
+  const [isProjectModalOpen, setProjectModalOpen] = useState(false);
+  const [isProfileModalOpen, setProfileModalOpen] = useState(false);
+  const [isUploadModalOpen, setUploadModalOpen] = useState(false);
+  const [isReportsModalOpen, setReportsModalOpen] = useState(false);
+  const [isSupportModalOpen, setSupportModalOpen] = useState(false);
+
   useEffect(() => {
     const loadDashboardData = async () => {
       try {
         setIsLoading(true);
         
-        // Load projects and activities
-        const [projectsData, activitiesData] = await Promise.all([
-          projectAPI.getAll(),
-          activityAPI.getAll(),
-        ]);
+        // Use mock data
+        const mockProjects: ProjectItem[] = [
+          {
+            id: "1",
+            name: "Welcome Project",
+            status: "Planning",
+            progress: 25,
+            dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+            location: "Your Location",
+            priority: "Medium",
+            description: "This is your first project. Get started by adding details and milestones.",
+          },
+        ];
 
-        if (projectsData.success) {
-          setProjects(projectsData.data || []);
-          setStats({
-            totalProjects: projectsData.data?.length || 0,
-            activeProjects: projectsData.data?.filter(p => p.status === "In Progress").length || 0,
-            completedProjects: projectsData.data?.filter(p => p.status === "Completed").length || 0,
-            upcomingDeadlines: projectsData.data?.filter(p => 
-              new Date(p.dueDate) > new Date() && p.status !== "Completed"
-            ).length || 0,
-          });
-        }
+        const mockActivities: ActivityItem[] = [
+          {
+            id: "1",
+            type: "project_update",
+            message: "Welcome to JD Marc Limited! Your account has been created successfully.",
+            timestamp: new Date().toISOString(),
+          },
+        ];
 
-        if (activitiesData.success) {
-          setActivities(activitiesData.data || []);
-        }
+        setProjects(mockProjects);
+        setActivities(mockActivities);
+        setStats({
+          totalProjects: mockProjects.length,
+          activeProjects: mockProjects.filter(p => p.status === "In Progress").length,
+          completedProjects: mockProjects.filter(p => p.status === "Completed").length,
+          upcomingDeadlines: mockProjects.filter(p => new Date(p.dueDate) > new Date() && p.status !== "Completed").length,
+        });
+        
       } catch (error) {
         console.error("Error loading dashboard data:", error);
-        // Set mock data for development
+        // Fallback data
         setProjects([
           {
             id: "1",
@@ -142,21 +144,13 @@ export default function GeneralDashboard() {
   };
 
   const staggerContainer = {
-    animate: {
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
+    animate: { transition: { staggerChildren: 0.1 } },
   };
 
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#EAE6DF] to-[#C2CCC5]">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="text-center"
-        >
+        <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#A7967E] mx-auto mb-4"></div>
           <p className="text-[#142E54] font-medium">Loading your dashboard...</p>
         </motion.div>
@@ -167,119 +161,61 @@ export default function GeneralDashboard() {
   return (
     <PageTransition>
       <div className="min-h-screen bg-gradient-to-br from-[#EAE6DF] to-[#C2CCC5] p-6">
-        <motion.div
-          variants={staggerContainer}
-          initial="initial"
-          animate="animate"
-          className="max-w-7xl mx-auto space-y-6"
-        >
-          {/* Welcome Header */}
+        <motion.div variants={staggerContainer} initial="initial" animate="animate" className="max-w-7xl mx-auto space-y-6">
+          
+          {/* Welcome Section */}
           <motion.div variants={fadeInUp} className="text-center space-y-4">
-            <div className="flex items-center justify-center space-x-3">
-              <Badge variant="outline" className="text-lg px-4 py-2">
-                Welcome to JD Marc Limited
-              </Badge>
-            </div>
-            <h1 className="text-4xl font-bold text-[#142E54]">
-              Welcome, {user?.firstName}!
-            </h1>
+            <Badge variant="outline" className="text-lg px-4 py-2">Welcome to JD Marc Limited</Badge>
+            <h1 className="text-4xl font-bold text-[#142E54]">Welcome, {user?.firstName}!</h1>
             <p className="text-lg text-[#4A5568] max-w-2xl mx-auto">
-              You're now part of our construction and project management platform. 
-              Get started by exploring your dashboard and creating your first project.
+              Explore your dashboard, manage projects, and stay on top of deadlines effortlessly.
             </p>
           </motion.div>
 
           {/* Quick Stats */}
           <motion.div variants={fadeInUp} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
-              <CardContent className="p-6">
-                <div className="flex items-center">
-                  <Project className="h-8 w-8 text-blue-600" />
+            {[
+              { title: "Total Projects", count: stats.totalProjects, icon: FolderOpen, color: "text-blue-600" },
+              { title: "Active Projects", count: stats.activeProjects, icon: Activity, color: "text-green-600" },
+              { title: "Completed", count: stats.completedProjects, icon: CheckCircle, color: "text-purple-600" },
+              { title: "Upcoming", count: stats.upcomingDeadlines, icon: Clock, color: "text-orange-600" },
+            ].map(({ title, count, icon: Icon, color }) => (
+              <Card key={title} className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition">
+                <CardContent className="p-6 flex items-center">
+                  <Icon className={`h-8 w-8 ${color}`} />
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Total Projects</p>
-                    <p className="text-2xl font-bold text-[#142E54]">{stats.totalProjects}</p>
+                    <p className="text-sm font-medium text-gray-600">{title}</p>
+                    <p className="text-2xl font-bold text-[#142E54]">{count}</p>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
-              <CardContent className="p-6">
-                <div className="flex items-center">
-                  <Activity className="h-8 w-8 text-green-600" />
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Active Projects</p>
-                    <p className="text-2xl font-bold text-[#142E54]">{stats.activeProjects}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
-              <CardContent className="p-6">
-                <div className="flex items-center">
-                  <CheckCircle className="h-8 w-8 text-purple-600" />
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Completed</p>
-                    <p className="text-2xl font-bold text-[#142E54]">{stats.completedProjects}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
-              <CardContent className="p-6">
-                <div className="flex items-center">
-                  <Clock className="h-8 w-8 text-orange-600" />
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Upcoming</p>
-                    <p className="text-2xl font-bold text-[#142E54]">{stats.upcomingDeadlines}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            ))}
           </motion.div>
 
-          {/* Get Started Section */}
+          {/* Get Started */}
           <motion.div variants={fadeInUp} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="bg-gradient-to-br from-blue-50 to-indigo-100 border-0 shadow-lg">
+            <Card className="bg-gradient-to-br from-blue-50 to-indigo-100 border-0 shadow-lg hover:shadow-xl transition">
               <CardHeader>
-                <CardTitle className="flex items-center space-x-2 text-[#142E54]">
-                  <Plus className="h-6 w-6" />
-                  <span>Create Your First Project</span>
-                </CardTitle>
-                <CardDescription>
-                  Start building by creating your first construction project
-                </CardDescription>
+                <CardTitle className="flex items-center space-x-2 text-[#142E54]"><Plus className="h-6 w-6" /><span>Create Your First Project</span></CardTitle>
+                <CardDescription>Start building by creating your first project</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <p className="text-[#4A5568]">
-                  Define project scope, set milestones, and track progress with our comprehensive project management tools.
-                </p>
-                <Button className="w-full bg-[#142E54] hover:bg-[#1E3A8A] text-white">
-                  <Plus className="h-4 w-4 mr-2" />
-                  New Project
+                <p className="text-[#4A5568]">Define project scope, set milestones, and track progress easily.</p>
+                <Button className="w-full bg-[#142E54] hover:bg-[#1E3A8A] text-white" onClick={() => setProjectModalOpen(true)}>
+                  <Plus className="h-4 w-4 mr-2" /> New Project
                 </Button>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-green-50 to-emerald-100 border-0 shadow-lg">
+            <Card className="bg-gradient-to-br from-green-50 to-emerald-100 border-0 shadow-lg hover:shadow-xl transition">
               <CardHeader>
-                <CardTitle className="flex items-center space-x-2 text-[#142E54]">
-                  <Settings className="h-6 w-6" />
-                  <span>Complete Your Profile</span>
-                </CardTitle>
-                <CardDescription>
-                  Add more details to personalize your experience
-                </CardDescription>
+                <CardTitle className="flex items-center space-x-2 text-[#142E54]"><Settings className="h-6 w-6" /><span>Complete Your Profile</span></CardTitle>
+                <CardDescription>Add details to personalize your experience</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <p className="text-[#4A5568]">
-                  Upload your company logo, add contact information, and set preferences for better project management.
-                </p>
-                <Button variant="outline" className="w-full border-[#142E54] text-[#142E54] hover:bg-[#142E54] hover:text-white">
-                  <ArrowRight className="h-4 w-4 mr-2" />
-                  Update Profile
+                <p className="text-[#4A5568]">Upload logo, add contact details, and set preferences.</p>
+                <Button variant="outline" className="w-full border-[#142E54] text-[#142E54] hover:bg-[#142E54] hover:text-white" onClick={() => setProfileModalOpen(true)}>
+                  <ArrowRight className="h-4 w-4 mr-2" /> Update Profile
                 </Button>
               </CardContent>
             </Card>
@@ -293,13 +229,11 @@ export default function GeneralDashboard() {
                 {activities.length > 0 ? (
                   <div className="space-y-4">
                     {activities.slice(0, 5).map((activity) => (
-                      <div key={activity.id} className="flex items-start space-x-3 p-3 rounded-lg bg-gray-50">
+                      <div key={activity.id} className="flex items-start space-x-3 p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition">
                         <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
                         <div className="flex-1">
                           <p className="text-sm text-[#4A5568]">{activity.message}</p>
-                          <p className="text-xs text-gray-500 mt-1">
-                            {new Date(activity.timestamp).toLocaleDateString()}
-                          </p>
+                          <p className="text-xs text-gray-500 mt-1">{new Date(activity.timestamp).toLocaleDateString()}</p>
                         </div>
                       </div>
                     ))}
@@ -319,15 +253,15 @@ export default function GeneralDashboard() {
           <motion.div variants={fadeInUp} className="space-y-4">
             <h2 className="text-2xl font-bold text-[#142E54]">Quick Actions</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button variant="outline" className="h-20 flex-col space-y-2 border-[#142E54] text-[#142E54] hover:bg-[#142E54] hover:text-white">
+              <Button variant="outline" className="h-20 flex-col space-y-2 border-[#142E54] text-[#142E54] hover:bg-[#142E54] hover:text-white transition" onClick={() => setUploadModalOpen(true)}>
                 <Upload className="h-6 w-6" />
                 <span>Upload Documents</span>
               </Button>
-              <Button variant="outline" className="h-20 flex-col space-y-2 border-[#142E54] text-[#142E54] hover:bg-[#142E54] hover:text-white">
+              <Button variant="outline" className="h-20 flex-col space-y-2 border-[#142E54] text-[#142E54] hover:bg-[#142E54] hover:text-white transition" onClick={() => setSupportModalOpen(true)}>
                 <MessageSquare className="h-6 w-6" />
                 <span>Contact Support</span>
               </Button>
-              <Button variant="outline" className="h-20 flex-col space-y-2 border-[#142E54] text-[#142E54] hover:bg-[#142E54] hover:text-white">
+              <Button variant="outline" className="h-20 flex-col space-y-2 border-[#142E54] text-[#142E54] hover:bg-[#142E54] hover:text-white transition" onClick={() => setReportsModalOpen(true)}>
                 <FileText className="h-6 w-6" />
                 <span>View Reports</span>
               </Button>

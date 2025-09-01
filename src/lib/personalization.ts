@@ -95,7 +95,7 @@ export class PersonalizationEngine {
     }
     
     // Returning user indicators
-    const hasReturnVisitCookie = localStorage.getItem('jdmarc_return_visitor');
+    const hasReturnVisitCookie = localStorage.getItem('builder_aura_return_visitor');
     if (hasReturnVisitCookie || portfolioViews > 5) {
       return 'returning';
     }
@@ -261,7 +261,7 @@ export class LeadScoringEngine {
   }
   
   private scoreReturnVisitor(): number {
-    return localStorage.getItem('jdmarc_return_visitor') ? 15 : 0;
+    return localStorage.getItem('builder_aura_return_visitor') ? 15 : 0;
   }
   
   private scoreDeviceQuality(): number {

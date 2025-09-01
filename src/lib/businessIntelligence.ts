@@ -575,7 +575,7 @@ export class BusinessIntelligenceEngine {
   // Data persistence
   private loadExistingData(): void {
     // In a real implementation, load from database or API
-    const savedData = localStorage.getItem('jdmarc_bi_data');
+    const savedData = localStorage.getItem('builder_aura_bi_data');
     if (savedData) {
       try {
         const data = JSON.parse(savedData);
@@ -599,7 +599,7 @@ export class BusinessIntelligenceEngine {
       timestamp: new Date(),
     };
     
-    localStorage.setItem('jdmarc_bi_data', JSON.stringify(data));
+    localStorage.setItem('builder_aura_bi_data', JSON.stringify(data));
   }
   
   private sendNotification(notification: any): void {

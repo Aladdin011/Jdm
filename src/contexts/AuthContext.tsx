@@ -72,7 +72,7 @@ const isDevelopmentMode = import.meta.env.MODE === "development";
 const mockUsers: User[] = [
   {
     id: "1",
-    email: "admin@jdmarcng.com",
+    email: "admin@builder-aura-field.onrender.com",
     firstName: "Admin",
     lastName: "User",
     role: "admin",
@@ -100,7 +100,7 @@ const mockUsers: User[] = [
   },
   {
     id: "3",
-    email: "project@jdmarcng.com",
+    email: "project@builder-aura-field.onrender.com",
     firstName: "Project",
     lastName: "Manager",
     role: "user",
@@ -114,7 +114,7 @@ const mockUsers: User[] = [
   },
   {
     id: "4",
-    email: "hr@jdmarcng.com",
+    email: "hr@builder-aura-field.onrender.com",
     firstName: "HR",
     lastName: "Manager",
     role: "user",
@@ -128,7 +128,7 @@ const mockUsers: User[] = [
   },
   {
     id: "5",
-    email: "accounting@jdmarcng.com",
+    email: "accounting@builder-aura-field.onrender.com",
     firstName: "Finance",
     lastName: "Manager",
     role: "user",
@@ -142,7 +142,7 @@ const mockUsers: User[] = [
   },
   {
     id: "6",
-    email: "marketing@jdmarcng.com",
+    email: "marketing@builder-aura-field.onrender.com",
     firstName: "Marketing",
     lastName: "Specialist",
     role: "user",
@@ -157,8 +157,8 @@ const mockUsers: User[] = [
 ];
 
 // Storage keys
-const USER_STORAGE_KEY = "jdmarc_user";
-const TOKEN_STORAGE_KEY = "jdmarc_token";
+const USER_STORAGE_KEY = "builder_aura_user";
+const TOKEN_STORAGE_KEY = "builder_aura_token";
 
 // Auth Provider Component
 export function AuthProvider({ children }: { children: React.ReactNode }) {

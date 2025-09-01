@@ -14,7 +14,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
     // Get theme from localStorage or default to 'system'
     if (typeof window !== "undefined") {
-      return (localStorage.getItem("jdmarc-theme") as Theme) || "system";
+      return (localStorage.getItem("builder-aura-theme") as Theme) || "system";
     }
     return "system";
   });
@@ -43,7 +43,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setActualTheme(resolvedTheme);
 
     // Update localStorage
-    localStorage.setItem("jdmarc-theme", theme);
+    localStorage.setItem("builder-aura-theme", theme);
   }, [theme]);
 
   useEffect(() => {

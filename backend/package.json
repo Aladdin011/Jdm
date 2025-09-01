@@ -1,5 +1,5 @@
 {
-  "name": "jdmarc-backend",
+  "name": "builder-aura-backend",
   "version": "1.0.0",
   "description": "JD Marc Limited Backend API - Render Deployment",
   "main": "dist/server.js",

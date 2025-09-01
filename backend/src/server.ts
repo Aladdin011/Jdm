@@ -55,22 +55,28 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
   'http://localhost:8080', // Vite dev server
-  'http://jdmarcng.com',
-  'https://jdmarcng.com',
-  'https://www.jdmarcng.com'
+  'https://builder-aura-field.onrender.com'
 ];
+
+console.log('Allowed CORS origins:', allowedOrigins);
 
 app.use(
   cors({
     origin: function(origin, callback) {
-      // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
+      console.log('CORS request from origin:', origin);
       
-      if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) {
+        console.log('No origin, allowing request');
+        return callback(null, true);
+      }
+      
+      if (allowedOrigins.includes(origin)) {
+        console.log('Origin allowed:', origin);
         callback(null, true);
       } else {
         console.log('CORS blocked origin:', origin);
-        callback(null, true); // Allow all origins in case of issues
+        callback(new Error(`Origin ${origin} not allowed by CORS`));
       }
     },
     credentials: true,
@@ -86,12 +92,23 @@ app.options('*', cors());
 // Add explicit CORS headers for all responses
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  if (origin && (allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production')) {
+  console.log('Setting CORS headers for origin:', origin);
+  
+  if (origin && allowedOrigins.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
+    console.log('Set Access-Control-Allow-Origin to:', origin);
   }
+  
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
   res.header('Access-Control-Allow-Credentials', 'true');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+  
   next();
 });
 
@@ -132,6 +149,35 @@ app.get("/", (req, res) => {
     message: "JD Marc Limited API Server",
     version: "1.0.0",
     status: "running",
+    timestamp: new Date().toISOString(),
+    port: PORT,
+    environment: process.env.NODE_ENV || "development",
+    cors: {
+      allowedOrigins,
+      currentOrigin: req.headers.origin
+    }
+  });
+});
+
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.json({
+    status: "healthy",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || "development"
+  });
+});
+
+// CORS test endpoint
+app.get("/api/cors-test", (req, res) => {
+  const origin = req.headers.origin;
+  console.log('CORS test request from origin:', origin);
+  
+  res.json({
+    message: "CORS test successful",
+    origin: origin,
+    allowedOrigins: allowedOrigins,
     timestamp: new Date().toISOString(),
   });
 });
@@ -175,14 +221,17 @@ const startServer = async () => {
     server.listen(PORT, () => {
       console.log(`🚀 JD Marc API Server running on port ${PORT}`);
       console.log(`📊 Environment: ${process.env.NODE_ENV || "development"}`);
+      console.log(`🔧 Process ID: ${process.pid}`);
+      console.log(`🌍 Host: ${process.env.HOST || "0.0.0.0"}`);
 
       const baseUrl = process.env.NODE_ENV === 'production'
-        ? 'https://jdmarc-backend-api.onrender.com'
+        ? 'https://builder-aura-field.onrender.com'
         : `http://localhost:${PORT}`;
 
       console.log(`🌐 API URL: ${baseUrl}`);
       console.log(`🔄 WebSocket enabled: ${baseUrl.replace('http', 'ws')}`);
       console.log('🎯 Ready to handle requests and real-time connections');
+      console.log(`🔒 CORS Origins: ${allowedOrigins.join(', ')}`);
 
       if (!process.env.DB_HOST || !process.env.DB_USER || !process.env.DB_PASSWORD) {
         console.log('\n⚠️  Database not configured. Run: npm run verify-credentials');
