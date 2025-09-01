@@ -24,7 +24,7 @@ import authRoutes from "./routes/auth";
 import projectsRoutes from "./routes/projects";
 
 const app = express();
-const PORT = process.env.PORT || 5002; // Changed port to avoid conflict with existing process
+const PORT = process.env.PORT || 5004; // Use environment variable or default to 5004
 
 // Create HTTP server
 const server = http.createServer(app);
@@ -54,6 +54,7 @@ app.use(
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
+  'http://localhost:8080', // Vite dev server
   'http://jdmarcng.com',
   'https://jdmarcng.com',
   'https://www.jdmarcng.com'
@@ -84,7 +85,10 @@ app.options('*', cors());
 
 // Add explicit CORS headers for all responses
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  const origin = req.headers.origin;
+  if (origin && (allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production')) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
   res.header('Access-Control-Allow-Credentials', 'true');
