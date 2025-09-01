@@ -55,7 +55,9 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
   'http://localhost:8080', // Vite dev server
-  'https://builder-aura-field.onrender.com'
+  'https://builder-aura-field.onrender.com',
+  'http://jdmarcng.com',
+  'https://jdmarcng.com'
 ];
 
 console.log('Allowed CORS origins:', allowedOrigins);
