@@ -6,9 +6,7 @@ const setupSocketIO = (server) => {
     const allowedOrigins = [
         'http://localhost:3000',
         'http://localhost:5173',
-        'http://jdmarcng.com',
-        'https://jdmarcng.com',
-        'https://www.jdmarcng.com'
+        'https://builder-aura-field.onrender.com'
     ];
     const io = new socket_io_1.Server(server, {
         cors: {

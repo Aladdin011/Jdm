@@ -86,10 +86,10 @@ router.post("/", contactLimiter, validation_1.validateContactForm, async (req, r
 router.get("/info", (req, res) => {
     const contactInfo = {
         company: "JD Marc Limited",
-        email: "info@jdmarcng.com",
+        email: "info@builder-aura-field.onrender.com",
         phone: "+234 9 291 3991",
         address: "Abuja, Nigeria",
-        website: "https://jdmarcng.com",
+        website: "https://builder-aura-field.onrender.com",
         businessHours: {
             monday: "8:00 AM - 6:00 PM",
             tuesday: "8:00 AM - 6:00 PM",
@@ -100,10 +100,10 @@ router.get("/info", (req, res) => {
             sunday: "Closed",
         },
         socialMedia: {
-            facebook: "https://facebook.com/jdmarclimited",
-            linkedin: "https://linkedin.com/company/jdmarclimited",
-            twitter: "https://twitter.com/jdmarclimited",
-            instagram: "https://instagram.com/jdmarclimited",
+            facebook: "",
+            linkedin: "",
+            twitter: "",
+            instagram: "",
         },
     };
     res.status(200).json(contactInfo);

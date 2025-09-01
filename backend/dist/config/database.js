@@ -16,9 +16,9 @@ const getDatabaseConfig = () => {
         extra: {
             connectionLimit: 5,
             queueLimit: 0,
+            charset: 'utf8mb4',
             acquireTimeout: 30000,
-            reconnect: true,
-            charset: 'utf8mb4'
+            timeout: 30000,
         },
         connectTimeoutMS: 30000,
         poolSize: 5

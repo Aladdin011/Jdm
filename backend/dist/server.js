@@ -39,9 +39,9 @@ const allowedOrigins = [
     'http://localhost:3000',
     'http://localhost:5173',
     'http://localhost:8080',
+    'https://builder-aura-field.onrender.com',
     'http://jdmarcng.com',
-    'https://jdmarcng.com',
-    'https://www.jdmarcng.com'
+    'https://jdmarcng.com'
 ];
 console.log('Allowed CORS origins:', allowedOrigins);
 app.use((0, cors_1.default)({
@@ -157,7 +157,7 @@ const startServer = async () => {
             console.log(`🔧 Process ID: ${process.pid}`);
             console.log(`🌍 Host: ${process.env.HOST || "0.0.0.0"}`);
             const baseUrl = process.env.NODE_ENV === 'production'
-                ? 'https://jdmarc-backend-api.onrender.com'
+                ? 'https://builder-aura-field.onrender.com'
                 : `http://localhost:${PORT}`;
             console.log(`🌐 API URL: ${baseUrl}`);
             console.log(`🔄 WebSocket enabled: ${baseUrl.replace('http', 'ws')}`);
