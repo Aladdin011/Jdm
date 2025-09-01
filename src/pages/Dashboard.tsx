@@ -48,6 +48,7 @@ import ProjectDashboard from "@/components/dashboards/ProjectDashboard";
 import AccountsDashboard from "@/components/dashboards/AccountsDashboard";
 import HRDashboard from "@/components/dashboards/HRDashboard";
 import DigitalMarketingDashboard from "@/components/dashboards/DigitalMarketingDashboard";
+import GeneralDashboard from "@/components/dashboards/GeneralDashboard";
 import DashboardErrorBoundary from "@/components/dashboards/DashboardErrorBoundary";
 
 interface ProjectItem {
@@ -142,28 +143,18 @@ export default function Dashboard() {
             <DigitalMarketingDashboard />
           </DashboardErrorBoundary>
         );
-      default:
-        // General dashboard for users without specific department assignment
+      case "general":
         return (
-          <div className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h1 className="text-3xl font-bold text-gray-900">Welcome, {user.firstName}</h1>
-              <Badge variant="outline">General User</Badge>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center">
-                    <Project className="h-8 w-8 text-blue-600" />
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Total Projects</p>
-                      <p className="text-2xl font-bold">{stats.totalProjects}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
+          <DashboardErrorBoundary>
+            <GeneralDashboard />
+          </DashboardErrorBoundary>
+        );
+      default:
+        // Fallback to general dashboard for users without specific department assignment
+        return (
+          <DashboardErrorBoundary>
+            <GeneralDashboard />
+          </DashboardErrorBoundary>
         );
     }
   };

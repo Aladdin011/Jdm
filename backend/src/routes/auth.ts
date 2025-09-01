@@ -103,6 +103,7 @@ router.post('/register', (req, res) => {
       lastName,
       role: 'user',
       company: company || '',
+      department: 'general', // Set default department for new users
       isVerified: false,
     };
 

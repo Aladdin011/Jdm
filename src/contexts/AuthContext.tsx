@@ -348,6 +348,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           company: userData.company,
           phone: userData.phone,
           location: userData.location,
+          department: "general", // Set default department for new users
           isVerified: true, // Auto-verify in development
           lastLoginAt: new Date().toISOString(),
           createdAt: new Date().toISOString(),
