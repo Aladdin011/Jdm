@@ -480,11 +480,19 @@ export default function BusinessDevelopmentDashboard() {
                     <Video className="h-4 w-4 mr-2" />
                     {isInCall ? "In Meeting" : "Start Team Meeting"}
                   </Button>
-                  <Button variant="outline" className="w-full border-purple-600 text-purple-600 hover:bg-purple-50">
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-purple-600 text-purple-600 hover:bg-purple-50"
+                    onClick={() => alert('Report generation functionality would be implemented here')}
+                  >
                     <FileText className="h-4 w-4 mr-2" />
                     Generate Report
                   </Button>
-                  <Button variant="outline" className="w-full border-orange-600 text-orange-600 hover:bg-orange-50">
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-orange-600 text-orange-600 hover:bg-orange-50"
+                    onClick={() => alert('Analytics view functionality would be implemented here')}
+                  >
                     <ArrowUpRight className="h-4 w-4 mr-2" />
                     View Analytics
                   </Button>

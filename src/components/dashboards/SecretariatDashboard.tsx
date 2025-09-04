@@ -836,10 +836,18 @@ export default function SecretariatDashboard() {
                           </div>
                         </div>
                         <div className="flex gap-1">
-                          <Button size="sm" variant="outline">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => alert(`Edit task: ${task.title}`)}
+                          >
                             <Edit className="h-3 w-3" />
                           </Button>
-                          <Button size="sm" variant="outline">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => alert(`View task details: ${task.title}`)}
+                          >
                             <Eye className="h-3 w-3" />
                           </Button>
                         </div>
@@ -861,6 +869,7 @@ export default function SecretariatDashboard() {
                   <Button
                     size="sm"
                     className="bg-gradient-to-r from-blue-500 to-indigo-500"
+                    onClick={() => alert('Document upload functionality would be implemented here')}
                   >
                     <Upload className="h-4 w-4 mr-2" />
                     Upload

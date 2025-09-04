@@ -58,6 +58,8 @@ interface RegisterData {
   phone: string;
   location: string;
   company?: string;
+  department?: string;
+  isStaff?: boolean;
   password: string;
   confirmPassword: string;
 }
@@ -281,7 +283,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Register function
   const register = async (
     userData: RegisterData,
-  ): Promise<{ success: boolean; error?: string; user?: User }> => {
+  ): Promise<{ success: boolean; error?: string; user?: User; departmentCode?: string }> => {
     setIsLoading(true);
 
     try {
@@ -307,18 +309,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               phone: userData.phone,
               location: userData.location,
               company: userData.company,
+              department: userData.department,
+              isStaff: userData.isStaff,
               password: userData.password,
             }),
           },
         );
 
-        const { user: newUser, token } = response;
+        const { user: newUser, token, departmentCode } = response;
         storeUserData(newUser, token);
         setIsLoading(false);
 
         return {
           success: true,
           user: newUser,
+          departmentCode: departmentCode
         };
       } catch (apiError) {
         console.warn(
@@ -348,7 +353,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           company: userData.company,
           phone: userData.phone,
           location: userData.location,
-          department: "general", // Set default department for new users
+          department: userData.department || "general", // Use provided department or default
           isVerified: true, // Auto-verify in development
           lastLoginAt: new Date().toISOString(),
           createdAt: new Date().toISOString(),
@@ -357,10 +362,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const mockToken = `mock_token_${Date.now()}`;
         storeUserData(newUser, mockToken);
         setIsLoading(false);
+        
+        // Generate a mock department code for staff users
+        let departmentCode = null;
+        if (userData.isStaff && userData.department) {
+          // Generate a simple mock department code based on department
+          const deptPrefix = userData.department.substring(0, 2).toUpperCase();
+          const randomNum = Math.floor(10000 + Math.random() * 90000);
+          departmentCode = `${deptPrefix}${randomNum}`;
+        }
 
         return {
           success: true,
           user: newUser,
+          departmentCode: departmentCode
         };
       }
     } catch (error) {

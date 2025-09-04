@@ -1192,7 +1192,10 @@ export default function AccountingDashboard() {
                     <Video className="h-4 w-4 mr-2" />
                     Video Call
                   </Button>
-                  <Button variant="outline">
+                  <Button 
+                    variant="outline"
+                    onClick={() => alert('Finance chat functionality would be implemented here')}
+                  >
                     <MessageSquare className="h-4 w-4 mr-2" />
                     Finance Chat
                   </Button>

@@ -1,6 +1,9 @@
 import express from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { AppDataSource } from '../config/database';
+import { UserRepository } from '../repositories/UserRepository';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
@@ -29,7 +32,7 @@ const users = [
 ];
 
 // Login route
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -40,19 +43,38 @@ router.post('/login', (req, res) => {
       });
     }
 
-    // Find user by email
-    const user = users.find((u) => u.email === email);
+    // Initialize user repository
+    const userRepository = new UserRepository();
 
-    // Check if user exists and password matches
-    if (!user || user.password !== password) {
+    // Find user by email
+    const user = await userRepository.findByEmail(email);
+
+    // Check if user exists
+    if (!user) {
       return res.status(401).json({
         success: false,
         message: 'Invalid email or password',
       });
     }
 
-    // Generate mock token
-    const token = `mock-jwt-token-${uuidv4()}`;
+    // Check if password matches
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid email or password',
+      });
+    }
+
+    // Update last login time
+    await userRepository.updateLastLogin(user.id);
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: user.id, email: user.email, role: user.role },
+      process.env.JWT_SECRET || 'default_jwt_secret',
+      { expiresIn: '24h' }
+    );
 
     // Return user data and token
     const { password: _, ...userData } = user;
@@ -75,9 +97,9 @@ router.post('/login', (req, res) => {
 });
 
 // Register route
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
   try {
-    const { email, password, firstName, lastName, company } = req.body;
+    const { email, password, firstName, lastName, company, department, isStaff } = req.body;
 
     if (!email || !password || !firstName || !lastName) {
       return res.status(400).json({
@@ -86,8 +108,11 @@ router.post('/register', (req, res) => {
       });
     }
 
-    // Check if user already exists
-    const existingUser = users.find((u) => u.email === email);
+    // Initialize user repository
+    const userRepository = new UserRepository();
+
+    // Check if user already exists in database
+    const existingUser = await userRepository.findByEmail(email);
     if (existingUser) {
       return res.status(409).json({
         success: false,
@@ -95,28 +120,45 @@ router.post('/register', (req, res) => {
       });
     }
 
-    // Create new user
+    // Hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Generate department code for staff users
+    let departmentCode = null;
+    if (isStaff && department) {
+      // Import the department code generator
+      const { generateDepartmentCode } = require('../utils/departmentCodes');
+      departmentCode = generateDepartmentCode(department);
+    }
+
+    // Create new user object
     const newUser = {
-      id: uuidv4(),
       email,
-      password, // In production, this would be hashed
+      password: hashedPassword,
       firstName,
       lastName,
       role: 'user',
       company: company || '',
-      department: 'general', // Set default department for new users
-      isVerified: false,
+      department: department || null,
+      department_code: departmentCode,
+      isActive: true,
+      lastLogin: new Date()
     };
 
-    // In a real app, we would save to database
-    // For mock purposes, we'll just log it
-    console.log('New user registered:', newUser);
+    // Save user to database
+    const savedUser = await userRepository.create(newUser);
+    console.log('New user registered and saved to database:', savedUser.id);
 
-    // Generate mock token
-    const token = `mock-jwt-token-${uuidv4()}`;
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: savedUser.id, email: savedUser.email, role: savedUser.role },
+      process.env.JWT_SECRET || 'default_jwt_secret',
+      { expiresIn: '24h' }
+    );
 
     // Return user data without password and token
-    const { password: _, ...userData } = newUser;
+    const { password: _, ...userData } = savedUser;
     
     return res.status(201).json({
       success: true,
@@ -131,6 +173,36 @@ router.post('/register', (req, res) => {
     return res.status(500).json({
       success: false,
       message: 'Internal server error',
+    });
+  }
+});
+
+// Get all department codes
+router.get('/department-codes', (req, res) => {
+  try {
+    // Import the department codes utility
+    const { listAllDepartmentCodes, getDepartmentDisplayName } = require('../utils/departmentCodes');
+    
+    // Get all department base codes
+    const departmentCodes = listAllDepartmentCodes();
+    
+    // Format the response with department names and codes
+    const formattedResponse = Object.entries(departmentCodes).map(([deptId, baseCode]) => ({
+      id: deptId,
+      name: getDepartmentDisplayName(deptId),
+      baseCode: baseCode,
+      codeRange: `${baseCode}-${Number(baseCode) + 999}`
+    }));
+    
+    return res.status(200).json({
+      success: true,
+      data: formattedResponse
+    });
+  } catch (error) {
+    console.error('Error fetching department codes:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error'
     });
   }
 });

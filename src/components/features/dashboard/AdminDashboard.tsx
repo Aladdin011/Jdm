@@ -311,10 +311,18 @@ export default function AdminDashboard() {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Button variant="ghost" size="sm">
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => alert(`Viewing task: ${task.title}`)}
+                          >
                             <Eye className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="sm">
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => alert(`Editing task: ${task.title}`)}
+                          >
                             <Edit className="h-4 w-4" />
                           </Button>
                         </div>
@@ -423,7 +431,10 @@ export default function AdminDashboard() {
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">User Management</h3>
               <p className="text-sm text-gray-600 mb-4">Manage staff accounts and permissions</p>
-              <Button className="w-full bg-blue-600 hover:bg-blue-700">
+              <Button 
+                className="w-full bg-blue-600 hover:bg-blue-700"
+                onClick={() => alert('User Management functionality would be implemented here')}
+              >
                 Manage Users
               </Button>
             </CardContent>
@@ -436,7 +447,11 @@ export default function AdminDashboard() {
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">System Settings</h3>
               <p className="text-sm text-gray-600 mb-4">Configure system parameters</p>
-              <Button variant="outline" className="w-full border-green-600 text-green-600 hover:bg-green-50">
+              <Button 
+                variant="outline" 
+                className="w-full border-green-600 text-green-600 hover:bg-green-50"
+                onClick={() => alert('System Settings functionality would be implemented here')}
+              >
                 Settings
               </Button>
             </CardContent>
@@ -449,7 +464,11 @@ export default function AdminDashboard() {
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Security Center</h3>
               <p className="text-sm text-gray-600 mb-4">Monitor security and access logs</p>
-              <Button variant="outline" className="w-full border-purple-600 text-purple-600 hover:bg-purple-50">
+              <Button 
+                variant="outline" 
+                className="w-full border-purple-600 text-purple-600 hover:bg-purple-50"
+                onClick={() => alert('Security Center functionality would be implemented here')}
+              >
                 Security
               </Button>
             </CardContent>
@@ -462,7 +481,11 @@ export default function AdminDashboard() {
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Analytics</h3>
               <p className="text-sm text-gray-600 mb-4">View detailed system analytics</p>
-              <Button variant="outline" className="w-full border-orange-600 text-orange-600 hover:bg-orange-50">
+              <Button 
+                variant="outline" 
+                className="w-full border-orange-600 text-orange-600 hover:bg-orange-50"
+                onClick={() => alert('Analytics functionality would be implemented here')}
+              >
                 Analytics
               </Button>
             </CardContent>
@@ -487,7 +510,11 @@ export default function AdminDashboard() {
                     <Video className="h-4 w-4 mr-2" />
                     {isInCall ? "In Meeting" : "Start Meeting"}
                   </Button>
-                  <Button variant="outline" className="border-white text-white hover:bg-white/10">
+                  <Button 
+                    variant="outline" 
+                    className="border-white text-white hover:bg-white/10"
+                    onClick={() => alert('Send Announcement functionality would be implemented here')}
+                  >
                     <MessageSquare className="h-4 w-4 mr-2" />
                     Send Announcement
                   </Button>

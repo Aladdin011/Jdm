@@ -1092,11 +1092,16 @@ export default function BusinessAdministrationDashboard() {
                             <Button
                               size="sm"
                               className="bg-green-600 hover:bg-green-700 text-white"
+                              onClick={() => alert(`Approval functionality for ${approval.title} would be implemented here`)}
                             >
                               <ThumbsUp className="h-3 w-3 mr-1" />
                               Approve
                             </Button>
-                            <Button size="sm" variant="destructive">
+                            <Button 
+                              size="sm" 
+                              variant="destructive"
+                              onClick={() => alert(`Rejection functionality for ${approval.title} would be implemented here`)}
+                            >
                               <ThumbsDown className="h-3 w-3 mr-1" />
                               Reject
                             </Button>

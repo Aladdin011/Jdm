@@ -476,7 +476,11 @@ export default function ProjectDashboard() {
               <Video className="h-4 w-4 mr-2" />
               Team Call
             </Button>
-            <Button variant="outline" className="gap-2">
+            <Button 
+              variant="outline" 
+              className="gap-2"
+              onClick={() => alert('Dashboard data refresh functionality would be implemented here')}
+            >
               <RefreshCw className="h-4 w-4" />
               Refresh
             </Button>

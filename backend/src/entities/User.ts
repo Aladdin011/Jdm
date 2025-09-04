@@ -28,6 +28,12 @@ export class User {
 
   @Column({ type: 'enum', enum: ['user', 'admin'], default: 'user' })
   role!: string;
+  
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  department?: string;
+  
+  @Column({ type: 'varchar', length: 5, nullable: true })
+  department_code?: string;
 
   @Column({ type: 'boolean', default: true })
   isActive!: boolean;

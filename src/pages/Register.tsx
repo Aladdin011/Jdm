@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Card,
   CardContent,
@@ -13,6 +14,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Eye,
   EyeOff,
@@ -40,8 +48,11 @@ interface FormData {
   phone: string;
   location: string;
   company: string;
+  department: string;
+  isStaff: boolean;
   password: string;
   confirmPassword: string;
+  departmentCode?: string;
 }
 
 export default function Register() {
@@ -55,9 +66,22 @@ export default function Register() {
     phone: "",
     location: "",
     company: "",
+    department: "",
+    isStaff: false,
     password: "",
     confirmPassword: "",
   });
+  
+  // Define departments from the system
+  const DEPARTMENTS = [
+    { value: "secretariat-admin", label: "Secretariat/Admin" },
+    { value: "business-development", label: "Business Development" },
+    { value: "project-management", label: "Project Management" },
+    { value: "accounting", label: "Accounting" },
+    { value: "human-resources", label: "Human Resources" },
+    { value: "digital-marketing", label: "Digital Marketing" },
+    { value: "business-administration", label: "Business Administration" },
+  ];
   const [passwordMatch, setPasswordMatch] = useState<boolean | null>(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -155,10 +179,20 @@ export default function Register() {
         phone: formData.phone,
         location: formData.location,
         company: formData.company,
+        department: formData.department,
+        isStaff: formData.isStaff,
         password: formData.password,
         confirmPassword: formData.confirmPassword,
       });
 
+      // If we received a department code back, update the form data
+      if (result.departmentCode) {
+        setFormData(prev => ({
+          ...prev,
+          departmentCode: result.departmentCode
+        }));
+      }
+      
       if (result.success) {
         trackBusinessEvent.userAuth("register");
         setSuccess("Account created successfully! Redirecting to dashboard...");
@@ -430,6 +464,46 @@ export default function Register() {
                           />
                         </div>
                       </div>
+
+                      <div className="space-y-2">
+                        <Label
+                          htmlFor="department"
+                          className="text-arch-charcoal font-medium"
+                        >
+                          Department
+                        </Label>
+                        <Select
+                          value={formData.department}
+                          onValueChange={(value) => handleInputChange("department", value)}
+                        >
+                          <SelectTrigger className="h-12 border-arch-light-blue/50 focus:border-arch-orange focus:ring-arch-orange/20">
+                            <SelectValue placeholder="Select your department" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {DEPARTMENTS.map((dept) => (
+                              <SelectItem key={dept.value} value={dept.value}>
+                                {dept.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="flex items-center space-x-2">
+                        <Checkbox 
+                          id="isStaff" 
+                          checked={formData.isStaff}
+                          onCheckedChange={(checked) => 
+                            handleInputChange("isStaff", checked === true)
+                          }
+                        />
+                        <Label 
+                          htmlFor="isStaff" 
+                          className="text-sm font-medium leading-none text-arch-blue-gray"
+                        >
+                          Register as Staff
+                        </Label>
+                      </div>
                     </motion.div>
                   )}
 
@@ -598,48 +672,67 @@ export default function Register() {
                   )}
                 </AnimatePresence>
 
-                {/* Navigation Buttons */}
-                <div className="flex justify-between pt-6">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={prevStep}
-                    disabled={currentStep === 1}
-                    className="flex items-center gap-2 border-arch-light-blue text-arch-charcoal hover:bg-arch-light-blue/20"
-                  >
-                    <ArrowLeft className="h-4 w-4" />
-                    Previous
-                  </Button>
-
-                  {currentStep < 2 ? (
+                {/* Department Code Display */}
+                {formData.departmentCode ? (
+                  <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-md">
+                    <h3 className="text-lg font-semibold text-green-800 mb-2">Registration Successful!</h3>
+                    <p className="text-green-700 mb-4">Your department code has been generated:</p>
+                    <div className="bg-white p-3 rounded border border-green-300 text-center">
+                      <span className="text-2xl font-bold text-arch-orange">{formData.departmentCode}</span>
+                    </div>
+                    <p className="mt-4 text-sm text-green-600">Please save this code for future reference.</p>
                     <Button
                       type="button"
-                      onClick={nextStep}
-                      className="flex items-center gap-2 bg-arch-orange hover:bg-arch-rust text-white"
+                      className="w-full mt-4 bg-arch-blue hover:bg-arch-blue/90 text-white"
+                      onClick={() => navigate("/login")}
                     >
-                      Next
-                      <ArrowRight className="h-4 w-4" />
+                      Continue to Login
                     </Button>
-                  ) : (
+                  </div>
+                ) : (
+                  /* Navigation Buttons */
+                  <div className="flex justify-between pt-6">
                     <Button
-                      type="submit"
-                      disabled={isLoading}
-                      className="flex items-center gap-2 bg-arch-orange hover:bg-arch-rust text-white min-w-[140px]"
+                      type="button"
+                      variant="outline"
+                      onClick={prevStep}
+                      disabled={currentStep === 1}
+                      className="flex items-center gap-2 border-arch-light-blue text-arch-charcoal hover:bg-arch-light-blue/20"
                     >
-                      {isLoading ? (
-                        <>
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                          Creating Account...
-                        </>
-                      ) : (
-                        <>
-                          <CheckCircle className="h-4 w-4" />
-                          Create Account
-                        </>
-                      )}
+                      <ArrowLeft className="h-4 w-4" />
+                      Previous
                     </Button>
-                  )}
-                </div>
+
+                    {currentStep < 2 ? (
+                      <Button
+                        type="button"
+                        onClick={nextStep}
+                        className="flex items-center gap-2 bg-arch-orange hover:bg-arch-rust text-white"
+                      >
+                        Next
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                    ) : (
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="flex items-center gap-2 bg-arch-orange hover:bg-arch-rust text-white min-w-[140px]"
+                      >
+                        {isLoading ? (
+                          <>
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            Creating Account...
+                          </>
+                        ) : (
+                          <>
+                            <CheckCircle className="h-4 w-4" />
+                            Create Account
+                          </>
+                        )}
+                      </Button>
+                    )}
+                  </div>
+                )}
               </form>
 
               {/* Login Link */}

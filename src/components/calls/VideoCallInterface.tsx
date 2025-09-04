@@ -61,11 +61,22 @@ export default function VideoCallInterface() {
   };
 
   const handleMouseMove = () => {
-    setShowControls(true);
+    try {
+      console.log('Mouse moved, showing controls');
+      setShowControls(true);
+    } catch (error) {
+      console.error('Error showing controls:', error);
+    }
   };
 
   const handleEndCall = () => {
-    endCall();
+    try {
+      console.log('User clicked end call button');
+      endCall();
+    } catch (error) {
+      console.error('Error ending call from UI:', error);
+      alert('There was a problem ending the call. Please try again.');
+    }
   };
 
   if (!callState.isInCall) return null;
@@ -227,7 +238,15 @@ export default function VideoCallInterface() {
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={toggleLocalAudio}
+                  onClick={() => {
+                    try {
+                      console.log('Toggling microphone');
+                      toggleLocalAudio();
+                    } catch (error) {
+                      console.error('Error toggling microphone:', error);
+                      alert('There was a problem with your microphone. Please check your device permissions.');
+                    }
+                  }}
                   className={`rounded-full w-12 h-12 ${
                     callState.localAudio
                       ? "bg-white/20 hover:bg-white/30 text-white"
@@ -245,7 +264,15 @@ export default function VideoCallInterface() {
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={toggleLocalVideo}
+                  onClick={() => {
+                    try {
+                      console.log('Toggling video');
+                      toggleLocalVideo();
+                    } catch (error) {
+                      console.error('Error toggling video:', error);
+                      alert('There was a problem with your camera. Please check your device permissions.');
+                    }
+                  }}
                   className={`rounded-full w-12 h-12 ${
                     callState.localVideo
                       ? "bg-white/20 hover:bg-white/30 text-white"
@@ -263,7 +290,15 @@ export default function VideoCallInterface() {
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={toggleScreenShare}
+                  onClick={() => {
+                    try {
+                      console.log('Toggling screen sharing');
+                      toggleScreenShare();
+                    } catch (error) {
+                      console.error('Error toggling screen share:', error);
+                      alert('There was a problem sharing your screen. Please check your browser permissions.');
+                    }
+                  }}
                   className={`rounded-full w-12 h-12 ${
                     callState.isScreenSharing
                       ? "bg-[#F97316] hover:bg-[#F97316]/80 text-white"
@@ -302,7 +337,14 @@ export default function VideoCallInterface() {
               <Button
                 size="sm"
                 variant="ghost"
-                onClick={toggleLocalAudio}
+                onClick={() => {
+                  try {
+                    console.log('Toggling microphone (minimized)');
+                    toggleLocalAudio();
+                  } catch (error) {
+                    console.error('Error toggling microphone:', error);
+                  }
+                }}
                 className={`w-8 h-8 ${callState.localAudio ? "text-white" : "text-red-400"}`}
               >
                 {callState.localAudio ? (
@@ -314,7 +356,14 @@ export default function VideoCallInterface() {
               <Button
                 size="sm"
                 variant="ghost"
-                onClick={toggleLocalVideo}
+                onClick={() => {
+                  try {
+                    console.log('Toggling video (minimized)');
+                    toggleLocalVideo();
+                  } catch (error) {
+                    console.error('Error toggling video:', error);
+                  }
+                }}
                 className={`w-8 h-8 ${callState.localVideo ? "text-white" : "text-red-400"}`}
               >
                 {callState.localVideo ? (

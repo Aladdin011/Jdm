@@ -469,10 +469,18 @@ export default function HRDashboard() {
                           </Badge>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Button variant="ghost" size="sm">
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => alert(`View details for ${employee.name} would be implemented here`)}
+                          >
                             <Eye className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="sm">
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => alert(`Edit details for ${employee.name} would be implemented here`)}
+                          >
                             <Edit className="h-4 w-4" />
                           </Button>
                         </div>
@@ -493,7 +501,11 @@ export default function HRDashboard() {
                   </CardTitle>
                   <p className="text-sm text-gray-600 mt-1">Pending and recent leave applications</p>
                 </div>
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => alert('New leave request form would be displayed here')}
+                >
                   <Plus className="h-4 w-4 mr-2" />
                   New Request
                 </Button>

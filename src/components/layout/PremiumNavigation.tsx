@@ -273,6 +273,7 @@ const MobileMenu = ({
   const navigate = useNavigate();
   const { trackUserInteraction } = useAppStore();
   const { theme, setTheme } = useTheme();
+  const { isAuthenticated } = useAuth();
 
   const handleNavClick = (href: string, label: string) => {
     trackUserInteraction(`mobile-nav-${label.toLowerCase()}`);
