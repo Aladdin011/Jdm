@@ -42,6 +42,17 @@ interface AuthContextType {
   logout: () => void;
   updateUser: (userData: Partial<User>) => Promise<void>;
   refreshUser: () => Promise<void>;
+  verifyCredentials: (
+    email: string,
+    password: string
+  ) => Promise<{ success: boolean; error?: string; requiresDepartmentCode?: boolean; userId?: number; department?: string }>;
+  verifyDepartmentCode: (
+    userId: number,
+    departmentCode: string
+  ) => Promise<{ success: boolean; error?: string; user?: User }>;
+  completeLogin: (
+    userId: number
+  ) => Promise<{ success: boolean; error?: string; user?: User }>;
 }
 
 // Login credentials interface
@@ -210,7 +221,107 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   };
 
-  // Login function
+  // Step 1: Verify credentials (email and password)
+  const verifyCredentials = async (
+    email: string,
+    password: string
+  ): Promise<{ success: boolean; error?: string; requiresDepartmentCode?: boolean; userId?: number; department?: string }> => {
+    setIsLoading(true);
+
+    try {
+      const response = await apiCall<{
+        success: boolean;
+        requiresDepartmentCode: boolean;
+        userId: number;
+        department: string;
+        message: string;
+      }>("/auth/verify-credentials", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+      });
+
+      setIsLoading(false);
+      return {
+        success: response.success,
+        requiresDepartmentCode: response.requiresDepartmentCode,
+        userId: response.userId,
+        department: response.department,
+      };
+    } catch (error: any) {
+      setIsLoading(false);
+      return {
+        success: false,
+        error: error.message || "Failed to verify credentials",
+      };
+    }
+  };
+
+  // Step 2: Verify department code (for staff only)
+  const verifyDepartmentCode = async (
+    userId: number,
+    departmentCode: string
+  ): Promise<{ success: boolean; error?: string; user?: User }> => {
+    setIsLoading(true);
+
+    try {
+      const response = await apiCall<{ user: User; token: string; dashboard: string }>(
+        "/auth/verify-department-code",
+        {
+          method: "POST",
+          body: JSON.stringify({ userId, departmentCode }),
+        }
+      );
+
+      const { user: userData, token } = response;
+      storeUserData(userData, token);
+      setIsLoading(false);
+
+      return {
+        success: true,
+        user: userData,
+      };
+    } catch (error: any) {
+      setIsLoading(false);
+      return {
+        success: false,
+        error: error.message || "Failed to verify department code",
+      };
+    }
+  };
+
+  // Complete login for non-staff users
+  const completeLogin = async (
+    userId: number
+  ): Promise<{ success: boolean; error?: string; user?: User }> => {
+    setIsLoading(true);
+
+    try {
+      const response = await apiCall<{ user: User; token: string; dashboard: string }>(
+        "/auth/complete-login",
+        {
+          method: "POST",
+          body: JSON.stringify({ userId }),
+        }
+      );
+
+      const { user: userData, token } = response;
+      storeUserData(userData, token);
+      setIsLoading(false);
+
+      return {
+        success: true,
+        user: userData,
+      };
+    } catch (error: any) {
+      setIsLoading(false);
+      return {
+        success: false,
+        error: error.message || "Failed to complete login",
+      };
+    }
+  };
+
+  // Legacy login function (kept for backward compatibility)
   const login = async (
     credentials: LoginCredentials,
   ): Promise<{ success: boolean; error?: string; user?: User }> => {
@@ -539,11 +650,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Context value
-  const value: AuthContextType = {
+  const value = {
     user,
-    isAuthenticated: !!user,
-    isAdmin: !!user && user.role === "admin",
     isLoading,
+    isAuthenticated: !!user,
+    isAdmin: user?.role === 'admin',
     login,
     register,
     forgotPassword,
@@ -551,12 +662,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     logout,
     updateUser,
     refreshUser,
+    verifyCredentials,
+    verifyDepartmentCode,
+    completeLogin,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-// Custom hook to use auth context
+// ... (rest of the code remains the same)
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {

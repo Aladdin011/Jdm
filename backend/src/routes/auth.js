@@ -130,7 +130,223 @@ router.post('/register', async (req, res) => {
 });
 
 /**
- * Login user
+ * Step 1: Verify email and password
+ * POST /api/auth/verify-credentials
+ */
+router.post('/verify-credentials', async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        // Validate input
+        if (!email || !password) {
+            return res.status(400).json({
+                success: false,
+                message: 'Email and password are required'
+            });
+        }
+
+        // Find user by email
+        const [users] = await pool.execute(
+            'SELECT id, email, password, role, department, department_code, code_expires_at FROM users WHERE email = ?',
+            [email]
+        );
+
+        if (users.length === 0) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid credentials'
+            });
+        }
+
+        const user = users[0];
+
+        // Compare password
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordValid) {
+            console.log(`❌ Failed login attempt for: ${email}`);
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid credentials'
+            });
+        }
+
+        console.log(`✅ Password verified for: ${email}`);
+
+        // Check if user is staff and needs department code verification
+        const requiresDepartmentCode = user.role === 'staff';
+
+        res.json({
+            success: true,
+            requiresDepartmentCode,
+            userId: user.id,
+            department: user.department,
+            message: requiresDepartmentCode ? 'Password verified. Please enter your department code.' : 'Login successful'
+        });
+
+    } catch (error) {
+        console.error('❌ Error during credential verification:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error during login'
+        });
+    }
+});
+
+/**
+ * Step 2: Verify department code (for staff only)
+ * POST /api/auth/verify-department-code
+ */
+router.post('/verify-department-code', async (req, res) => {
+    const { userId, departmentCode } = req.body;
+
+    try {
+        // Validate input
+        if (!userId || !departmentCode) {
+            return res.status(400).json({
+                success: false,
+                message: 'User ID and department code are required'
+            });
+        }
+
+        // Find user by ID
+        const [users] = await pool.execute(
+            'SELECT id, email, role, department, department_code, code_expires_at FROM users WHERE id = ?',
+            [userId]
+        );
+
+        if (users.length === 0) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid user'
+            });
+        }
+
+        const user = users[0];
+
+        // Check if department code matches
+        if (user.department_code !== departmentCode) {
+            console.log(`❌ Invalid department code for user: ${user.email}`);
+            return res.status(401).json({
+                success: false,
+                message: 'invalid code'
+            });
+        }
+
+        // Check if code has expired
+        if (user.code_expires_at && new Date() > new Date(user.code_expires_at)) {
+            console.log(`❌ Expired department code for user: ${user.email}`);
+            return res.status(401).json({
+                success: false,
+                message: 'expired code'
+            });
+        }
+
+        console.log(`✅ Department code verified for: ${user.email}`);
+
+        // Generate JWT token
+        const token = jwt.sign(
+            { 
+                userId: user.id, 
+                email: user.email, 
+                role: user.role,
+                department: user.department
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        res.json({
+            success: true,
+            token,
+            user: {
+                id: user.id,
+                email: user.email,
+                role: user.role,
+                department: user.department
+            },
+            dashboard: user.department,
+            message: 'Login successful'
+        });
+
+    } catch (error) {
+        console.error('❌ Error during department code verification:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error during verification'
+        });
+    }
+});
+
+/**
+ * Complete login for non-staff users (admin/general)
+ * POST /api/auth/complete-login
+ */
+router.post('/complete-login', async (req, res) => {
+    const { userId } = req.body;
+
+    try {
+        // Validate input
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: 'User ID is required'
+            });
+        }
+
+        // Find user by ID
+        const [users] = await pool.execute(
+            'SELECT id, email, role, department FROM users WHERE id = ?',
+            [userId]
+        );
+
+        if (users.length === 0) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid user'
+            });
+        }
+
+        const user = users[0];
+
+        console.log(`✅ Complete login for: ${user.email}`);
+
+        // Generate JWT token
+        const token = jwt.sign(
+            { 
+                userId: user.id, 
+                email: user.email, 
+                role: user.role,
+                department: user.department
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        res.json({
+            success: true,
+            token,
+            user: {
+                id: user.id,
+                email: user.email,
+                role: user.role,
+                department: user.department
+            },
+            dashboard: user.department,
+            message: 'Login successful'
+        });
+
+    } catch (error) {
+        console.error('❌ Error during complete login:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error during login'
+        });
+    }
+});
+
+/**
+ * Legacy login endpoint (kept for backward compatibility)
  * POST /api/auth/login
  */
 router.post('/login', async (req, res) => {

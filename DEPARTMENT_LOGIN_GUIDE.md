@@ -1,34 +1,42 @@
 # Department Login System - JD Marc Limited
 
 ## Overview
-The department login system allows each department to have its own default account with both email and 5-digit department code login options. Users are automatically redirected to their department-specific dashboard.
+The department login system implements 2-step verification for staff members. After entering email and password, staff users must provide their unique 5-6 character department code. Admin and general users bypass the department code requirement and login directly.
 
 ## Department Accounts
 
 | Department | Email | Password | Dept Code | Dashboard Component |
 |------------|-------|----------|-----------|-------------------|
-| Admin | admin@jdmarcng.com | Admin@123 | 84217 | AdminDashboard.tsx |
-| Accounts | accounts@jdmarcng.com | Acc@123 | 59304 | AccountsDashboard.tsx |
-| Accounting | accounting@jdmarcng.com | Acct@123 | 17026 | AccountingDashboard.tsx |
-| Business Administration | busadmin@jdmarcng.com | BA@123 | 42689 | BusinessAdministrationDashboard.tsx |
-| Business Development | busdev@jdmarcng.com | BD@123 | 31275 | BusinessDevelopmentDashboard.tsx |
-| Digital Marketing | marketing@jdmarcng.com | Mkt@123 | 75820 | DigitalMarketingDashboard.tsx |
-| HR | hr@jdmarcng.com | Hr@123 | 60491 | HRDashboard.tsx |
-| Projects | projects@jdmarcng.com | Proj@123 | 18562 | ProjectDashboard.tsx |
-| Secretariat | secretariat@jdmarcng.com | Sec@123 | 92734 | SecretariatDashboard.tsx |
-| General Users | general@jdmarcng.com | Gen@123 | 35108 | GeneralDashboard.tsx |
+| Admin | admin@jdmarcng.com | Admin@123 | SA1234 | AdminDashboard.tsx |
+| Accounts | accounts@jdmarcng.com | Acc@123 | AC5930 | AccountsDashboard.tsx |
+| Accounting | accounting@jdmarcng.com | Acct@123 | AC1702 | AccountingDashboard.tsx |
+| Business Administration | busadmin@jdmarcng.com | BA@123 | BA4268 | BusinessAdministrationDashboard.tsx |
+| Business Development | busdev@jdmarcng.com | BD@123 | BD3127 | BusinessDevelopmentDashboard.tsx |
+| Digital Marketing | marketing@jdmarcng.com | Mkt@123 | DM7582 | DigitalMarketingDashboard.tsx |
+| HR | hr@jdmarcng.com | Hr@123 | HR6049 | HRDashboard.tsx |
+| Projects | projects@jdmarcng.com | Proj@123 | PM1856 | ProjectDashboard.tsx |
+| Secretariat | secretariat@jdmarcng.com | Sec@123 | SA9273 | SecretariatDashboard.tsx |
+| General Users | general@jdmarcng.com | Gen@123 | N/A | GeneralDashboard.tsx |
 
-## Login Methods
+## 2-Step Login Process
 
-### Method 1: Email Login
-- Use the department email address
-- Enter the corresponding password
-- System authenticates and redirects to department dashboard
+### Step 1: Email and Password Verification
+1. User enters email address and password
+2. Backend verifies credentials against database
+3. System determines if user requires department code (staff role)
+4. Response indicates next step required
 
-### Method 2: Department Code Login
-- Use the 5-digit department code instead of email
-- Enter the corresponding password
-- System authenticates and redirects to department dashboard
+### Step 2: Department Code Verification (Staff Only)
+1. Modal popup requests department code input
+2. User enters 5-6 character department code (e.g., SA1234)
+3. Backend validates code against user's stored department_code
+4. System checks code expiration (7-day validity)
+5. On success: JWT token issued and user redirected to dashboard
+
+### Admin/General User Flow
+- Admin and general users skip Step 2
+- Direct login after email/password verification
+- Immediate JWT token issuance and dashboard redirect
 
 ## Technical Implementation
 

@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL,
     role VARCHAR(50) DEFAULT 'user',
     department VARCHAR(100),
-    department_code CHAR(5) UNIQUE,
+    department_code VARCHAR(6) UNIQUE,
+    code_expires_at TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
