@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useDashboardActions } from "@/hooks/useDashboardActions";
 import {
   Card,
   CardContent,
@@ -34,6 +35,16 @@ interface Invoice {
 
 export default function AccountsDashboard() {
   const theme = getDepartmentTheme("accounting");
+  const {
+    createProject,
+    updateProject,
+    deleteProject,
+    refreshData,
+    exportData,
+    customAction,
+    isLoading,
+    getError
+  } = useDashboardActions('AccountsDashboard');
 
   const [invoices] = useState<Invoice[]>([
     {

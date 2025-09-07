@@ -2,7 +2,6 @@ import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
-import { useAdvancedAnalytics } from '@/lib/advancedAnalytics';
 
 interface Props {
   children: ReactNode;
@@ -17,7 +16,6 @@ interface State {
 }
 
 class DashboardErrorBoundary extends Component<Props, State> {
-  private analytics: ReturnType<typeof useAdvancedAnalytics> | null = null;
 
   constructor(props: Props) {
     super(props);
@@ -31,15 +29,12 @@ class DashboardErrorBoundary extends Component<Props, State> {
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Dashboard Error Boundary caught an error:', error, errorInfo);
     
-    // Track error in analytics
+    // Track error in analytics (safely)
     try {
-      if (typeof window !== 'undefined') {
-        const { trackEvent } = require('@/lib/advancedAnalytics').useAdvancedAnalytics();
-        trackEvent('error', 'dashboard_error', {
-          message: error.message,
-          stack: error.stack,
-          componentStack: errorInfo.componentStack,
-          timestamp: new Date().toISOString(),
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', 'exception', {
+          description: error.message,
+          fatal: false
         });
       }
     } catch (analyticsError) {

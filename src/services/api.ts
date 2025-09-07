@@ -3,7 +3,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 // API Configuration
 const API_BASE_URL = import.meta.env.DEV
   ? '/api'  // Development mode - use Vite proxy
-  : import.meta.env.VITE_API_URL || 'https://builder-aura-field.onrender.com/api'; // Production mode - deployed backend
+  : import.meta.env.VITE_API_URL || 'https://your-app-name.onrender.com/api'; // Production mode - deployed backend
 // Use https for production backend to avoid mixed content issues
 const TOKEN_STORAGE_KEY =
   import.meta.env.VITE_TOKEN_STORAGE_KEY || "builder_aura_auth_token";

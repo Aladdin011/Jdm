@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCall } from "@/contexts/CallContext";
 import { useAdvancedAnalytics } from "@/lib/advancedAnalytics";
+import { useDashboardActions } from "@/hooks/useDashboardActions";
 import ModernDashboardLayout from "./ModernDashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -97,6 +98,17 @@ export default function HRDashboard() {
   const { user } = useAuth();
   const { isInCall, startCall } = useCall();
   const { trackEvent } = useAdvancedAnalytics();
+  const {
+    createUser,
+    updateUser,
+    deleteUser,
+    approveLeave,
+    rejectLeave,
+    refreshData,
+    exportData,
+    isLoading,
+    getError
+  } = useDashboardActions('HRDashboard');
   
   const [employees] = useState<Employee[]>([
     {
@@ -145,7 +157,7 @@ export default function HRDashboard() {
     },
   ]);
 
-  const [leaveRequests] = useState<LeaveRequest[]>([
+  const [leaveRequests, setLeaveRequests] = useState<LeaveRequest[]>([
     {
       id: "1",
       employeeName: "Emma Wilson",
@@ -311,14 +323,67 @@ export default function HRDashboard() {
     // TODO: Implement report generation
   };
 
-  const handleApproveLeave = (requestId: string, employeeName: string) => {
-    trackEvent('interaction', 'approve_leave', { requestId, employeeName, department: 'human-resources' });
-    // TODO: Implement leave approval
+  const handleApproveLeave = async (leaveId: string, employeeName: string) => {
+    try {
+      await approveLeave(leaveId, employeeName);
+      setLeaveRequests(prev => 
+        prev.map(req => 
+          req.id === leaveId 
+            ? { ...req, status: 'approved' as const }
+            : req
+        )
+      );
+    } catch (error) {
+      console.error('Error approving leave:', error);
+    }
   };
 
-  const handleRejectLeave = (requestId: string, employeeName: string) => {
-    trackEvent('interaction', 'reject_leave', { requestId, employeeName, department: 'human-resources' });
-    // TODO: Implement leave rejection
+  const handleRejectLeave = async (leaveId: string, employeeName: string) => {
+    try {
+      await rejectLeave(leaveId, employeeName);
+      setLeaveRequests(prev => 
+        prev.map(req => 
+          req.id === leaveId 
+            ? { ...req, status: 'rejected' as const }
+            : req
+        )
+      );
+    } catch (error) {
+      console.error('Error rejecting leave:', error);
+    }
+  };
+
+  const handleViewEmployee = async (employeeId: string) => {
+    try {
+      const employee = employees.find(e => e.id === employeeId);
+      if (employee) {
+        console.log(`Viewing employee details for ${employee.name}`);
+        // Navigate to employee details page or open modal
+      }
+    } catch (error) {
+      console.error('Error viewing employee:', error);
+    }
+  };
+
+  const handleEditEmployee = async (employeeId: string) => {
+    try {
+      const employee = employees.find(e => e.id === employeeId);
+      if (employee) {
+        console.log(`Editing employee ${employee.name}`);
+        // Open edit modal or navigate to edit page
+      }
+    } catch (error) {
+      console.error('Error editing employee:', error);
+    }
+  };
+
+  const handleNewLeaveRequest = async () => {
+    try {
+      console.log('Opening new leave request form');
+      // Open new leave request modal
+    } catch (error) {
+      console.error('Error opening leave request form:', error);
+    }
   };
 
   const totalEmployees = employees.length;
@@ -472,14 +537,14 @@ export default function HRDashboard() {
                           <Button 
                             variant="ghost" 
                             size="sm"
-                            onClick={() => alert(`View details for ${employee.name} would be implemented here`)}
+                            onClick={() => handleViewEmployee(employee.id)}
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
                           <Button 
                             variant="ghost" 
                             size="sm"
-                            onClick={() => alert(`Edit details for ${employee.name} would be implemented here`)}
+                            onClick={() => handleEditEmployee(employee.id)}
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
@@ -504,7 +569,7 @@ export default function HRDashboard() {
                 <Button 
                   variant="outline" 
                   size="sm"
-                  onClick={() => alert('New leave request form would be displayed here')}
+                  onClick={handleNewLeaveRequest}
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   New Request
@@ -541,18 +606,20 @@ export default function HRDashboard() {
                               size="sm"
                               className="bg-green-600 hover:bg-green-700 text-white"
                               onClick={() => handleApproveLeave(request.id, request.employeeName)}
+                              disabled={isLoading('approveLeave')}
                             >
                               <CheckCircle className="h-4 w-4 mr-1" />
-                              Approve
+                              {isLoading('approveLeave') ? 'Approving...' : 'Approve'}
                             </Button>
                             <Button
                               size="sm"
                               variant="outline"
                               className="border-red-500 text-red-500 hover:bg-red-50"
                               onClick={() => handleRejectLeave(request.id, request.employeeName)}
+                              disabled={isLoading('rejectLeave')}
                             >
                               <UserX className="h-4 w-4 mr-1" />
-                              Reject
+                              {isLoading('rejectLeave') ? 'Rejecting...' : 'Reject'}
                             </Button>
                           </div>
                         )}

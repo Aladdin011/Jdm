@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
+import { useDashboardActions } from "@/hooks/useDashboardActions";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -47,6 +48,16 @@ interface ActivityItem {
 export default function GeneralDashboard() {
   const { user } = useAuth();
   const { trackBusinessEvent } = useAnalytics();
+  const {
+    createProject,
+    updateProject,
+    deleteProject,
+    refreshData,
+    exportData,
+    customAction,
+    isLoading,
+    getError
+  } = useDashboardActions('GeneralDashboard');
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [stats, setStats] = useState({
@@ -55,7 +66,7 @@ export default function GeneralDashboard() {
     completedProjects: 0,
     upcomingDeadlines: 0,
   });
-  const [isLoading, setIsLoading] = useState(true);
+  const [isDataLoading, setIsDataLoading] = useState(true);
 
   const [isProjectModalOpen, setProjectModalOpen] = useState(false);
   const [isProfileModalOpen, setProfileModalOpen] = useState(false);
@@ -66,7 +77,7 @@ export default function GeneralDashboard() {
   useEffect(() => {
     const loadDashboardData = async () => {
       try {
-        setIsLoading(true);
+        setIsDataLoading(true);
         
         // Use mock data
         const mockProjects: ProjectItem[] = [
@@ -130,7 +141,7 @@ export default function GeneralDashboard() {
           upcomingDeadlines: 1,
         });
       } finally {
-        setIsLoading(false);
+        setIsDataLoading(false);
       }
     };
 

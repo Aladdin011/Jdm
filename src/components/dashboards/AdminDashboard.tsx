@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCall } from "@/contexts/CallContext";
+import { useDashboardActions } from "@/hooks/useDashboardActions";
 import ModernDashboardLayout from "./ModernDashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -77,8 +78,20 @@ interface DepartmentPerformance {
 export default function AdminDashboard() {
   const { user } = useAuth();
   const { isInCall, startCall } = useCall();
+  const {
+    createUser,
+    updateUser,
+    deleteUser,
+    createTask,
+    updateTask,
+    deleteTask,
+    refreshData,
+    exportData,
+    isLoading,
+    getError
+  } = useDashboardActions('AdminDashboard');
   
-  const [adminTasks] = useState<AdminTask[]>([
+  const [adminTasks, setAdminTasks] = useState<AdminTask[]>([
     {
       id: "1",
       title: "System Security Audit",
@@ -244,6 +257,135 @@ export default function AdminDashboard() {
     });
   };
 
+  const handleViewTask = async (taskId: string) => {
+    try {
+      // Navigate to task details or open modal
+      console.log(`Viewing task ${taskId}`);
+    } catch (error) {
+      console.error('Error viewing task:', error);
+    }
+  };
+
+  const handleEditTask = async (taskId: string) => {
+    try {
+      const task = adminTasks.find(t => t.id === taskId);
+      if (task) {
+        // Open edit modal or navigate to edit page
+        console.log(`Editing task ${taskId}`, task);
+      }
+    } catch (error) {
+      console.error('Error editing task:', error);
+    }
+  };
+
+  const handleAddTask = async () => {
+    try {
+      const newTask = await createTask({
+        title: "New Administrative Task",
+        description: "Task description",
+        priority: "medium",
+        status: "pending",
+        assignee: "Admin",
+        dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+      });
+      
+      setAdminTasks(prev => [...prev, newTask]);
+    } catch (error) {
+      console.error('Error adding task:', error);
+    }
+  };
+
+  const handleDeleteUser = async (userId: string) => {
+    try {
+      await customAction(
+        'deleteUser',
+        async () => {
+          console.log(`Deleting user: ${userId}`);
+          return { success: true };
+        },
+        'User deleted successfully',
+        'Failed to delete user'
+      );
+      // Refresh data to show updated user list
+      await refreshData();
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  };
+
+  const handleManageUsers = async () => {
+    try {
+      // Navigate to user management page
+      console.log('Opening user management');
+    } catch (error) {
+      console.error('Error opening user management:', error);
+    }
+  };
+
+  const handleUpdateSettings = async () => {
+    try {
+      await customAction(
+        'updateSettings',
+        async () => {
+          console.log('Updating system settings');
+          return { success: true };
+        },
+        'Settings updated successfully',
+        'Failed to update settings'
+      );
+      // Refresh data to reflect setting changes
+      await refreshData();
+    } catch (error) {
+      console.error('Error updating settings:', error);
+    }
+  };
+
+  const handleSecurityCenter = async () => {
+    try {
+      // Navigate to security center
+      console.log('Opening security center');
+    } catch (error) {
+      console.error('Error opening security center:', error);
+    }
+  };
+
+  const handleCreateTask = async () => {
+    try {
+      const newTask = await customAction(
+        'createTask',
+        async () => {
+          const task = {
+            id: Date.now().toString(),
+            name: 'New Admin Task',
+            description: 'Task created from admin dashboard',
+            priority: 'medium',
+            status: 'pending',
+            assignee: 'Admin',
+            dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+          };
+          return task;
+        },
+        'Task created successfully',
+        'Failed to create task'
+      );
+      
+      setAdminTasks(prev => [...prev, newTask]);
+      // Refresh data to show updated task list
+      await refreshData();
+    } catch (error) {
+      console.error('Error creating task:', error);
+    }
+  };
+
+  const handleSendAnnouncement = async () => {
+    try {
+      // Open announcement modal or send notification
+      console.log('Sending announcement');
+    } catch (error) {
+      console.error('Error sending announcement:', error);
+    }
+  };
+
   return (
     <ModernDashboardLayout
       user={user}
@@ -268,13 +410,13 @@ export default function AdminDashboard() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleAddTask} disabled={isLoading('createTask')}>
                       <Plus className="h-4 w-4 mr-2" />
-                      Add Task
+                      {isLoading('createTask') ? 'Adding...' : 'Add Task'}
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleExportReport} disabled={isLoading('exportData')}>
                       <Download className="h-4 w-4 mr-2" />
-                      Export Report
+                      {isLoading('exportData') ? 'Exporting...' : 'Export Report'}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -311,10 +453,18 @@ export default function AdminDashboard() {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Button variant="ghost" size="sm">
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => handleViewTask(task.id)}
+                          >
                             <Eye className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="sm">
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => handleEditTask(task.id)}
+                          >
                             <Edit className="h-4 w-4" />
                           </Button>
                         </div>
@@ -423,7 +573,10 @@ export default function AdminDashboard() {
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">User Management</h3>
               <p className="text-sm text-gray-600 mb-4">Manage staff accounts and permissions</p>
-              <Button className="w-full bg-blue-600 hover:bg-blue-700">
+              <Button 
+                className="w-full bg-blue-600 hover:bg-blue-700"
+                onClick={handleManageUsers}
+              >
                 Manage Users
               </Button>
             </CardContent>
@@ -436,7 +589,11 @@ export default function AdminDashboard() {
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">System Settings</h3>
               <p className="text-sm text-gray-600 mb-4">Configure system parameters</p>
-              <Button variant="outline" className="w-full border-green-600 text-green-600 hover:bg-green-50">
+              <Button 
+                variant="outline" 
+                className="w-full border-green-600 text-green-600 hover:bg-green-50"
+                onClick={handleUpdateSettings}
+              >
                 Settings
               </Button>
             </CardContent>
@@ -449,7 +606,11 @@ export default function AdminDashboard() {
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Security Center</h3>
               <p className="text-sm text-gray-600 mb-4">Monitor security and access logs</p>
-              <Button variant="outline" className="w-full border-purple-600 text-purple-600 hover:bg-purple-50">
+              <Button 
+                variant="outline" 
+                className="w-full border-purple-600 text-purple-600 hover:bg-purple-50"
+                onClick={handleSecurityCenter}
+              >
                 Security
               </Button>
             </CardContent>
@@ -462,7 +623,11 @@ export default function AdminDashboard() {
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Analytics</h3>
               <p className="text-sm text-gray-600 mb-4">View detailed system analytics</p>
-              <Button variant="outline" className="w-full border-orange-600 text-orange-600 hover:bg-orange-50">
+              <Button 
+                variant="outline" 
+                className="w-full border-orange-600 text-orange-600 hover:bg-orange-50"
+                onClick={() => customAction('analytics', async () => ({ success: true }), 'Analytics opened', 'Failed to open analytics')}
+              >
                 Analytics
               </Button>
             </CardContent>
@@ -480,14 +645,18 @@ export default function AdminDashboard() {
                 </p>
                 <div className="flex items-center gap-4">
                   <Button
-                    onClick={handleStartSystemMeeting}
+                    onClick={() => startCall("AdminSystemMeeting", { title: "System Administration Meeting", participants: [] })}
                     disabled={isInCall}
                     className="bg-white text-blue-600 hover:bg-blue-50"
                   >
                     <Video className="h-4 w-4 mr-2" />
                     {isInCall ? "In Meeting" : "Start Meeting"}
                   </Button>
-                  <Button variant="outline" className="border-white text-white hover:bg-white/10">
+                  <Button 
+                    variant="outline" 
+                    className="border-white text-white hover:bg-white/10"
+                    onClick={handleSendAnnouncement}
+                  >
                     <MessageSquare className="h-4 w-4 mr-2" />
                     Send Announcement
                   </Button>

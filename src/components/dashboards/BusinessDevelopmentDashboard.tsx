@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCall } from "@/contexts/CallContext";
+import { useDashboardActions } from "@/hooks/useDashboardActions";
 import ModernDashboardLayout from "./ModernDashboardLayout";
 import {
   Card,
@@ -77,6 +78,16 @@ interface Deal {
 export default function BusinessDevelopmentDashboard() {
   const { user } = useAuth();
   const { isInCall, startCall } = useCall();
+  const {
+    createProject,
+    updateProject,
+    deleteProject,
+    refreshData,
+    exportData,
+    customAction,
+    isLoading,
+    getError
+  } = useDashboardActions('BusinessDevelopmentDashboard');
 
   const [leads, setLeads] = useState<Lead[]>([
     {
@@ -183,29 +194,44 @@ export default function BusinessDevelopmentDashboard() {
     }
   };
 
-  const handleAddLead = () => {
+  const handleAddLead = async () => {
     if (newLead.name && newLead.company && newLead.email) {
-      const lead: Lead = {
-        ...newLead,
-        id: (leads.length + 1).toString(),
-        date: new Date().toISOString().split("T")[0],
-      };
-      setLeads([...leads, lead]);
-      setNewLead({
-        name: "",
-        company: "",
-        email: "",
-        phone: "",
-        projectType: "",
-        value: "",
-        status: "new",
-      });
-      setShowAddLead(false);
+      try {
+        const leadData = await customAction(
+          'addLead',
+          async () => {
+            // Mock API call - replace with actual implementation
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            return {
+              ...newLead,
+              id: Date.now().toString(),
+              status: "contacted",
+              date: new Date().toISOString().split('T')[0],
+            };
+          },
+          'Lead added successfully',
+          'Failed to add lead'
+        );
+        
+        setLeads(prev => [...prev, leadData as Lead]);
+        setNewLead({
+          name: "",
+          company: "",
+          email: "",
+          phone: "",
+          projectType: "",
+          value: "",
+          status: "new" as const,
+        });
+        setShowAddLead(false);
+      } catch (error) {
+        console.error('Error adding lead:', error);
+      }
     }
   };
 
   const handleStartCall = (leadId: string) => {
-    const lead = leads.find((l) => l.id === leadId);
+    const lead = leads.find(l => l.id === leadId);
     if (lead) {
       startCall(`lead-${leadId}`, {
         title: `Call with ${lead.name}`,
@@ -483,18 +509,20 @@ export default function BusinessDevelopmentDashboard() {
                   <Button 
                     variant="outline" 
                     className="w-full border-purple-600 text-purple-600 hover:bg-purple-50"
-                    onClick={() => alert('Report generation functionality would be implemented here')}
+                    onClick={handleGenerateReport}
+                    disabled={isLoading('exportData')}
                   >
                     <FileText className="h-4 w-4 mr-2" />
-                    Generate Report
+                    {isLoading('exportData') ? 'Generating...' : 'Generate Report'}
                   </Button>
                   <Button 
                     variant="outline" 
                     className="w-full border-orange-600 text-orange-600 hover:bg-orange-50"
-                    onClick={() => alert('Analytics view functionality would be implemented here')}
+                    onClick={handleViewAnalytics}
+                    disabled={isLoading('viewAnalytics')}
                   >
                     <ArrowUpRight className="h-4 w-4 mr-2" />
-                    View Analytics
+                    {isLoading('viewAnalytics') ? 'Loading...' : 'View Analytics'}
                   </Button>
                 </div>
               </CardContent>
@@ -579,8 +607,12 @@ export default function BusinessDevelopmentDashboard() {
                   onChange={(e) => setNewLead({ ...newLead, value: e.target.value })}
                 />
                 <div className="flex gap-3">
-                  <Button onClick={handleAddLead} className="flex-1 bg-emerald-600 hover:bg-emerald-700">
-                    Add Lead
+                  <Button 
+                    onClick={handleAddLead} 
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+                    disabled={isLoading('addLead')}
+                  >
+                    {isLoading('addLead') ? 'Adding...' : 'Add Lead'}
                   </Button>
                   <Button onClick={() => setShowAddLead(false)} variant="outline" className="flex-1">
                     Cancel

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
+import DashboardRouter from "@/components/DashboardRouter";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -81,7 +82,7 @@ import {
 } from "lucide-react";
 import PageTransition from "@/components/ui/PageTransition";
 import { projectAPI, activityAPI } from "@/services/api";
-import useAnalytics from "@/hooks/useAnalytics";
+import useAnalytics, { trackEvent } from "@/hooks/useAnalytics";
 
 // Enhanced interfaces
 interface Project {
@@ -132,6 +133,11 @@ export default function ModernDashboard() {
   const { user, isAdmin, logout } = useAuth();
   const { trackBusinessEvent } = useAnalytics();
 
+  // Check if user has department info for routing
+  if (user?.department) {
+    return <DashboardRouter department={user.department} />;
+  }
+
   // State management
   const [projects, setProjects] = useState<Project[]>([]);
   const [activities, setActivities] = useState<Activity[]>([]);
@@ -162,23 +168,6 @@ export default function ModernDashboard() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(false);
-
-  // Auto-refresh effect
-  useEffect(() => {
-    let refreshInterval: NodeJS.Timeout | null = null;
-    
-    if (autoRefreshEnabled) {
-      refreshInterval = setInterval(() => {
-        loadDashboardData();
-      }, 5 * 60 * 1000); // 5 minutes
-    }
-    
-    return () => {
-      if (refreshInterval) {
-        clearInterval(refreshInterval);
-      }
-    };
-  }, [autoRefreshEnabled, loadDashboardData]);
 
   // Load dashboard data
   const loadDashboardData = useCallback(async () => {
@@ -315,6 +304,23 @@ export default function ModernDashboard() {
     }
   }, []);
 
+  // Auto-refresh effect
+  useEffect(() => {
+    let refreshInterval: NodeJS.Timeout | null = null;
+    
+    if (autoRefreshEnabled) {
+      refreshInterval = setInterval(() => {
+        loadDashboardData();
+      }, 5 * 60 * 1000); // 5 minutes
+    }
+    
+    return () => {
+      if (refreshInterval) {
+        clearInterval(refreshInterval);
+      }
+    };
+  }, [autoRefreshEnabled, loadDashboardData]);
+
   useEffect(() => {
     loadDashboardData();
   }, [loadDashboardData]);
@@ -333,16 +339,16 @@ export default function ModernDashboard() {
   const handleSearch = useCallback((query: string) => {
     try {
       setSearchQuery(query);
-      trackBusinessEvent("search_performed", { query, context: "dashboard" });
+      trackEvent("search_performed", "dashboard", query);
     } catch (error) {
       console.error('Error during search:', error);
       toast.error("Search functionality encountered an error");
     }
-  }, [trackBusinessEvent]);
+  }, [trackEvent]);
 
   const handleQuickAction = useCallback((action: string) => {
     try {
-      trackBusinessEvent("quick_action", { action });
+      trackEvent("quick_action", "dashboard", action);
       
       switch (action) {
         case "new_project":

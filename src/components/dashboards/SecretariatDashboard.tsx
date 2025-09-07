@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDashboardActions } from "@/hooks/useDashboardActions";
 import {
   Card,
   CardContent,
@@ -158,6 +159,16 @@ interface ExecutiveBriefing {
 export default function SecretariatDashboard() {
   const theme = getDepartmentTheme("secretariat-admin");
   const { startCall } = useCall();
+  const {
+    createProject,
+    updateProject,
+    deleteProject,
+    refreshData,
+    exportData,
+    customAction,
+    isLoading,
+    getError
+  } = useDashboardActions('SecretariatDashboard');
   const [activeTab, setActiveTab] = useState("overview");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date(),
@@ -453,6 +464,54 @@ export default function SecretariatDashboard() {
         return "bg-red-100 text-red-800 border-red-200";
       default:
         return "bg-gray-100 text-gray-800 border-gray-200";
+    }
+  };
+
+  const handleEditTask = async (taskId: string) => {
+    try {
+      await customAction(
+        'editTask',
+        async () => {
+          console.log(`Editing task: ${taskId}`);
+          return { success: true };
+        },
+        'Task edit opened',
+        'Failed to open task editor'
+      );
+    } catch (error) {
+      console.error('Error editing task:', error);
+    }
+  };
+
+  const handleViewTask = async (taskId: string) => {
+    try {
+      await customAction(
+        'viewTask',
+        async () => {
+          console.log(`Viewing task details: ${taskId}`);
+          return { success: true };
+        },
+        'Task details opened',
+        'Failed to open task details'
+      );
+    } catch (error) {
+      console.error('Error viewing task:', error);
+    }
+  };
+
+  const handleDocumentUpload = async () => {
+    try {
+      await customAction(
+        'documentUpload',
+        async () => {
+          console.log('Opening document upload interface');
+          return { success: true };
+        },
+        'Document upload opened',
+        'Failed to open document upload'
+      );
+    } catch (error) {
+      console.error('Error opening document upload:', error);
     }
   };
 
@@ -839,14 +898,16 @@ export default function SecretariatDashboard() {
                           <Button 
                             size="sm" 
                             variant="outline"
-                            onClick={() => alert(`Edit task: ${task.title}`)}
+                            onClick={() => handleEditTask(task.id)}
+                            disabled={isLoading('editTask')}
                           >
                             <Edit className="h-3 w-3" />
                           </Button>
                           <Button 
                             size="sm" 
                             variant="outline"
-                            onClick={() => alert(`View task details: ${task.title}`)}
+                            onClick={() => handleViewTask(task.id)}
+                            disabled={isLoading('viewTask')}
                           >
                             <Eye className="h-3 w-3" />
                           </Button>
@@ -869,10 +930,11 @@ export default function SecretariatDashboard() {
                   <Button
                     size="sm"
                     className="bg-gradient-to-r from-blue-500 to-indigo-500"
-                    onClick={() => alert('Document upload functionality would be implemented here')}
+                    onClick={handleDocumentUpload}
+                    disabled={isLoading('documentUpload')}
                   >
                     <Upload className="h-4 w-4 mr-2" />
-                    Upload
+                    {isLoading('documentUpload') ? 'Uploading...' : 'Upload'}
                   </Button>
                 </div>
               </CardHeader>

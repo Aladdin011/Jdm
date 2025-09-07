@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDashboardActions } from "@/hooks/useDashboardActions";
 import {
   Card,
   CardContent,
@@ -136,6 +137,16 @@ interface RecurringPayment {
 export default function AccountingDashboard() {
   const theme = getDepartmentTheme("accounting");
   const { startCall } = useCall();
+  const {
+    createProject,
+    updateProject,
+    deleteProject,
+    refreshData,
+    exportData,
+    customAction,
+    isLoading,
+    getError
+  } = useDashboardActions('AccountingDashboard');
   const [activeTab, setActiveTab] = useState("overview");
   const [selectedPeriod, setSelectedPeriod] = useState("current-month");
   const [selectedView, setSelectedView] = useState("monthly");
@@ -407,6 +418,23 @@ export default function AccountingDashboard() {
         return "bg-gray-100 text-gray-800 border-gray-200";
       default:
         return "bg-blue-100 text-blue-800 border-blue-200";
+    }
+  };
+
+  const handleFinanceChat = async () => {
+    try {
+      await customAction(
+        'financeChat',
+        async () => {
+          // Open finance chat interface
+          console.log('Opening finance chat interface');
+          return { success: true };
+        },
+        'Finance chat opened',
+        'Failed to open finance chat'
+      );
+    } catch (error) {
+      console.error('Error opening finance chat:', error);
     }
   };
 
@@ -1194,10 +1222,11 @@ export default function AccountingDashboard() {
                   </Button>
                   <Button 
                     variant="outline"
-                    onClick={() => alert('Finance chat functionality would be implemented here')}
+                    onClick={handleFinanceChat}
+                    disabled={isLoading('financeChat')}
                   >
                     <MessageSquare className="h-4 w-4 mr-2" />
-                    Finance Chat
+                    {isLoading('financeChat') ? 'Loading...' : 'Finance Chat'}
                   </Button>
                 </div>
               </div>

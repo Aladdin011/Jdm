@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDashboardActions } from "@/hooks/useDashboardActions";
 import {
   Card,
   CardContent,
@@ -166,6 +167,16 @@ interface ComplianceItem {
 export default function BusinessAdministrationDashboard() {
   const theme = getDepartmentTheme("business-administration");
   const { startCall } = useCall();
+  const {
+    createProject,
+    updateProject,
+    deleteProject,
+    refreshData,
+    exportData,
+    customAction,
+    isLoading,
+    getError
+  } = useDashboardActions('BusinessAdministrationDashboard');
   const [activeTab, setActiveTab] = useState("overview");
   const [selectedTimeframe, setSelectedTimeframe] = useState("current-month");
 
@@ -501,6 +512,38 @@ export default function BusinessAdministrationDashboard() {
         return <ArrowDownRight className="h-4 w-4 text-red-500" />;
       default:
         return <Activity className="h-4 w-4 text-gray-500" />;
+    }
+  };
+
+  const handleApproveRequest = async (requestId: string) => {
+    try {
+      await customAction(
+        'approveRequest',
+        async () => {
+          console.log(`Approving request: ${requestId}`);
+          return { success: true };
+        },
+        'Request approved successfully',
+        'Failed to approve request'
+      );
+    } catch (error) {
+      console.error('Error approving request:', error);
+    }
+  };
+
+  const handleRejectRequest = async (requestId: string) => {
+    try {
+      await customAction(
+        'rejectRequest',
+        async () => {
+          console.log(`Rejecting request: ${requestId}`);
+          return { success: true };
+        },
+        'Request rejected successfully',
+        'Failed to reject request'
+      );
+    } catch (error) {
+      console.error('Error rejecting request:', error);
     }
   };
 
@@ -1092,18 +1135,20 @@ export default function BusinessAdministrationDashboard() {
                             <Button
                               size="sm"
                               className="bg-green-600 hover:bg-green-700 text-white"
-                              onClick={() => alert(`Approval functionality for ${approval.title} would be implemented here`)}
+                              onClick={() => handleApproveRequest(approval.id)}
+                              disabled={isLoading('approveRequest')}
                             >
                               <ThumbsUp className="h-3 w-3 mr-1" />
-                              Approve
+                              {isLoading('approveRequest') ? 'Approving...' : 'Approve'}
                             </Button>
                             <Button 
                               size="sm" 
                               variant="destructive"
-                              onClick={() => alert(`Rejection functionality for ${approval.title} would be implemented here`)}
+                              onClick={() => handleRejectRequest(approval.id)}
+                              disabled={isLoading('rejectRequest')}
                             >
                               <ThumbsDown className="h-3 w-3 mr-1" />
-                              Reject
+                              {isLoading('rejectRequest') ? 'Rejecting...' : 'Reject'}
                             </Button>
                           </>
                         )}

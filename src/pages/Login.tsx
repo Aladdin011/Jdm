@@ -326,7 +326,15 @@ export default function Login() {
   };
 
   const performLogin = async (department?: string) => {
-    const result = await login(email, password);
+    // Support both email and department code login
+    const loginCredentials = {
+      email: email,
+      identifier: email, // This will be used for department code or email
+      password: password,
+      rememberMe: rememberMe
+    };
+
+    const result = await login(loginCredentials);
 
     if (result.success) {
       trackBusinessEvent.userAuth("login");

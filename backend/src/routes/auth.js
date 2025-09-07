@@ -16,14 +16,47 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this-in-pro
  * POST /api/auth/register
  */
 router.post('/register', async (req, res) => {
-    const { email, password, role = 'user' } = req.body;
+    console.log('Register request received:', {
+        body: req.body,
+        rawBody: req.rawBody ? req.rawBody.toString() : 'none',
+        contentType: req.get('Content-Type'),
+        method: req.method,
+        url: req.url
+    });
+    
+    // Handle case where body might be empty or malformed
+    let email, password, role = 'user';
+    
+    if (req.body && typeof req.body === 'object') {
+        ({ email, password, role = 'user' } = req.body);
+    } else if (req.rawBody) {
+        try {
+            const parsed = JSON.parse(req.rawBody.toString());
+            ({ email, password, role = 'user' } = parsed);
+        } catch (e) {
+            console.log('Failed to parse raw body:', e.message);
+        }
+    }
 
     try {
         // Validate input
         if (!email || !password) {
+            console.log('Validation failed - missing fields:', { 
+                email: !!email, 
+                password: !!password,
+                bodyExists: !!req.body,
+                bodyType: typeof req.body,
+                bodyKeys: req.body ? Object.keys(req.body) : 'no body',
+                rawBodyExists: !!req.rawBody
+            });
             return res.status(400).json({
                 success: false,
-                message: 'Email and password are required'
+                message: 'Email and password are required',
+                debug: {
+                    receivedEmail: !!email,
+                    receivedPassword: !!password,
+                    bodyType: typeof req.body
+                }
             });
         }
 
@@ -101,27 +134,30 @@ router.post('/register', async (req, res) => {
  * POST /api/auth/login
  */
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, identifier } = req.body;
+    
+    // Use identifier if provided, otherwise use email (for backward compatibility)
+    const loginIdentifier = identifier || email;
 
     try {
         // Validate input
-        if (!email || !password) {
+        if (!loginIdentifier || !password) {
             return res.status(400).json({
                 success: false,
-                message: 'Email and password are required'
+                message: 'Email/Department Code and password are required'
             });
         }
 
-        // Find user by email
+        // Find user by email OR department_code
         const [users] = await pool.execute(
-            'SELECT id, email, password, role, created_at FROM users WHERE email = ?',
-            [email]
+            'SELECT id, email, password, role, department, department_code, created_at FROM users WHERE email = ? OR department_code = ?',
+            [loginIdentifier, loginIdentifier]
         );
 
         if (users.length === 0) {
             return res.status(401).json({
                 success: false,
-                message: 'Invalid email or password'
+                message: 'Invalid credentials'
             });
         }
 
@@ -131,10 +167,10 @@ router.post('/login', async (req, res) => {
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (!isPasswordValid) {
-            console.log(`❌ Failed login attempt for: ${email}`);
+            console.log(`❌ Failed login attempt for: ${loginIdentifier}`);
             return res.status(401).json({
                 success: false,
-                message: 'Invalid email or password'
+                message: 'Invalid credentials'
             });
         }
 
@@ -143,22 +179,26 @@ router.post('/login', async (req, res) => {
             { 
                 userId: user.id, 
                 email: user.email, 
-                role: user.role 
+                role: user.role,
+                department: user.department
             },
             JWT_SECRET,
             { expiresIn: '24h' }
         );
 
-        console.log(`✅ Successful login: ${email} (ID: ${user.id})`);
+        console.log(`✅ Successful login: ${loginIdentifier} (ID: ${user.id}, Department: ${user.department})`);
 
         res.json({
             success: true,
             message: 'Login successful',
             token: token,
+            dashboard: user.department,
             user: {
                 id: user.id,
                 email: user.email,
                 role: user.role,
+                department: user.department,
+                department_code: user.department_code,
                 created_at: user.created_at
             }
         });

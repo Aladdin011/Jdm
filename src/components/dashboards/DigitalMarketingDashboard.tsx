@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDashboardActions } from "@/hooks/useDashboardActions";
 import {
   Card,
   CardContent,
@@ -152,6 +153,16 @@ interface MarketingAutomation {
 export default function DigitalMarketingDashboard() {
   const theme = getDepartmentTheme("digital-marketing");
   const { startCall, callState } = useCall();
+  const {
+    createProject,
+    updateProject,
+    deleteProject,
+    refreshData,
+    exportData,
+    customAction,
+    isLoading,
+    getError
+  } = useDashboardActions('DigitalMarketingDashboard');
   const [selectedThemeColor, setSelectedThemeColor] = useState("pink");
   const [activeTab, setActiveTab] = useState("overview");
   const [selectedTimeRange, setSelectedTimeRange] = useState("7d");

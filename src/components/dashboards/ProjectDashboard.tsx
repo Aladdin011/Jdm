@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDashboardActions } from "@/hooks/useDashboardActions";
 import {
   Card,
   CardContent,
@@ -140,6 +141,16 @@ interface ProjectFile {
 export default function ProjectDashboard() {
   const theme = getDepartmentTheme("project-management");
   const { startCall } = useCall();
+  const {
+    createProject,
+    updateProject,
+    deleteProject,
+    refreshData,
+    exportData,
+    customAction,
+    isLoading,
+    getError
+  } = useDashboardActions('ProjectDashboard');
   const [activeTab, setActiveTab] = useState("overview");
   const [selectedProject, setSelectedProject] = useState<string>("all");
   const [selectedTimeframe, setSelectedTimeframe] = useState("current");
@@ -386,6 +397,14 @@ export default function ProjectDashboard() {
     }).format(amount);
   };
 
+  const handleRefreshData = async () => {
+    try {
+      await refreshData();
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+    }
+  };
+
   const activeProjects = projects.filter((p) => p.status === "active");
   const totalBudget = projects.reduce((sum, p) => sum + p.budget, 0);
   const totalSpent = projects.reduce((sum, p) => sum + p.spent, 0);
@@ -479,10 +498,11 @@ export default function ProjectDashboard() {
             <Button 
               variant="outline" 
               className="gap-2"
-              onClick={() => alert('Dashboard data refresh functionality would be implemented here')}
+              onClick={handleRefreshData}
+              disabled={isLoading('refreshData')}
             >
               <RefreshCw className="h-4 w-4" />
-              Refresh
+              {isLoading('refreshData') ? 'Refreshing...' : 'Refresh'}
             </Button>
           </div>
         </motion.div>

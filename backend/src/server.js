@@ -9,12 +9,38 @@ const { initializeDatabase, testConnection } = require('./config/database');
 const authRoutes = require('./routes/auth');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Middleware - order is critical
+app.use(cors({
+    origin: process.env.NODE_ENV === 'production' 
+        ? ['https://builder-aura-field-2.vercel.app', 'https://builder-aura-field.onrender.com']
+        : ['http://localhost:3000', 'http://localhost:8080', 'http://127.0.0.1:3000', 'http://127.0.0.1:8080'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
+
+// Body parsing middleware MUST come before routes
+app.use(express.json({ 
+    limit: '10mb',
+    verify: (req, res, buf) => {
+        req.rawBody = buf;
+    }
+}));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Debug middleware to log requests (after body parsing)
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.path}`, {
+        body: req.body,
+        rawBody: req.rawBody ? req.rawBody.toString() : 'none',
+        contentType: req.headers['content-type'],
+        contentLength: req.headers['content-length'],
+        timestamp: new Date().toISOString()
+    });
+    next();
+});
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -22,9 +48,10 @@ app.use('/api/auth', authRoutes);
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.json({
-        success: true,
-        message: 'Server is running',
-        timestamp: new Date().toISOString()
+        status: 'healthy',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        environment: process.env.NODE_ENV || 'development'
     });
 });
 
@@ -74,10 +101,10 @@ async function startServer() {
         await initializeDatabase();
         
         // Start the server
-        app.listen(PORT, () => {
+        app.listen(PORT, '0.0.0.0', () => {
             console.log(`✅ Server running on port ${PORT}`);
-            console.log(`🌐 API available at: http://localhost:${PORT}`);
-            console.log(`📋 Health check: http://localhost:${PORT}/health`);
+            console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
+            console.log(`📋 Health check: /health`);
             console.log('📚 Available endpoints:');
             console.log('   POST /api/auth/register - Register user');
             console.log('   POST /api/auth/login - Login user');

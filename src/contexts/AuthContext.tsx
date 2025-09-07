@@ -5,9 +5,9 @@ import { apiCall } from "@/services/api";
 interface User {
   id: string;
   email: string;
-  firstName: string;
-  lastName: string;
-  role: "admin" | "user";
+  firstName?: string;
+  lastName?: string;
+  role: "admin" | "user" | "staff";
   company?: string;
   phone?: string;
   location?: string;
@@ -16,6 +16,7 @@ interface User {
   lastLoginAt?: string;
   createdAt?: string;
   department?: string;
+  department_code?: string;
 }
 
 // Auth context interface
@@ -45,7 +46,8 @@ interface AuthContextType {
 
 // Login credentials interface
 interface LoginCredentials {
-  email: string;
+  email?: string;
+  identifier?: string;
   password: string;
   rememberMe?: boolean;
 }
@@ -224,6 +226,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             method: "POST",
             body: JSON.stringify({
               email: credentials.email,
+              identifier: credentials.identifier,
               password: credentials.password,
               rememberMe: credentials.rememberMe,
             }),
@@ -316,14 +319,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           },
         );
 
-        const { user: newUser, token, departmentCode } = response;
+        const { user: newUser, token } = response;
         storeUserData(newUser, token);
         setIsLoading(false);
 
         return {
           success: true,
-          user: newUser,
-          departmentCode: departmentCode
+          user: newUser
         };
       } catch (apiError) {
         console.warn(
