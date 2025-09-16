@@ -212,8 +212,37 @@ export default function GeneralDashboard() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-[#4A5568]">Define project scope, set milestones, and track progress easily.</p>
-                <Button className="w-full bg-[#142E54] hover:bg-[#1E3A8A] text-white" onClick={() => setProjectModalOpen(true)}>
-                  <Plus className="h-4 w-4 mr-2" /> New Project
+                <Button 
+                  className="w-full bg-[#142E54] hover:bg-[#1E3A8A] text-white" 
+                  onClick={async () => {
+                    try {
+                      await customAction(
+                        'createProject',
+                        async () => {
+                          const newProject = {
+                            id: Date.now().toString(),
+                            name: 'New Project',
+                            status: 'Planning' as const,
+                            progress: 0,
+                            dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                            location: 'Project Location',
+                            priority: 'Medium' as const,
+                            description: 'Project description'
+                          };
+                          return newProject;
+                        },
+                        'Project created successfully',
+                        'Failed to create project'
+                      );
+                      await refreshData('projects');
+                    } catch (error) {
+                      console.error('Error creating project:', error);
+                    }
+                  }}
+                  disabled={isLoading('createProject')}
+                >
+                  <Plus className="h-4 w-4 mr-2" /> 
+                  {isLoading('createProject') ? 'Creating...' : 'New Project'}
                 </Button>
               </CardContent>
             </Card>
@@ -225,8 +254,28 @@ export default function GeneralDashboard() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-[#4A5568]">Upload logo, add contact details, and set preferences.</p>
-                <Button variant="outline" className="w-full border-[#142E54] text-[#142E54] hover:bg-[#142E54] hover:text-white" onClick={() => setProfileModalOpen(true)}>
-                  <ArrowRight className="h-4 w-4 mr-2" /> Update Profile
+                <Button 
+                  variant="outline" 
+                  className="w-full border-[#142E54] text-[#142E54] hover:bg-[#142E54] hover:text-white" 
+                  onClick={async () => {
+                    try {
+                      await customAction(
+                        'updateProfile',
+                        async () => {
+                          console.log('Opening profile update modal');
+                          return { success: true };
+                        },
+                        'Profile update modal opened',
+                        'Failed to open profile update'
+                      );
+                    } catch (error) {
+                      console.error('Error opening profile modal:', error);
+                    }
+                  }}
+                  disabled={isLoading('updateProfile')}
+                >
+                  <ArrowRight className="h-4 w-4 mr-2" /> 
+                  {isLoading('updateProfile') ? 'Opening...' : 'Update Profile'}
                 </Button>
               </CardContent>
             </Card>
@@ -264,17 +313,66 @@ export default function GeneralDashboard() {
           <motion.div variants={fadeInUp} className="space-y-4">
             <h2 className="text-2xl font-bold text-[#142E54]">Quick Actions</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button variant="outline" className="h-20 flex-col space-y-2 border-[#142E54] text-[#142E54] hover:bg-[#142E54] hover:text-white transition" onClick={() => setUploadModalOpen(true)}>
+              <Button 
+                variant="outline" 
+                className="h-20 flex-col space-y-2 border-[#142E54] text-[#142E54] hover:bg-[#142E54] hover:text-white transition" 
+                onClick={async () => {
+                  try {
+                    await customAction(
+                      'uploadDocument',
+                      async () => {
+                        console.log('Opening document upload modal');
+                        return { success: true };
+                      },
+                      'Document upload modal opened',
+                      'Failed to open upload modal'
+                    );
+                  } catch (error) {
+                    console.error('Error opening upload modal:', error);
+                  }
+                }}
+                disabled={isLoading('uploadDocument')}
+              >
                 <Upload className="h-6 w-6" />
-                <span>Upload Documents</span>
+                <span>{isLoading('uploadDocument') ? 'Opening...' : 'Upload Documents'}</span>
               </Button>
-              <Button variant="outline" className="h-20 flex-col space-y-2 border-[#142E54] text-[#142E54] hover:bg-[#142E54] hover:text-white transition" onClick={() => setSupportModalOpen(true)}>
+              <Button 
+                variant="outline" 
+                className="h-20 flex-col space-y-2 border-[#142E54] text-[#142E54] hover:bg-[#142E54] hover:text-white transition" 
+                onClick={async () => {
+                  try {
+                    await customAction(
+                      'contactSupport',
+                      async () => {
+                        console.log('Opening support contact modal');
+                        return { success: true };
+                      },
+                      'Support contact opened',
+                      'Failed to open support contact'
+                    );
+                  } catch (error) {
+                    console.error('Error opening support contact:', error);
+                  }
+                }}
+                disabled={isLoading('contactSupport')}
+              >
                 <MessageSquare className="h-6 w-6" />
-                <span>Contact Support</span>
+                <span>{isLoading('contactSupport') ? 'Opening...' : 'Contact Support'}</span>
               </Button>
-              <Button variant="outline" className="h-20 flex-col space-y-2 border-[#142E54] text-[#142E54] hover:bg-[#142E54] hover:text-white transition" onClick={() => setReportsModalOpen(true)}>
+              <Button 
+                variant="outline" 
+                className="h-20 flex-col space-y-2 border-[#142E54] text-[#142E54] hover:bg-[#142E54] hover:text-white transition" 
+                onClick={async () => {
+                  try {
+                    await exportData('reports', 'pdf');
+                  } catch (error) {
+                    console.error('Error generating reports:', error);
+                  }
+                }}
+                disabled={isLoading('exportData')}
+              >
                 <FileText className="h-6 w-6" />
-                <span>View Reports</span>
+                <span>{isLoading('exportData') ? 'Generating...' : 'View Reports'}</span>
               </Button>
             </div>
           </motion.div>

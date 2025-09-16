@@ -2,7 +2,6 @@ import { ReactNode } from "react";
 import PremiumNavigation from "./PremiumNavigation";
 import Footer from "./Footer";
 import BackToTop from "@/components/ui/BackToTop";
-import ChatbotPlaceholder from "@/components/chat/ChatbotPlaceholder";
 
 interface LayoutProps {
   children: ReactNode;
@@ -19,7 +18,6 @@ export default function Layout({
       <main className="flex-grow pt-20">{children}</main>
       <Footer />
       <BackToTop />
-      <ChatbotPlaceholder />
     </div>
   );
 }

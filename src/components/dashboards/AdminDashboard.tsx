@@ -87,6 +87,7 @@ export default function AdminDashboard() {
     deleteTask,
     refreshData,
     exportData,
+    customAction,
     isLoading,
     getError
   } = useDashboardActions('AdminDashboard');
@@ -290,6 +291,7 @@ export default function AdminDashboard() {
       });
       
       setAdminTasks(prev => [...prev, newTask]);
+      await refreshData('tasks');
     } catch (error) {
       console.error('Error adding task:', error);
     }
@@ -307,7 +309,7 @@ export default function AdminDashboard() {
         'Failed to delete user'
       );
       // Refresh data to show updated user list
-      await refreshData();
+      await refreshData('users');
     } catch (error) {
       console.error('Error deleting user:', error);
     }
@@ -334,7 +336,7 @@ export default function AdminDashboard() {
         'Failed to update settings'
       );
       // Refresh data to reflect setting changes
-      await refreshData();
+      await refreshData('settings');
     } catch (error) {
       console.error('Error updating settings:', error);
     }
@@ -356,10 +358,10 @@ export default function AdminDashboard() {
         async () => {
           const task = {
             id: Date.now().toString(),
-            name: 'New Admin Task',
+            title: 'New Admin Task',
             description: 'Task created from admin dashboard',
-            priority: 'medium',
-            status: 'pending',
+            priority: 'medium' as const,
+            status: 'pending' as const,
             assignee: 'Admin',
             dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
           };
@@ -371,7 +373,7 @@ export default function AdminDashboard() {
       
       setAdminTasks(prev => [...prev, newTask]);
       // Refresh data to show updated task list
-      await refreshData();
+      await refreshData('tasks');
     } catch (error) {
       console.error('Error creating task:', error);
     }
@@ -414,7 +416,7 @@ export default function AdminDashboard() {
                       <Plus className="h-4 w-4 mr-2" />
                       {isLoading('createTask') ? 'Adding...' : 'Add Task'}
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleExportReport} disabled={isLoading('exportData')}>
+                    <DropdownMenuItem onClick={() => exportData('tasks', 'pdf')} disabled={isLoading('exportData')}>
                       <Download className="h-4 w-4 mr-2" />
                       {isLoading('exportData') ? 'Exporting...' : 'Export Report'}
                     </DropdownMenuItem>

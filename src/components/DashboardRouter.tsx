@@ -2,9 +2,8 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import AdminDashboard from './dashboards/AdminDashboard';
 import AccountsDashboard from './dashboards/AccountsDashboard';
-import AccountingDashboard from './dashboards/AccountingDashboard';
 import BusinessAdministrationDashboard from './dashboards/BusinessAdministrationDashboard';
-import BusinessDevelopmentDashboard from './dashboards/BusinessDevelopmentDashboard';
+import ExecutiveAssistantDashboard from './dashboards/ExecutiveAssistantDashboard';
 import DigitalMarketingDashboard from './dashboards/DigitalMarketingDashboard';
 import HRDashboard from './dashboards/HRDashboard';
 import ProjectDashboard from './dashboards/ProjectDashboard';
@@ -20,13 +19,12 @@ const DashboardRouter: React.FC<DashboardRouterProps> = ({ department }) => {
     case 'Admin':
       return <AdminDashboard />;
     case 'Accounts':
-      return <AccountsDashboard />;
     case 'Accounting':
-      return <AccountingDashboard />;
+      return <AccountsDashboard />;
     case 'Business Administration':
       return <BusinessAdministrationDashboard />;
-    case 'Business Development':
-      return <BusinessDevelopmentDashboard />;
+    case 'Executive Assistant':
+      return <ExecutiveAssistantDashboard />;
     case 'Digital Marketing':
       return <DigitalMarketingDashboard />;
     case 'HR':
@@ -38,7 +36,6 @@ const DashboardRouter: React.FC<DashboardRouterProps> = ({ department }) => {
     case 'General Users':
       return <GeneralDashboard />;
     default:
-      console.warn(`Unknown department: ${department}`);
       return <Navigate to="/login" replace />;
   }
 };

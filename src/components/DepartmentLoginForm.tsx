@@ -23,7 +23,7 @@ const departmentAccounts: DepartmentAccount[] = [
   { department: "Accounts", email: "accounts@jdmarcng.com", password: "Acc@123", code: "59304", dashboard: "AccountsDashboard" },
   { department: "Accounting", email: "accounting@jdmarcng.com", password: "Acct@123", code: "17026", dashboard: "AccountingDashboard" },
   { department: "Business Administration", email: "busadmin@jdmarcng.com", password: "BA@123", code: "42689", dashboard: "BusinessAdministrationDashboard" },
-  { department: "Business Development", email: "busdev@jdmarcng.com", password: "BD@123", code: "31275", dashboard: "BusinessDevelopmentDashboard" },
+  { department: "Executive Assistant", email: "busdev@jdmarcng.com", password: "BD@123", code: "31275", dashboard: "ExecutiveAssistantDashboard" },
   { department: "Digital Marketing", email: "marketing@jdmarcng.com", password: "Mkt@123", code: "75820", dashboard: "DigitalMarketingDashboard" },
   { department: "HR", email: "hr@jdmarcng.com", password: "Hr@123", code: "60491", dashboard: "HRDashboard" },
   { department: "Projects", email: "projects@jdmarcng.com", password: "Proj@123", code: "18562", dashboard: "ProjectDashboard" },
