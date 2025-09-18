@@ -3,7 +3,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 // API Configuration
 const API_BASE_URL = import.meta.env.DEV
   ? '/api'  // Development mode - use Vite proxy
-  : import.meta.env.VITE_API_URL || 'https://your-app-name.onrender.com/api'; // Production mode - deployed backend
+  : import.meta.env.VITE_API_URL || 'https://jdmarcng.com/backend'; // Production mode - PHP backend on Hostinger
 // Use https for production backend to avoid mixed content issues
 const TOKEN_STORAGE_KEY =
   import.meta.env.VITE_TOKEN_STORAGE_KEY || "builder_aura_auth_token";
@@ -14,6 +14,7 @@ const REFRESH_TOKEN_STORAGE_KEY =
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
@@ -151,41 +152,27 @@ const apiRequest = async <T>(
 // Authentication API
 export const authAPI = {
   register: async (userData: {
-    firstName: string;
-    lastName: string;
     email: string;
     password: string;
-    phone?: string;
-    company?: string;
-    role?: string;
   }) => {
-    return apiRequest("POST", "/auth/register", userData);
+    return apiRequest("POST", "/api/signup", userData);
   },
 
   login: async (credentials: {
     email: string;
     password: string;
-    deviceInfo?: string;
-    rememberMe?: boolean;
+    departmentCode?: string;
   }) => {
     const response = await apiRequest<{
       user: any;
-      tokens: {
-        accessToken: string;
-        refreshToken: string;
-        expiresIn: string;
-      };
-    }>("POST", "/auth/login", credentials);
-
-    // Store tokens
-    setTokens(response.tokens.accessToken, response.tokens.refreshToken);
+    }>("POST", "/api/login", credentials);
 
     return response;
   },
 
   logout: async () => {
     try {
-      await apiRequest("POST", "/auth/logout");
+      await apiRequest("POST", "/api/logout");
     } finally {
       clearTokens();
     }
@@ -219,7 +206,7 @@ export const authAPI = {
   },
 
   getCurrentUser: async () => {
-    return apiRequest("GET", "/auth/me");
+    return apiRequest("GET", "/api/profile");
   },
 
   resendVerification: async (email: string) => {
@@ -341,25 +328,15 @@ export const projectsAPI = {
 // Users API
 export const usersAPI = {
   getProfile: async () => {
-    return apiRequest("GET", "/users/profile");
+    return apiRequest("GET", "/api/profile");
   },
 
   updateProfile: async (profileData: {
-    firstName?: string;
-    lastName?: string;
-    phone?: string;
-    company?: string;
-    position?: string;
-    bio?: string;
-    address?: string;
-    city?: string;
-    state?: string;
-    country?: string;
-    website?: string;
-    linkedIn?: string;
-    twitter?: string;
+    email?: string;
+    password?: string;
+    department?: string;
   }) => {
-    return apiRequest("PUT", "/users/profile", profileData);
+    return apiRequest("PUT", "/api/update-user", profileData);
   },
 
   uploadAvatar: async (avatar: File) => {

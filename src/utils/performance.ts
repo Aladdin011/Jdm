@@ -107,17 +107,34 @@ export const generateSrcSet = (
     .join(', ');
 };
 
-// Preload critical resources
+// Preload critical resources with usage tracking
 export const preloadResource = (
   href: string,
   as: 'image' | 'font' | 'script' | 'style',
   crossorigin?: boolean
 ) => {
+  // Check if resource is already preloaded
+  const existingPreload = document.querySelector(`link[rel="preload"][href="${href}"]`);
+  if (existingPreload) return;
+
   const link = document.createElement('link');
   link.rel = 'preload';
   link.href = href;
   link.as = as;
   if (crossorigin) link.crossOrigin = 'anonymous';
+  
+  // Add onload handler to track usage
+  link.onload = () => {
+    link.dataset.loaded = 'true';
+  };
+  
+  // Remove unused preloads after 10 seconds
+  setTimeout(() => {
+    if (!link.dataset.loaded && link.parentNode) {
+      link.parentNode.removeChild(link);
+    }
+  }, 10000);
+  
   document.head.appendChild(link);
 };
 
@@ -228,14 +245,14 @@ export const trackWebVitals = () => {
         try {
           const firstInput = list.getEntries()[0];
           if (firstInput) {
-            const fid = firstInput.processingStart - firstInput.startTime;
-            console.log('FID:', fid);
+            const processingTime = (firstInput as any).processingStart - firstInput.startTime;
+            console.log('FID:', processingTime);
 
             if (window.gtag) {
               window.gtag('event', 'web_vitals', {
                 event_category: 'Performance',
                 event_label: 'First Input Delay',
-                value: Math.round(fid),
+                value: Math.round(processingTime),
               });
             }
           }
@@ -483,7 +500,8 @@ export const initializePerformanceOptimizations = () => {
         'https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F6fe8dede446d44e5b3f61dac8e245b53?alt=media&token=2cd3aa20-e283-42dd-ad0a-b327725825be&apiKey=751ea84be0da437c8dd3f1bf04173189',
       ];
 
-      preloadCriticalImages(criticalImages);
+      // Disable critical images preload to reduce unused preloads
+      // preloadCriticalImages(criticalImages);
     } catch (error) {
       console.warn('Critical images preload failed:', error);
     }
@@ -492,13 +510,4 @@ export const initializePerformanceOptimizations = () => {
   }
 };
 
-// TypeScript declarations for global gtag
-declare global {
-  interface Window {
-    gtag?: (
-      command: string,
-      targetId: string,
-      config?: Record<string, any>
-    ) => void;
-  }
-}
+// TypeScript declarations removed - already declared in useAnalytics.ts

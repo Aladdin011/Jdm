@@ -80,7 +80,7 @@ const smartHomeProjects = [
       ],
       members: [
         { name: "John", status: "home", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" },
-        { name: "Sarah", status: "away", avatar: "https://images.unsplash.com/photo-1494790108755-2616b7c7ad4c?w=100&q=80" },
+        { name: "Sarah", status: "away", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80" },
         { name: "Mike", status: "home", avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&q=80" },
       ],
     },

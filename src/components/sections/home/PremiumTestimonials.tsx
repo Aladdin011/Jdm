@@ -48,7 +48,7 @@ const testimonials: Testimonial[] = [
     role: "Property Developer",
     company: "Olatunde Developments",
     avatar:
-      "https://images.unsplash.com/photo-1494790108755-2616b612b765?w=150&h=150&fit=crop&crop=face",
+      "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
     rating: 5,
     quote:
       "JD Marc's platform revolutionized how we manage our construction projects. We connected with skilled professionals across Lagos and completed our 20-unit residential complex 3 months ahead of schedule. The remote collaboration tools made communication seamless.",
