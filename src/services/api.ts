@@ -206,7 +206,7 @@ export const authAPI = {
   },
 
   getCurrentUser: async () => {
-    return apiRequest("GET", "/api/profile");
+    return apiRequest("GET", "/api/auth/profile");
   },
 
   resendVerification: async (email: string) => {
@@ -328,7 +328,7 @@ export const projectsAPI = {
 // Users API
 export const usersAPI = {
   getProfile: async () => {
-    return apiRequest("GET", "/api/profile");
+    return apiRequest("GET", "/api/auth/profile");
   },
 
   updateProfile: async (profileData: {
@@ -336,14 +336,14 @@ export const usersAPI = {
     password?: string;
     department?: string;
   }) => {
-    return apiRequest("PUT", "/api/update-user", profileData);
+    return apiRequest("PUT", "/api/auth/update-user", profileData);
   },
 
   uploadAvatar: async (avatar: File) => {
     const formData = new FormData();
     formData.append("avatar", avatar);
 
-    return apiRequest("POST", "/users/upload-avatar", formData, {
+    return apiRequest("POST", "/api/users/upload-avatar", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -358,7 +358,32 @@ export const usersAPI = {
     sortBy?: string;
     sortOrder?: string;
   }) => {
-    return apiRequest("GET", "/users", null, { params });
+    return apiRequest("GET", "/api/users", null, { params });
+  },
+  
+  // Additional methods for UserManagement.tsx
+  getAllUsers: async () => {
+    return apiRequest("GET", "/api/admin/users");
+  },
+  
+  updateUserRole: async (userId: string | number, role: string) => {
+    return apiRequest("PUT", `/api/admin/users/${userId}/role`, { role });
+  },
+  
+  updateUserDepartment: async (userId: string | number, department: string) => {
+    return apiRequest("PUT", `/api/users/${userId}/department`, { department });
+  },
+  
+  activateUser: async (userId: string | number) => {
+    return apiRequest("POST", `/api/admin/users/${userId}/block`, { blocked: false });
+  },
+  
+  deactivateUser: async (userId: string | number) => {
+    return apiRequest("POST", `/api/admin/users/${userId}/block`, { blocked: true });
+  },
+  
+  deleteUser: async (userId: string | number) => {
+    return apiRequest("DELETE", `/api/admin/users/${userId}`);
   },
 };
 
@@ -508,6 +533,19 @@ export const adminAPI = {
     return apiRequest("GET", "/admin/analytics/projects", null, {
       params: { timeframe },
     });
+  },
+
+  // New REST-style admin routes
+  getUsers: async () => {
+    return apiRequest("GET", "/api/admin/users");
+  },
+
+  assignRole: async (userId: string | number, role: string) => {
+    return apiRequest("PUT", `/api/admin/users/${userId}/role`, { role });
+  },
+
+  blockUser: async (userId: string | number, blocked: boolean) => {
+    return apiRequest("POST", `/api/admin/users/${userId}/block`, { blocked });
   },
 };
 

@@ -1,219 +1,51 @@
-# JD Marc Limited Backend API
+# JD Marc Backend
 
-A clean, production-ready Node.js/Express API server designed for Render deployment.
+## Render Deployment Guide
 
-## 🚀 Features
+### Prerequisites
 
-- **Express.js** - Fast, unopinionated web framework
-- **TypeScript** - Type-safe development
-- **Security** - Helmet, CORS, rate limiting
-- **Validation** - Joi schema validation
-- **Email** - Contact form email handling
-- **Health Checks** - Application monitoring endpoints
-- **Production Ready** - Optimized for Render deployment
+1. Create a Render account at [render.com](https://render.com)
+2. Connect your GitHub repository to Render
 
-## 📁 Project Structure
+### Deployment Steps
 
-```
-backend/
-├── src/
-│   ├── routes/          # API routes
-│   ├── middleware/      # Custom middleware
-│   ├── utils/          # Utility functions
-│   └── server.ts       # Main server file
-├── config/             # Configuration files
-├── tests/              # Test files
-├── package.json        # Dependencies and scripts
-└── tsconfig.json       # TypeScript configuration
-```
+1. **Create a new Web Service**
+   - Select your repository
+   - Set the name to `jdmarc-backend`
+   - Set the environment to `Node`
+   - Set the build command to `npm install && npx prisma generate`
+   - Set the start command to `npm start`
 
-## 🛠️ Installation
+2. **Configure Environment Variables**
+   - `NODE_ENV`: `production`
+   - `PORT`: `10000` (Render will override this with its own port)
+   - `JWT_SECRET`: Your JWT secret key
+   - `DB_HOST`: Your MySQL host
+   - `DB_USER`: Your MySQL username
+   - `DB_PASSWORD`: Your MySQL password
+   - `DB_NAME`: Your MySQL database name
+   - `DB_PORT`: `3306`
+   - `FRONTEND_URL`: Your frontend URL (e.g., `https://jdmarcng.com`)
 
-1. **Install dependencies:**
+3. **Deploy**
+   - Click the "Create Web Service" button
+   - Wait for the deployment to complete
 
-   ```bash
-   cd backend
-   npm install
-   ```
+### Verify Deployment
 
-2. **Create environment file:**
+- Check the health endpoint at `https://your-app-name.onrender.com/api/health`
+- The response should be:
+  ```json
+  {
+    "status": "ok",
+    "timestamp": "2023-06-01T12:00:00.000Z",
+    "uptime": 123.456,
+    "environment": "production"
+  }
+  ```
 
-   ```bash
-   cp .env.example .env
-   ```
+### Troubleshooting
 
-3. **Configure environment variables in `.env`**
-
-## 🚦 Development
-
-```bash
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
-
-# Run tests
-npm test
-
-# Lint code
-npm run lint
-```
-
-## 🌐 API Endpoints
-
-### Health Check
-
-- `GET /` - Basic server info
-- `GET /api/health` - Health check
-- `GET /api/health/detailed` - Detailed health info
-
-### Contact
-
-- `POST /api/contact` - Submit contact form
-- `GET /api/contact/info` - Get contact information
-
-## 📧 Email Configuration
-
-The API supports email notifications for contact form submissions.
-
-### Gmail Setup:
-
-1. Enable 2-factor authentication
-2. Generate an app password
-3. Set environment variables:
-   ```
-   EMAIL_SERVICE_ENABLED=true
-   EMAIL_SERVICE=gmail
-   EMAIL_USER=your-email@gmail.com
-   EMAIL_PASSWORD=your-app-password
-   ```
-
-### SMTP Setup:
-
-```
-# Email Configuration (SMTP)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=Support@jdmarcng.com
-SMTP_PASS=55|K*^?Lr
-SMTP_FROM=Support@jdmarcng.com
-SMTP_SECURE=false
-```
-
-## 🚀 Render Deployment
-
-### Automatic Deployment:
-
-1. **Connect Repository:**
-
-   - Link your GitHub repository to Render
-   - Select the `backend` folder as the source
-
-2. **Configure Build:**
-
-   - Build Command: `npm install && npm run build`
-   - Start Command: `npm start`
-
-3. **Environment Variables:**
-   Add these in Render dashboard:
-
-   ```
-   NODE_ENV=production
-   PORT=5000
-   EMAIL_SERVICE_ENABLED=true
-   EMAIL_USER=your-email@gmail.com
-   EMAIL_PASSWORD=your-app-password
-   COMPANY_EMAIL=info@jdmarcng.com
-   ```
-
-4. **Domain Setup:**
-   - Your API will be available at: `https://your-app-name.onrender.com`
-   - Update frontend `VITE_API_URL` to point to this URL
-
-### Manual Deployment:
-
-```bash
-# Build the project
-npm run build
-
-# Deploy to Render (using Render CLI)
-render deploy
-```
-
-## 🔒 Security Features
-
-- **Helmet** - Security headers
-- **CORS** - Cross-origin protection
-- **Rate Limiting** - Request throttling
-- **Input Validation** - Joi schema validation
-- **Error Handling** - Secure error responses
-
-## 📊 Monitoring
-
-- Health check endpoints for uptime monitoring
-- Structured logging with Morgan
-- Memory and CPU usage tracking
-- Error tracking and reporting
-
-## 🧪 Testing
-
-```bash
-# Run all tests
-npm test
-
-# Run tests in watch mode
-npm run test:watch
-
-# Generate coverage report
-npm run test:coverage
-```
-
-## 📝 Environment Variables
-
-| Variable                | Description           | Default       |
-| ----------------------- | --------------------- | ------------- |
-| `NODE_ENV`              | Environment mode      | `development` |
-| `PORT`                  | Server port           | `5000`        |
-| `EMAIL_SERVICE_ENABLED` | Enable email features | `false`       |
-| `EMAIL_USER`            | Email username        | -             |
-| `EMAIL_PASSWORD`        | Email password        | -             |
-| `COMPANY_EMAIL`         | Company email address | -             |
-
-## 🆘 Troubleshooting
-
-### Common Issues:
-
-1. **Port Already in Use:**
-
-   ```bash
-   # Kill process on port 5000
-   npx kill-port 5000
-   ```
-
-2. **Email Not Sending:**
-
-   - Check environment variables
-   - Verify email credentials
-   - Check firewall settings
-
-3. **Build Errors:**
-   ```bash
-   # Clear node modules and reinstall
-   rm -rf node_modules package-lock.json
-   npm install
-   ```
-
-## 📞 Support
-
-For technical support:
-
-- Email: info@jdmarcng.com
-- Phone: +234 9 291 3991
-
----
-
-**JD Marc Limited** - Building Africa's Future Cities
+- Check the Render logs for any errors
+- Ensure all environment variables are set correctly
+- Verify that the database connection is working
