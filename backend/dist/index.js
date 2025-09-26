@@ -9,10 +9,17 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
 const adminRoutes_1 = __importDefault(require("./routes/adminRoutes"));
 const healthRoutes_1 = __importDefault(require("./routes/healthRoutes"));
+const rateLimitMiddleware_1 = require("./middleware/rateLimitMiddleware");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
+// Configure CORS with specific origin
+app.use((0, cors_1.default)({
+    origin: process.env.CORS_ORIGIN,
+    credentials: true
+}));
 app.use(express_1.default.json());
+// Apply rate limiting to all API routes
+app.use("/api", rateLimitMiddleware_1.rateLimitMiddleware);
 app.use("/api/auth", authRoutes_1.default);
 app.use("/api/admin", adminRoutes_1.default);
 app.use("/api/health", healthRoutes_1.default);

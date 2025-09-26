@@ -18,14 +18,16 @@
 
 2. **Configure Environment Variables**
    - `NODE_ENV`: `production`
-   - `PORT`: `10000` (Render will override this with its own port)
+   - `PORT`: `5004` (Render will override this with its own port)
+   - `CORS_ORIGIN`: Your frontend URL (e.g., `https://jdmarcng.com`)
+   - `DATABASE_URL`: Your MySQL connection string
    - `JWT_SECRET`: Your JWT secret key
-   - `DB_HOST`: Your MySQL host
-   - `DB_USER`: Your MySQL username
-   - `DB_PASSWORD`: Your MySQL password
-   - `DB_NAME`: Your MySQL database name
-   - `DB_PORT`: `3306`
+   - `JWT_EXPIRES_IN`: `1h` (or your preferred token expiration time)
+   - `BCRYPT_ROUNDS`: `12` (password hashing strength)
+   - `API_VERSION`: `v1`
    - `FRONTEND_URL`: Your frontend URL (e.g., `https://jdmarcng.com`)
+   - `RATE_LIMIT_WINDOW_MS`: `900000` (15 minutes in milliseconds)
+   - `RATE_LIMIT_MAX`: `100` (maximum requests per IP within the window)
 
 3. **Deploy**
    - Click the "Create Web Service" button
@@ -44,8 +46,19 @@
   }
   ```
 
+### Security Features
+
+#### Rate Limiting
+
+The API implements rate limiting to protect against abuse and DoS attacks:
+
+- Default: 100 requests per IP address in a 15-minute window
+- Customize by setting `RATE_LIMIT_WINDOW_MS` and `RATE_LIMIT_MAX` environment variables
+- Returns 429 status code with retry information when limits are exceeded
+
 ### Troubleshooting
 
 - Check the Render logs for any errors
 - Ensure all environment variables are set correctly
 - Verify that the database connection is working
+- If experiencing 429 errors, check the rate limiting configuration

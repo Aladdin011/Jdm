@@ -2,26 +2,34 @@ services:
   - type: web
     name: jdmarc-backend
     env: node
-    rootDir: backend
+    plan: free
     buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 10000
+        value: 5004
+      - key: CORS_ORIGIN
+        value: https://jdmarcng.com
+      - key: DATABASE_URL
+        sync: false
       - key: JWT_SECRET
         sync: false
-      - key: DB_HOST
-        sync: false
-      - key: DB_USER
-        sync: false
-      - key: DB_PASSWORD
-        sync: false
-      - key: DB_NAME
-        sync: false
-      - key: DB_PORT
-        value: "3306"
+      - key: JWT_EXPIRES_IN
+        value: 1h
+      - key: BCRYPT_ROUNDS
+        value: 12
+      - key: API_VERSION
+        value: v1
+      - key: BASE_URL
+        value: https://builder-aura-field.onrender.com
       - key: FRONTEND_URL
-        value: "https://jdmarcng.com"
+        value: https://jdmarcng.com
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+        # 15 minutes in milliseconds for rate limiting window
+      - key: RATE_LIMIT_MAX
+        value: 100
+        # Maximum number of requests allowed per IP within the rate limit window
     healthCheckPath: /api/health
