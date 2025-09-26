@@ -1,37 +1,125 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity('contact_submissions')
+@Entity('contacts')
 export class Contact {
   @PrimaryGeneratedColumn()
-  id!: number;
+  id: number;
 
-  @Column({ type: 'varchar', length: 100 })
-  firstName!: string;
+  @Column({
+    type: 'varchar',
+    length: 100
+  })
+  name: string;
 
-  @Column({ type: 'varchar', length: 100 })
-  lastName!: string;
+  @Column({
+    type: 'varchar',
+    length: 100
+  })
+  email: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  email!: string;
+  @Column({
+    type: 'varchar',
+    length: 20,
+    nullable: true
+  })
+  phone: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
-  phone?: string;
+  @Column({
+    type: 'varchar',
+    length: 100,
+    nullable: true
+  })
+  company: string;
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
-  company?: string;
+  @Column({
+    type: 'varchar',
+    length: 100
+  })
+  subject: string;
 
-  @Column({ type: 'text' })
-  message!: string;
+  @Column({
+    type: 'text'
+  })
+  message: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
-  subject?: string;
+  @Column({
+    type: 'varchar',
+    length: 50,
+    nullable: true
+  })
+  projectType: string;
 
-  @Column({ type: 'enum', enum: ['pending', 'reviewed', 'responded'], default: 'pending' })
-  status!: string;
+  @Column({
+    type: 'varchar',
+    length: 50,
+    nullable: true
+  })
+  budget: string;
 
-  @CreateDateColumn()
-  createdAt!: Date;
+  @Column({
+    type: 'varchar',
+    length: 50,
+    nullable: true
+  })
+  timeline: string;
 
-  @UpdateDateColumn()
-  updatedAt!: Date;
+  @Column({
+    type: 'varchar',
+    length: 100,
+    nullable: true
+  })
+  location: string;
+
+  @Column({
+    type: 'varchar',
+    length: 50,
+    nullable: true
+  })
+  source: string;
+
+  @Column({
+    type: 'varchar',
+    length: 20,
+    default: 'new'
+  })
+  status: string;
+
+  @Column({
+    type: 'varchar',
+    length: 20,
+    default: 'medium'
+  })
+  priority: string;
+
+  @Column({
+    type: 'varchar',
+    length: 100,
+    nullable: true
+  })
+  assignedTo: string;
+
+  @Column({
+    type: 'text',
+    nullable: true
+  })
+  notes: string;
+
+  @Column({
+    type: 'timestamp',
+    nullable: true
+  })
+  followUpDate: Date;
+
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP'
+  })
+  createdAt: Date;
+
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP'
+  })
+  updatedAt: Date;
 }

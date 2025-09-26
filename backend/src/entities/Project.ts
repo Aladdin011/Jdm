@@ -1,49 +1,124 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('projects')
 export class Project {
+  @Column({
+    type: 'varchar',
+    length: 100
+  })
+  title: string;
+
+  @Column({
+    type: 'text'
+  })
+  description: string;
+
+  @Column({
+    type: 'varchar',
+    length: 50
+  })
+  category: string;
+
+  @Column({
+    type: 'varchar',
+    length: 100
+  })
+  location: string;
+
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    nullable: true
+  })
+  budget: number;
+
+  @Column({
+    type: 'date',
+    nullable: true
+  })
+  startDate: Date;
+
+  @Column({
+    type: 'date',
+    nullable: true
+  })
+  estimatedEndDate: Date;
+
+  @Column({
+    type: 'simple-array',
+    nullable: true
+  })
+  features: string[];
+
+  @Column({
+    type: 'simple-array',
+    nullable: true
+  })
+  tags: string[];
+
+  @Column({
+    type: 'varchar',
+    length: 50,
+    default: 'planning'
+  })
+  status: string;
+
+  @Column({
+    type: 'int',
+    default: 0
+  })
+  progress: number;
+
+  @Column({
+    type: 'varchar',
+    length: 100,
+    nullable: true
+  })
+  client: string;
+
+  @Column({
+    type: 'varchar',
+    length: 50,
+    default: 'medium'
+  })
+  priority: string;
+
+  @Column({
+    type: 'varchar',
+    length: 50,
+    nullable: true
+  })
+  type: string;
+
+  @Column({
+    type: 'varchar',
+    length: 50,
+    nullable: true
+  })
+  manager: string;
+
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    default: 0
+  })
+  spent: number;
+
   @PrimaryGeneratedColumn()
-  id!: number;
+  id: number;
 
-  @Column({ type: 'varchar', length: 200 })
-  title!: string;
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP'
+  })
+  createdAt: Date;
 
-  @Column({ type: 'text' })
-  description!: string;
-
-  @Column({ type: 'varchar', length: 100 })
-  category!: string;
-
-  @Column({ type: 'varchar', length: 200, nullable: true })
-  location?: string;
-
-  @Column({ type: 'json', nullable: true })
-  images?: string[];
-
-  @Column({ type: 'enum', enum: ['planning', 'ongoing', 'completed', 'paused'], default: 'planning' })
-  status!: string;
-
-  @Column({ type: 'date', nullable: true })
-  startDate?: Date;
-
-  @Column({ type: 'date', nullable: true })
-  endDate?: Date;
-
-  @Column({ type: 'decimal', precision: 15, scale: 2, nullable: true })
-  budget?: number;
-
-  @Column({ type: 'varchar', length: 200, nullable: true })
-  client?: string;
-
-  @Column({ type: 'text', nullable: true })
-  tags?: string;
-
-  @Column({ type: 'boolean', default: true })
-  isPublic!: boolean;
-
-  @CreateDateColumn()
-  createdAt!: Date;
-
-  @UpdateDateColumn()
-  updatedAt!: Date;
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP'
+  })
+  updatedAt: Date;
 }
