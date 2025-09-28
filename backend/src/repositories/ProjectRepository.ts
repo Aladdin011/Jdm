@@ -1,67 +1,59 @@
-import { Repository } from 'typeorm';
-import { AppDataSource } from '../config/database';
+import { FindOptionsOrder, FindOptionsWhere, Repository } from 'typeorm';
 import { Project } from '../entities/Project';
 
-export class ProjectRepository {
+class ProjectRepository {
   private repository: Repository<Project>;
 
-  constructor() {
-    this.repository = AppDataSource.getRepository(Project);
+  constructor(repository: Repository<Project>) {
+    this.repository = repository;
   }
 
-  async create(projectData: Partial<Project>): Promise<Project> {
-    const project = this.repository.create(projectData);
-    return await this.repository.save(project);
-  }
+  async findAll(options?: {
+    limit?: number;
+    offset?: number;
+    order?: FindOptionsOrder<Project>;
+  }) {
+    const { limit = 10, offset = 0, order = { createdAt: 'DESC' } } = options || {};
 
-  async findAll(): Promise<Project[]> {
-    return await this.repository.find({
-      order: { createdAt: 'DESC' }
+    return this.repository.find({
+      take: limit,
+      skip: offset,
+      order,
     });
   }
 
-  async findPublic(): Promise<Project[]> {
-    return await this.repository.find({
-      where: { isPublic: true },
-      order: { createdAt: 'DESC' }
+  async findPublic(options?: {
+    limit?: number;
+    offset?: number;
+    order?: FindOptionsOrder<Project>;
+  }) {
+    const { limit = 10, offset = 0, order = { createdAt: 'DESC' } } = options || {};
+
+    return this.repository.find({
+      where: { public: true }, // Changed from isPublic to public
+      take: limit,
+      skip: offset,
+      order,
     });
   }
 
-  async findById(id: number): Promise<Project | null> {
-    return await this.repository.findOne({ where: { id } });
+  async findById(id: number) {
+    return this.repository.findOne({ where: { id } });
   }
 
-  async findByCategory(category: string): Promise<Project[]> {
-    return await this.repository.find({
-      where: { category, isPublic: true },
-      order: { createdAt: 'DESC' }
-    });
+  async create(data: Partial<Project>) {
+    const project = this.repository.create(data);
+    return this.repository.save(project);
   }
 
-  async findByStatus(status: string): Promise<Project[]> {
-    return await this.repository.find({
-      where: { status },
-      order: { createdAt: 'DESC' }
-    });
+  async update(id: number, data: Partial<Project>) {
+    await this.repository.update(id, data);
+    return this.findById(id);
   }
 
-  async update(id: number, updateData: Partial<Project>): Promise<Project | null> {
-    await this.repository.update(id, updateData);
-    return await this.findById(id);
-  }
-
-  async delete(id: number): Promise<boolean> {
-    const result = await this.repository.delete(id);
-    return (result.affected ?? 0) > 0;
-  }
-
-  async search(searchTerm: string): Promise<Project[]> {
-    return await this.repository
-      .createQueryBuilder('project')
-      .where('project.title LIKE :search OR project.description LIKE :search OR project.tags LIKE :search', 
-        { search: `%${searchTerm}%` })
-      .andWhere('project.isPublic = :isPublic', { isPublic: true })
-      .orderBy('project.createdAt', 'DESC')
-      .getMany();
+  async delete(id: number) {
+    return this.repository.delete(id);
   }
 }
+
+export default ProjectRepository;

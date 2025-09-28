@@ -1,58 +1,75 @@
-import { Repository } from 'typeorm';
-import { AppDataSource } from '../config/database';
+import { FindOptionsOrder, FindOptionsWhere, Repository } from 'typeorm';
 import { User } from '../entities/User';
 
-export class UserRepository {
+class UserRepository {
   private repository: Repository<User>;
 
-  constructor() {
-    this.repository = AppDataSource.getRepository(User);
+  constructor(repository: Repository<User>) {
+    this.repository = repository;
   }
 
-  async create(userData: Partial<User>): Promise<User> {
-    const user = this.repository.create(userData);
-    return await this.repository.save(user);
-  }
+  async findAll(options?: {
+    limit?: number;
+    offset?: number;
+    order?: FindOptionsOrder<User>;
+  }) {
+    const { limit = 10, offset = 0, order = { created_at: 'DESC' } } = options || {};
 
-  async findAll(): Promise<User[]> {
-    return await this.repository.find({
-      select: ['id', 'firstName', 'lastName', 'email', 'phone', 'location', 'company', 'role', 'isActive', 'lastLogin', 'createdAt'],
-      order: { createdAt: 'DESC' }
+    return this.repository.find({
+      take: limit,
+      skip: offset,
+      order,
+      select: ['id', 'email', 'role', 'department', 'active', 'created_at'] // Changed from isActive to active, createdAt to created_at
     });
   }
 
-  async findById(id: number): Promise<User | null> {
-    return await this.repository.findOne({
-      where: { id },
-      select: ['id', 'firstName', 'lastName', 'email', 'phone', 'location', 'company', 'role', 'isActive', 'lastLogin', 'createdAt']
+  async findActive(options?: {
+    limit?: number;
+    offset?: number;
+    order?: FindOptionsOrder<User>;
+  }) {
+    const { limit = 10, offset = 0, order = { created_at: 'DESC' } } = options || {};
+
+    return this.repository.find({
+      where: { active: true }, // Changed from isActive to active
+      take: limit,
+      skip: offset,
+      order,
+      select: ['id', 'email', 'role', 'department', 'active', 'created_at'] // Changed from isActive to active, createdAt to created_at
     });
   }
 
-  async findByEmail(email: string): Promise<User | null> {
-    return await this.repository.findOne({ where: { email } });
+  async findById(id: number) {
+    return this.repository.findOne({ where: { id } });
   }
 
-  async updateLastLogin(id: number): Promise<void> {
-    await this.repository.update(id, { lastLogin: new Date() });
+  async findByEmail(email: string) {
+    return this.repository.findOne({ where: { email } });
   }
 
-  async updatePassword(id: number, hashedPassword: string): Promise<boolean> {
-    const result = await this.repository.update(id, { password: hashedPassword });
-    return (result.affected ?? 0) > 0;
+  async activate(id: number) {
+    await this.repository.update(id, { active: true }); // Changed from isActive to active
+    return this.findById(id);
   }
 
-  async deactivateUser(id: number): Promise<boolean> {
-    const result = await this.repository.update(id, { isActive: false });
-    return (result.affected ?? 0) > 0;
+  async deactivate(id: number) {
+    await this.repository.update(id, { active: false }); // Changed from isActive to active
+    return this.findById(id);
   }
 
-  async activateUser(id: number): Promise<boolean> {
-    const result = await this.repository.update(id, { isActive: true });
-    return (result.affected ?? 0) > 0;
+  async create(data: Partial<User>) {
+    const user = this.repository.create(data);
+    return this.repository.save(user);
   }
 
-  async delete(id: number): Promise<boolean> {
-    const result = await this.repository.delete(id);
-    return (result.affected ?? 0) > 0;
+  async update(id: number, data: Partial<User>) {
+    await this.repository.update(id, data);
+    return this.findById(id);
+  }
+
+  async delete(id: number) {
+    return this.repository.delete(id);
   }
 }
+
+export default UserRepository;

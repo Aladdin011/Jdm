@@ -1,67 +1,51 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('users')
 export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @Column({
     type: 'varchar',
-    length: 100
+    length: 255,
+    unique: true
   })
   email: string;
 
   @Column({
     type: 'varchar',
-    length: 100
+    length: 255
   })
   password: string;
 
   @Column({
     type: 'varchar',
     length: 50,
+    default: 'user',
     nullable: true
-  })
-  firstName: string;
-
-  @Column({
-    type: 'varchar',
-    length: 50,
-    nullable: true
-  })
-  lastName: string;
-
-  @Column({
-    type: 'varchar',
-    length: 20,
-    default: 'user'
   })
   role: string;
 
   @Column({
     type: 'varchar',
-    length: 50,
+    length: 100,
     nullable: true
   })
   department: string;
 
   @Column({
     type: 'varchar',
-    length: 100,
-    nullable: true
+    length: 6,
+    nullable: true,
+    unique: true
   })
-  company: string;
+  department_code: string;
 
   @Column({
-    type: 'varchar',
-    length: 20,
+    type: 'timestamp',
     nullable: true
   })
-  phone: string;
-
-  @Column({
-    type: 'varchar',
-    length: 100,
-    nullable: true
-  })
-  location: string;
+  code_expires_at: Date;
 
   @Column({
     type: 'boolean',
@@ -69,25 +53,13 @@ export class User {
   })
   active: boolean;
 
-  @Column({
-    type: 'timestamp',
-    nullable: true
-  })
-  lastLogin: Date;
-
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP'
+  @CreateDateColumn({
+    name: 'created_at'
   })
   created_at: Date;
 
-  @Column({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP'
+  @UpdateDateColumn({
+    name: 'updated_at'
   })
   updated_at: Date;
 }

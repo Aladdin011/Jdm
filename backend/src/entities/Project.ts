@@ -1,7 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('projects')
 export class Project {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @Column({
     type: 'varchar',
     length: 100
@@ -46,10 +49,10 @@ export class Project {
   estimatedEndDate: Date;
 
   @Column({
-    type: 'simple-array',
+    type: 'simple-json',
     nullable: true
   })
-  features: string[];
+  features: { name: string; description: string }[];
 
   @Column({
     type: 'simple-array',
@@ -59,8 +62,8 @@ export class Project {
 
   @Column({
     type: 'varchar',
-    length: 50,
-    default: 'planning'
+    length: 20,
+    default: 'pending'
   })
   status: string;
 
@@ -79,7 +82,7 @@ export class Project {
 
   @Column({
     type: 'varchar',
-    length: 50,
+    length: 20,
     default: 'medium'
   })
   priority: string;
@@ -93,7 +96,7 @@ export class Project {
 
   @Column({
     type: 'varchar',
-    length: 50,
+    length: 100,
     nullable: true
   })
   manager: string;
@@ -106,19 +109,15 @@ export class Project {
   })
   spent: number;
 
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @Column({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP'
+    type: 'boolean',
+    default: false
   })
+  public: boolean;
+
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP'
-  })
+  @UpdateDateColumn()
   updatedAt: Date;
 }
