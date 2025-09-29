@@ -11,7 +11,11 @@ const app = express();
 
 // Configure CORS with specific origin
 app.use(cors({
-  origin: process.env.CORS_ORIGIN,
+  origin: [
+    'https://jdmarcng.com',
+    'https://www.jdmarcng.com',
+    process.env.CORS_ORIGIN
+  ].filter(Boolean),
   credentials: true
 }));
 
