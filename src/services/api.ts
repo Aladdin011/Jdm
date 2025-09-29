@@ -3,8 +3,14 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 // API Configuration
 const API_BASE_URL = import.meta.env.DEV
   ? '/api'  // Development mode - use Vite proxy
-  : import.meta.env.VITE_API_URL || 'https://jdmarcng.com/backend'; // Production mode - PHP backend on Hostinger
+  : import.meta.env.VITE_API_URL || 'https://api.jdmarcng.com'; // Production mode - JD Marc API
 // Use https for production backend to avoid mixed content issues
+
+// Log API URL configuration for debugging
+console.log(`API Base URL configured as: ${API_BASE_URL}`);
+if (!import.meta.env.DEV && !import.meta.env.VITE_API_URL) {
+  console.warn('VITE_API_URL environment variable is not set. Using fallback URL: https://api.jdmarcng.com');
+}
 const TOKEN_STORAGE_KEY =
   import.meta.env.VITE_TOKEN_STORAGE_KEY || "builder_aura_auth_token";
 const REFRESH_TOKEN_STORAGE_KEY =
@@ -578,6 +584,8 @@ export const apiCall = async <T>(
       headers: options?.headers,
     };
 
+    console.log(`Making API call to: ${API_BASE_URL}${endpoint}`);
+
     const response: AxiosResponse<ApiResponse<T>> = await apiClient.request({
       method,
       url: endpoint,
@@ -593,6 +601,7 @@ export const apiCall = async <T>(
   } catch (error: any) {
     // Handle network errors
     if (error.code === "NETWORK_ERROR" || error.message === "Network Error") {
+      console.error(`Network error when calling ${endpoint}:`, error);
       throw new Error(
         "Network connection failed. Please check your internet connection.",
       );
@@ -600,14 +609,25 @@ export const apiCall = async <T>(
 
     // Handle timeout errors
     if (error.code === "ECONNABORTED") {
+      console.error(`Timeout error when calling ${endpoint}:`, error);
       throw new Error("Request timeout. Please try again.");
+    }
+
+    // Handle 404 errors specifically
+    if (error.response?.status === 404) {
+      console.error(`404 Not Found error when calling ${endpoint}:`, error);
+      throw new Error(
+        `API endpoint not found: ${endpoint}. The requested resource may not exist on the server.`
+      );
     }
 
     // Handle API errors
     if (error.response?.data?.error) {
+      console.error(`API error when calling ${endpoint}:`, error.response.data.error);
       throw new Error(error.response.data.error);
     }
 
+    console.error(`Unhandled error when calling ${endpoint}:`, error);
     throw error;
   }
 };

@@ -14,7 +14,11 @@ dotenv_1.default.config();
 const app = (0, express_1.default)();
 // Configure CORS with specific origin
 app.use((0, cors_1.default)({
-    origin: process.env.CORS_ORIGIN,
+    origin: [
+        'https://jdmarcng.com',
+        'https://www.jdmarcng.com',
+        process.env.CORS_ORIGIN
+    ].filter(Boolean),
     credentials: true
 }));
 app.use(express_1.default.json());

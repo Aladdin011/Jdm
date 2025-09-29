@@ -7,5 +7,8 @@ const router = (0, express_1.Router)();
 router.post("/register", authController_1.register);
 router.post("/login", authController_1.login);
 router.get("/profile", authMiddleware_1.authMiddleware, authController_1.profile);
+router.post("/verify-credentials", authController_1.verifyCredentials);
+router.post("/verify-department-code", authController_1.verifyDepartmentCode);
+router.post("/complete-login", authController_1.completeLogin);
 exports.default = router;
 //# sourceMappingURL=authRoutes.js.map
