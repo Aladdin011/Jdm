@@ -273,10 +273,10 @@ export const trackWebVitals = () => {
 // Resource hints for better performance
 export const addResourceHints = () => {
   try {
+    const useLocalFonts = Boolean((import.meta as any).env?.VITE_USE_LOCAL_FONTS);
     // DNS prefetch for external domains
     const dnsPrefetchDomains = [
-      '//fonts.googleapis.com',
-      '//fonts.gstatic.com',
+      ...(useLocalFonts ? [] : ['//fonts.googleapis.com', '//fonts.gstatic.com']),
       '//cdn.builder.io',
       '//images.unsplash.com',
     ];
@@ -297,10 +297,9 @@ export const addResourceHints = () => {
     });
 
     // Preconnect to critical domains
-    const preconnectDomains = [
-      'https://fonts.googleapis.com',
-      'https://cdn.builder.io',
-    ];
+    const preconnectDomains = useLocalFonts
+      ? ['https://cdn.builder.io']
+      : ['https://fonts.googleapis.com', 'https://cdn.builder.io'];
 
     preconnectDomains.forEach((domain) => {
       try {
@@ -369,6 +368,25 @@ export const registerServiceWorker = async () => {
   }
 };
 
+// Dev-only cleanup to avoid SW interference with Vite HMR and module loading
+export const unregisterDevServiceWorkers = async () => {
+  if (!import.meta.env.PROD && 'serviceWorker' in navigator) {
+    try {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      for (const reg of registrations) {
+        await reg.unregister();
+      }
+      if ('caches' in window) {
+        const cacheNames = await caches.keys();
+        await Promise.all(cacheNames.map((name) => caches.delete(name)));
+      }
+      console.log('Dev: Unregistered service workers and cleared caches to prevent module fetch issues.');
+    } catch (error) {
+      console.warn('Dev: Service worker cleanup failed:', error);
+    }
+  }
+};
+
 // Cache management
 export const cacheResource = async (
   cacheName: string,
@@ -383,10 +401,12 @@ export const cacheResource = async (
 // Font loading optimization
 export const optimizeFontLoading = () => {
   try {
-    // Preload critical fonts with font-display: swap already included in URL
-    const criticalFonts = [
-      'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap',
-    ];
+    const useLocalFonts = Boolean((import.meta as any).env?.VITE_USE_LOCAL_FONTS);
+    
+    // Choose font source based on env toggle
+    const criticalFonts = useLocalFonts
+      ? ['/fonts/fonts.css']
+      : ['https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'];
 
     criticalFonts.forEach((fontUrl) => {
       // Check if the font is already preloaded
@@ -396,14 +416,14 @@ export const optimizeFontLoading = () => {
         link.rel = 'preload';
         link.as = 'style';
         link.href = fontUrl;
-        link.crossOrigin = 'anonymous';
+        if (!useLocalFonts) link.crossOrigin = 'anonymous';
         document.head.appendChild(link);
 
         // Also add the actual stylesheet
         const styleLink = document.createElement('link');
         styleLink.rel = 'stylesheet';
         styleLink.href = fontUrl;
-        styleLink.crossOrigin = 'anonymous';
+        if (!useLocalFonts) styleLink.crossOrigin = 'anonymous';
         document.head.appendChild(styleLink);
       }
     });
@@ -464,6 +484,12 @@ export const analyzeBundleSize = () => {
 // Global performance configuration
 export const initializePerformanceOptimizations = () => {
   try {
+    // Ensure dev environment is clean of any SW that may have persisted
+    try {
+      unregisterDevServiceWorkers();
+    } catch (error) {
+      console.warn('Dev SW cleanup failed:', error);
+    }
     // Add resource hints
     try {
       addResourceHints();
@@ -485,8 +511,8 @@ export const initializePerformanceOptimizations = () => {
       console.warn('Font loading optimization failed:', error);
     }
 
-    // Register service worker in production
-    if (process.env.NODE_ENV === 'production') {
+    // Register service worker only in production
+    if (import.meta.env.PROD) {
       try {
         registerServiceWorker();
       } catch (error) {
