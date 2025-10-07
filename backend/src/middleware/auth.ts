@@ -113,12 +113,13 @@ export const authenticate = async (
     req.user = user;
     req.token = token;
     
-    // Log authentication
+    // Log authentication with robust IP extraction to avoid typing mismatches
+    const ipAddress = (req as any).ip || req.headers['x-forwarded-for'] || req.socket?.remoteAddress || (req as any).connection?.remoteAddress || 'unknown';
     logger.info('User authenticated', {
       userId: user.id,
       email: user.email,
       role: user.role,
-      ip: req.ip
+      ip: Array.isArray(ipAddress) ? ipAddress[0] : String(ipAddress)
     });
     
     next();
@@ -179,11 +180,12 @@ export const authorize = (...allowedRoles: string[]) => {
     }
     
     if (!allowedRoles.includes(req.user.role)) {
+      const requestUrl = (req as any).url || req.originalUrl || req.path || '';
       logger.warn('Authorization failed', {
         userId: req.user.id,
         userRole: req.user.role,
         requiredRoles: allowedRoles,
-        url: req.url
+        url: requestUrl
       });
       
       return next(new AuthorizationError(
