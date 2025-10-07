@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import { config } from '../config/environment';
 import { logger } from '../utils/logger';
 import { 
@@ -39,10 +39,8 @@ export const generateAccessToken = (user: any): string => {
     role: user.role,
     department: user.department
   };
-  
-  return jwt.sign(payload, config.jwt.secret as string, {
-    expiresIn: config.jwt.expiresIn
-  });
+  const options: SignOptions = { expiresIn: config.jwt.expiresIn as any };
+  return jwt.sign(payload, config.jwt.secret as unknown as jwt.Secret, options);
 };
 
 // Generate refresh token
@@ -51,10 +49,8 @@ export const generateRefreshToken = (user: any): string => {
     userId: user.id,
     type: 'refresh'
   };
-  
-  return jwt.sign(payload, config.jwt.refreshSecret as string, {
-    expiresIn: config.jwt.refreshExpiresIn
-  });
+  const options: SignOptions = { expiresIn: config.jwt.refreshExpiresIn as any };
+  return jwt.sign(payload, config.jwt.refreshSecret as unknown as jwt.Secret, options);
 };
 
 // Generate token pair

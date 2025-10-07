@@ -21,26 +21,27 @@ export const validate = (schema: {
       
       // Validate query parameters
       if (schema.query) {
-        req.query = schema.query.parse(req.query);
+        req.query = schema.query.parse(req.query) as any;
       }
       
       // Validate route parameters
       if (schema.params) {
-        req.params = schema.params.parse(req.params);
+        req.params = schema.params.parse(req.params) as any;
       }
       
       // Validate headers
       if (schema.headers) {
-        req.headers = schema.headers.parse(req.headers);
+        req.headers = schema.headers.parse(req.headers) as any;
       }
       
       next();
     } catch (error) {
       if (error instanceof ZodError) {
-        const validationErrors = error.errors.map(err => ({
-          field: err.path.join('.'),
-          message: err.message,
-          value: err.code === 'invalid_type' ? undefined : (err as any).received
+        const validationErrors = error.issues.map(issue => ({
+          field: issue.path?.join('.') || '',
+          message: issue.message,
+          code: issue.code,
+          value: (issue as any).received
         }));
         
         logger.warn('Validation failed:', {
@@ -168,9 +169,7 @@ export const userSchemas = {
   }),
   
   updateRole: z.object({
-    role: z.enum(['user', 'admin', 'moderator'], {
-      errorMap: () => ({ message: 'Invalid role' })
-    })
+    role: z.enum(['user', 'admin', 'moderator'], { message: 'Invalid role' })
   }),
   
   updateStatus: z.object({
@@ -282,11 +281,11 @@ export const customValidators = {
 
 // Validation error formatter
 export const formatValidationError = (error: ZodError) => {
-  return error.errors.map(err => ({
-    field: err.path.join('.'),
-    message: err.message,
-    code: err.code,
-    value: (err as any).received
+  return error.issues.map(issue => ({
+    field: issue.path?.join('.') || '',
+    message: issue.message,
+    code: issue.code,
+    value: (issue as any).received
   }));
 };
 

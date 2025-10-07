@@ -143,10 +143,12 @@ const handleJWTError = (error: JsonWebTokenError | TokenExpiredError): AppError 
 
 // Zod validation error handler
 const handleZodError = (error: ZodError): ValidationError => {
-  const validationErrors = error.errors.map(err => ({
-    field: err.path.join('.'),
-    message: err.message,
-    value: err.code === 'invalid_type' ? undefined : (err as any).received
+  const validationErrors = error.issues.map(issue => ({
+    field: issue.path?.join('.') || '',
+    message: issue.message,
+    code: issue.code,
+    // received exists for invalid_type issues; include if present
+    value: (issue as any).received
   }));
   
   return new ValidationError('Validation failed', { validationErrors });

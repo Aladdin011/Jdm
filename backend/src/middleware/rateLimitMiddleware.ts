@@ -122,7 +122,7 @@ class EnhancedRateLimiter {
       
       res.set('Retry-After', Math.min(retryAfterSeconds, timeUntilReset).toString());
       
-      return res.status(429).json({
+      res.status(429).json({
         success: false,
         error: 'Rate limit exceeded',
         message: this.options.message,
@@ -134,6 +134,7 @@ class EnhancedRateLimiter {
         },
         timestamp: new Date().toISOString()
       });
+      return; 
     }
 
     // Add current request to the list
