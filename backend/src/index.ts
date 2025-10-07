@@ -9,7 +9,7 @@ import { errorHandler } from './middleware/errorHandler';
 import { requestLogger } from './middleware/requestLogger';
 import { validate } from './middleware/validation';
 import { authenticate } from './middleware/auth';
-import { connectDatabase } from './config/database';
+import { connectDatabaseWithRetry } from './config/database';
 import { ApiResponse } from './types/response';
 
 // Import routes
@@ -141,21 +141,17 @@ class Server {
   }
 
   public async start(): Promise<void> {
-    try {
-      // Connect to database
-      await connectDatabase();
-      logger.info('Database connected successfully');
+    // Start server without blocking on DB
+    this.app.listen(this.port, () => {
+      logger.info(`Server running on port ${this.port}`);
+      logger.info(`Environment: ${config.nodeEnv}`);
+      logger.info(`API Documentation: http://localhost:${this.port}/api/docs`);
+    });
 
-      // Start server
-      this.app.listen(this.port, () => {
-        logger.info(`Server running on port ${this.port}`);
-        logger.info(`Environment: ${config.nodeEnv}`);
-        logger.info(`API Documentation: http://localhost:${this.port}/api/docs`);
-      });
-    } catch (error) {
-      logger.error('Failed to start server:', error);
-      process.exit(1);
-    }
+    // Kick off DB connection retries in background
+    connectDatabaseWithRetry().catch((err) => {
+      logger.error('Background DB connection failed:', err);
+    });
   }
 
   public getApp(): express.Application {

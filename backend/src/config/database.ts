@@ -42,6 +42,7 @@ class DatabaseClient extends PrismaClient {
     // Log database errors
     this.$on('error', (e) => {
       logger.error('Database error:', e);
+      isConnected = false;
     });
 
     // Log database info
@@ -106,6 +107,7 @@ class DatabaseClient extends PrismaClient {
 
 // Create singleton instance
 let dbClient: DatabaseClient;
+let isConnected = false;
 
 export const getPrismaClient = (): DatabaseClient => {
   if (!dbClient) {
@@ -128,6 +130,7 @@ export const connectDatabase = async (): Promise<void> => {
       throw new Error('Database health check failed');
     }
     
+    isConnected = true;
     logger.info('✅ Database connected successfully');
     
     // Setup graceful shutdown
@@ -142,9 +145,33 @@ export const connectDatabase = async (): Promise<void> => {
     
   } catch (error) {
     logger.error('❌ Failed to connect to database:', error);
+    isConnected = false;
     throw error;
   }
 };
+
+// Attempt to connect with retries (non-blocking if caller does not await)
+export const connectDatabaseWithRetry = async (
+  maxAttempts: number = 10,
+  initialDelayMs: number = 2000
+): Promise<void> => {
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      logger.info(`Attempting DB connection (attempt ${attempt}/${maxAttempts})...`);
+      await connectDatabase();
+      logger.info('Database connection established');
+      return;
+    } catch (error) {
+      const delay = initialDelayMs * attempt;
+      logger.warn(`DB connection attempt ${attempt} failed. Retrying in ${delay}ms...`);
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+  }
+  logger.error(`All ${maxAttempts} DB connection attempts failed. Continuing without DB.`);
+};
+
+// Expose simple status for health checks
+export const getDatabaseStatus = () => ({ connected: isConnected });
 
 // Export the client instance
 export const prisma = getPrismaClient();

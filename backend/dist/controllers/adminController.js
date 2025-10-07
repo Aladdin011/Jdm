@@ -1,10 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.blockUser = exports.assignRole = exports.listUsers = void 0;
-const client_1 = require("@prisma/client");
-const prisma = new client_1.PrismaClient();
+exports.deleteUser = exports.updateDepartment = exports.blockUser = exports.assignRole = exports.listUsers = void 0;
+const database_1 = require("../config/database");
 const listUsers = async (_req, res) => {
-    const users = await prisma.users.findMany({
+    const users = await database_1.prisma.users.findMany({
         select: { id: true, email: true, role: true, created_at: true }
     });
     return res.json({ users });
@@ -18,7 +17,7 @@ const assignRole = async (req, res) => {
     if (!['admin', 'staff', 'user'].includes(role.toLowerCase()))
         return res.status(400).json({ message: "Invalid role" });
     try {
-        const user = await prisma.users.update({
+        const user = await database_1.prisma.users.update({
             where: { id: parseInt(id) },
             data: { role: role.toLowerCase() }
         });
@@ -35,7 +34,7 @@ const blockUser = async (req, res) => {
     if (!id || blocked === undefined)
         return res.status(400).json({ message: "id and blocked flag required" });
     try {
-        const user = await prisma.users.update({
+        const user = await database_1.prisma.users.update({
             where: { id: parseInt(id) },
             data: { active: !blocked }
         });
@@ -50,4 +49,34 @@ const blockUser = async (req, res) => {
     }
 };
 exports.blockUser = blockUser;
+const updateDepartment = async (req, res) => {
+    const { id } = req.params;
+    const { department } = req.body;
+    if (!id || !department)
+        return res.status(400).json({ message: "id and department required" });
+    try {
+        const user = await database_1.prisma.users.update({
+            where: { id: parseInt(id) },
+            data: { department }
+        });
+        return res.json({ ok: true, user, message: "Department updated successfully" });
+    }
+    catch (error) {
+        return res.status(404).json({ message: "User not found" });
+    }
+};
+exports.updateDepartment = updateDepartment;
+const deleteUser = async (req, res) => {
+    const { id } = req.params;
+    if (!id)
+        return res.status(400).json({ message: "id required" });
+    try {
+        await database_1.prisma.users.delete({ where: { id: parseInt(id) } });
+        return res.json({ ok: true, message: "User deleted successfully" });
+    }
+    catch (error) {
+        return res.status(404).json({ message: "User not found" });
+    }
+};
+exports.deleteUser = deleteUser;
 //# sourceMappingURL=adminController.js.map

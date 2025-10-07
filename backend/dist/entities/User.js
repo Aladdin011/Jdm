@@ -52,22 +52,6 @@ __decorate([
 ], User.prototype, "department", void 0);
 __decorate([
     (0, typeorm_1.Column)({
-        type: 'varchar',
-        length: 6,
-        nullable: true,
-        unique: true
-    }),
-    __metadata("design:type", String)
-], User.prototype, "department_code", void 0);
-__decorate([
-    (0, typeorm_1.Column)({
-        type: 'timestamp',
-        nullable: true
-    }),
-    __metadata("design:type", Date)
-], User.prototype, "code_expires_at", void 0);
-__decorate([
-    (0, typeorm_1.Column)({
         type: 'boolean',
         default: true
     }),

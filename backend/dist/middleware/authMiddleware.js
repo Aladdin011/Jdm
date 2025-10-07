@@ -5,8 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.adminOnly = exports.authMiddleware = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const client_1 = require("@prisma/client");
-const prisma = new client_1.PrismaClient();
+const database_1 = require("../config/database");
 const authMiddleware = async (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer "))
@@ -14,7 +13,7 @@ const authMiddleware = async (req, res, next) => {
     const token = authHeader.split(" ")[1];
     try {
         const payload = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-        const user = await prisma.users.findUnique({ where: { id: payload.userId } });
+        const user = await database_1.prisma.users.findUnique({ where: { id: payload.userId } });
         if (!user)
             return res.status(404).json({ message: "User not found" });
         req.user = { userId: user.id, role: user.role };
