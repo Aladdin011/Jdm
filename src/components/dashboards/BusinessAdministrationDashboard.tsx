@@ -91,6 +91,8 @@ import {
 import DashboardThemeWrapper from "./DashboardThemeWrapper";
 import { getDepartmentTheme } from "@/utils/departmentThemes";
 import { useCall } from "@/contexts/CallContext";
+import CallManager from "@/components/calls/CallManager";
+import ConversationModule from "@/components/features/communication/ConversationModule";
 
 interface OrgKPI {
   id: string;
@@ -640,13 +642,11 @@ export default function BusinessAdministrationDashboard() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button
-              onClick={() => startCall("business-administration")}
+            <CallManager
+              currentDepartment="business-administration"
+              customLabel="Executive Call"
               className="bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 text-white"
-            >
-              <Video className="h-4 w-4 mr-2" />
-              Executive Call
-            </Button>
+            />
             <Button variant="outline" className="gap-2">
               <RefreshCw className="h-4 w-4" />
               Refresh
@@ -1497,20 +1497,16 @@ export default function BusinessAdministrationDashboard() {
                   Connect with department heads, executives, and board members
                 </p>
                 <div className="flex gap-2">
-                  <Button
-                    onClick={() => startCall("business-administration")}
+                  <CallManager
+                    currentDepartment="business-administration"
+                    customLabel="Voice Call"
                     className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
-                  >
-                    <Phone className="h-4 w-4 mr-2" />
-                    Voice Call
-                  </Button>
-                  <Button
-                    onClick={() => startCall("business-administration")}
+                  />
+                  <CallManager
+                    currentDepartment="business-administration"
+                    customLabel="Video Conference"
                     className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white"
-                  >
-                    <Video className="h-4 w-4 mr-2" />
-                    Video Conference
-                  </Button>
+                  />
                   <Button variant="outline">
                     <MessageSquare className="h-4 w-4 mr-2" />
                     Executive Chat
@@ -1520,6 +1516,9 @@ export default function BusinessAdministrationDashboard() {
             </CardContent>
           </Card>
         </motion.div>
+
+        {/* Communication Module */}
+        <ConversationModule />
       </div>
     </DashboardThemeWrapper>
   );

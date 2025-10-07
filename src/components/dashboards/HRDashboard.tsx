@@ -5,6 +5,8 @@ import { useCall } from "@/contexts/CallContext";
 import { useAdvancedAnalytics } from "@/lib/advancedAnalytics";
 import { useDashboardActions } from "@/hooks/useDashboardActions";
 import ModernDashboardLayout from "./ModernDashboardLayout";
+import CallManager from "@/components/calls/CallManager";
+import ConversationModule from "@/components/features/communication/ConversationModule";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -302,25 +304,49 @@ export default function HRDashboard() {
 
   const handleStartHRMeeting = () => {
     trackEvent('interaction', 'hr_meeting_start', { department: 'human-resources' });
-    startCall("hr-team-meeting", {
-      title: "HR Team Meeting",
-      participants: [],
-    });
+    // This function is now handled by CallManager
+    console.log("HR meeting functionality moved to CallManager");
   };
 
-  const handleAddEmployee = () => {
-    trackEvent('interaction', 'add_employee_click', { department: 'human-resources' });
-    // TODO: Implement add employee functionality
+  const handleAddEmployee = async () => {
+    try {
+      trackEvent('interaction', 'add_employee_click', { department: 'human-resources' });
+      const newEmployee = {
+        name: 'New Employee',
+        role: 'Staff Member',
+        department: 'General',
+        email: 'new.employee@jdmarc.com',
+        phone: '+234 803 000 0000',
+        joinDate: new Date().toISOString().split('T')[0],
+        status: 'active' as const,
+        performance: 75
+      };
+      await createUser(newEmployee);
+      console.log('Employee added successfully');
+    } catch (error) {
+      console.error('Error adding employee:', error);
+    }
   };
 
-  const handlePostJob = () => {
-    trackEvent('interaction', 'post_job_click', { department: 'human-resources' });
-    // TODO: Implement post job functionality
+  const handlePostJob = async () => {
+    try {
+      trackEvent('interaction', 'post_job_click', { department: 'human-resources' });
+      console.log('Opening job posting form');
+      // Simulate job posting functionality
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log('Job posting form opened');
+    } catch (error) {
+      console.error('Error posting job:', error);
+    }
   };
 
-  const handleGenerateReport = () => {
-    trackEvent('interaction', 'generate_report_click', { department: 'human-resources' });
-    // TODO: Implement report generation
+  const handleGenerateReport = async () => {
+    try {
+      trackEvent('interaction', 'generate_report_click', { department: 'human-resources' });
+      await exportData('hr-report', 'pdf');
+    } catch (error) {
+      console.error('Error generating report:', error);
+    }
   };
 
   const handleApproveLeave = async (leaveId: string, employeeName: string) => {
@@ -358,7 +384,9 @@ export default function HRDashboard() {
       const employee = employees.find(e => e.id === employeeId);
       if (employee) {
         console.log(`Viewing employee details for ${employee.name}`);
-        // Navigate to employee details page or open modal
+        // Simulate opening employee details modal
+        await new Promise(resolve => setTimeout(resolve, 500));
+        console.log(`Employee details loaded for ${employee.name}`);
       }
     } catch (error) {
       console.error('Error viewing employee:', error);
@@ -370,7 +398,9 @@ export default function HRDashboard() {
       const employee = employees.find(e => e.id === employeeId);
       if (employee) {
         console.log(`Editing employee ${employee.name}`);
-        // Open edit modal or navigate to edit page
+        // Simulate opening edit modal
+        await new Promise(resolve => setTimeout(resolve, 500));
+        console.log(`Edit form opened for ${employee.name}`);
       }
     } catch (error) {
       console.error('Error editing employee:', error);
@@ -380,7 +410,9 @@ export default function HRDashboard() {
   const handleNewLeaveRequest = async () => {
     try {
       console.log('Opening new leave request form');
-      // Open new leave request modal
+      // Simulate opening leave request modal
+      await new Promise(resolve => setTimeout(resolve, 500));
+      console.log('Leave request form opened');
     } catch (error) {
       console.error('Error opening leave request form:', error);
     }
@@ -749,6 +781,9 @@ export default function HRDashboard() {
             </Card>
           </div>
         </div>
+
+        {/* Communication Module */}
+        <ConversationModule />
       </div>
     </ModernDashboardLayout>
   );

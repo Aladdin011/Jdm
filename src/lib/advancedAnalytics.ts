@@ -239,10 +239,10 @@ export class AdvancedAnalyticsEngine {
 
     // Only track meaningful interactions
     const trackableElements = ['BUTTON', 'A', 'INPUT', 'SELECT', 'TEXTAREA'];
-    const hasClickHandler = element.onclick || element.getAttribute('data-track') === 'true';
+    const hasClickHandler = !!(element as any).onclick || element.getAttribute('data-track') === 'true';
     const isTrackableTag = trackableElements.includes(element.tagName);
     const hasRole = element.getAttribute('role') === 'button' || element.getAttribute('role') === 'link';
-    const hasAriaLabel = element.getAttribute('aria-label');
+    const hasAriaLabel = !!element.getAttribute('aria-label');
 
     // Additional check for disabled elements
     if (element.hasAttribute('disabled') || element.getAttribute('aria-disabled') === 'true') {
@@ -344,22 +344,36 @@ export class AdvancedAnalyticsEngine {
         currentPage = newPage;
       }
     };
+
+    // Throttle navigation tracking to avoid IPC flooding (see crbug.com/1038223)
+    let scheduled = false;
+    let scheduleId: number | null = null;
+    const scheduleTrack = () => {
+      if (scheduled) return;
+      scheduled = true;
+      // Coalesce multiple rapid history updates
+      scheduleId = window.setTimeout(() => {
+        scheduled = false;
+        scheduleId = null;
+        trackPageView();
+      }, 200);
+    };
     
     // Listen for SPA navigation
-    window.addEventListener('popstate', trackPageView);
+    window.addEventListener('popstate', () => scheduleTrack(), { passive: true });
     
     // Override history methods for SPA tracking
     const originalPushState = history.pushState;
     const originalReplaceState = history.replaceState;
     
-    history.pushState = function(...args) {
-      originalPushState.apply(history, args);
-      setTimeout(trackPageView, 0);
+    history.pushState = function(data: any, title: string, url?: string | null) {
+      originalPushState.call(history, data, title, url ?? null);
+      scheduleTrack();
     };
     
-    history.replaceState = function(...args) {
-      originalReplaceState.apply(history, args);
-      setTimeout(trackPageView, 0);
+    history.replaceState = function(data: any, title: string, url?: string | null) {
+      originalReplaceState.call(history, data, title, url ?? null);
+      scheduleTrack();
     };
   }
   
@@ -539,8 +553,9 @@ export class AdvancedAnalyticsEngine {
       // Examples: Google Analytics, Mixpanel, Amplitude, etc.
 
       // Google Analytics 4 example:
-      if (typeof gtag !== 'undefined') {
-        gtag('event', event.action, {
+      const g = (window as any).gtag;
+      if (typeof g === 'function') {
+        g('event', event.action, {
           event_category: event.category,
           event_label: event.data?.element || '',
           value: event.data?.value || 0,

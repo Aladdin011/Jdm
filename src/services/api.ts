@@ -1,15 +1,42 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 // API Configuration
-const API_BASE_URL = import.meta.env.DEV
-  ? '/api'  // Development mode - use Vite proxy
-  : import.meta.env.VITE_API_URL || 'https://api.jdmarcng.com'; // Production mode - JD Marc API
-// Use https for production backend to avoid mixed content issues
+// Derive base URL from `VITE_API_URL` when provided, normalize to include `/api` path.
+// Fallback to Vite proxy `/api` in development when not provided.
+const normalizeApiBaseUrl = (raw?: string): string => {
+  const input = (raw || '').trim();
+  if (!input) return '/api';
+
+  // If relative path
+  if (input.startsWith('/')) {
+    // Ensure it includes `/api`
+    return input.includes('/api') ? input : input.replace(/\/+$/, '') + '/api';
+  }
+
+  // Absolute URL
+  try {
+    const u = new URL(input);
+    const path = u.pathname || '/';
+    // Append `/api` if not present at the end
+    if (!path.endsWith('/api') && !path.match(/\/(api)(\/|$)/)) {
+      u.pathname = path.replace(/\/+$/, '') + '/api';
+    }
+    // Remove trailing slash for consistency
+    const normalized = u.origin + u.pathname.replace(/\/+$/, '');
+    return normalized;
+  } catch {
+    // If URL parsing fails, fallback safely
+    return '/api';
+  }
+};
+
+const API_BASE_URL = normalizeApiBaseUrl(import.meta.env.VITE_API_URL);
+// Note: Ensure `.env.development` and proxy config align with backend port
 
 // Log API URL configuration for debugging
 console.log(`API Base URL configured as: ${API_BASE_URL}`);
 if (!import.meta.env.DEV && !import.meta.env.VITE_API_URL) {
-  console.warn('VITE_API_URL environment variable is not set. Using fallback URL: https://api.jdmarcng.com');
+  console.warn('VITE_API_URL is not set. Please set it to your production API.');
 }
 const TOKEN_STORAGE_KEY =
   import.meta.env.VITE_TOKEN_STORAGE_KEY || "builder_aura_auth_token";
@@ -23,6 +50,7 @@ const apiClient = axios.create({
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
+    "Accept": "application/json",
   },
 });
 
@@ -72,7 +100,7 @@ apiClient.interceptors.response.use(
         const refreshToken = getRefreshToken();
         if (refreshToken) {
           const response = await axios.post(
-            `${API_BASE_URL}/auth/refresh-token`,
+            `${API_BASE_URL}/auth/refresh`,
             {
               refreshToken,
             },
@@ -128,11 +156,23 @@ const apiRequest = async <T>(
       ...config,
     });
 
-    if (response.data.success) {
-      return response.data.data as T;
-    } else {
-      throw new Error(response.data.error || "API request failed");
+    // Support both wrapped and unwrapped API responses
+    const payload: any = response.data;
+    if (payload && typeof payload === 'object') {
+      if ('success' in payload) {
+        if (payload.success) {
+          // If data exists, return it; otherwise return the payload itself
+          return (payload.data !== undefined ? (payload.data as T) : (payload as T));
+        } else {
+          throw new Error(payload.message || payload.error || "API request failed");
+        }
+      }
+      // No success wrapper: return payload directly
+      return payload as T;
     }
+
+    // Fallback: return raw payload
+    return payload as T;
   } catch (error: any) {
     // Handle network errors
     if (error.code === "NETWORK_ERROR" || error.message === "Network Error") {
@@ -146,9 +186,11 @@ const apiRequest = async <T>(
       throw new Error("Request timeout. Please try again.");
     }
 
-    // Handle API errors
-    if (error.response?.data?.error) {
-      throw new Error(error.response.data.error);
+    // Handle API errors (prefer message, fallback to error)
+    const apiMessage = error.response?.data?.message;
+    const apiError = error.response?.data?.error;
+    if (apiMessage || apiError) {
+      throw new Error(apiMessage || apiError);
     }
 
     throw error;
@@ -161,7 +203,8 @@ export const authAPI = {
     email: string;
     password: string;
   }) => {
-    return apiRequest("POST", "/api/signup", userData);
+    // Backend route: POST /api/auth/register
+    return apiRequest("POST", "/auth/register", userData);
   },
 
   login: async (credentials: {
@@ -169,16 +212,18 @@ export const authAPI = {
     password: string;
     departmentCode?: string;
   }) => {
+    // Backend route: POST /api/auth/login
     const response = await apiRequest<{
       user: any;
-    }>("POST", "/api/login", credentials);
+    }>("POST", "/auth/login", credentials);
 
     return response;
   },
 
   logout: async () => {
     try {
-      await apiRequest("POST", "/api/logout");
+      // No explicit backend logout route; clear tokens client-side
+      await Promise.resolve();
     } finally {
       clearTokens();
     }
@@ -212,7 +257,8 @@ export const authAPI = {
   },
 
   getCurrentUser: async () => {
-    return apiRequest("GET", "/api/auth/profile");
+    // Backend protected route: GET /api/auth/profile
+    return apiRequest("GET", "/auth/profile");
   },
 
   resendVerification: async (email: string) => {
@@ -334,7 +380,7 @@ export const projectsAPI = {
 // Users API
 export const usersAPI = {
   getProfile: async () => {
-    return apiRequest("GET", "/api/auth/profile");
+    return apiRequest("GET", "/auth/profile");
   },
 
   updateProfile: async (profileData: {
@@ -342,14 +388,14 @@ export const usersAPI = {
     password?: string;
     department?: string;
   }) => {
-    return apiRequest("PUT", "/api/auth/update-user", profileData);
+    return apiRequest("PUT", "/auth/update-user", profileData);
   },
 
   uploadAvatar: async (avatar: File) => {
     const formData = new FormData();
     formData.append("avatar", avatar);
 
-    return apiRequest("POST", "/api/users/upload-avatar", formData, {
+    return apiRequest("POST", "/users/upload-avatar", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -364,32 +410,35 @@ export const usersAPI = {
     sortBy?: string;
     sortOrder?: string;
   }) => {
-    return apiRequest("GET", "/api/users", null, { params });
+    return apiRequest("GET", "/admin/users", null, { params });
   },
   
   // Additional methods for UserManagement.tsx
   getAllUsers: async () => {
-    return apiRequest("GET", "/api/admin/users");
+    // Use public authenticated users route for general user directory
+    // Normalize to return an array of users
+    const payload = await apiRequest<{ users: any[] }>("GET", "/users");
+    return payload?.users || [];
   },
   
   updateUserRole: async (userId: string | number, role: string) => {
-    return apiRequest("PUT", `/api/admin/users/${userId}/role`, { role });
+    return apiRequest("PUT", `/admin/users/${userId}/role`, { role });
   },
   
   updateUserDepartment: async (userId: string | number, department: string) => {
-    return apiRequest("PUT", `/api/users/${userId}/department`, { department });
+    return apiRequest("PUT", `/admin/users/${userId}/department`, { department });
   },
   
   activateUser: async (userId: string | number) => {
-    return apiRequest("POST", `/api/admin/users/${userId}/block`, { blocked: false });
+    return apiRequest("POST", `/admin/users/${userId}/block`, { blocked: false });
   },
   
   deactivateUser: async (userId: string | number) => {
-    return apiRequest("POST", `/api/admin/users/${userId}/block`, { blocked: true });
+    return apiRequest("POST", `/admin/users/${userId}/block`, { blocked: true });
   },
   
   deleteUser: async (userId: string | number) => {
-    return apiRequest("DELETE", `/api/admin/users/${userId}`);
+    return apiRequest("DELETE", `/admin/users/${userId}`);
   },
 };
 
@@ -543,15 +592,15 @@ export const adminAPI = {
 
   // New REST-style admin routes
   getUsers: async () => {
-    return apiRequest("GET", "/api/admin/users");
+    return apiRequest("GET", "/admin/users");
   },
-
+  
   assignRole: async (userId: string | number, role: string) => {
-    return apiRequest("PUT", `/api/admin/users/${userId}/role`, { role });
+    return apiRequest("PUT", `/admin/users/${userId}/role`, { role });
   },
-
+  
   blockUser: async (userId: string | number, blocked: boolean) => {
-    return apiRequest("POST", `/api/admin/users/${userId}/block`, { blocked });
+    return apiRequest("POST", `/admin/users/${userId}/block`, { blocked });
   },
 };
 
@@ -568,68 +617,182 @@ export const clearAuthentication = (): void => {
   clearTokens();
 };
 
-// Generic API call function for compatibility
+// Retry configuration
+interface RetryConfig {
+  maxRetries: number;
+  baseDelay: number;
+  maxDelay: number;
+  retryableStatuses: number[];
+}
+
+const DEFAULT_RETRY_CONFIG: RetryConfig = {
+  maxRetries: 3,
+  baseDelay: 1000, // 1 second
+  maxDelay: 10000, // 10 seconds
+  retryableStatuses: [408, 429, 500, 502, 503, 504]
+};
+
+// Sleep utility for delays
+const sleep = (ms: number): Promise<void> => 
+  new Promise(resolve => setTimeout(resolve, ms));
+
+// Calculate exponential backoff delay
+const calculateDelay = (attempt: number, config: RetryConfig): number => {
+  const delay = config.baseDelay * Math.pow(2, attempt - 1);
+  const jitter = Math.random() * 0.1 * delay; // Add 10% jitter
+  return Math.min(delay + jitter, config.maxDelay);
+};
+
+// Enhanced API call function with retry logic and fault tolerance
 export const apiCall = async <T>(
   endpoint: string,
   options?: {
     method?: string;
     body?: string;
     headers?: Record<string, string>;
+    retryConfig?: Partial<RetryConfig>;
+    skipRetry?: boolean;
   }
 ): Promise<T> => {
-  try {
-    const method = options?.method || 'GET';
-    const data = options?.body ? JSON.parse(options.body) : undefined;
-    const config: AxiosRequestConfig = {
-      headers: options?.headers,
-    };
+  const config = { ...DEFAULT_RETRY_CONFIG, ...options?.retryConfig };
+  const skipRetry = options?.skipRetry || false;
+  let lastError: any;
 
-    console.log(`Making API call to: ${API_BASE_URL}${endpoint}`);
+  for (let attempt = 1; attempt <= (skipRetry ? 1 : config.maxRetries + 1); attempt++) {
+    try {
+      const method = options?.method || 'GET';
+      const data = options?.body ? JSON.parse(options.body) : undefined;
+      const requestConfig: AxiosRequestConfig = {
+        headers: options?.headers,
+        timeout: 30000, // 30 second timeout
+      };
 
-    const response: AxiosResponse<ApiResponse<T>> = await apiClient.request({
-      method,
-      url: endpoint,
-      data,
-      ...config,
-    });
+      console.log(`[Attempt ${attempt}] Making API call to: ${API_BASE_URL}${endpoint}`);
 
-    if (response.data.success) {
-      return response.data.data as T;
-    } else {
-      throw new Error(response.data.error || "API request failed");
+      const response: AxiosResponse<ApiResponse<T>> = await apiClient.request({
+        method,
+        url: endpoint,
+        data,
+        ...requestConfig,
+      });
+
+      console.log(`[Success] API call to ${endpoint} completed successfully`);
+
+      // Support both wrapped and unwrapped API responses
+      const payload: any = response.data;
+      if (payload && typeof payload === 'object') {
+        if ('success' in payload) {
+          if (payload.success) {
+            // If data exists, return it; otherwise return the payload itself
+            return (payload.data !== undefined ? (payload.data as T) : (payload as T));
+          } else {
+            throw new Error(payload.message || payload.error || "API request failed");
+          }
+        }
+        // No success wrapper: return payload directly
+        return payload as T;
+      }
+
+      // Fallback: return raw payload
+      return payload as T;
+
+    } catch (error: any) {
+      lastError = error;
+      const isLastAttempt = attempt === (skipRetry ? 1 : config.maxRetries + 1);
+      
+      console.error(`[Attempt ${attempt}] Error calling ${endpoint}:`, {
+        status: error.response?.status,
+        message: error.message,
+        code: error.code
+      });
+
+      // Handle specific error types
+      if (error.code === "NETWORK_ERROR" || error.message === "Network Error") {
+        if (isLastAttempt) {
+          console.error(`[Final] Network error when calling ${endpoint}:`, error);
+          throw new Error(
+            "Network connection failed. Please check your internet connection and try again."
+          );
+        }
+      }
+      // Handle timeout errors
+      else if (error.code === "ECONNABORTED") {
+        if (isLastAttempt) {
+          console.error(`[Final] Timeout error when calling ${endpoint}:`, error);
+          throw new Error("Request timeout. The server is taking too long to respond.");
+        }
+      }
+      // Handle 404 errors (don't retry)
+      else if (error.response?.status === 404) {
+        console.error(`[Final] 404 Not Found error when calling ${endpoint}:`, error);
+        throw new Error(
+          `API endpoint not found: ${endpoint}. The requested resource may not exist on the server.`
+        );
+      }
+      // Handle 401 errors (don't retry)
+      else if (error.response?.status === 401) {
+        console.error(`[Final] 401 Unauthorized error when calling ${endpoint}:`, error);
+        throw new Error("Authentication failed. Please log in again.");
+      }
+      // Handle 403 errors (don't retry)
+      else if (error.response?.status === 403) {
+        console.error(`[Final] 403 Forbidden error when calling ${endpoint}:`, error);
+        throw new Error("Access denied. You don't have permission to access this resource.");
+      }
+      // Handle rate limiting with specific retry logic
+      else if (error.response?.status === 429) {
+        const retryAfter = error.response.headers['retry-after'];
+        const waitTime = retryAfter ? parseInt(retryAfter) * 1000 : calculateDelay(attempt, config);
+        
+        if (isLastAttempt) {
+          console.error(`[Final] Rate limit exceeded for ${endpoint}`);
+          throw new Error(
+            `Too many requests. Please wait ${Math.ceil(waitTime / 1000)} seconds and try again.`
+          );
+        }
+        
+        console.log(`[Retry] Rate limited. Waiting ${waitTime}ms before retry ${attempt + 1}`);
+        await sleep(waitTime);
+        continue;
+      }
+      // Handle other retryable errors
+      else if (config.retryableStatuses.includes(error.response?.status)) {
+        if (isLastAttempt) {
+          const apiMessage = error.response?.data?.message;
+          const apiError = error.response?.data?.error;
+          const errorMsg = apiMessage || apiError || `Server error (${error.response?.status})`;
+          console.error(`[Final] Server error when calling ${endpoint}:`, errorMsg);
+          throw new Error(errorMsg);
+        }
+        
+        const delay = calculateDelay(attempt, config);
+        console.log(`[Retry] Server error. Waiting ${delay}ms before retry ${attempt + 1}`);
+        await sleep(delay);
+        continue;
+      }
+      // Handle non-retryable API errors
+      else {
+        const apiMessage = error.response?.data?.message;
+        const apiError = error.response?.data?.error;
+        
+        if (apiMessage || apiError) {
+          // Improve error messages for specific endpoints
+          if (endpoint === '/auth/verify-credentials' && (apiMessage || apiError).includes('Invalid credentials')) {
+            console.error(`[Final] Auth error when calling ${endpoint}:`, 'Invalid credentials');
+            throw new Error('Invalid credentials');
+          }
+          console.error(`[Final] API error when calling ${endpoint}:`, apiMessage || apiError);
+          throw new Error(apiMessage || apiError);
+        }
+        
+        console.error(`[Final] Unhandled error when calling ${endpoint}:`, error);
+        throw error;
+      }
     }
-  } catch (error: any) {
-    // Handle network errors
-    if (error.code === "NETWORK_ERROR" || error.message === "Network Error") {
-      console.error(`Network error when calling ${endpoint}:`, error);
-      throw new Error(
-        "Network connection failed. Please check your internet connection.",
-      );
-    }
-
-    // Handle timeout errors
-    if (error.code === "ECONNABORTED") {
-      console.error(`Timeout error when calling ${endpoint}:`, error);
-      throw new Error("Request timeout. Please try again.");
-    }
-
-    // Handle 404 errors specifically
-    if (error.response?.status === 404) {
-      console.error(`404 Not Found error when calling ${endpoint}:`, error);
-      throw new Error(
-        `API endpoint not found: ${endpoint}. The requested resource may not exist on the server.`
-      );
-    }
-
-    // Handle API errors
-    if (error.response?.data?.error) {
-      console.error(`API error when calling ${endpoint}:`, error.response.data.error);
-      throw new Error(error.response.data.error);
-    }
-
-    console.error(`Unhandled error when calling ${endpoint}:`, error);
-    throw error;
   }
+
+  // This should never be reached, but just in case
+  throw lastError || new Error(`Failed to complete request to ${endpoint} after ${config.maxRetries} attempts`);
 };
 
 // Export the configured axios instance for direct use if needed

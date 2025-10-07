@@ -87,8 +87,6 @@ export const CallProvider: React.FC<CallProviderProps> = ({ children }) => {
 
   const startCall = (callId: string, options?: CallOptions) => {
     try {
-      console.log('Starting call with ID:', callId, 'Options:', options);
-      
       if (!user) {
         console.error('Cannot start call: No authenticated user');
         return;
@@ -97,8 +95,6 @@ export const CallProvider: React.FC<CallProviderProps> = ({ children }) => {
       // Request media permissions
       navigator.mediaDevices.getUserMedia({ audio: true, video: true })
         .then(stream => {
-          console.log('Media permissions granted:', stream.getTracks().map(t => t.kind));
-          
           const currentUserParticipant: CallParticipant = {
             id: user.id,
             name: `${user.firstName} ${user.lastName}`,
@@ -110,7 +106,6 @@ export const CallProvider: React.FC<CallProviderProps> = ({ children }) => {
           };
 
           const department = options?.title || user.department || "general";
-          console.log('Setting up call for department:', department);
 
           setCallState({
             isInCall: true,
@@ -156,8 +151,6 @@ export const CallProvider: React.FC<CallProviderProps> = ({ children }) => {
       // Request media permissions
       navigator.mediaDevices.getUserMedia({ audio: true, video: true })
         .then(stream => {
-          console.log('Media permissions granted for joining call:', stream.getTracks().map(t => t.kind));
-          
           const newParticipant: CallParticipant = {
             id: user.id,
             name: `${user.firstName} ${user.lastName}`,
@@ -169,7 +162,6 @@ export const CallProvider: React.FC<CallProviderProps> = ({ children }) => {
           };
 
           setCallState((prev) => {
-            console.log('Updating call state to join call');
             return {
               ...prev,
               isInCall: true,
@@ -190,11 +182,8 @@ export const CallProvider: React.FC<CallProviderProps> = ({ children }) => {
 
   const endCall = () => {
     try {
-      console.log('Ending call for department:', callState.department);
-      
       if (callState.department) {
         setActiveCalls((prev) => {
-          console.log('Removing call from active calls map');
           const newMap = new Map(prev);
           newMap.delete(callState.department!);
           return newMap;
@@ -209,7 +198,6 @@ export const CallProvider: React.FC<CallProviderProps> = ({ children }) => {
           .then(stream => {
             stream.getTracks().forEach(track => {
               track.stop();
-              console.log(`Stopped ${track.kind} track`);
             });
           })
           .catch(err => {
@@ -230,8 +218,6 @@ export const CallProvider: React.FC<CallProviderProps> = ({ children }) => {
         isScreenSharing: false,
         incomingCall: null,
       });
-      
-      console.log('Call ended successfully');
     } catch (error) {
       console.error('Error ending call:', error);
     }

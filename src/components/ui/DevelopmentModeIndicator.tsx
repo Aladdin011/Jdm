@@ -29,7 +29,7 @@ export default function DevelopmentModeIndicator() {
 
   const handleCheckConnection = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/health", {
+      const response = await fetch("/api/health", {
         method: "GET",
         signal: AbortSignal.timeout(5000), // 5 second timeout
       });
@@ -44,9 +44,9 @@ export default function DevelopmentModeIndicator() {
         );
       }
     } catch (error) {
-      alert(
-        "❌ Cannot connect to backend server. Please ensure it's running on http://localhost:5000",
-      );
+        alert(
+          "❌ Cannot connect to backend server. Please ensure it's running on http://localhost:4000",
+        );
     }
   };
 

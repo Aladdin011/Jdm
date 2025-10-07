@@ -95,6 +95,21 @@ services:
   - Open your Hostinger site URL and test routes (client-side navigation)
   - Check Console for 404s on assets; relative base and SPA redirects should prevent these
 
+### Hostinger Production Cautions
+
+- Set `VITE_API_URL` in `.env.production` to your backend (e.g., `https://api.jdmarcng.com`).
+- Ensure `VITE_ENABLE_SEED_ACCOUNTS=false` in `.env.production` to hide test accounts.
+- Confirm `dist/` contains `index.html`, `_redirects`, and `.htaccess` after build.
+- In production, console and debugger statements are stripped for cleaner logs.
+- If fonts from Google fail to load due to network policies, the app still functions; consider self-hosting fonts under `public/` for strict environments.
+- Private routes use `src/components/auth/PrivateRoute.tsx`; unauthenticated users are redirected to `/login`.
+
+### Backend API Connectivity
+
+- In development, API calls default to the Vite proxy at `/api`; configure the proxy in `vite.config.ts`.
+- In production, API calls require `VITE_API_URL`; there is no fallback to external Render URLs.
+- Token storage keys align between frontend and API service: `builder_aura_auth_token` and `builder_aura_refresh_token` (override via env).
+
 ## Seed Accounts Feature
 
 The application includes a seed account feature that provides quick and easy login access to different dashboard types. This is particularly useful for development, testing, and demonstration purposes.

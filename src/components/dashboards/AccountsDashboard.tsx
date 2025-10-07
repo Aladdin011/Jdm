@@ -70,6 +70,7 @@ import {
 import DashboardThemeWrapper from "./DashboardThemeWrapper";
 import { getDepartmentTheme } from "@/utils/departmentThemes";
 import { useCall } from "@/contexts/CallContext";
+import ConversationModule from "@/components/features/communication/ConversationModule";
 
 interface Transaction {
   id: string;
@@ -1149,6 +1150,9 @@ export default function AccountsDashboard() {
             </CardContent>
           </Card>
         </motion.div>
+
+        {/* Communication Module */}
+        <ConversationModule />
       </div>
     </DashboardThemeWrapper>
   );

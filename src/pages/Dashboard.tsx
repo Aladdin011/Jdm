@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import DashboardRouter from "@/components/DashboardRouter";
 import { Button } from "@/components/ui/button";
@@ -82,7 +83,7 @@ import {
 } from "lucide-react";
 import PageTransition from "@/components/ui/PageTransition";
 import { projectAPI, activityAPI } from "@/services/api";
-import useAnalytics, { trackEvent } from "@/hooks/useAnalytics";
+import useAnalytics, { trackEvent, trackBusinessEvent } from "@/hooks/useAnalytics";
 
 // Enhanced interfaces
 interface Project {
@@ -131,11 +132,85 @@ interface DashboardMetrics {
 
 export default function ModernDashboard() {
   const { user, isAdmin, logout } = useAuth();
-  const { trackBusinessEvent } = useAnalytics();
+  const [isInitializing, setIsInitializing] = useState(true);
+
+  // Add effect to handle initialization and prevent immediate navigation
+  useEffect(() => {
+    // Track dashboard access
+    trackEvent('dashboard_access', 'user_interaction', `${user?.department || 'unknown'}_department`);
+    
+    // Short delay to ensure user data is fully loaded
+    const timer = setTimeout(() => {
+      console.log('Dashboard initialization complete');
+      setIsInitializing(false);
+    }, 1500); // Increased delay for better user experience
+    
+    return () => clearTimeout(timer);
+  }, [user]);
+
+  // Show loading state while initializing
+  if (isInitializing) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#EAE6DF] to-[#C2CCC5]">
+        <div className="text-center bg-white/80 backdrop-blur-sm p-8 rounded-lg shadow-lg">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#A7967E] mx-auto mb-4"></div>
+          <p className="text-[#142E54] font-medium text-lg">Preparing your dashboard...</p>
+          <p className="text-gray-600 mt-2 text-sm">Loading your personalized experience</p>
+          <div className="mt-4 w-48 h-1.5 bg-gray-200 rounded-full overflow-hidden mx-auto">
+            <div className="h-full bg-[#142E54] animate-pulse rounded-full"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Check if user has department info for routing
-  if (user?.department) {
-    return <DashboardRouter department={user.department} />;
+  if (!user) {
+    console.error('No user data available');
+    toast.error('Authentication error. Please log in again.');
+    return <Navigate to="/login" replace />;
+  }
+  
+  // Use department or dashboard field for routing
+  const departmentForRouting = user.department || user.dashboard;
+  
+  if (departmentForRouting) {
+    // Log successful routing
+    console.log(`Routing to department: ${departmentForRouting}`);
+    
+    return <DashboardRouter department={departmentForRouting} />;
+  }
+  
+  // If no department, redirect to admin page for admins, otherwise show error
+  if (isAdmin) {
+    console.log('No department found but user is admin. Redirecting to admin page.');
+    return <Navigate to="/admin" replace />;
+  } else {
+    console.error('User has no department assigned:', user);
+    toast.error('No department assigned. Please contact your administrator.');
+    
+    // Show a more helpful error page instead of immediate redirect
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#EAE6DF] to-[#C2CCC5] p-4">
+        <div className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">
+          <div className="text-amber-600 text-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <h2 className="text-xl font-bold mt-2">Department Not Assigned</h2>
+          </div>
+          <p className="text-gray-700 mb-4">Your account doesn't have a department assigned. Please contact your administrator to resolve this issue.</p>
+          <div className="flex flex-col space-y-2">
+            <button 
+              onClick={() => logout()} 
+              className="w-full py-2 px-4 bg-[#142E54] text-white rounded hover:bg-[#0e2240] transition-colors">
+              Return to Login
+            </button>
+            <p className="text-sm text-gray-500 text-center mt-2">User ID: {user.id}</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   // State management

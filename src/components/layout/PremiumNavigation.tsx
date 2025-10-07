@@ -31,6 +31,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import SmartLogo from "@/components/ui/SmartLogo";
+import NotificationSystem from "@/components/features/communication/NotificationSystem";
 
 interface NavItem {
   label: string;
@@ -630,6 +631,9 @@ export default function PremiumNavigation() {
 
           {/* Enhanced Desktop CTA & Theme Toggle */}
           <div className="nav-cta hidden lg:flex items-center gap-6">
+            {/* Notification System */}
+            <NotificationSystem />
+            
             {/* Enhanced Theme Toggle */}
             <motion.div
               className="relative w-16 h-8 bg-black/40 border border-white/30 rounded-full p-1 cursor-pointer backdrop-blur-sm"

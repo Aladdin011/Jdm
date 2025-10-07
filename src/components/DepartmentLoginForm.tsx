@@ -19,16 +19,16 @@ interface DepartmentAccount {
 }
 
 const departmentAccounts: DepartmentAccount[] = [
-  { department: "Admin", email: "admin@jdmarcng.com", password: "Admin@123", code: "84217", dashboard: "AdminDashboard" },
-  { department: "Accounts", email: "accounts@jdmarcng.com", password: "Acc@123", code: "59304", dashboard: "AccountsDashboard" },
-  { department: "Accounting", email: "accounting@jdmarcng.com", password: "Acct@123", code: "17026", dashboard: "AccountingDashboard" },
-  { department: "Business Administration", email: "busadmin@jdmarcng.com", password: "BA@123", code: "42689", dashboard: "BusinessAdministrationDashboard" },
-  { department: "Executive Assistant", email: "busdev@jdmarcng.com", password: "BD@123", code: "31275", dashboard: "ExecutiveAssistantDashboard" },
-  { department: "Digital Marketing", email: "marketing@jdmarcng.com", password: "Mkt@123", code: "75820", dashboard: "DigitalMarketingDashboard" },
-  { department: "HR", email: "hr@jdmarcng.com", password: "Hr@123", code: "60491", dashboard: "HRDashboard" },
-  { department: "Projects", email: "projects@jdmarcng.com", password: "Proj@123", code: "18562", dashboard: "ProjectDashboard" },
-  { department: "Secretariat", email: "secretariat@jdmarcng.com", password: "Sec@123", code: "92734", dashboard: "SecretariatDashboard" },
-  { department: "General Users", email: "general@jdmarcng.com", password: "Gen@123", code: "35108", dashboard: "GeneralDashboard" }
+  { department: "Admin", email: "admin@jdmarcng.com", password: "Admin@123", code: "AD8421", dashboard: "AdminDashboard" },
+  { department: "Accounts", email: "accounts@jdmarcng.com", password: "Acc@123", code: "AC5930", dashboard: "AccountsDashboard" },
+  { department: "Accounting", email: "accounting@jdmarcng.com", password: "Acct@123", code: "AC1702", dashboard: "AccountsDashboard" },
+  { department: "Business Administration", email: "busadmin@jdmarcng.com", password: "BA@123", code: "BA4268", dashboard: "BusinessAdministrationDashboard" },
+  { department: "Executive Assistant", email: "busdev@jdmarcng.com", password: "BD@123", code: "EA3127", dashboard: "ExecutiveAssistantDashboard" },
+  { department: "Digital Marketing", email: "marketing@jdmarcng.com", password: "Mkt@123", code: "DM7582", dashboard: "DigitalMarketingDashboard" },
+  { department: "HR", email: "hr@jdmarcng.com", password: "Hr@123", code: "HR6049", dashboard: "HRDashboard" },
+  { department: "Projects", email: "projects@jdmarcng.com", password: "Proj@123", code: "PR1856", dashboard: "ProjectDashboard" },
+  { department: "Secretariat", email: "secretariat@jdmarcng.com", password: "Sec@123", code: "SE9273", dashboard: "SecretaryDashboard" },
+  { department: "General Users", email: "general@jdmarcng.com", password: "Gen@123", code: "GU3510", dashboard: "GeneralDashboard" }
 ];
 
 const DepartmentLoginForm: React.FC = () => {
@@ -36,13 +36,17 @@ const DepartmentLoginForm: React.FC = () => {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [showCompleteLoginButton, setShowCompleteLoginButton] = useState(false);
   
-  const { login } = useAuth();
+  const { login, completeLogin } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setShowCompleteLoginButton(false);
+    setUserId(null);
 
     try {
       const credentials = {
@@ -52,7 +56,13 @@ const DepartmentLoginForm: React.FC = () => {
 
       const result = await login(credentials);
 
-      if (result.success) {
+      if (result.success && result.userId) {
+        // Store userId and show complete login button
+        setUserId(String(result.userId));
+        setShowCompleteLoginButton(true);
+        toast.success("Credentials verified! Click 'Complete Login' to finish.");
+      } else if (result.success && result.user) {
+        // Direct login success (fallback for older flow)
         toast.success("Login successful! Redirecting to dashboard...");
         setTimeout(() => {
           navigate('/dashboard');
@@ -61,7 +71,42 @@ const DepartmentLoginForm: React.FC = () => {
         toast.error(result.error || "Login failed");
       }
     } catch (error) {
+      console.error('Login error:', error);
       toast.error("An error occurred during login");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCompleteLogin = async () => {
+    if (!userId) {
+      toast.error("No user ID available for completion");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const result = await completeLogin(Number(userId));
+      
+      if (result.success && result.user) {
+        toast.success("Login completed successfully! Redirecting to dashboard...");
+        
+        // Reset form state
+        setShowCompleteLoginButton(false);
+        setUserId(null);
+        setIdentifier('');
+        setPassword('');
+        
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 1000);
+      } else {
+        toast.error(result.error || "Failed to complete login");
+      }
+    } catch (error) {
+      console.error('Complete login error:', error);
+      toast.error("An error occurred while completing login");
     } finally {
       setIsLoading(false);
     }
@@ -70,6 +115,10 @@ const DepartmentLoginForm: React.FC = () => {
   const quickLogin = (account: DepartmentAccount) => {
     setIdentifier(loginType === 'email' ? account.email : account.code);
     setPassword(account.password);
+    // Reset completion state when selecting new account
+    setShowCompleteLoginButton(false);
+    setUserId(null);
+    toast.success(`Credentials filled for ${account.department}. Click 'Sign In' to verify.`);
   };
 
   return (
@@ -89,7 +138,7 @@ const DepartmentLoginForm: React.FC = () => {
                 Department Login
               </CardTitle>
               <CardDescription>
-                Login with your email or 5-digit department code
+                Login with your email or 6-character department code
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -116,6 +165,7 @@ const DepartmentLoginForm: React.FC = () => {
                         value={identifier}
                         onChange={(e) => setIdentifier(e.target.value)}
                         required
+                        disabled={showCompleteLoginButton}
                       />
                     </div>
                   </TabsContent>
@@ -126,11 +176,12 @@ const DepartmentLoginForm: React.FC = () => {
                       <Input
                         id="code"
                         type="text"
-                        placeholder="Enter 5-digit code"
+                        placeholder="Enter 6-character code"
                         value={identifier}
                         onChange={(e) => setIdentifier(e.target.value)}
-                        maxLength={5}
+                        maxLength={6}
                         required
+                        disabled={showCompleteLoginButton}
                       />
                     </div>
                   </TabsContent>
@@ -144,22 +195,44 @@ const DepartmentLoginForm: React.FC = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
+                      disabled={showCompleteLoginButton}
                     />
                   </div>
 
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Logging in...
-                      </>
-                    ) : (
-                      <>
-                        <Lock className="mr-2 h-4 w-4" />
-                        Login
-                      </>
-                    )}
-                  </Button>
+                  {!showCompleteLoginButton ? (
+                    <Button type="submit" className="w-full" disabled={isLoading}>
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Verifying...
+                        </>
+                      ) : (
+                        <>
+                          <Lock className="mr-2 h-4 w-4" />
+                          Sign In
+                        </>
+                      )}
+                    </Button>
+                  ) : (
+                    <Button 
+                      type="button" 
+                      onClick={handleCompleteLogin} 
+                      className="w-full bg-green-600 hover:bg-green-700" 
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Completing...
+                        </>
+                      ) : (
+                        <>
+                          <Lock className="mr-2 h-4 w-4" />
+                          Complete Login
+                        </>
+                      )}
+                    </Button>
+                  )}
                 </form>
               </Tabs>
             </CardContent>
@@ -170,7 +243,7 @@ const DepartmentLoginForm: React.FC = () => {
             <CardHeader>
               <CardTitle>Quick Access</CardTitle>
               <CardDescription>
-                Click any department for quick login (Development Mode)
+                Click any department to fill credentials (Development Mode)
               </CardDescription>
             </CardHeader>
             <CardContent>

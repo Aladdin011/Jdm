@@ -84,6 +84,7 @@ import {
 import DashboardThemeWrapper from "./DashboardThemeWrapper";
 import { getDepartmentTheme } from "@/utils/departmentThemes";
 import { useCall } from "@/contexts/CallContext";
+import ConversationModule from "@/components/features/communication/ConversationModule";
 
 // Enhanced interfaces
 interface Campaign {
@@ -327,6 +328,141 @@ export default function DigitalMarketingDashboard() {
     { stage: "Purchase", count: 245, conversion: 4.5 },
   ];
 
+  // Handler functions
+  const handleNewCampaign = async () => {
+    try {
+      await customAction(
+        'newCampaign',
+        async () => {
+          console.log('Creating new marketing campaign');
+          // Simulate campaign creation
+          await new Promise(resolve => setTimeout(resolve, 1500));
+          return { success: true };
+        },
+        'New campaign created successfully',
+        'Failed to create campaign'
+      );
+    } catch (error) {
+      console.error('Error creating campaign:', error);
+    }
+  };
+
+  const handleEditCampaign = async (campaignId: string) => {
+    try {
+      await customAction(
+        'editCampaign',
+        async () => {
+          console.log(`Editing campaign: ${campaignId}`);
+          // Simulate campaign editing
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          return { success: true };
+        },
+        'Campaign updated successfully',
+        'Failed to update campaign'
+      );
+    } catch (error) {
+      console.error('Error editing campaign:', error);
+    }
+  };
+
+  const handleViewAnalytics = async (campaignId: string) => {
+    try {
+      await customAction(
+        'viewAnalytics',
+        async () => {
+          console.log(`Viewing analytics for campaign: ${campaignId}`);
+          // Simulate analytics loading
+          await new Promise(resolve => setTimeout(resolve, 800));
+          return { success: true };
+        },
+        'Analytics loaded successfully',
+        'Failed to load analytics'
+      );
+    } catch (error) {
+      console.error('Error viewing analytics:', error);
+    }
+  };
+
+  const handleSchedulePost = async () => {
+    try {
+      await customAction(
+        'schedulePost',
+        async () => {
+          console.log('Scheduling social media post');
+          // Simulate post scheduling
+          await new Promise(resolve => setTimeout(resolve, 1200));
+          return { success: true };
+        },
+        'Post scheduled successfully',
+        'Failed to schedule post'
+      );
+    } catch (error) {
+      console.error('Error scheduling post:', error);
+    }
+  };
+
+  const handleConfigureAutomation = async (toolId: string) => {
+    try {
+      await customAction(
+        'configureAutomation',
+        async () => {
+          console.log(`Configuring automation tool: ${toolId}`);
+          // Simulate automation configuration
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          return { success: true };
+        },
+        'Automation configured successfully',
+        'Failed to configure automation'
+      );
+    } catch (error) {
+      console.error('Error configuring automation:', error);
+    }
+  };
+
+  const handleViewAutomationReports = async (toolId: string) => {
+    try {
+      await customAction(
+        'viewAutomationReports',
+        async () => {
+          console.log(`Viewing reports for automation tool: ${toolId}`);
+          // Simulate report loading
+          await new Promise(resolve => setTimeout(resolve, 900));
+          return { success: true };
+        },
+        'Reports loaded successfully',
+        'Failed to load reports'
+      );
+    } catch (error) {
+      console.error('Error viewing reports:', error);
+    }
+  };
+
+  const handleRefreshData = async () => {
+    try {
+      await refreshData();
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+    }
+  };
+
+  const handleTeamChat = async () => {
+    try {
+      await customAction(
+        'teamChat',
+        async () => {
+          console.log('Opening team chat interface');
+          // Simulate chat opening
+          await new Promise(resolve => setTimeout(resolve, 500));
+          return { success: true };
+        },
+        'Team chat opened',
+        'Failed to open team chat'
+      );
+    } catch (error) {
+      console.error('Error opening team chat:', error);
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active":
@@ -437,9 +573,14 @@ export default function DigitalMarketingDashboard() {
               <Video className="h-4 w-4 mr-2" />
               Team Call
             </Button>
-            <Button variant="outline" className="gap-2">
+            <Button 
+              variant="outline" 
+              className="gap-2"
+              onClick={handleRefreshData}
+              disabled={isLoading('refreshData')}
+            >
               <RefreshCw className="h-4 w-4" />
-              Refresh
+              {isLoading('refreshData') ? 'Refreshing...' : 'Refresh'}
             </Button>
           </div>
         </motion.div>
@@ -681,13 +822,23 @@ export default function DigitalMarketingDashboard() {
                               </div>
 
                               <div className="flex gap-2">
-                                <Button size="sm" variant="outline">
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  onClick={() => handleEditCampaign(campaign.id)}
+                                  disabled={isLoading('editCampaign')}
+                                >
                                   <Edit className="h-4 w-4 mr-1" />
-                                  Edit
+                                  {isLoading('editCampaign') ? 'Loading...' : 'Edit'}
                                 </Button>
-                                <Button size="sm" variant="outline">
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  onClick={() => handleViewAnalytics(campaign.id)}
+                                  disabled={isLoading('viewAnalytics')}
+                                >
                                   <BarChart3 className="h-4 w-4 mr-1" />
-                                  Analytics
+                                  {isLoading('viewAnalytics') ? 'Loading...' : 'Analytics'}
                                 </Button>
                               </div>
                             </motion.div>
@@ -914,9 +1065,13 @@ export default function DigitalMarketingDashboard() {
               <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
                 Campaign Management
               </h3>
-              <Button className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white">
+              <Button 
+                className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white"
+                onClick={handleNewCampaign}
+                disabled={isLoading('newCampaign')}
+              >
                 <PlusCircle className="h-4 w-4 mr-2" />
-                New Campaign
+                {isLoading('newCampaign') ? 'Creating...' : 'New Campaign'}
               </Button>
             </div>
 
@@ -1080,9 +1235,11 @@ export default function DigitalMarketingDashboard() {
                       <Button
                         size="sm"
                         className="bg-gradient-to-r from-pink-500 to-rose-500"
+                        onClick={handleSchedulePost}
+                        disabled={isLoading('schedulePost')}
                       >
                         <Send className="h-4 w-4 mr-2" />
-                        Schedule
+                        {isLoading('schedulePost') ? 'Scheduling...' : 'Schedule'}
                       </Button>
                     </div>
                   </div>
@@ -1261,13 +1418,23 @@ export default function DigitalMarketingDashboard() {
                           </div>
                         </div>
                         <div className="flex gap-2">
-                          <Button size="sm" variant="outline">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => handleConfigureAutomation(tool.id)}
+                            disabled={isLoading('configureAutomation')}
+                          >
                             <Settings className="h-4 w-4 mr-2" />
-                            Configure
+                            {isLoading('configureAutomation') ? 'Loading...' : 'Configure'}
                           </Button>
-                          <Button size="sm" variant="outline">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => handleViewAutomationReports(tool.id)}
+                            disabled={isLoading('viewAutomationReports')}
+                          >
                             <BarChart3 className="h-4 w-4 mr-2" />
-                            Reports
+                            {isLoading('viewAutomationReports') ? 'Loading...' : 'Reports'}
                           </Button>
                         </div>
                       </div>
@@ -1445,6 +1612,9 @@ export default function DigitalMarketingDashboard() {
             </CardContent>
           </Card>
         </motion.div>
+
+        {/* Communication Module */}
+        <ConversationModule />
       </div>
     </DashboardThemeWrapper>
   );

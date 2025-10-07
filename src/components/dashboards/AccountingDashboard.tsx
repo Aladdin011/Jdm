@@ -70,6 +70,8 @@ import {
 import DashboardThemeWrapper from "./DashboardThemeWrapper";
 import { getDepartmentTheme } from "@/utils/departmentThemes";
 import { useCall } from "@/contexts/CallContext";
+import CallManager from "@/components/calls/CallManager";
+import ConversationModule from "@/components/features/communication/ConversationModule";
 
 interface Transaction {
   id: string;
@@ -438,6 +440,104 @@ export default function AccountingDashboard() {
     }
   };
 
+  const handleViewInvoice = async (invoiceId: string) => {
+    try {
+      await customAction(
+        'viewInvoice',
+        async () => {
+          console.log(`Viewing invoice details for: ${invoiceId}`);
+          // Simulate loading invoice details
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          return { success: true };
+        },
+        'Invoice details loaded',
+        'Failed to load invoice details'
+      );
+    } catch (error) {
+      console.error('Error viewing invoice:', error);
+    }
+  };
+
+  const handleEditInvoice = async (invoiceId: string) => {
+    try {
+      await customAction(
+        'editInvoice',
+        async () => {
+          console.log(`Opening invoice editor for: ${invoiceId}`);
+          // Simulate opening invoice editor
+          await new Promise(resolve => setTimeout(resolve, 800));
+          return { success: true };
+        },
+        'Invoice editor opened',
+        'Failed to open invoice editor'
+      );
+    } catch (error) {
+      console.error('Error editing invoice:', error);
+    }
+  };
+
+  const handleDownloadInvoicePDF = async (invoiceId: string) => {
+    try {
+      await customAction(
+        'downloadInvoicePDF',
+        async () => {
+          console.log(`Generating PDF for invoice: ${invoiceId}`);
+          // Simulate PDF generation
+          await new Promise(resolve => setTimeout(resolve, 1500));
+          return { success: true };
+        },
+        'Invoice PDF downloaded',
+        'Failed to generate PDF'
+      );
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+    }
+  };
+
+  const handleSendInvoice = async (invoiceId: string) => {
+    try {
+      await customAction(
+        'sendInvoice',
+        async () => {
+          console.log(`Sending invoice: ${invoiceId}`);
+          // Simulate sending invoice
+          await new Promise(resolve => setTimeout(resolve, 1200));
+          return { success: true };
+        },
+        'Invoice sent successfully',
+        'Failed to send invoice'
+      );
+    } catch (error) {
+      console.error('Error sending invoice:', error);
+    }
+  };
+
+  const handleProcessPayroll = async () => {
+    try {
+      await customAction(
+        'processPayroll',
+        async () => {
+          console.log('Processing payroll for all employees');
+          // Simulate payroll processing
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          return { success: true };
+        },
+        'Payroll processed successfully',
+        'Failed to process payroll'
+      );
+    } catch (error) {
+      console.error('Error processing payroll:', error);
+    }
+  };
+
+  const handleRefreshData = async () => {
+    try {
+      await refreshData();
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+    }
+  };
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-NG", {
       style: "currency",
@@ -530,9 +630,14 @@ export default function AccountingDashboard() {
               <Video className="h-4 w-4 mr-2" />
               Finance Call
             </Button>
-            <Button variant="outline" className="gap-2">
+            <Button 
+              variant="outline" 
+              className="gap-2"
+              onClick={handleRefreshData}
+              disabled={isLoading('refreshData')}
+            >
               <RefreshCw className="h-4 w-4" />
-              Refresh
+              {isLoading('refreshData') ? 'Refreshing...' : 'Refresh'}
             </Button>
           </div>
         </motion.div>
@@ -917,21 +1022,41 @@ export default function AccountingDashboard() {
                       </div>
 
                       <div className="flex gap-2">
-                        <Button size="sm" variant="outline">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleViewInvoice(invoice.id)}
+                          disabled={isLoading('viewInvoice')}
+                        >
                           <Eye className="h-4 w-4 mr-1" />
-                          View
+                          {isLoading('viewInvoice') ? 'Loading...' : 'View'}
                         </Button>
-                        <Button size="sm" variant="outline">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleEditInvoice(invoice.id)}
+                          disabled={isLoading('editInvoice')}
+                        >
                           <Edit className="h-4 w-4 mr-1" />
-                          Edit
+                          {isLoading('editInvoice') ? 'Loading...' : 'Edit'}
                         </Button>
-                        <Button size="sm" variant="outline">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleDownloadInvoicePDF(invoice.id)}
+                          disabled={isLoading('downloadInvoicePDF')}
+                        >
                           <Download className="h-4 w-4 mr-1" />
-                          PDF
+                          {isLoading('downloadInvoicePDF') ? 'Generating...' : 'PDF'}
                         </Button>
-                        <Button size="sm" variant="outline">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleSendInvoice(invoice.id)}
+                          disabled={isLoading('sendInvoice')}
+                        >
                           <Send className="h-4 w-4 mr-1" />
-                          Send
+                          {isLoading('sendInvoice') ? 'Sending...' : 'Send'}
                         </Button>
                       </div>
                     </motion.div>
@@ -947,9 +1072,13 @@ export default function AccountingDashboard() {
               <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
                 Payroll Management
               </h3>
-              <Button className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white">
+              <Button 
+                className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white"
+                onClick={handleProcessPayroll}
+                disabled={isLoading('processPayroll')}
+              >
                 <Calculator className="h-4 w-4 mr-2" />
-                Process Payroll
+                {isLoading('processPayroll') ? 'Processing...' : 'Process Payroll'}
               </Button>
             </div>
 
@@ -1206,20 +1335,16 @@ export default function AccountingDashboard() {
                   Connect with accounting team and financial advisors
                 </p>
                 <div className="flex gap-2">
-                  <Button
-                    onClick={() => startCall("accounting")}
+                  <CallManager
+                    currentDepartment="accounting"
+                    customLabel="Voice Call"
                     className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
-                  >
-                    <Phone className="h-4 w-4 mr-2" />
-                    Voice Call
-                  </Button>
-                  <Button
-                    onClick={() => startCall("accounting")}
+                  />
+                  <CallManager
+                    currentDepartment="accounting"
+                    customLabel="Video Call"
                     className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white"
-                  >
-                    <Video className="h-4 w-4 mr-2" />
-                    Video Call
-                  </Button>
+                  />
                   <Button 
                     variant="outline"
                     onClick={handleFinanceChat}
@@ -1233,6 +1358,9 @@ export default function AccountingDashboard() {
             </CardContent>
           </Card>
         </motion.div>
+
+        {/* Communication Module */}
+        <ConversationModule />
       </div>
     </DashboardThemeWrapper>
   );

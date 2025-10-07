@@ -12,16 +12,16 @@ The system supports two authentication methods:
 
 | Department | Email | Password | Dept Code | Dashboard |
 |------------|-------|----------|-----------|-----------|
-| Admin | admin@jdmarcng.com | Admin@123 | 84217 | AdminDashboard |
-| Accounts | accounts@jdmarcng.com | Acc@123 | 59304 | AccountsDashboard |
-| Accounting | accounting@jdmarcng.com | Acct@123 | 17026 | AccountsDashboard |
-| Business Administration | busadmin@jdmarcng.com | BA@123 | 42689 | BusinessAdministrationDashboard |
-| Executive Assistant | busdev@jdmarcng.com | BD@123 | 31275 | ExecutiveAssistantDashboard |
-| Digital Marketing | marketing@jdmarcng.com | Mkt@123 | 75820 | DigitalMarketingDashboard |
-| HR | hr@jdmarcng.com | Hr@123 | 60491 | HRDashboard |
-| Projects | projects@jdmarcng.com | Proj@123 | 18562 | ProjectDashboard |
-| Secretariat | secretariat@jdmarcng.com | Sec@123 | 92734 | SecretaryDashboard |
-| General Users | general@jdmarcng.com | Gen@123 | 35108 | GeneralDashboard |
+| Admin | admin@jdmarcng.com | Admin@123 | AD8421 | AdminDashboard |
+| Accounts | accounts@jdmarcng.com | Acc@123 | AC5930 | AccountsDashboard |
+| Accounting | accounting@jdmarcng.com | Acct@123 | AC1702 | AccountsDashboard |
+| Business Administration | busadmin@jdmarcng.com | BA@123 | BA4268 | BusinessAdministrationDashboard |
+| Executive Assistant | busdev@jdmarcng.com | BD@123 | EA3127 | ExecutiveAssistantDashboard |
+| Digital Marketing | marketing@jdmarcng.com | Mkt@123 | DM7582 | DigitalMarketingDashboard |
+| HR | hr@jdmarcng.com | Hr@123 | HR6049 | HRDashboard |
+| Projects | projects@jdmarcng.com | Proj@123 | PR1856 | ProjectDashboard |
+| Secretariat | secretariat@jdmarcng.com | Sec@123 | SE9273 | SecretaryDashboard |
+| General Users | general@jdmarcng.com | Gen@123 | GU3510 | GeneralDashboard |
 
 ## Login Process
 
@@ -30,7 +30,7 @@ Navigate to the login page and choose your preferred authentication method.
 
 ### Step 2: Enter Credentials
 - **Email Method:** Enter your department email and password
-- **Code Method:** Enter your 5-digit department code and password
+- **Code Method:** Enter your 6-character department code (2 letters followed by 4 digits) and password
 
 ### Step 3: Dashboard Access
 Upon successful authentication, you'll be redirected to your department-specific dashboard.
@@ -91,7 +91,7 @@ Dashboard: SecretaryDashboard (renamed from SecretariatDashboard)
 ## Technical Notes
 
 - All passwords follow the format: [DeptAbbr]@123
-- Department codes are unique 5-digit identifiers
+- Department codes are unique 6-character identifiers (2 letters followed by 4 digits)
 - The system automatically routes users to appropriate dashboards
 - Session management handles authentication state
 - Both Accounts and Accounting departments share the same enhanced dashboard

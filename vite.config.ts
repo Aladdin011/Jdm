@@ -13,6 +13,14 @@ export default defineConfig(({ mode }) => {
   }
   return {
     base: "./",
+    build: {
+      minify: 'esbuild',
+      target: 'es2018',
+      sourcemap: false,
+    },
+    esbuild: {
+      drop: mode === 'production' ? ['console', 'debugger'] : [],
+    },
     server: {
       // Bind explicitly to localhost to match browser origin
       host: "localhost",
@@ -27,7 +35,7 @@ export default defineConfig(({ mode }) => {
       },
       proxy: {
         '/api': {
-          target: 'http://localhost:4000',
+          target: 'http://localhost:4001',
           changeOrigin: true,
           secure: false,
           rewrite: (path) => path.replace(/^\/api/, '/api'),

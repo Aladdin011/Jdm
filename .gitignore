@@ -37,6 +37,10 @@ bower_components
 # dotenv environment variables file
 .env
 
+# Vite build output and cache
+dist/
+.vite/
+
 # node_modules directory
 node_modules
 

@@ -25,7 +25,12 @@ const NotFound = lazy(() => import("@/pages/NotFound"));
 const Login = lazy(() => import("@/pages/Login"));
 const Register = lazy(() => import("@/pages/Register"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
+const Admin = lazy(() => import("@/pages/Admin"));
 const ForgotPassword = lazy(() => import("@/pages/ForgotPassword"));
+const Settings = lazy(() => import("@/pages/Settings"));
+const Security = lazy(() => import("@/pages/Security"));
+const Analytics = lazy(() => import("@/pages/Analytics"));
+const CallInterface = lazy(() => import("@/pages/CallInterface"));
 
 // Enhanced loading component
 const LoadingSpinner = () => (
@@ -401,6 +406,96 @@ function App() {
                                 }}
                               >
                                 <Dashboard />
+                              </RouteWithSEO>
+                            </PrivateRoute>
+                          }
+                        />
+                        <Route
+                          path="/admin"
+                          element={
+                            <PrivateRoute>
+                              <RouteWithSEO
+                                seo={{
+                                  title: "Admin Dashboard - JD Marc Limited",
+                                  description:
+                                    "Manage system administration, users, and team communication in the admin dashboard.",
+                                  keywords:
+                                    "admin dashboard, system administration, user management, team communication",
+                                }}
+                              >
+                                <Admin />
+                              </RouteWithSEO>
+                            </PrivateRoute>
+                          }
+                        />
+                        <Route
+                          path="/settings"
+                          element={
+                            <PrivateRoute>
+                              <RouteWithSEO
+                                seo={{
+                                  title: "Settings - JD Marc Limited",
+                                  description:
+                                    "Manage your account settings, preferences, and system configurations for your JD Marc Limited dashboard.",
+                                  keywords:
+                                    "settings, account management, preferences, configuration",
+                                }}
+                              >
+                                <Settings />
+                              </RouteWithSEO>
+                            </PrivateRoute>
+                          }
+                        />
+                        <Route
+                          path="/security"
+                          element={
+                            <PrivateRoute>
+                              <RouteWithSEO
+                                seo={{
+                                  title: "Security Center - JD Marc Limited",
+                                  description:
+                                    "Monitor security events, access logs, and manage security settings for your JD Marc Limited account.",
+                                  keywords:
+                                    "security, access logs, monitoring, threat detection",
+                                }}
+                              >
+                                <Security />
+                              </RouteWithSEO>
+                            </PrivateRoute>
+                          }
+                        />
+                        <Route
+                          path="/analytics"
+                          element={
+                            <PrivateRoute>
+                              <RouteWithSEO
+                                seo={{
+                                  title: "Analytics Dashboard - JD Marc Limited",
+                                  description:
+                                    "View business insights, performance metrics, and data visualization for your JD Marc Limited projects.",
+                                  keywords:
+                                    "analytics, business insights, metrics, data visualization",
+                                }}
+                              >
+                                <Analytics />
+                              </RouteWithSEO>
+                            </PrivateRoute>
+                          }
+                        />
+                        <Route
+                          path="/call"
+                          element={
+                            <PrivateRoute>
+                              <RouteWithSEO
+                                seo={{
+                                  title: "Call Interface - JD Marc Limited",
+                                  description:
+                                    "Join video and voice calls with your team members for seamless collaboration and communication.",
+                                  keywords:
+                                    "video call, voice call, team communication, collaboration",
+                                }}
+                              >
+                                <CallInterface />
                               </RouteWithSEO>
                             </PrivateRoute>
                           }

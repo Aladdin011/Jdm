@@ -1,0 +1,368 @@
+import { io, Socket } from 'socket.io-client';
+import errorLogger from '../utils/errorLogger';
+
+export interface WebSocketMessage {
+  id: string;
+  type: 'call' | 'message' | 'notification' | 'system';
+  from: string;
+  to: string;
+  content: any;
+  timestamp: Date;
+}
+
+export interface CallEvent {
+  id: string;
+  from: string;
+  to: string;
+  type: 'incoming' | 'accepted' | 'rejected' | 'ended';
+  timestamp: Date;
+}
+
+export interface MessageEvent {
+  id: string;
+  from: string;
+  to: string;
+  content: string;
+  timestamp: Date;
+  conversationId: string;
+}
+
+class WebSocketService {
+  private socket: Socket | null = null;
+  private reconnectAttempts = 0;
+  private maxReconnectAttempts = 5;
+  private reconnectDelay = 1000;
+  private listeners: Map<string, Function[]> = new Map();
+  private isDevMode = true; // Always use dev mode for now
+  private mockConnected = false;
+  private connectionTimer: number | null = null;
+  private devLogCount = 0;
+
+  constructor() {
+    this.connect();
+  }
+
+  private connect() {
+    if (this.isDevMode) {
+      // In development mode, simulate connection after a short delay
+      this.connectionTimer = setTimeout(() => {
+        this.mockConnected = true;
+        this.reconnectAttempts = 0;
+        this.emit('connected', true);
+        this.devInfoLog('🔗 Mock WebSocket connected (Development Mode)');
+      }, 1000) as unknown as number;
+      return;
+    }
+
+    try {
+      // In production, this would be your actual WebSocket server URL
+      const wsUrl = import.meta.env.PROD 
+        ? 'wss://your-production-websocket-url.com'
+        : 'ws://localhost:3001';
+
+      this.socket = io(wsUrl, {
+        transports: ['websocket', 'polling'],
+        timeout: 5000,
+        forceNew: true,
+        autoConnect: false,
+      });
+
+      this.setupEventListeners();
+      this.socket.connect();
+    } catch (error) {
+      errorLogger.error('WebSocketService', 'connect', 'Socket connection failed', error as Error);
+      this.handleReconnect();
+    }
+  }
+
+  private setupEventListeners() {
+    if (!this.socket) return;
+
+    this.socket.on('connect', () => {
+      this.reconnectAttempts = 0;
+      this.emit('connected', true);
+    });
+
+    this.socket.on('disconnect', (reason) => {
+      this.emit('connected', false);
+      
+      if (reason === 'io server disconnect') {
+        this.handleReconnect();
+      }
+    });
+
+    this.socket.on('connect_error', (error) => {
+      errorLogger.error('WebSocketService', 'connect_error', 'WebSocket connection error', error);
+      this.handleReconnect();
+    });
+
+    // Call events
+    this.socket.on('incoming_call', (data: CallEvent) => {
+      this.emit('incoming_call', data);
+    });
+
+    this.socket.on('call_accepted', (data: CallEvent) => {
+      this.emit('call_accepted', data);
+    });
+
+    this.socket.on('call_rejected', (data: CallEvent) => {
+      this.emit('call_rejected', data);
+    });
+
+    this.socket.on('call_ended', (data: CallEvent) => {
+      this.emit('call_ended', data);
+    });
+
+    // Message events
+    this.socket.on('new_message', (data: MessageEvent) => {
+      this.emit('new_message', data);
+    });
+
+    this.socket.on('message_read', (data: { messageId: string; readBy: string }) => {
+      this.emit('message_read', data);
+    });
+
+    // Notification events
+    this.socket.on('notification', (data: any) => {
+      this.emit('notification', data);
+    });
+
+    // System events
+    this.socket.on('user_online', (data: { userId: string }) => {
+      this.emit('user_online', data);
+    });
+
+    this.socket.on('user_offline', (data: { userId: string }) => {
+      this.emit('user_offline', data);
+    });
+  }
+
+  private handleReconnect() {
+    if (this.isDevMode) {
+      // In dev mode, just simulate reconnection
+      this.mockConnected = false;
+      this.emit('connected', false);
+      
+      setTimeout(() => {
+        this.mockConnected = true;
+        this.emit('connected', true);
+        this.devInfoLog('🔗 Mock WebSocket reconnected (Development Mode)');
+      }, 2000);
+      return;
+    }
+
+    if (this.reconnectAttempts < this.maxReconnectAttempts) {
+      this.reconnectAttempts++;
+      const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1);
+      
+      this.devInfoLog(`Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts})`);
+      
+      setTimeout(() => {
+        this.connect();
+      }, delay);
+    } else {
+      errorLogger.error('WebSocketService', 'reconnect_failed', 'Max reconnection attempts reached');
+      this.emit('connection_failed', true);
+    }
+  }
+
+  private devInfoLog(message: string, metadata?: Record<string, any>) {
+    // Limit noisy dev logs to 4 entries per session
+    if (this.devLogCount < 4) {
+      errorLogger.info('WebSocketService', 'dev_info', message, metadata);
+      this.devLogCount += 1;
+    }
+  }
+
+  // Event listener management
+  on(event: string, callback: Function) {
+    if (!this.listeners.has(event)) {
+      this.listeners.set(event, []);
+    }
+    this.listeners.get(event)!.push(callback);
+  }
+
+  off(event: string, callback: Function) {
+    const eventListeners = this.listeners.get(event);
+    if (eventListeners) {
+      const index = eventListeners.indexOf(callback);
+      if (index > -1) {
+        eventListeners.splice(index, 1);
+      }
+    }
+  }
+
+  private emit(event: string, data: any) {
+    const eventListeners = this.listeners.get(event);
+    if (eventListeners) {
+      eventListeners.forEach(callback => callback(data));
+    }
+  }
+
+  // Room management
+  joinRoom(roomId: string) {
+    if (this.isDevMode) {
+      this.devInfoLog(`📍 Joined room: ${roomId} (Mock)`);
+      return;
+    }
+    
+    if (this.socket?.connected) {
+      this.socket.emit('join_room', { roomId });
+    }
+  }
+
+  leaveRoom(roomId: string) {
+    if (this.isDevMode) {
+      this.devInfoLog(`📍 Left room: ${roomId} (Mock)`);
+      return;
+    }
+    
+    if (this.socket?.connected) {
+      this.socket.emit('leave_room', { roomId });
+    }
+  }
+
+  // Message handling
+  sendMessage(message: Omit<MessageEvent, 'id' | 'timestamp'> & { type?: string }) {
+    if (this.isDevMode) {
+      // In dev mode, simulate message echo for testing
+      setTimeout(() => {
+        const echoMessage: MessageEvent = {
+          ...message,
+          id: this.generateId(),
+          timestamp: new Date(),
+          from: 'System',
+          content: `Echo: ${message.content}`,
+        };
+        this.emit('new_message', echoMessage);
+      }, 500);
+      return;
+    }
+
+    if (this.socket?.connected) {
+      this.socket.emit('send_message', {
+        ...message,
+        id: this.generateId(),
+        timestamp: new Date(),
+      });
+    }
+  }
+
+  // Call handling
+  initiateCall(callData: Omit<CallEvent, 'id' | 'timestamp'>) {
+    if (this.isDevMode) {
+      this.devInfoLog('📞 Mock call initiated:', { callData });
+      return;
+    }
+
+    if (this.socket?.connected) {
+      this.socket.emit('initiate_call', {
+        ...callData,
+        id: this.generateId(),
+        type: (callData as Partial<CallEvent>).type ?? 'incoming',
+        timestamp: new Date(),
+      });
+    }
+  }
+
+  acceptCall(callId: string) {
+    if (this.isDevMode) {
+      this.devInfoLog('📞 Mock call accepted:', { callId });
+      return;
+    }
+
+    if (this.socket?.connected) {
+      this.socket.emit('accept_call', { callId });
+    }
+  }
+
+  rejectCall(callId: string) {
+    if (this.isDevMode) {
+      this.devInfoLog('📞 Mock call rejected:', { callId });
+      return;
+    }
+
+    if (this.socket?.connected) {
+      this.socket.emit('reject_call', { callId });
+    }
+  }
+
+  endCall(callId: string) {
+    if (this.isDevMode) {
+      this.devInfoLog('📞 Mock call ended:', { callId });
+      return;
+    }
+
+    if (this.socket?.connected) {
+      this.socket.emit('end_call', { callId });
+    }
+  }
+
+  // Utility methods
+  markMessageAsRead(messageId: string) {
+    if (this.isDevMode) {
+      this.devInfoLog('✅ Mock message marked as read:', { messageId });
+      return;
+    }
+
+    if (this.socket?.connected) {
+      this.socket.emit('mark_message_read', { messageId });
+    }
+  }
+
+  setUserOnline(userId: string) {
+    if (this.isDevMode) {
+      this.devInfoLog('🟢 Mock user online:', { userId });
+      return;
+    }
+
+    if (this.socket?.connected) {
+      this.socket.emit('user_online', { userId });
+    }
+  }
+
+  setUserOffline(userId: string) {
+    if (this.isDevMode) {
+      this.devInfoLog('🔴 Mock user offline:', { userId });
+      return;
+    }
+
+    if (this.socket?.connected) {
+      this.socket.emit('user_offline', { userId });
+    }
+  }
+
+  isConnected(): boolean {
+    if (this.isDevMode) {
+      return this.mockConnected;
+    }
+    return this.socket?.connected || false;
+  }
+
+  disconnect() {
+    if (this.connectionTimer) {
+      clearTimeout(this.connectionTimer);
+      this.connectionTimer = null;
+    }
+
+    if (this.isDevMode) {
+      this.mockConnected = false;
+      this.emit('connected', false);
+      this.devInfoLog('🔗 Mock WebSocket disconnected');
+      return;
+    }
+
+    if (this.socket) {
+      this.socket.disconnect();
+      this.socket = null;
+    }
+  }
+
+  private generateId(): string {
+    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }
+}
+
+// Create and export a singleton instance
+const webSocketService = new WebSocketService();
+export default webSocketService;

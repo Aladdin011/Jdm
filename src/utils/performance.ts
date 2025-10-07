@@ -273,7 +273,7 @@ export const trackWebVitals = () => {
 // Resource hints for better performance
 export const addResourceHints = () => {
   try {
-    const useLocalFonts = Boolean((import.meta as any).env?.VITE_USE_LOCAL_FONTS);
+    const useLocalFonts = String((import.meta as any).env?.VITE_USE_LOCAL_FONTS).toLowerCase() === 'true';
     // DNS prefetch for external domains
     const dnsPrefetchDomains = [
       ...(useLocalFonts ? [] : ['//fonts.googleapis.com', '//fonts.gstatic.com']),
@@ -401,46 +401,44 @@ export const cacheResource = async (
 // Font loading optimization
 export const optimizeFontLoading = () => {
   try {
-    const useLocalFonts = Boolean((import.meta as any).env?.VITE_USE_LOCAL_FONTS);
-    
-    // Choose font source based on env toggle
-    const criticalFonts = useLocalFonts
-      ? ['/fonts/fonts.css']
-      : ['https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'];
+    // Force remote Google Fonts and disable local fonts to avoid OTS errors
+    const useLocalFonts = false;
 
-    criticalFonts.forEach((fontUrl) => {
-      // Check if the font is already preloaded
-      const existingPreload = document.querySelector(`link[href="${fontUrl}"]`);
-      if (!existingPreload) {
-        const link = document.createElement('link');
-        link.rel = 'preload';
-        link.as = 'style';
-        link.href = fontUrl;
-        if (!useLocalFonts) link.crossOrigin = 'anonymous';
-        document.head.appendChild(link);
+    // When using local fonts via bundled imports (e.g., @fontsource), avoid injecting any external stylesheets
+    if (useLocalFonts) {
+      // Ensure font-display: swap is applied broadly
+      const fontDisplayCSS = `
+        html { text-rendering: optimizeLegibility; }
+        body { font-synthesis-weight: none; }
+        @font-face { font-display: swap; }
+      `;
 
-        // Also add the actual stylesheet
-        const styleLink = document.createElement('link');
-        styleLink.rel = 'stylesheet';
-        styleLink.href = fontUrl;
-        if (!useLocalFonts) styleLink.crossOrigin = 'anonymous';
-        document.head.appendChild(styleLink);
+      const existingFontStyle = document.querySelector('#font-display-optimization');
+      if (!existingFontStyle) {
+        const style = document.createElement('style');
+        style.id = 'font-display-optimization';
+        style.textContent = fontDisplayCSS;
+        document.head.appendChild(style);
       }
-    });
+      return; // Skip external injection when local fonts are used
+    }
 
-    // Add font-display: swap via CSS for any custom fonts
-    const fontDisplayCSS = `
-      @font-face {
-        font-display: swap;
-      }
-    `;
+    // Fallback: inject Google Fonts stylesheet when not using local fonts
+    const fontUrl = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap';
+    const existingPreload = document.querySelector(`link[href="${fontUrl}"]`);
+    if (!existingPreload) {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'style';
+      link.href = fontUrl;
+      link.crossOrigin = 'anonymous';
+      document.head.appendChild(link);
 
-    const existingFontStyle = document.querySelector('#font-display-optimization');
-    if (!existingFontStyle) {
-      const style = document.createElement('style');
-      style.id = 'font-display-optimization';
-      style.textContent = fontDisplayCSS;
-      document.head.appendChild(style);
+      const styleLink = document.createElement('link');
+      styleLink.rel = 'stylesheet';
+      styleLink.href = fontUrl;
+      styleLink.crossOrigin = 'anonymous';
+      document.head.appendChild(styleLink);
     }
   } catch (error) {
     console.warn('Font loading optimization failed:', error);

@@ -12,13 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+
 import {
   Eye,
   EyeOff,
@@ -27,31 +21,30 @@ import {
   AlertCircle,
   CheckCircle,
   Shield,
-  Key,
   Loader2,
 } from "lucide-react";
 import PageTransition from "@/components/ui/PageTransition";
 import useAnalytics from "@/hooks/useAnalytics";
+import SeedAccountSelector from "@/components/SeedAccountSelector";
+import { SeedAccount } from "@/data/SeedAccounts";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [selectedDepartment, setSelectedDepartment] = useState("");
-  const [uniqueKey, setUniqueKey] = useState("");
-  const [showUniqueKeyModal, setShowUniqueKeyModal] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [isValidatingKey, setIsValidatingKey] = useState(false);
-  const [keyValidationAttempts, setKeyValidationAttempts] = useState(0);
   const [userId, setUserId] = useState<number | null>(null);
+  const [showCompleteLoginButton, setShowCompleteLoginButton] = useState(false);
 
-  const { verifyCredentials, verifyDepartmentCode, completeLogin, isLoading, isAuthenticated } = useAuth();
+
+  const { verifyCredentials, completeLogin, isLoading, isAuthenticated } = useAuth();
   const { trackBusinessEvent } = useAnalytics();
   const navigate = useNavigate();
   const location = useLocation();
 
   const from = location.state?.from?.pathname || "/dashboard";
+  const enableSeedAccounts = import.meta.env.VITE_ENABLE_SEED_ACCOUNTS === "true";
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -60,111 +53,101 @@ export default function Login() {
     }
   }, [isAuthenticated, navigate, from]);
 
-  // Reset form when modal closes
+  // Pre-fill admin credentials in development mode (optional; disabled for production hygiene)
   useEffect(() => {
-    if (!showUniqueKeyModal) {
-      setUniqueKey("");
-      setError("");
-      setKeyValidationAttempts(0);
+    if (import.meta.env.MODE === 'development' && enableSeedAccounts) {
+      const adminAccount = {
+        email: "admin@jdmarcng.com",
+        password: "Admin@123"
+      };
+      setEmail(adminAccount.email);
+      setPassword(adminAccount.password);
+      console.log('🔧 Development mode: Admin credentials pre-filled (manual login required)');
     }
-  }, [showUniqueKeyModal]);
+  }, [enableSeedAccounts]);
+
+  const handleSeedAccountSelect = (account: SeedAccount) => {
+    setEmail(account.email);
+    setPassword(account.password);
+    setSuccess(`Credentials filled for ${account.email}. Click Login to continue.`);
+    // Remove auto-submission - require explicit user action
+  };
 
   const handleInitialSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess("");
 
-    // Basic validation
-    if (!email || !password) {
-      setError("Please fill in all fields");
-      return;
-    }
+    try {
+      // Track login attempt
+      trackBusinessEvent.userAuth("login");
 
-    // Step 1: Verify email and password
-    const result = await verifyCredentials(email, password);
-
-    if (result.success) {
-      if (result.requiresDepartmentCode) {
-        // Staff member - show department code modal
-        setUserId(result.userId!);
-        setSelectedDepartment(result.department!);
-        setShowUniqueKeyModal(true);
-      } else {
-        // Non-staff (admin/general) - complete login directly
-        const loginResult = await completeLogin(result.userId!);
-        if (loginResult.success) {
-          setSuccess("Login successful! Redirecting to dashboard...");
-          setTimeout(() => {
-            navigate(from, { replace: true });
-          }, 1000);
-        } else {
-          setError(loginResult.error || "Login failed");
-        }
+      // Basic validation
+      if (!email || !password) {
+        setError("Please fill in all fields");
+        return;
       }
-    } else {
-      setError(result.error || "Invalid credentials");
+
+      // Verify email and password
+      const result = await verifyCredentials(email, password);
+
+      if (result.success && result.userId) {
+        // Show success message and require explicit action to complete login
+        setSuccess("Credentials verified! Click 'Complete Login' to continue.");
+        setUserId(result.userId);
+        setShowCompleteLoginButton(true);
+      } else {
+        setError(result.error || "Invalid email or password");
+      }
+    } catch (error: any) {
+      console.error("Login error:", error);
+      // Provide more user-friendly error message for exceptions
+      let errorMessage = error.message || "An unexpected error occurred";
+      if (errorMessage.includes("Invalid credentials") || 
+          errorMessage.includes("API error")) {
+        errorMessage = "Email or password is incorrect. Please try again.";
+      }
+      setError(errorMessage);
     }
   };
 
-  const handleUniqueKeySubmit = async () => {
-    if (!uniqueKey) {
-      setError("Please enter your department code");
-      return;
-    }
-
+  const handleCompleteLogin = async () => {
     if (!userId) {
-      setError("Session expired. Please try logging in again.");
+      setError("No user ID available. Please try logging in again.");
       return;
     }
-
-    setIsValidatingKey(true);
-    setError("");
 
     try {
-      const result = await verifyDepartmentCode(userId, uniqueKey);
-
-      if (result.success) {
-        setSuccess("Department code verified! Redirecting to dashboard...");
-        setShowUniqueKeyModal(false);
+      setError("");
+      setSuccess("");
+      
+      const loginResult = await completeLogin(userId);
+      if (loginResult.success) {
+        // Track successful login
+        trackBusinessEvent.userAuth("login");
+        
+        setSuccess("Login successful! Redirecting to dashboard...");
+        console.log('User logged in successfully:', loginResult.user?.email);
+        
         setTimeout(() => {
           navigate(from, { replace: true });
-        }, 1000);
+        }, 1500);
       } else {
-        setKeyValidationAttempts((prev) => prev + 1);
-
-        // Handle specific error messages from backend
-        if (result.error === 'expired code') {
-          setError("Your department code has expired. Please contact your administrator.");
-        } else if (result.error === 'invalid code') {
-          setError("Invalid department code. Please check and try again.");
-        } else {
-          setError(result.error || "Department code verification failed");
-        }
-
-        if (keyValidationAttempts >= 2) {
-          setTimeout(() => {
-            setShowUniqueKeyModal(false);
-            setSelectedDepartment("");
-            setUniqueKey("");
-            setUserId(null);
-            setError("Too many failed attempts. Please contact your administrator.");
-          }, 2000);
-        }
+        setError(loginResult.error || "Login completion failed");
+        // Reset state on failure
+        setUserId(null);
+        setShowCompleteLoginButton(false);
       }
-    } catch (error) {
-      setError("Failed to verify department code. Please try again.");
-    } finally {
-      setIsValidatingKey(false);
+    } catch (error: any) {
+      console.error("Complete login error:", error);
+      setError("Login completion failed. Please try again.");
+      // Reset state on error
+      setUserId(null);
+      setShowCompleteLoginButton(false);
     }
   };
 
-  const handleModalClose = () => {
-    setShowUniqueKeyModal(false);
-    setUniqueKey("");
-    setError("");
-    setKeyValidationAttempts(0);
-    setUserId(null);
-  };
+
 
   return (
     <PageTransition>
@@ -300,104 +283,51 @@ export default function Login() {
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ duration: 0.5, delay: 0.4 }}
                 >
-                  <Button
-                    type="submit"
-                    className="w-full h-12 bg-arch-orange hover:bg-arch-rust text-white font-medium"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <div className="flex items-center gap-2">
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span>Signing in...</span>
-                      </div>
-                    ) : (
-                      "Sign In"
-                    )}
-                  </Button>
+                  {!showCompleteLoginButton ? (
+                    <Button
+                      type="submit"
+                      className="w-full h-12 bg-arch-orange hover:bg-arch-rust text-white font-medium"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <div className="flex items-center gap-2">
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <span>Signing in...</span>
+                        </div>
+                      ) : (
+                        "Sign In"
+                      )}
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      onClick={handleCompleteLogin}
+                      className="w-full h-12 bg-green-600 hover:bg-green-700 text-white font-medium"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <div className="flex items-center gap-2">
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <span>Completing Login...</span>
+                        </div>
+                      ) : (
+                        "Complete Login"
+                      )}
+                    </Button>
+                  )}
                 </motion.div>
+                
+                {enableSeedAccounts && (
+                  <div className="mt-4 flex justify-center">
+                    <SeedAccountSelector onSelect={handleSeedAccountSelect} />
+                  </div>
+                )}
               </form>
             </CardContent>
           </Card>
         </div>
 
-        {/* Department Code Modal */}
-        <Dialog open={showUniqueKeyModal} onOpenChange={setShowUniqueKeyModal}>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Key className="h-5 w-5 text-arch-orange" />
-                Department Code Required
-              </DialogTitle>
-              <DialogDescription>
-                Please enter your 5-6 character department code to complete login for {selectedDepartment}.
-              </DialogDescription>
-            </DialogHeader>
 
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="unique-key">Department Code</Label>
-                <Input
-                  id="unique-key"
-                  placeholder="Enter your department code"
-                  value={uniqueKey}
-                  onChange={(e) => {
-                    const value = e.target.value.toUpperCase().slice(0, 6);
-                    setUniqueKey(value);
-                  }}
-                  maxLength={6}
-                  autoFocus
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleUniqueKeySubmit();
-                    }
-                  }}
-                />
-              </div>
-              <p className="text-xs text-arch-blue-gray">
-                Format: 5-6 characters (e.g., SA1234, AC5930)
-              </p>
-            </div>
-
-            {keyValidationAttempts > 0 && (
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                <div className="flex items-center gap-2 text-yellow-700">
-                  <AlertCircle className="h-4 w-4" />
-                  <span className="text-sm">
-                    Attempt {keyValidationAttempts}/3 -{" "}
-                    {3 - keyValidationAttempts} attempts remaining
-                  </span>
-                </div>
-              </div>
-            )}
-
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                onClick={handleModalClose}
-                className="flex-1 border-arch-light-blue text-arch-charcoal hover:bg-arch-light-blue/20"
-                disabled={isValidatingKey}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={handleUniqueKeySubmit}
-                disabled={
-                  !uniqueKey || uniqueKey.length < 5 || isValidatingKey
-                }
-                className="flex-1 bg-arch-orange hover:bg-arch-rust text-white"
-              >
-                {isValidatingKey ? (
-                  <div className="flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Verifying...</span>
-                  </div>
-                ) : (
-                  "Verify Code"
-                )}
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
       </div>
     </PageTransition>
   );

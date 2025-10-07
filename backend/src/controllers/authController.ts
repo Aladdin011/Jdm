@@ -1,206 +1,345 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "../config/database";
+import { 
+  generateTokenPair, 
+  AuthenticatedRequest 
+} from "../middleware/auth";
+import { ResponseHelper, HttpStatus, ErrorCodes } from "../types/response";
+import { logger } from "../utils/logger";
 
 export const register = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ message: "Email and password required" });
-  }
-  const existing = await prisma.users.findUnique({ where: { email } });
-  if (existing) {
-    return res.status(400).json({ message: "User with this email already exists" });
-  }
-  const hash = await bcrypt.hash(password, 10);
-  const user = await prisma.users.create({
-    data: {
-      email,
-      password: hash,
-      role: "USER",
+  try {
+    logger.info('Registration attempt started', { body: req.body });
+    const { email, password, department } = req.body;
+    const normalizedEmail = String(email || '').trim().toLowerCase();
+    
+    if (!normalizedEmail || !password) {
+      logger.warn('Missing email or password');
+      return res.status(HttpStatus.BAD_REQUEST).json(
+        ResponseHelper.error(ErrorCodes.MISSING_REQUIRED_FIELD, "Email and password are required")
+      );
     }
-  });
-  return res.status(201).json({ id: user.id, email: user.email, role: user.role });
+    
+    logger.info('Checking if user exists');
+    // Check if user already exists
+    const existing = await prisma.users.findUnique({ where: { email: normalizedEmail } });
+    if (existing) {
+      logger.warn('User already exists', { email });
+      return res.status(HttpStatus.CONFLICT).json(
+        ResponseHelper.error(ErrorCodes.ALREADY_EXISTS, "User with this email already exists")
+      );
+    }
+    
+    logger.info('Hashing password');
+    // Hash password with lower rounds for testing
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    logger.info('Creating user in database');
+    // Create user
+    const user = await prisma.users.create({
+      data: {
+        email: normalizedEmail,
+        password: hashedPassword,
+        department,
+        role: "user",
+        active: true
+      },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        department: true,
+        active: true
+      }
+    });
+    
+    logger.info('Generating tokens');
+    // Generate tokens
+    const tokens = generateTokenPair(user);
+    
+    logger.info('User registered successfully', {
+      userId: user.id,
+      email: user.email,
+      ip: req.ip
+    });
+    
+    return res.status(HttpStatus.CREATED).json(
+      ResponseHelper.success({
+        user,
+        ...tokens
+      }, "User registered successfully")
+    );
+  } catch (error) {
+    logger.error('Registration error', { error: error.message, stack: error.stack, ip: req.ip });
+    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
+      ResponseHelper.error(ErrorCodes.INTERNAL_ERROR, "Registration failed")
+    );
+  }
 };
 
 export const login = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ message: "Email and password required" });
-  const user = await prisma.users.findUnique({ where: { email } });
-  if (!user) return res.status(401).json({ message: "Invalid credentials" });
-  const ok = await bcrypt.compare(password, user.password);
-  if (!ok) return res.status(401).json({ message: "Invalid credentials" });
-  const token = jwt.sign({ userId: user.id, role: user.role }, process.env.JWT_SECRET as string, { expiresIn: (process.env.JWT_EXPIRES_IN || "7d") as jwt.SignOptions['expiresIn'] });
-  return res.json({ token });
+  try {
+    const { email, password } = req.body;
+    const normalizedEmail = String(email || '').trim().toLowerCase();
+    
+    if (!normalizedEmail || !password) {
+      return res.status(HttpStatus.BAD_REQUEST).json(
+        ResponseHelper.error(ErrorCodes.MISSING_REQUIRED_FIELD, "Email and password are required")
+      );
+    }
+    
+    // Find user
+    const user = await prisma.users.findUnique({ 
+      where: { email: normalizedEmail },
+      select: {
+        id: true,
+        email: true,
+        password: true,
+        role: true,
+        department: true,
+        active: true
+      }
+    });
+    
+    if (!user) {
+      return res.status(HttpStatus.UNAUTHORIZED).json(
+        ResponseHelper.error(ErrorCodes.INVALID_CREDENTIALS, "Invalid credentials")
+      );
+    }
+    
+    if (!user.active) {
+      return res.status(HttpStatus.UNAUTHORIZED).json(
+        ResponseHelper.error(ErrorCodes.ACCOUNT_DISABLED, "Account is deactivated")
+      );
+    }
+    
+    // Verify password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(HttpStatus.UNAUTHORIZED).json(
+        ResponseHelper.error(ErrorCodes.INVALID_CREDENTIALS, "Invalid credentials")
+      );
+    }
+    
+    // Remove password from user object
+    const { password: _, ...userWithoutPassword } = user;
+    
+    // Generate tokens
+    const tokens = generateTokenPair(userWithoutPassword);
+    
+    logger.info('User logged in successfully', {
+      userId: user.id,
+      email: user.email,
+      ip: req.ip
+    });
+    
+    return res.json(
+      ResponseHelper.success({
+        user: userWithoutPassword,
+        ...tokens
+      }, "Login successful")
+    );
+  } catch (error) {
+    logger.error('Login error', { error, ip: req.ip });
+    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
+      ResponseHelper.error(ErrorCodes.INTERNAL_ERROR, "Login failed")
+    );
+  }
 };
 
-export const profile = async (req: Request, res: Response) => {
-  const payload = (req as any).user;
-  const user = await prisma.users.findUnique({
-    where: { id: payload.userId },
-    select: { id: true, email: true, role: true }
-  });
-  if (!user) return res.status(404).json({ message: "User not found" });
-  return res.json(user);
+export const profile = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const user = req.user;
+    
+    if (!user) {
+      return res.status(HttpStatus.UNAUTHORIZED).json(
+        ResponseHelper.error(ErrorCodes.UNAUTHORIZED, "Authentication required")
+      );
+    }
+    
+    // Get fresh user data from database
+    const userData = await prisma.users.findUnique({
+      where: { id: user.id },
+      select: { 
+        id: true, 
+        email: true, 
+        role: true, 
+        department: true,
+        active: true,
+        created_at: true,
+        updated_at: true
+      }
+    });
+    
+    if (!userData) {
+      return res.status(HttpStatus.NOT_FOUND).json(
+        ResponseHelper.error(ErrorCodes.NOT_FOUND, "User not found")
+      );
+    }
+    
+    return res.json(
+      ResponseHelper.success(userData, "Profile retrieved successfully")
+    );
+  } catch (error) {
+    logger.error('Profile retrieval error', { error, userId: req.user?.id });
+    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
+      ResponseHelper.error(ErrorCodes.INTERNAL_ERROR, "Failed to retrieve profile")
+    );
+  }
 };
 
 export const verifyCredentials = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  
-  if (!email || !password) {
-    return res.status(400).json({ 
-      success: false, 
-      message: "Email and password required" 
-    });
-  }
-  
   try {
-    const user = await prisma.users.findUnique({ where: { email } });
+    const { email, password } = req.body;
+    const normalizedEmail = String(email || '').trim().toLowerCase();
+    
+    if (!normalizedEmail || !password) {
+      return res.status(HttpStatus.BAD_REQUEST).json(
+        ResponseHelper.error(ErrorCodes.MISSING_REQUIRED_FIELD, "Email and password are required")
+      );
+    }
+    
+    const user = await prisma.users.findUnique({ 
+      where: { email: normalizedEmail },
+      select: {
+        id: true,
+        email: true,
+        password: true,
+        role: true,
+        department: true,
+        active: true
+      }
+    });
     
     if (!user) {
-      return res.status(401).json({ 
-        success: false, 
-        message: "Invalid credentials" 
-      });
+      return res.status(HttpStatus.UNAUTHORIZED).json(
+        ResponseHelper.error(ErrorCodes.INVALID_CREDENTIALS, "Invalid credentials")
+      );
+    }
+    
+    if (!user.active) {
+      return res.status(HttpStatus.UNAUTHORIZED).json(
+        ResponseHelper.error(ErrorCodes.ACCOUNT_DISABLED, "Account is deactivated")
+      );
     }
     
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    
     if (!isPasswordValid) {
-      return res.status(401).json({ 
-        success: false, 
-        message: "Invalid credentials" 
-      });
+      return res.status(HttpStatus.UNAUTHORIZED).json(
+        ResponseHelper.error(ErrorCodes.INVALID_CREDENTIALS, "Invalid credentials")
+      );
     }
     
-    // Check if user belongs to a department that requires a code
-    const requiresDepartmentCode = user.department !== null;
-    
-    return res.json({
-      success: true,
-      requiresDepartmentCode,
+    logger.info('Credentials verified successfully', {
       userId: user.id,
-      department: user.department || '',
-      message: "Credentials verified successfully"
+      email: user.email,
+      ip: req.ip
     });
+    
+    return res.json(
+      ResponseHelper.success({
+        success: true,
+        userId: user.id,
+        department: user.department || 'default'
+      }, "Credentials verified successfully")
+    );
   } catch (error) {
-    console.error("Error verifying credentials:", error);
-    return res.status(500).json({ 
-      success: false, 
-      message: "Server error while verifying credentials" 
-    });
+    logger.error('Verify credentials error', { error, ip: req.ip });
+    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
+      ResponseHelper.error(ErrorCodes.INTERNAL_ERROR, "Credential verification failed")
+    );
   }
 };
 
-export const verifyDepartmentCode = async (req: Request, res: Response) => {
-  const { userId, departmentCode } = req.body;
-  
-  if (!userId || !departmentCode) {
-    return res.status(400).json({ 
-      success: false, 
-      message: "User ID and department code required" 
-    });
-  }
-  
+
+
+export const refreshToken = async (req: Request, res: Response) => {
   try {
-    const user = await prisma.users.findUnique({ 
-      where: { id: userId }
-    });
+    const { refreshToken } = req.body;
     
-    if (!user) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "User not found" 
-      });
+    if (!refreshToken) {
+      return res.status(HttpStatus.BAD_REQUEST).json(
+        ResponseHelper.error(ErrorCodes.MISSING_REQUIRED_FIELD, "Refresh token is required")
+      );
     }
     
-    // Verify department code logic
-    // This is a simplified example - you would typically check against stored codes
-    const isValidCode = user.department_code === departmentCode;
-    
-    if (!isValidCode) {
-      return res.status(401).json({ 
-        success: false, 
-        message: "Invalid department code" 
-      });
-    }
-    
-    // Generate token for authenticated user
-    const token = jwt.sign(
-      { userId: user.id, role: user.role }, 
-      process.env.JWT_SECRET as string, 
-      { expiresIn: (process.env.JWT_EXPIRES_IN || "7d") as jwt.SignOptions['expiresIn'] }
-    );
-    
-    // Return user data and token
-    return res.json({
-      user: {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-        department: user.department
-        // Note: firstName and lastName are not in the schema
-      },
-      token,
-      dashboard: user.department || 'default'
-    });
+    // This will be handled by the refreshTokenMiddleware
+    // The middleware will validate the token and generate new tokens
   } catch (error) {
-    console.error("Error verifying department code:", error);
-    return res.status(500).json({ 
-      success: false, 
-      message: "Server error while verifying department code" 
-    });
+    logger.error('Refresh token error', { error });
+    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
+      ResponseHelper.error(ErrorCodes.INTERNAL_ERROR, "Token refresh failed")
+    );
   }
 };
 
 export const completeLogin = async (req: Request, res: Response) => {
-  const { userId } = req.body;
-  
-  if (!userId) {
-    return res.status(400).json({ 
-      success: false, 
-      message: "User ID required" 
-    });
-  }
-  
   try {
+    const { userId } = req.body;
+    
+    if (!userId) {
+      return res.status(HttpStatus.BAD_REQUEST).json(
+        ResponseHelper.error(ErrorCodes.MISSING_REQUIRED_FIELD, "User ID required")
+      );
+    }
+    
+    // Convert userId to integer since the database expects an integer ID
+    const userIdInt = parseInt(userId, 10);
+    if (isNaN(userIdInt)) {
+      return res.status(HttpStatus.BAD_REQUEST).json(
+        ResponseHelper.error(ErrorCodes.INVALID_FORMAT, "Invalid user ID format")
+      );
+    }
+    
     const user = await prisma.users.findUnique({ 
-      where: { id: userId }
+      where: { id: userIdInt },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        department: true,
+        active: true
+      }
     });
     
     if (!user) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "User not found" 
-      });
+      return res.status(HttpStatus.NOT_FOUND).json(
+        ResponseHelper.error(ErrorCodes.NOT_FOUND, "User not found")
+      );
     }
     
-    // Generate token for authenticated user
-    const token = jwt.sign(
-      { userId: user.id, role: user.role }, 
-      process.env.JWT_SECRET as string, 
-      { expiresIn: (process.env.JWT_EXPIRES_IN || "7d") as jwt.SignOptions['expiresIn'] }
-    );
+    if (!user.active) {
+      return res.status(HttpStatus.UNAUTHORIZED).json(
+        ResponseHelper.error(ErrorCodes.ACCOUNT_DISABLED, "Account is deactivated")
+      );
+    }
     
-    // Return user data and token
-    return res.json({
-      user: {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-        department: user.department
-        // Note: firstName and lastName are not in the schema
-      },
-      token,
-      dashboard: 'default'
+    // Generate tokens
+    const tokens = generateTokenPair(user);
+    
+    logger.info('Login completed successfully', {
+      userId: user.id,
+      email: user.email,
+      ip: req.ip
     });
+    
+    return res.json(
+      ResponseHelper.success({
+        user,
+        // Maintain both accessToken and token for frontend compatibility
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
+        expiresIn: tokens.expiresIn,
+        token: tokens.accessToken,
+        dashboard: user.department || 'default'
+      }, "Login completed successfully")
+    );
   } catch (error) {
-    console.error("Error completing login:", error);
-    return res.status(500).json({ 
-      success: false, 
-      message: "Server error while completing login" 
-    });
+    logger.error('Complete login error', { error });
+    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
+      ResponseHelper.error(ErrorCodes.INTERNAL_ERROR, "Login completion failed")
+    );
   }
 };

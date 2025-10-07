@@ -76,10 +76,20 @@ self.addEventListener('fetch', (event) => {
   if (!url.origin.includes('localhost') && 
       !url.origin.includes('builder-aura-field.onrender.com') && 
       !url.origin.includes('cdn.builder.io') && 
-      !url.origin.includes('images.unsplash.com') &&
-      !url.origin.includes('fonts.googleapis.com') &&
-      !url.origin.includes('fonts.gstatic.com')) {
+      !url.origin.includes('images.unsplash.com')) {
     return;
+  }
+
+  // In dev, bypass Vite HMR and module requests entirely to avoid interference
+  // This checks common Vite dev patterns: /@vite, ?t= timestamp, and .ts/.tsx source paths
+  const isViteDevModule = (
+    url.pathname.startsWith('/@vite') ||
+    url.searchParams.has('t') ||
+    url.pathname.endsWith('.ts') ||
+    url.pathname.endsWith('.tsx')
+  );
+  if (isViteDevModule) {
+    return; // Let the network handle dev modules without SW caching
   }
 
   // Handle different types of requests
@@ -88,6 +98,9 @@ self.addEventListener('fetch', (event) => {
   } else if (request.destination === 'document') {
     event.respondWith(handleDocumentRequest(request));
   } else if (request.destination === 'script' || request.destination === 'style') {
+    event.respondWith(handleStaticAssetRequest(request));
+  } else if (request.destination === 'font') {
+    // Treat font files similar to static assets
     event.respondWith(handleStaticAssetRequest(request));
   } else {
     event.respondWith(handleDynamicRequest(request));
@@ -151,22 +164,21 @@ async function handleDocumentRequest(request) {
 // Handle static assets (JS, CSS) with cache-first strategy
 async function handleStaticAssetRequest(request) {
   try {
-    // Try cache first
+    // Prefer network-first to avoid serving stale dev or invalidated assets
+    const networkResponse = await fetch(request);
+    if (networkResponse && networkResponse.status === 200) {
+      const cache = await caches.open(STATIC_CACHE);
+      cache.put(request, networkResponse.clone());
+      return networkResponse;
+    }
+
+    // Fallback to cache if network fails
     const cachedResponse = await caches.match(request);
     if (cachedResponse) {
       return cachedResponse;
     }
 
-    // If not in cache, fetch from network
-    const networkResponse = await fetch(request);
-    
-    // Cache the response
-    if (networkResponse.status === 200) {
-      const cache = await caches.open(STATIC_CACHE);
-      cache.put(request, networkResponse.clone());
-    }
-    
-    return networkResponse;
+    return new Response('', { status: 503, statusText: 'Service Unavailable' });
   } catch (error) {
     console.log('[SW] Static asset fetch failed:', error);
     // Try to serve from cache

@@ -14,9 +14,35 @@ interface ErrorLog {
 class ErrorLogger {
   private logs: ErrorLog[] = [];
   private maxLogs = 1000;
+  private devConsoleLimit = 4;
+  private devConsoleCount = 0;
+  private recentConsoleKeys: string[] = [];
 
   private generateId(): string {
     return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  private makeConsoleKey(
+    level: 'error' | 'warning' | 'info',
+    component: string,
+    action: string,
+    message: string
+  ): string {
+    return `${level}|${component}|${action}|${message}`;
+  }
+
+  private shouldConsoleLog(key: string): boolean {
+    if (!import.meta.env.DEV) return false;
+    if (this.devConsoleCount >= this.devConsoleLimit) return false;
+    if (this.recentConsoleKeys.includes(key)) return false;
+    return true;
+  }
+
+  private recordConsoleKey(key: string): void {
+    this.recentConsoleKeys.push(key);
+    if (this.recentConsoleKeys.length > 50) {
+      this.recentConsoleKeys.shift();
+    }
   }
 
   log(
@@ -47,10 +73,13 @@ class ErrorLogger {
     }
 
     // Console logging for development
-    if (import.meta.env.DEV) {
+    const consoleKey = this.makeConsoleKey(level, component, action, message);
+    if (this.shouldConsoleLog(consoleKey)) {
       const logMethod = level === 'error' ? console.error : 
                        level === 'warning' ? console.warn : console.info;
       logMethod(`[${component}] ${action}: ${message}`, error || metadata);
+      this.devConsoleCount += 1;
+      this.recordConsoleKey(consoleKey);
     }
 
     // Store in localStorage for persistence

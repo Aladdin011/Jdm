@@ -34,20 +34,6 @@ export class User {
   department: string;
 
   @Column({
-    type: 'varchar',
-    length: 6,
-    nullable: true,
-    unique: true
-  })
-  department_code: string;
-
-  @Column({
-    type: 'timestamp',
-    nullable: true
-  })
-  code_expires_at: Date;
-
-  @Column({
     type: 'boolean',
     default: true
   })

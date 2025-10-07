@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCall } from "@/contexts/CallContext";
@@ -38,6 +40,17 @@ import {
   LogOut,
   ChevronDown,
 } from "lucide-react";
+
+import Header from "@/components/layout/Header";
+import Sidebar from "@/components/layout/Sidebar";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface DashboardProps {
   user: any;
@@ -212,6 +225,11 @@ export default function ModernDashboardLayout({
     description: "100%",
   });
 
+  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [selectedYear, setSelectedYear] = useState<string>(String(new Date().getFullYear()));
+  const { toast } = useToast();
+
   // Update time every minute
   useEffect(() => {
     const timer = setInterval(() => {
@@ -248,6 +266,15 @@ export default function ModernDashboardLayout({
     });
   };
 
+  const handleExportData = () => {
+    // TODO: Connect to actual export logic
+    console.log("Exporting data for year", selectedYear);
+    toast({
+      title: "Export started",
+      description: `Preparing data export for ${selectedYear}. You will be notified when ready.`,
+    });
+  };
+
   return (
     <div 
       className="min-h-screen"
@@ -255,73 +282,32 @@ export default function ModernDashboardLayout({
         background: `linear-gradient(135deg, ${themeColors.background} 0%, ${themeColors.secondary} 100%)` 
       }}
     >
-      {/* Header */}
-      <div 
-        className="sticky top-0 z-40 border-b backdrop-blur-md"
-        style={{ 
-          backgroundColor: `${themeColors.headerBg}CC`,
-          borderColor: `${themeColors.primary}20`
-        }}
-      >
-        <div className="flex items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-white/20">
-                <Target className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-white">TalentaSync</h1>
-                <div className="flex items-center gap-4 text-white/80 text-sm">
-                  <span>Dashboard</span>
-                  <span>Employees</span>
-                  <span>Jobs</span>
-                  <span>Candidates</span>
-                  <span>Leaves</span>
-                </div>
-              </div>
-            </div>
-          </div>
+      {/* Sidebar */}
+      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-white">
-              <Calendar className="h-4 w-4" />
-              <span className="text-sm">{formatDate(currentTime)}</span>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="bg-white/20 border-white/30 text-white hover:bg-white/30"
-            >
-              <Download className="h-4 w-4 mr-2" />
-              Export Data
-            </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-auto p-0 hover:bg-white/10">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback className="bg-white text-gray-800">
-                        {user?.firstName?.[0]}{user?.lastName?.[0]}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="text-white text-left">
-                      <p className="text-sm font-medium">{user?.firstName} {user?.lastName}</p>
-                      <p className="text-xs text-white/70">{department}</p>
-                    </div>
-                    <ChevronDown className="h-4 w-4 text-white/70" />
-                  </div>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem onClick={() => logout()} className="text-red-600 focus:text-red-600">
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Sign Out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+      {/* Header */}
+      <Header
+        onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
+        onNavigate={(path) => navigate(path)}
+        yearSelector={
+          <div className="hidden md:flex items-center gap-2">
+            <Select value={selectedYear} onValueChange={setSelectedYear}>
+              <SelectTrigger className="w-[140px]">
+                <SelectValue placeholder={formatDate(currentTime)} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={String(new Date().getFullYear())}>This Year</SelectItem>
+                <SelectItem value={String(new Date().getFullYear() - 1)}>Last Year</SelectItem>
+                <SelectItem value={String(new Date().getFullYear() - 2)}>{new Date().getFullYear() - 2}</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-        </div>
-      </div>
+        }
+        onExportData={handleExportData}
+      />
+
+      {/* Breadcrumbs */}
+      <Breadcrumbs />
 
       {/* Main Content */}
       <div className="p-6">

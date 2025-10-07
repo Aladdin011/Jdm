@@ -73,6 +73,8 @@ import {
 import DashboardThemeWrapper from "./DashboardThemeWrapper";
 import { getDepartmentTheme } from "@/utils/departmentThemes";
 import { useCall } from "@/contexts/CallContext";
+import CallManager from "@/components/calls/CallManager";
+import ConversationModule from "@/components/features/communication/ConversationModule";
 
 interface Project {
   id: string;
@@ -405,6 +407,153 @@ export default function ProjectDashboard() {
     }
   };
 
+  // New Project Management Handlers
+  const handleNewProject = async () => {
+    await customAction(
+      'newProject',
+      async () => {
+        console.log('Creating new project...');
+        // Simulate project creation
+        await new Promise(resolve => setTimeout(resolve, 1500));
+      },
+      'New project created successfully',
+      'Failed to create new project'
+    );
+  };
+
+  const handleViewProject = async (projectId: string) => {
+    await customAction(
+      'viewProject',
+      async () => {
+        console.log('Viewing project:', projectId);
+        // Simulate project view
+        await new Promise(resolve => setTimeout(resolve, 800));
+      },
+      'Project details loaded',
+      'Failed to load project details'
+    );
+  };
+
+  const handleProjectChat = async (projectId: string) => {
+    await customAction(
+      'projectChat',
+      async () => {
+        console.log('Opening project chat for:', projectId);
+        // Simulate opening project chat
+        await new Promise(resolve => setTimeout(resolve, 600));
+      },
+      'Project chat opened',
+      'Failed to open project chat'
+    );
+  };
+
+  const handleShareProject = async (projectId: string) => {
+    await customAction(
+      'shareProject',
+      async () => {
+        console.log('Sharing project:', projectId);
+        // Simulate project sharing
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      },
+      'Project shared successfully',
+      'Failed to share project'
+    );
+  };
+
+  // Task Management Handlers
+  const handleNewTask = async () => {
+    await customAction(
+      'newTask',
+      async () => {
+        console.log('Creating new task...');
+        // Simulate task creation
+        await new Promise(resolve => setTimeout(resolve, 1200));
+      },
+      'New task created successfully',
+      'Failed to create new task'
+    );
+  };
+
+  const handleViewTask = async (taskId: string) => {
+    await customAction(
+      'viewTask',
+      async () => {
+        console.log('Viewing task:', taskId);
+        // Simulate task view
+        await new Promise(resolve => setTimeout(resolve, 700));
+      },
+      'Task details loaded',
+      'Failed to load task details'
+    );
+  };
+
+  const handleEditTask = async (taskId: string) => {
+    await customAction(
+      'editTask',
+      async () => {
+        console.log('Editing task:', taskId);
+        // Simulate task editing
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      },
+      'Task updated successfully',
+      'Failed to update task'
+    );
+  };
+
+  // Resource Management Handlers
+  const handleAllocateResource = async (resourceId: string) => {
+    await customAction(
+      'allocateResource',
+      async () => {
+        console.log('Allocating resource:', resourceId);
+        // Simulate resource allocation
+        await new Promise(resolve => setTimeout(resolve, 1100));
+      },
+      'Resource allocated successfully',
+      'Failed to allocate resource'
+    );
+  };
+
+  const handleViewResourceDetails = async (resourceId: string) => {
+    await customAction(
+      'viewResourceDetails',
+      async () => {
+        console.log('Viewing resource details:', resourceId);
+        // Simulate resource details view
+        await new Promise(resolve => setTimeout(resolve, 800));
+      },
+      'Resource details loaded',
+      'Failed to load resource details'
+    );
+  };
+
+  const handleManageResource = async (resourceId: string) => {
+    await customAction(
+      'manageResource',
+      async () => {
+        console.log('Managing resource:', resourceId);
+        // Simulate resource management
+        await new Promise(resolve => setTimeout(resolve, 1300));
+      },
+      'Resource management opened',
+      'Failed to open resource management'
+    );
+  };
+
+  // File Management Handlers
+  const handleUploadFile = async () => {
+    await customAction(
+      'uploadFile',
+      async () => {
+        console.log('Uploading file...');
+        // Simulate file upload
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      },
+      'File uploaded successfully',
+      'Failed to upload file'
+    );
+  };
+
   const activeProjects = projects.filter((p) => p.status === "active");
   const totalBudget = projects.reduce((sum, p) => sum + p.budget, 0);
   const totalSpent = projects.reduce((sum, p) => sum + p.spent, 0);
@@ -488,13 +637,11 @@ export default function ProjectDashboard() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button
-              onClick={() => startCall("project-management")}
+            <CallManager
+              currentDepartment="project-management"
+              customLabel="Team Call"
               className="bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 text-white"
-            >
-              <Video className="h-4 w-4 mr-2" />
-              Team Call
-            </Button>
+            />
             <Button 
               variant="outline" 
               className="gap-2"
@@ -875,9 +1022,13 @@ export default function ProjectDashboard() {
               <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
                 All Projects
               </h3>
-              <Button className="bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 text-white">
+              <Button 
+                className="bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 text-white"
+                onClick={handleNewProject}
+                disabled={isLoading('newProject')}
+              >
                 <Plus className="h-4 w-4 mr-2" />
-                New Project
+                {isLoading('newProject') ? 'Creating...' : 'New Project'}
               </Button>
             </div>
 
@@ -934,14 +1085,30 @@ export default function ProjectDashboard() {
                       </div>
 
                       <div className="flex gap-2">
-                        <Button size="sm" variant="outline" className="flex-1">
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="flex-1"
+                          onClick={() => handleViewProject(project.id)}
+                          disabled={isLoading('viewProject')}
+                        >
                           <Eye className="h-3 w-3 mr-1" />
-                          View
+                          {isLoading('viewProject') ? 'Loading...' : 'View'}
                         </Button>
-                        <Button size="sm" variant="outline">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleProjectChat(project.id)}
+                          disabled={isLoading('projectChat')}
+                        >
                           <MessageSquare className="h-3 w-3" />
                         </Button>
-                        <Button size="sm" variant="outline">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleShareProject(project.id)}
+                          disabled={isLoading('shareProject')}
+                        >
                           <Share2 className="h-3 w-3" />
                         </Button>
                       </div>
@@ -954,6 +1121,19 @@ export default function ProjectDashboard() {
 
           {/* Tasks Tab */}
           <TabsContent value="tasks" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
+                Task Management
+              </h3>
+              <Button 
+                className="bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 text-white"
+                onClick={handleNewTask}
+                disabled={isLoading('newTask')}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                {isLoading('newTask') ? 'Creating...' : 'New Task'}
+              </Button>
+            </div>
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -998,6 +1178,27 @@ export default function ProjectDashboard() {
                                   Due:{" "}
                                   {new Date(task.dueDate).toLocaleDateString()}
                                 </p>
+                                <div className="flex gap-1 mt-2">
+                                  <Button 
+                                    size="sm" 
+                                    variant="outline" 
+                                    className="flex-1 text-xs"
+                                    onClick={() => handleViewTask(task.id)}
+                                    disabled={isLoading('viewTask')}
+                                  >
+                                    <Eye className="h-3 w-3 mr-1" />
+                                    {isLoading('viewTask') ? 'Loading...' : 'View'}
+                                  </Button>
+                                  <Button 
+                                    size="sm" 
+                                    variant="outline" 
+                                    className="text-xs"
+                                    onClick={() => handleEditTask(task.id)}
+                                    disabled={isLoading('editTask')}
+                                  >
+                                    <Edit className="h-3 w-3" />
+                                  </Button>
+                                </div>
                               </div>
                             </div>
                           ))}
@@ -1157,20 +1358,16 @@ export default function ProjectDashboard() {
                   Connect with development teams, contractors, and stakeholders
                 </p>
                 <div className="flex gap-2">
-                  <Button
-                    onClick={() => startCall("project-management")}
+                  <CallManager
+                    currentDepartment="project-management"
+                    customLabel="Voice Call"
                     className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
-                  >
-                    <Phone className="h-4 w-4 mr-2" />
-                    Voice Call
-                  </Button>
-                  <Button
-                    onClick={() => startCall("project-management")}
+                  />
+                  <CallManager
+                    currentDepartment="project-management"
+                    customLabel="Video Call"
                     className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white"
-                  >
-                    <Video className="h-4 w-4 mr-2" />
-                    Video Call
-                  </Button>
+                  />
                   <Button variant="outline">
                     <MessageSquare className="h-4 w-4 mr-2" />
                     Team Chat
@@ -1180,6 +1377,9 @@ export default function ProjectDashboard() {
             </CardContent>
           </Card>
         </motion.div>
+
+        {/* Communication Module */}
+        <ConversationModule />
       </div>
     </DashboardThemeWrapper>
   );

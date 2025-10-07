@@ -25,11 +25,20 @@ const {
   FTP_HOST,
   FTP_USER,
   FTP_PASSWORD,
+  FTP_PASS,
   FTP_PORT = '21',
   FTP_SECURE = 'false',
-  FTP_REMOTE_DIR = '/public_html',
+  FTP_REMOTE_DIR,
+  REMOTE_DIR,
+  FTP_LOCAL_DIR,
+  LOCAL_DIR,
   FTP_CLEAN = 'false',
 } = process.env;
+
+// Resolve compatibility across env var names
+const resolvedPassword = FTP_PASSWORD ?? FTP_PASS;
+const resolvedRemoteDir = FTP_REMOTE_DIR ?? REMOTE_DIR ?? '/public_html';
+const resolvedLocalDir = FTP_LOCAL_DIR ?? LOCAL_DIR ?? 'dist';
 
 function assert(value, name) {
   if (!value || String(value).trim() === '') {
@@ -43,16 +52,31 @@ async function main() {
   // Validate required envs
   assert(FTP_HOST, 'FTP_HOST');
   assert(FTP_USER, 'FTP_USER');
-  assert(FTP_PASSWORD, 'FTP_PASSWORD');
+  assert(resolvedPassword, 'FTP_PASSWORD/FTP_PASS');
+
+  console.log('🔧 Configuration');
+  console.log(`   • Host: ${FTP_HOST}`);
+  console.log(`   • User: ${FTP_USER}`);
+  console.log(`   • Port: ${FTP_PORT}`);
+  console.log(`   • Secure: ${FTP_SECURE}`);
+  console.log(`   • Remote Dir: ${resolvedRemoteDir}`);
+  console.log(`   • Local Dir: ${resolvedLocalDir}`);
 
   // Ensure production build exists
-  const distPath = path.join(projectRoot, 'dist');
-  if (!fs.existsSync(distPath)) {
-    console.log('📦 No dist/ found. Running production build...');
-    const buildStart = Date.now();
-    execSync('npm run build', { cwd: projectRoot, stdio: 'inherit' });
-    const buildTime = ((Date.now() - buildStart) / 1000).toFixed(2);
-    console.log(`✅ Build completed in ${buildTime}s`);
+  const localUploadPath = path.join(projectRoot, resolvedLocalDir);
+  if (resolvedLocalDir === 'dist') {
+    if (!fs.existsSync(localUploadPath)) {
+      console.log('📦 No dist/ found. Running production build...');
+      const buildStart = Date.now();
+      execSync('npm run build', { cwd: projectRoot, stdio: 'inherit' });
+      const buildTime = ((Date.now() - buildStart) / 1000).toFixed(2);
+      console.log(`✅ Build completed in ${buildTime}s`);
+    }
+  } else {
+    // Custom local directory; ensure it exists
+    if (!fs.existsSync(localUploadPath)) {
+      throw new Error(`Local upload directory not found: ${localUploadPath}`);
+    }
   }
 
   const client = new ftp.Client();
@@ -63,31 +87,33 @@ async function main() {
     await client.access({
       host: FTP_HOST,
       user: FTP_USER,
-      password: FTP_PASSWORD,
+      password: resolvedPassword,
       port: Number(FTP_PORT),
       secure: FTP_SECURE === 'true',
     });
 
-    console.log(`📁 Ensuring remote directory: ${FTP_REMOTE_DIR}`);
-    await client.ensureDir(FTP_REMOTE_DIR);
+    console.log(`📁 Ensuring remote directory: ${resolvedRemoteDir}`);
+    await client.ensureDir(resolvedRemoteDir);
 
     if (FTP_CLEAN === 'true') {
       console.log('🧹 Cleaning remote directory before upload...');
       await client.clearWorkingDir();
     }
 
-    console.log('⏫ Uploading dist/ contents to server...');
-    await client.uploadFromDir(distPath);
+    console.log(`⏫ Uploading ${resolvedLocalDir}/ contents to server...`);
+    await client.uploadFromDir(localUploadPath);
 
-    // Upload .htaccess if present to ensure SPA routing and headers
-    const publicHtaccess = path.join(projectRoot, 'public', '.htaccess');
-    if (fs.existsSync(publicHtaccess)) {
-      console.log('⚙️ Uploading public/.htaccess');
-      await client.uploadFrom(publicHtaccess, path.posix.join(FTP_REMOTE_DIR, '.htaccess'));
-    }
-    const rootHtaccess = path.join(projectRoot, '.htaccess');
-    if (fs.existsSync(rootHtaccess)) {
-      console.log('ℹ️ Root .htaccess detected but not uploaded to avoid conflicts. Using public/.htaccess for SPA rewrites.');
+    // Upload .htaccess for SPA only when deploying dist
+    if (resolvedLocalDir === 'dist') {
+      const publicHtaccess = path.join(projectRoot, 'public', '.htaccess');
+      if (fs.existsSync(publicHtaccess)) {
+        console.log('⚙️ Uploading public/.htaccess');
+        await client.uploadFrom(publicHtaccess, path.posix.join(resolvedRemoteDir, '.htaccess'));
+      }
+      const rootHtaccess = path.join(projectRoot, '.htaccess');
+      if (fs.existsSync(rootHtaccess)) {
+        console.log('ℹ️ Root .htaccess detected but not uploaded to avoid conflicts. Using public/.htaccess for SPA rewrites.');
+      }
     }
     console.log('✅ Upload complete');
 

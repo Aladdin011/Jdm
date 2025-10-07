@@ -150,22 +150,32 @@ export default function UserManagement() {
   const loadUsers = async () => {
     setIsLoading(true);
     try {
-      const response = await userAPI.getAllUsers();
-      if (response.success) {
-        setUsers(response.data || []);
-      } else {
-        console.error("Failed to load users:", response.error);
-        toast({
-          title: "Error",
-          description: "Failed to load users. Please try again.",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error("Error loading users:", error);
+      const payload: any = await userAPI.getAllUsers();
+      const list: any[] = Array.isArray(payload) ? payload : (payload?.users || payload?.data || []);
+
+      // Normalize backend fields to UI shape
+      const normalized: User[] = list.map((u: any) => ({
+        id: String(u.id ?? u.userId ?? u.uid ?? ''),
+        email: u.email ?? '',
+        firstName: u.firstName ?? u.firstname ?? '',
+        lastName: u.lastName ?? u.lastname ?? '',
+        role: (u.role ?? 'user') as 'user' | 'admin',
+        department: u.department ?? u.department_code ?? undefined,
+        company: u.company ?? undefined,
+        phone: u.phone ?? undefined,
+        location: u.location ?? undefined,
+        isActive: (u.active ?? u.isActive ?? true) as boolean,
+        createdAt: (u.created_at ?? u.createdAt ?? new Date().toISOString()) as string,
+        updatedAt: (u.updated_at ?? u.updatedAt ?? new Date().toISOString()) as string,
+        lastLogin: u.lastLogin ?? u.last_login ?? undefined,
+      }));
+
+      setUsers(normalized);
+    } catch (error: any) {
+      console.error("Failed to load users:", error);
       toast({
         title: "Error",
-        description: "Failed to load users. Please check your connection.",
+        description: error?.message || "Failed to load users. Please check your connection.",
         variant: "destructive",
       });
     } finally {

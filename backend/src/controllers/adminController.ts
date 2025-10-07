@@ -1,7 +1,5 @@
-import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { Request, Response } from 'express';
+import { prisma } from '../config/database';
 
 export const listUsers = async (_req: Request, res: Response) => {
   const users = await prisma.users.findMany({
@@ -41,6 +39,34 @@ export const blockUser = async (req: Request, res: Response) => {
       user,
       message: blocked ? "User has been deactivated" : "User has been activated"
     });
+  } catch (error) {
+    return res.status(404).json({ message: "User not found" });
+  }
+};
+
+export const updateDepartment = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { department } = req.body;
+  if (!id || !department) return res.status(400).json({ message: "id and department required" });
+
+  try {
+    const user = await prisma.users.update({
+      where: { id: parseInt(id) },
+      data: { department }
+    });
+    return res.json({ ok: true, user, message: "Department updated successfully" });
+  } catch (error) {
+    return res.status(404).json({ message: "User not found" });
+  }
+};
+
+export const deleteUser = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  if (!id) return res.status(400).json({ message: "id required" });
+
+  try {
+    await prisma.users.delete({ where: { id: parseInt(id) } });
+    return res.json({ ok: true, message: "User deleted successfully" });
   } catch (error) {
     return res.status(404).json({ message: "User not found" });
   }

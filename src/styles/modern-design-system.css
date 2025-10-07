@@ -1,5 +1,5 @@
 /* Modern Construction Company Design System 2024 */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+/* Local fonts disabled; using Google Fonts Inter via src/index.css */
 
 /* === CORE DESIGN TOKENS === */
 :root {

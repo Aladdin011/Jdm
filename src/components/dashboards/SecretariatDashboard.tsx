@@ -77,6 +77,7 @@ import {
 import DashboardThemeWrapper from "./DashboardThemeWrapper";
 import { getDepartmentTheme } from "@/utils/departmentThemes";
 import { useCall } from "@/contexts/CallContext";
+import ConversationModule from "@/components/features/communication/ConversationModule";
 
 interface Task {
   id: string;
@@ -515,6 +516,70 @@ export default function SecretariatDashboard() {
     }
   };
 
+  const handleNewTask = async () => {
+    try {
+      await customAction(
+        'newTask',
+        async () => {
+          console.log('Creating new task...');
+          return { success: true };
+        },
+        'New task created successfully',
+        'Failed to create new task'
+      );
+    } catch (error) {
+      console.error('Error creating new task:', error);
+    }
+  };
+
+  const handleRefreshData = async () => {
+    try {
+      await customAction(
+        'refreshData',
+        async () => {
+          console.log('Refreshing dashboard data...');
+          return { success: true };
+        },
+        'Dashboard data refreshed',
+        'Failed to refresh data'
+      );
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+    }
+  };
+
+  const handleDownloadDocument = async (documentId: string) => {
+    try {
+      await customAction(
+        'downloadDocument',
+        async () => {
+          console.log(`Downloading document: ${documentId}`);
+          return { success: true };
+        },
+        'Document download started',
+        'Failed to download document'
+      );
+    } catch (error) {
+      console.error('Error downloading document:', error);
+    }
+  };
+
+  const handleSendMessage = async () => {
+    try {
+      await customAction(
+        'sendMessage',
+        async () => {
+          console.log('Opening message composer...');
+          return { success: true };
+        },
+        'Message composer opened',
+        'Failed to open message composer'
+      );
+    } catch (error) {
+      console.error('Error opening message composer:', error);
+    }
+  };
+
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "high":
@@ -614,9 +679,14 @@ export default function SecretariatDashboard() {
               <Video className="h-4 w-4 mr-2" />
               Executive Call
             </Button>
-            <Button variant="outline" className="gap-2">
+            <Button 
+              variant="outline" 
+              className="gap-2"
+              onClick={handleRefreshData}
+              disabled={isLoading('refreshData')}
+            >
               <RefreshCw className="h-4 w-4" />
-              Refresh
+              {isLoading('refreshData') ? 'Refreshing...' : 'Refresh'}
             </Button>
           </div>
         </motion.div>
@@ -847,9 +917,11 @@ export default function SecretariatDashboard() {
                   <Button
                     size="sm"
                     className="bg-gradient-to-r from-blue-500 to-indigo-500"
+                    onClick={handleNewTask}
+                    disabled={isLoading('newTask')}
                   >
                     <Plus className="h-4 w-4 mr-2" />
-                    New Task
+                    {isLoading('newTask') ? 'Creating...' : 'New Task'}
                   </Button>
                 </div>
               </CardHeader>
@@ -970,7 +1042,7 @@ export default function SecretariatDashboard() {
                         <Badge className={getStatusColor(doc.status)}>
                           {doc.status}
                         </Badge>
-                        <Button size="sm" variant="outline">
+                        <Button size="sm" variant="outline" onClick={() => handleDownloadDocument(doc.id)}>
                           <Download className="h-3 w-3" />
                         </Button>
                       </div>
@@ -1040,9 +1112,15 @@ export default function SecretariatDashboard() {
                     </div>
                   ))}
                 </div>
-                <Button size="sm" variant="outline" className="w-full mt-3">
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="w-full mt-3"
+                  onClick={handleSendMessage}
+                  disabled={isLoading('sendMessage')}
+                >
                   <Send className="h-4 w-4 mr-2" />
-                  Compose Message
+                  {isLoading('sendMessage') ? 'Opening...' : 'Compose Message'}
                 </Button>
               </CardContent>
             </Card>
@@ -1214,6 +1292,9 @@ export default function SecretariatDashboard() {
             </CardContent>
           </Card>
         </motion.div>
+
+        {/* Communication Module */}
+        <ConversationModule />
       </div>
     </DashboardThemeWrapper>
   );
