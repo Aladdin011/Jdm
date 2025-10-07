@@ -76,9 +76,26 @@ const clearTokens = (): void => {
 // Request interceptor to add auth token
 apiClient.interceptors.request.use(
   (config) => {
-    const token = getToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    // Allow callers to explicitly skip auth via custom header
+    const skipAuth = config.headers && (config.headers as any)['X-Skip-Auth'] === 'true';
+
+    // Derive request path to determine if endpoint is public
+    const urlPath = (config.url || '').toString();
+    const isPublicAuthEndpoint = [
+      '/auth/login',
+      '/auth/register',
+      '/auth/verify-credentials',
+      '/auth/refresh',
+      '/auth/forgot-password',
+      '/auth/reset-password',
+      '/auth/verify-otp'
+    ].some((ep) => urlPath.endsWith(ep));
+
+    if (!skipAuth && !isPublicAuthEndpoint) {
+      const token = getToken();
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
     return config;
   },
@@ -731,7 +748,25 @@ export const apiCall = async <T>(
       }
       // Handle 401 errors (don't retry)
       else if (error.response?.status === 401) {
-        console.error(`[Final] 401 Unauthorized error when calling ${endpoint}:`, error);
+        const apiMessage = error.response?.data?.message;
+        const apiError = error.response?.data?.error;
+        const errText = apiMessage || apiError || 'Unauthorized';
+
+        // Preserve specific message for credential verification flow
+        if (endpoint === '/auth/verify-credentials') {
+          console.error(`[Final] 401 on verify-credentials:`, errText);
+          // Map known backend responses to friendly messages
+          if (String(errText).toLowerCase().includes('invalid credentials')) {
+            throw new Error('Invalid credentials');
+          }
+          if (String(errText).toLowerCase().includes('deactivated')) {
+            throw new Error('Account is deactivated');
+          }
+          // Fallback to backend-provided text
+          throw new Error(errText);
+        }
+
+        console.error(`[Final] 401 Unauthorized error when calling ${endpoint}:`, errText);
         throw new Error("Authentication failed. Please log in again.");
       }
       // Handle 403 errors (don't retry)

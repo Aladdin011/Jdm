@@ -424,6 +424,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }>("/auth/verify-credentials", {
           method: "POST",
           body: JSON.stringify({ email, password }),
+          headers: { 'X-Skip-Auth': 'true' },
         });
 
         // Reset login attempts on successful login
