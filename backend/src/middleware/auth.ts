@@ -114,7 +114,7 @@ export const authenticate = async (
     req.token = token;
     
     // Log authentication with robust IP extraction to avoid typing mismatches
-    const forwarded = (typeof req.get === 'function' ? req.get('X-Forwarded-For') : undefined) || (req as any).headers?.['x-forwarded-for'];
+    const forwarded = ((req as any).headers?.['x-forwarded-for'] || (req as any).headers?.['X-Forwarded-For']);
     const ipAddress = (req as any).ip || forwarded || (req as any).socket?.remoteAddress || (req as any).connection?.remoteAddress || 'unknown';
     logger.info('User authenticated', {
       userId: user.id,
