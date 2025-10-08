@@ -9,6 +9,7 @@ import {
   refreshToken
 } from "../controllers/authController";
 import { authenticate, refreshTokenMiddleware } from "../middleware/auth";
+import { requireDatabaseReady } from "../middleware/dbReadiness";
 import { validate } from "../middleware/validation";
 
 const router = Router();
@@ -43,10 +44,11 @@ const completeLoginSchema = {
 };
 
 // Public routes
-router.post("/register", validate(registerSchema), register);
-router.post("/login", validate(loginSchema), login);
-router.post("/verify-credentials", validate(verifyCredentialsSchema), verifyCredentials);
-router.post("/complete-login", validate(completeLoginSchema), completeLogin);
+// Database-dependent public routes should only run when DB is ready
+router.post("/register", requireDatabaseReady, validate(registerSchema), register);
+router.post("/login", requireDatabaseReady, validate(loginSchema), login);
+router.post("/verify-credentials", requireDatabaseReady, validate(verifyCredentialsSchema), verifyCredentials);
+router.post("/complete-login", requireDatabaseReady, validate(completeLoginSchema), completeLogin);
 
 // Token refresh route
 router.post("/refresh", refreshTokenMiddleware);

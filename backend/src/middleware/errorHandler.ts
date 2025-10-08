@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { PrismaClientKnownRequestError, PrismaClientValidationError } from '@prisma/client/runtime/library';
+import { PrismaClientKnownRequestError, PrismaClientValidationError, PrismaClientInitializationError } from '@prisma/client/runtime/library';
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { ZodError } from 'zod';
 import { logger } from '../utils/logger';
@@ -80,6 +80,18 @@ export class RateLimitError extends AppError {
 
 // Database error handler
 const handleDatabaseError = (error: any): AppError => {
+  // Prisma initialization errors (e.g., unable to connect to DB)
+  if (error instanceof PrismaClientInitializationError || error?.name === 'PrismaClientInitializationError') {
+    logger.error('Prisma initialization error:', { message: error.message });
+    return new AppError(
+      'Database is unavailable',
+      HttpStatus.SERVICE_UNAVAILABLE,
+      ErrorCodes.DATABASE_ERROR,
+      true,
+      { reason: config.nodeEnv === 'development' ? error.message : undefined }
+    );
+  }
+
   if (error instanceof PrismaClientKnownRequestError) {
     switch (error.code) {
       case 'P2002':
@@ -171,6 +183,8 @@ export const errorHandler = (
   } else if (error instanceof JsonWebTokenError || error instanceof TokenExpiredError) {
     appError = handleJWTError(error);
   } else if (error.name === 'PrismaClientKnownRequestError' || error.name === 'PrismaClientValidationError') {
+    appError = handleDatabaseError(error);
+  } else if (error.name === 'PrismaClientInitializationError') {
     appError = handleDatabaseError(error);
   } else {
     // Unknown error

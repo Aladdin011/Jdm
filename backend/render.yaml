@@ -2,31 +2,54 @@ services:
   - type: web
     name: jdmarc-backend
     env: node
-    rootDir: backend
-    buildCommand: npm install && npx prisma generate && npm run build
-    startCommand: npm run prisma:migrate && npm start
+    plan: free
+    buildCommand: |
+      echo "📦 Installing dependencies..."
+      npm install
+
+      echo "🧩 Generating Prisma client..."
+      npx prisma generate
+
+      echo "🗃️ Pushing Prisma schema to database..."
+      npx prisma db push
+
+      echo "🔍 Testing database connection using @prisma/client..."
+      node -e "
+        import { PrismaClient } from '@prisma/client';
+        const prisma = new PrismaClient();
+        prisma.$connect()
+          .then(() => {
+            console.log('✅ Prisma connected successfully!');
+            return prisma.$disconnect();
+          })
+          .catch(err => {
+            console.error('❌ Prisma connection failed:', err);
+            process.exit(1);
+          });
+      "
+
+      echo '✅ Build and database check complete!'
+    startCommand: npm run start
+    autoDeploy: true
+
     envVars:
+      - key: DATABASE_URL
+        value: mysql://u158969833_JDM:%3EeH5YG%2AAg@srv1847.hstgr.io:3306/u158969833_Jdm?sslaccept=strict
+
+      - key: DATABASE_SSL
+        value: true
+
+      - key: DATABASE_CONNECTION_LIMIT
+        value: 10
+
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 5004
-      - key: CORS_ORIGIN
-        value: https://jdmarcng.com
-      - key: DATABASE_URL
-        sync: false
+
       - key: JWT_SECRET
-        sync: false
-      - key: JWT_EXPIRES_IN
-        value: 1h
-      - key: BCRYPT_ROUNDS
-        value: 12
-      - key: API_VERSION
-        value: v1
-      - key: BASE_URL
-        value: https://builder-aura-field.onrender.com
-        sync: false
-      - key: DB_PORT
-        value: "3306"
-      - key: FRONTEND_URL
-        value: "https://jdmarcng.com"
+        generateValue: true
+
+      - key: CORS_ORIGIN
+        value: `https://jdmarcng.com`
+
     healthCheckPath: /api/health
+    autoDeployOnGitPush: true

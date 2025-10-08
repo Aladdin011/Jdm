@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { listUsers, assignRole, blockUser, updateDepartment, deleteUser } from "../controllers/adminController";
 import { authMiddleware, adminOnly } from "../middleware/authMiddleware";
+import { requireDatabaseReady } from "../middleware/dbReadiness";
 
 const router = Router();
-router.use(authMiddleware, adminOnly);
+router.use(authMiddleware, adminOnly, requireDatabaseReady);
 router.get("/users", listUsers);
 router.put("/users/:id/role", assignRole);
 router.post("/users/:id/block", blockUser);
