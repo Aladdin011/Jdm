@@ -1,39 +1,35 @@
-import type { Request, Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { Request, Response, NextFunction } from 'express';
 
-// Single PrismaClient instance to avoid repeated connections across requests
 const prisma = new PrismaClient();
-
 let isConnected = false;
 
-async function ensureConnection() {
-  if (isConnected) return true;
+export const dbReadiness = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await prisma.$connect();
-    isConnected = true;
-    console.log('[Render::DB] Connected to Prisma');
-    return true;
-  } catch (err) {
-    console.error('[Render::DB] Prisma connection failed', err);
+    if (!isConnected) {
+      await prisma.$connect();
+      console.log('✅ Database connected successfully.');
+      isConnected = true;
+    }
+
+    // Optional: Simple check query (can be removed for performance)
+    await prisma.$queryRaw`SELECT 1`;
+
+    next();
+  } catch (error: any) {
+    console.error('❌ Database connection error:', error.message || error);
     isConnected = false;
-    return false;
-  }
-}
 
-export async function dbReadiness(req: Request, res: Response, next: NextFunction) {
-  const ok = await ensureConnection();
-  if (!ok) {
-    return res.status(503).json({ success: false, message: 'Database not ready' });
+    return res.status(503).json({
+      success: false,
+      message: 'Database not ready or connection failed. Please try again later.',
+      error: error.message || error,
+    });
   }
-  return next();
-}
+};
 
-// Safe shutdown to avoid dangling connections during Render restarts
+// Graceful shutdown handling for Render
 process.on('beforeExit', async () => {
-  try {
-    await prisma.$disconnect();
-    isConnected = false;
-  } catch (err) {
-    console.error('[Render::DB] Error during disconnect', err);
-  }
+  console.log('⚙️ Closing Prisma connection...');
+  await prisma.$disconnect();
 });
