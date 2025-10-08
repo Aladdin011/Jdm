@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import { listUsersPublic } from '../controllers/userController';
-import { requireDatabaseReady } from '../middleware/dbReadiness';
+import { dbReadiness } from '../middleware/dbReadiness';
 
 const router = Router();
 
+// Ensure database is healthy for user routes
+router.use(dbReadiness);
 // GET /api/users
-router.get('/', requireDatabaseReady, listUsersPublic);
+router.get('/', listUsersPublic);
 
 export default router;
