@@ -71,3 +71,33 @@ export const deleteUser = async (req: Request, res: Response) => {
     return res.status(404).json({ message: "User not found" });
   }
 };
+
+// Admin dashboard summary endpoint
+export const getDashboardSummary = async (_req: Request, res: Response) => {
+  try {
+    const totalUsers = await prisma.users.count();
+    const activeUsers = await prisma.users.count({ where: { active: true } });
+    const admins = await prisma.users.count({ where: { role: 'admin' } });
+    const departmentsAgg = await prisma.users.groupBy({
+      by: ['department'],
+      _count: { department: true },
+    });
+
+    const departmentCounts = departmentsAgg
+      .filter((d: any) => d.department)
+      .map((d: any) => ({ department: d.department, count: d._count.department }));
+
+    return res.json({
+      success: true,
+      data: {
+        totalUsers,
+        activeUsers,
+        admins,
+        departmentCounts,
+      },
+      message: 'Admin dashboard summary fetched successfully',
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: 'Failed to fetch dashboard summary' });
+  }
+};
