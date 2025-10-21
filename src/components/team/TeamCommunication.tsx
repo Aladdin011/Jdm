@@ -588,12 +588,20 @@ const TeamCommunication: React.FC<TeamCommunicationProps> = ({
                             }`}
                           >
                             {message.type !== "system" && message.from !== user?.id && (
-                              <Avatar className="h-8 w-8">
-                                <AvatarImage src={`/api/avatar/${message.from}`} />
-                                <AvatarFallback className="text-xs">
-                                  {message.avatar || message.sender.charAt(0)}
-                                </AvatarFallback>
-                              </Avatar>
+                                                  <Avatar className="h-8 w-8">
+                                                    {
+                                                      (() => {
+                                                        const ext = 'jpg';
+                                                        const publicUrl = supabaseService.getPublicUrl('project_files', `avatars/${message.from}.${ext}`);
+                                                        return (
+                                                          <AvatarImage src={publicUrl || `/api/avatar/${message.from}`} />
+                                                        );
+                                                      })()
+                                                    }
+                                                    <AvatarFallback className="text-xs">
+                                                      {message.avatar || message.sender.charAt(0)}
+                                                    </AvatarFallback>
+                                                  </Avatar>
                             )}
                             <div className={`flex-1 max-w-xs lg:max-w-md ${
                               message.from === user?.id ? "text-right" : ""

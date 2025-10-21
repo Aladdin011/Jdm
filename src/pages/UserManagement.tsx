@@ -216,18 +216,10 @@ export default function UserManagement() {
     setActionState({ isUpdating: true, userId });
     try {
       // Note: This API endpoint may need to be added to your backend
-      const response =
-        (await userAPI.updateUserDepartment?.(userId, department)) ||
-        (await fetch(`/api/admin/users/${userId}/department`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("jdmarc_token")}`,
-          },
-          body: JSON.stringify({ department }),
-        }).then((res) => res.json()));
+      const response = await userAPI.updateUserDepartment?.(userId, department);
 
-      if (response.success || response.ok) {
+      // supabaseService returns { data, error } objects
+      if (response && !response.error) {
         setUsers(
           users.map((user) =>
             user.id === userId ? { ...user, department } : user,

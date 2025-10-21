@@ -843,32 +843,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       // Try real API for registration first
       try {
-        const response = await apiCall<{ user: User; token: string }>(
-          "/auth/register",
-          {
-            method: "POST",
-            body: JSON.stringify({
-              firstName: userData.firstName,
-              lastName: userData.lastName,
-              email: userData.email,
-              phone: userData.phone,
-              location: userData.location,
-              company: userData.company,
-              department: userData.department,
-              isStaff: userData.isStaff,
-              password: userData.password,
-            }),
-          },
-        );
+        // Use the new authAPI which delegates to Supabase
+        const result = await authAPI.register({
+          email: userData.email,
+          password: userData.password,
+        } as any);
 
-        const { user: newUser, token } = response;
-        storeUserData(newUser, token);
+        // Supabase signUp returns a user object; we may also have a profile insert result
+        if (result?.error) {
+          setIsLoading(false);
+          return { success: false, error: result.error.message || String(result.error) };
+        }
+
+        const newUser = result?.user || result?.data?.user || null;
+        // Note: storeUserData may expect a token; Supabase manages session via its client
+        if (newUser) {
+          storeUserData(newUser, null as any);
+        }
+
         setIsLoading(false);
-
-        return {
-          success: true,
-          user: newUser
-        };
+        return { success: true, user: newUser };
       } catch (apiError) {
         console.warn(
           "Backend unavailable, using development mode for registration",

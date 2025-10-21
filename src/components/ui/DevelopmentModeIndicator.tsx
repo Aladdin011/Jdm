@@ -28,25 +28,12 @@ export default function DevelopmentModeIndicator() {
   };
 
   const handleCheckConnection = async () => {
-    try {
-      const response = await fetch("/api/health", {
-        method: "GET",
-        signal: AbortSignal.timeout(5000), // 5 second timeout
-      });
-
-      if (response.ok) {
-        alert(
-          "✅ Backend connection successful! Please refresh the page to use the live API.",
-        );
-      } else {
-        alert(
-          "❌ Backend server responded but API might not be configured correctly.",
-        );
-      }
-    } catch (error) {
-        alert(
-          "❌ Cannot connect to backend server. Please ensure it's running on http://localhost:4000",
-        );
+    // For Supabase migration, check if Vite env for Supabase is configured
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    if (supabaseUrl) {
+      alert(`✅ Supabase configured: ${supabaseUrl}`);
+    } else {
+      alert('❌ Supabase not configured. Set VITE_SUPABASE_URL in .env.local');
     }
   };
 
