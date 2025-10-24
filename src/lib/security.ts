@@ -1,46 +1,40 @@
 // Content Security Policy Configuration
 export const cspConfig = {
-  'default-src': ["'self'"],
-  'script-src': [
+  "default-src": ["'self'"],
+  "script-src": [
     "'self'",
     "'unsafe-inline'", // For inline scripts (minimize in production)
     "'unsafe-eval'", // Required for Google Analytics gtag function
-    'https://www.googletagmanager.com',
-    'https://www.google-analytics.com',
-    'https://connect.facebook.net',
-    'https://cdn.builder.io'
+    "https://www.googletagmanager.com",
+    "https://www.google-analytics.com",
+    "https://connect.facebook.net",
+    "https://cdn.builder.io",
   ],
-  'style-src': [
+  "style-src": [
     "'self'",
     "'unsafe-inline'", // For CSS-in-JS and Tailwind
-    'https://fonts.googleapis.com'
+    "https://fonts.googleapis.com",
   ],
-  'img-src': [
+  "img-src": [
     "'self'",
-    'data:',
-    'https:',
-    'https://cdn.builder.io',
-    'https://images.unsplash.com'
+    "data:",
+    "https:",
+    "https://cdn.builder.io",
+    "https://images.unsplash.com",
   ],
-  'font-src': [
+  "font-src": ["'self'", "https://fonts.gstatic.com"],
+  "connect-src": [
     "'self'",
-    'https://fonts.gstatic.com'
+    "https://builder-aura-field.onrender.com",
+    "https://www.google-analytics.com",
+    "https://vitals.vercel-analytics.com",
   ],
-  'connect-src': [
-    "'self'",
-    'https://builder-aura-field.onrender.com',
-    'https://www.google-analytics.com',
-    'https://vitals.vercel-analytics.com'
-  ],
-  'media-src': [
-    "'self'",
-    'https://cdn.builder.io'
-  ],
-  'object-src': ["'none'"],
-  'base-uri': ["'self'"],
-  'form-action': ["'self'"],
-  'frame-ancestors': ["'none'"],
-  'upgrade-insecure-requests': [],
+  "media-src": ["'self'", "https://cdn.builder.io"],
+  "object-src": ["'none'"],
+  "base-uri": ["'self'"],
+  "form-action": ["'self'"],
+  "frame-ancestors": ["'none'"],
+  "upgrade-insecure-requests": [],
 };
 
 // Generate CSP header string
@@ -48,25 +42,25 @@ export const generateCSPHeader = (): string => {
   return Object.entries(cspConfig)
     .map(([directive, sources]) => {
       if (sources.length === 0) {
-        return directive.replace(/-/g, '-');
+        return directive.replace(/-/g, "-");
       }
-      return `${directive.replace(/-/g, '-')} ${sources.join(' ')}`;
+      return `${directive.replace(/-/g, "-")} ${sources.join(" ")}`;
     })
-    .join('; ');
+    .join("; ");
 };
 
 // Apply CSP to the document
 export const applyCSP = (): void => {
-  if (typeof document !== 'undefined') {
+  if (typeof document !== "undefined") {
     // Only apply CSP in production to avoid development issues
-    if (process.env.NODE_ENV === 'production') {
-      const meta = document.createElement('meta');
-      meta.httpEquiv = 'Content-Security-Policy';
+    if (process.env.NODE_ENV === "production") {
+      const meta = document.createElement("meta");
+      meta.httpEquiv = "Content-Security-Policy";
       meta.content = generateCSPHeader();
       document.head.appendChild(meta);
     } else {
       // In development, log the CSP that would be applied
-      console.log('CSP (disabled in development):', generateCSPHeader());
+      console.log("CSP (disabled in development):", generateCSPHeader());
     }
   }
 };
@@ -98,15 +92,15 @@ class RateLimiter {
     const fingerprint = [
       navigator.userAgent,
       navigator.language,
-      screen.width + 'x' + screen.height,
+      screen.width + "x" + screen.height,
       Intl.DateTimeFormat().resolvedOptions().timeZone,
-    ].join('|');
+    ].join("|");
 
     // Simple hash function for fingerprinting
     let hash = 0;
     for (let i = 0; i < fingerprint.length; i++) {
       const char = fingerprint.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32-bit integer
     }
 
@@ -122,11 +116,16 @@ class RateLimiter {
     const existingRequests = this.requests.get(key) || [];
 
     // Filter out requests outside the current window
-    const requestsInWindow = existingRequests.filter(time => time > windowStart);
+    const requestsInWindow = existingRequests.filter(
+      (time) => time > windowStart,
+    );
 
     // Check if we're over the limit
     const allowed = requestsInWindow.length < this.config.maxRequests;
-    const remaining = Math.max(0, this.config.maxRequests - requestsInWindow.length);
+    const remaining = Math.max(
+      0,
+      this.config.maxRequests - requestsInWindow.length,
+    );
 
     if (allowed) {
       // Add this request to the list
@@ -178,8 +177,8 @@ class InputSanitizer {
   }
 
   sanitize(input: string): string {
-    if (!input || typeof input !== 'string') {
-      return '';
+    if (!input || typeof input !== "string") {
+      return "";
     }
 
     let sanitized = input;
@@ -205,24 +204,24 @@ class InputSanitizer {
 
   private stripHtml(input: string): string {
     // Create a temporary DOM element to strip HTML
-    if (typeof document !== 'undefined') {
-      const temp = document.createElement('div');
+    if (typeof document !== "undefined") {
+      const temp = document.createElement("div");
       temp.innerHTML = input;
-      return temp.textContent || temp.innerText || '';
+      return temp.textContent || temp.innerText || "";
     }
 
     // Fallback regex-based HTML stripping
-    return input.replace(/<[^>]*>/g, '');
+    return input.replace(/<[^>]*>/g, "");
   }
 
   private escapeHtml(input: string): string {
     const escapeMap: Record<string, string> = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#x27;',
-      '/': '&#x2F;',
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#x27;",
+      "/": "&#x2F;",
     };
 
     return input.replace(/[&<>"'/]/g, (char) => escapeMap[char]);
@@ -245,8 +244,8 @@ class InputSanitizer {
       /<form/gi,
     ];
 
-    dangerousPatterns.forEach(pattern => {
-      input = input.replace(pattern, '');
+    dangerousPatterns.forEach((pattern) => {
+      input = input.replace(pattern, "");
     });
 
     return input;
@@ -259,7 +258,7 @@ class InputSanitizer {
 
   validatePhone(phone: string): boolean {
     // Remove all non-digit characters
-    const cleaned = phone.replace(/\D/g, '');
+    const cleaned = phone.replace(/\D/g, "");
     // Check if it's a valid length (7-15 digits)
     return cleaned.length >= 7 && cleaned.length <= 15;
   }
@@ -267,7 +266,7 @@ class InputSanitizer {
   validateURL(url: string): boolean {
     try {
       const urlObj = new URL(url);
-      return ['http:', 'https:'].includes(urlObj.protocol);
+      return ["http:", "https:"].includes(urlObj.protocol);
     } catch {
       return false;
     }
@@ -295,21 +294,21 @@ export const nameSanitizer = new InputSanitizer({
 
 // Security Headers
 export const securityHeaders = {
-  'X-Content-Type-Options': 'nosniff',
-  'X-Frame-Options': 'DENY',
-  'X-XSS-Protection': '1; mode=block',
-  'Referrer-Policy': 'strict-origin-when-cross-origin',
-  'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
-  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "X-XSS-Protection": "1; mode=block",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+  "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
 };
 
 // Apply security headers (for client-side applications, this would be done by the server)
 export const applySecurityHeaders = (): void => {
   // Note: In a real application, these headers should be set by the server
   // This is for demonstration purposes only
-  if (typeof document !== 'undefined') {
+  if (typeof document !== "undefined") {
     Object.entries(securityHeaders).forEach(([header, value]) => {
-      const meta = document.createElement('meta');
+      const meta = document.createElement("meta");
       meta.httpEquiv = header;
       meta.content = value;
       document.head.appendChild(meta);
@@ -350,7 +349,9 @@ export class SecureFormHandler {
     if (this.options.rateLimiter) {
       const rateLimitResult = this.options.rateLimiter.check();
       if (!rateLimitResult.allowed) {
-        errors.push(`Too many requests. Please try again after ${rateLimitResult.resetTime.toLocaleTimeString()}`);
+        errors.push(
+          `Too many requests. Please try again after ${rateLimitResult.resetTime.toLocaleTimeString()}`,
+        );
         return { valid: false, errors, sanitizedData };
       }
     }
@@ -358,27 +359,33 @@ export class SecureFormHandler {
     // Honeypot check (anti-bot)
     if (this.options.honeypot && formData.website) {
       // If honeypot field is filled, it's likely a bot
-      errors.push('Spam submission detected');
+      errors.push("Spam submission detected");
       return { valid: false, errors, sanitizedData };
     }
 
     // Sanitize and validate each field
     Object.entries(formData).forEach(([key, value]) => {
-      if (typeof value === 'string' && this.options.sanitizer) {
+      if (typeof value === "string" && this.options.sanitizer) {
         sanitizedData[key] = this.options.sanitizer.sanitize(value);
 
         // Additional validation based on field type
-        if (key.toLowerCase().includes('email')) {
+        if (key.toLowerCase().includes("email")) {
           if (!this.options.sanitizer.validateEmail(sanitizedData[key])) {
-            errors.push('Invalid email address');
+            errors.push("Invalid email address");
           }
-        } else if (key.toLowerCase().includes('phone')) {
+        } else if (key.toLowerCase().includes("phone")) {
           if (!this.options.sanitizer.validatePhone(sanitizedData[key])) {
-            errors.push('Invalid phone number');
+            errors.push("Invalid phone number");
           }
-        } else if (key.toLowerCase().includes('url') || key.toLowerCase().includes('website')) {
-          if (sanitizedData[key] && !this.options.sanitizer.validateURL(sanitizedData[key])) {
-            errors.push('Invalid URL');
+        } else if (
+          key.toLowerCase().includes("url") ||
+          key.toLowerCase().includes("website")
+        ) {
+          if (
+            sanitizedData[key] &&
+            !this.options.sanitizer.validateURL(sanitizedData[key])
+          ) {
+            errors.push("Invalid URL");
           }
         }
       } else {
@@ -387,10 +394,12 @@ export class SecureFormHandler {
     });
 
     // Check for required fields
-    const requiredFields = ['name', 'email', 'message'];
-    requiredFields.forEach(field => {
-      if (!sanitizedData[field] || sanitizedData[field].trim() === '') {
-        errors.push(`${field.charAt(0).toUpperCase() + field.slice(1)} is required`);
+    const requiredFields = ["name", "email", "message"];
+    requiredFields.forEach((field) => {
+      if (!sanitizedData[field] || sanitizedData[field].trim() === "") {
+        errors.push(
+          `${field.charAt(0).toUpperCase() + field.slice(1)} is required`,
+        );
       }
     });
 
@@ -404,7 +413,7 @@ export class SecureFormHandler {
 
 // CSRF Protection
 class CSRFProtection {
-  private tokenKey = 'builder_aura_csrf_token';
+  private tokenKey = "builder_aura_csrf_token";
 
   generateToken(): string {
     const token = this.generateRandomString(32);
@@ -418,8 +427,9 @@ class CSRFProtection {
   }
 
   private generateRandomString(length: number): string {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
+    const chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
     for (let i = 0; i < length; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
@@ -431,7 +441,11 @@ export const csrfProtection = new CSRFProtection();
 
 // Security Event Logger
 interface SecurityEvent {
-  type: 'rate_limit_exceeded' | 'invalid_input' | 'csrf_violation' | 'suspicious_activity';
+  type:
+    | "rate_limit_exceeded"
+    | "invalid_input"
+    | "csrf_violation"
+    | "suspicious_activity";
   timestamp: Date;
   details: any;
   clientId: string;
@@ -440,7 +454,7 @@ interface SecurityEvent {
 class SecurityLogger {
   private events: SecurityEvent[] = [];
 
-  logEvent(type: SecurityEvent['type'], details: any): void {
+  logEvent(type: SecurityEvent["type"], details: any): void {
     const event: SecurityEvent = {
       type,
       timestamp: new Date(),
@@ -451,15 +465,15 @@ class SecurityLogger {
     this.events.push(event);
 
     // In production, send to security monitoring service
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === "production") {
       this.sendToSecurityService(event);
     } else {
-      console.warn('Security Event:', event);
+      console.warn("Security Event:", event);
     }
   }
 
   private getClientId(): string {
-    return sessionStorage.getItem('client_id') || 'anonymous';
+    return sessionStorage.getItem("client_id") || "anonymous";
   }
 
   private sendToSecurityService(event: SecurityEvent): void {
@@ -478,14 +492,14 @@ export const securityLogger = new SecurityLogger();
 export const initializeSecurity = (): void => {
   // Apply CSP
   applyCSP();
-  
+
   // Apply security headers (client-side demonstration)
   applySecurityHeaders();
-  
+
   // Set up global error handling for security events
-  window.addEventListener('error', (event) => {
-    if (event.message.includes('Content Security Policy')) {
-      securityLogger.logEvent('csrf_violation', {
+  window.addEventListener("error", (event) => {
+    if (event.message.includes("Content Security Policy")) {
+      securityLogger.logEvent("csrf_violation", {
         message: event.message,
         source: event.filename,
         line: event.lineno,
@@ -496,11 +510,13 @@ export const initializeSecurity = (): void => {
 
 // Utility function to check if running in secure context
 export const isSecureContext = (): boolean => {
-  return window.isSecureContext && location.protocol === 'https:';
+  return window.isSecureContext && location.protocol === "https:";
 };
 
 // Password strength validator
-export const validatePasswordStrength = (password: string): {
+export const validatePasswordStrength = (
+  password: string,
+): {
   score: number;
   feedback: string[];
   isStrong: boolean;
@@ -509,19 +525,19 @@ export const validatePasswordStrength = (password: string): {
   let score = 0;
 
   if (password.length >= 8) score += 1;
-  else feedback.push('Password should be at least 8 characters long');
+  else feedback.push("Password should be at least 8 characters long");
 
   if (/[a-z]/.test(password)) score += 1;
-  else feedback.push('Include lowercase letters');
+  else feedback.push("Include lowercase letters");
 
   if (/[A-Z]/.test(password)) score += 1;
-  else feedback.push('Include uppercase letters');
+  else feedback.push("Include uppercase letters");
 
   if (/\d/.test(password)) score += 1;
-  else feedback.push('Include numbers');
+  else feedback.push("Include numbers");
 
   if (/[^a-zA-Z\d]/.test(password)) score += 1;
-  else feedback.push('Include special characters');
+  else feedback.push("Include special characters");
 
   return {
     score,

@@ -61,7 +61,11 @@ interface Department {
 interface CallSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onStartCall: (callType: "department" | "staff" | "general", target: string, options?: any) => void;
+  onStartCall: (
+    callType: "department" | "staff" | "general",
+    target: string,
+    options?: any,
+  ) => void;
   currentDepartment?: string;
 }
 
@@ -172,7 +176,11 @@ const mockStaff: StaffMember[] = [
 ];
 
 const mapUserToStaff = (user: any): StaffMember => {
-  const fullName = [user.firstName, user.lastName].filter(Boolean).join(" ") || user.name || user.email || "Unknown";
+  const fullName =
+    [user.firstName, user.lastName].filter(Boolean).join(" ") ||
+    user.name ||
+    user.email ||
+    "Unknown";
   return {
     id: String(user.id),
     name: fullName,
@@ -181,7 +189,9 @@ const mapUserToStaff = (user: any): StaffMember => {
     role: user.role,
     avatar: user.avatarUrl || undefined,
     status: user.isActive ? "online" : "offline",
-    lastSeen: user.lastLogin ? new Date(user.lastLogin).toLocaleString() : undefined,
+    lastSeen: user.lastLogin
+      ? new Date(user.lastLogin).toLocaleString()
+      : undefined,
   };
 };
 
@@ -193,10 +203,13 @@ export default function CallSelectionModal({
 }: CallSelectionModalProps) {
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCallType, setSelectedCallType] = useState<"video" | "voice">("video");
+  const [selectedCallType, setSelectedCallType] = useState<"video" | "voice">(
+    "video",
+  );
   const [staff, setStaff] = useState<StaffMember[]>([]);
   const [filteredStaff, setFilteredStaff] = useState<StaffMember[]>([]);
-  const [filteredDepartments, setFilteredDepartments] = useState<Department[]>(departments);
+  const [filteredDepartments, setFilteredDepartments] =
+    useState<Department[]>(departments);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -228,15 +241,17 @@ export default function CallSelectionModal({
         staff.filter((member) =>
           [member.name, member.role, member.email]
             .filter(Boolean)
-            .some((field) => String(field).toLowerCase().includes(searchTerm.toLowerCase()))
-        )
+            .some((field) =>
+              String(field).toLowerCase().includes(searchTerm.toLowerCase()),
+            ),
+        ),
       );
       setFilteredDepartments(
         departments.filter(
           (dept) =>
             dept.displayName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            dept.description.toLowerCase().includes(searchTerm.toLowerCase())
-        )
+            dept.description.toLowerCase().includes(searchTerm.toLowerCase()),
+        ),
       );
     } else {
       setFilteredStaff(staff);
@@ -309,7 +324,8 @@ export default function CallSelectionModal({
             Start a Call
           </DialogTitle>
           <DialogDescription>
-            Choose who you'd like to call - a specific department, individual staff member, or everyone.
+            Choose who you'd like to call - a specific department, individual
+            staff member, or everyone.
           </DialogDescription>
         </DialogHeader>
 
@@ -367,7 +383,10 @@ export default function CallSelectionModal({
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="departments" className="space-y-4 max-h-96 overflow-y-auto">
+            <TabsContent
+              value="departments"
+              className="space-y-4 max-h-96 overflow-y-auto"
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {filteredDepartments.map((department) => (
                   <motion.div
@@ -379,11 +398,15 @@ export default function CallSelectionModal({
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-3">
-                        <div className={`p-2 rounded-lg ${department.color} text-white`}>
+                        <div
+                          className={`p-2 rounded-lg ${department.color} text-white`}
+                        >
                           {department.icon}
                         </div>
                         <div>
-                          <h3 className="font-medium">{department.displayName}</h3>
+                          <h3 className="font-medium">
+                            {department.displayName}
+                          </h3>
                           <p className="text-sm text-gray-600 dark:text-gray-400">
                             {department.description}
                           </p>
@@ -406,7 +429,10 @@ export default function CallSelectionModal({
               </div>
             </TabsContent>
 
-            <TabsContent value="staff" className="space-y-4 max-h-96 overflow-y-auto">
+            <TabsContent
+              value="staff"
+              className="space-y-4 max-h-96 overflow-y-auto"
+            >
               {isLoading && (
                 <div className="flex items-center justify-center py-8 text-sm text-gray-500">
                   Loading staff...
@@ -435,9 +461,15 @@ export default function CallSelectionModal({
                         <div className="flex items-center gap-3">
                           <div className="relative">
                             <Avatar className="h-10 w-10">
-                              <AvatarImage src={staff.avatar} alt={staff.name} />
+                              <AvatarImage
+                                src={staff.avatar}
+                                alt={staff.name}
+                              />
                               <AvatarFallback>
-                                {staff.name.split(" ").map(n => n[0]).join("")}
+                                {staff.name
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")}
                               </AvatarFallback>
                             </Avatar>
                             <div
@@ -446,18 +478,31 @@ export default function CallSelectionModal({
                           </div>
                           <div>
                             <h3 className="font-medium">{staff.name}</h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">{staff.role || "User"}</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              {staff.role || "User"}
+                            </p>
                             <p className="text-xs text-gray-500">
-                              {departments.find(d => d.name === staff.department)?.displayName || staff.department || "No department"}
+                              {departments.find(
+                                (d) => d.name === staff.department,
+                              )?.displayName ||
+                                staff.department ||
+                                "No department"}
                             </p>
                           </div>
                         </div>
                         <div className="text-right">
                           <Badge
-                            variant={(staff.status || "offline") === "online" ? "default" : "secondary"}
+                            variant={
+                              (staff.status || "offline") === "online"
+                                ? "default"
+                                : "secondary"
+                            }
                             className="text-xs"
                           >
-                            {getStatusText(staff.status || "offline", staff.lastSeen)}
+                            {getStatusText(
+                              staff.status || "offline",
+                              staff.lastSeen,
+                            )}
                           </Badge>
                         </div>
                       </motion.div>
@@ -472,10 +517,13 @@ export default function CallSelectionModal({
                 <div className="mx-auto w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mb-4">
                   <Globe className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">All Staff Meeting</h3>
+                <h3 className="text-lg font-semibold mb-2">
+                  All Staff Meeting
+                </h3>
                 <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
-                  Start a company-wide meeting that will notify all staff members across all departments.
-                  Perfect for announcements, all-hands meetings, or emergency communications.
+                  Start a company-wide meeting that will notify all staff
+                  members across all departments. Perfect for announcements,
+                  all-hands meetings, or emergency communications.
                 </p>
                 <Button
                   onClick={handleGeneralCall}
@@ -487,7 +535,8 @@ export default function CallSelectionModal({
                   ) : (
                     <Phone className="h-5 w-5" />
                   )}
-                  Start All Staff {selectedCallType === "video" ? "Video" : "Voice"} Meeting
+                  Start All Staff{" "}
+                  {selectedCallType === "video" ? "Video" : "Voice"} Meeting
                 </Button>
               </div>
             </TabsContent>

@@ -216,8 +216,11 @@ export default function BusinessDevelopmentDashboard() {
 
   const totalLeads = leads.length;
   const activeDeals = deals.length;
-  const potentialRevenue = deals.reduce((sum, deal) => sum + (deal.value * deal.probability / 100), 0);
-  const wonLeads = leads.filter(lead => lead.status === "won").length;
+  const potentialRevenue = deals.reduce(
+    (sum, deal) => sum + (deal.value * deal.probability) / 100,
+    0,
+  );
+  const wonLeads = leads.filter((lead) => lead.status === "won").length;
 
   return (
     <ModernDashboardLayout
@@ -232,8 +235,12 @@ export default function BusinessDevelopmentDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600 mb-1">Total Leads</p>
-                  <p className="text-3xl font-bold text-gray-900">{totalLeads}</p>
+                  <p className="text-sm font-medium text-gray-600 mb-1">
+                    Total Leads
+                  </p>
+                  <p className="text-3xl font-bold text-gray-900">
+                    {totalLeads}
+                  </p>
                   <p className="text-sm text-green-600 flex items-center gap-1 mt-1">
                     <TrendingUp className="h-3 w-3" />
                     +12% this month
@@ -250,8 +257,12 @@ export default function BusinessDevelopmentDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600 mb-1">Active Deals</p>
-                  <p className="text-3xl font-bold text-gray-900">{activeDeals}</p>
+                  <p className="text-sm font-medium text-gray-600 mb-1">
+                    Active Deals
+                  </p>
+                  <p className="text-3xl font-bold text-gray-900">
+                    {activeDeals}
+                  </p>
                   <p className="text-sm text-blue-600 mt-1">In pipeline</p>
                 </div>
                 <div className="p-3 bg-blue-100 rounded-full">
@@ -265,11 +276,15 @@ export default function BusinessDevelopmentDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600 mb-1">Potential Revenue</p>
+                  <p className="text-sm font-medium text-gray-600 mb-1">
+                    Potential Revenue
+                  </p>
                   <p className="text-3xl font-bold text-gray-900">
                     ₦{(potentialRevenue / 1000000).toFixed(1)}M
                   </p>
-                  <p className="text-sm text-purple-600 mt-1">Weighted pipeline</p>
+                  <p className="text-sm text-purple-600 mt-1">
+                    Weighted pipeline
+                  </p>
                 </div>
                 <div className="p-3 bg-purple-100 rounded-full">
                   <DollarSign className="h-6 w-6 text-purple-600" />
@@ -282,7 +297,9 @@ export default function BusinessDevelopmentDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600 mb-1">Won Deals</p>
+                  <p className="text-sm font-medium text-gray-600 mb-1">
+                    Won Deals
+                  </p>
                   <p className="text-3xl font-bold text-gray-900">{wonLeads}</p>
                   <p className="text-sm text-green-600 flex items-center gap-1 mt-1">
                     <Trophy className="h-3 w-3" />
@@ -309,7 +326,9 @@ export default function BusinessDevelopmentDashboard() {
                     <Users className="h-5 w-5 text-emerald-600" />
                     Active Leads
                   </CardTitle>
-                  <p className="text-sm text-gray-600 mt-1">Prospects in your pipeline</p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Prospects in your pipeline
+                  </p>
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -342,14 +361,18 @@ export default function BusinessDevelopmentDashboard() {
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
                             <div>
-                              <h4 className="font-semibold text-gray-900">{lead.name}</h4>
-                              <p className="text-sm text-gray-600">{lead.company}</p>
+                              <h4 className="font-semibold text-gray-900">
+                                {lead.name}
+                              </h4>
+                              <p className="text-sm text-gray-600">
+                                {lead.company}
+                              </p>
                             </div>
                             <Badge className={getStatusColor(lead.status)}>
                               {lead.status}
                             </Badge>
                           </div>
-                          
+
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600 mb-3">
                             <div className="flex items-center gap-2">
                               <Mail className="h-4 w-4" />
@@ -368,13 +391,13 @@ export default function BusinessDevelopmentDashboard() {
                               {lead.value}
                             </div>
                           </div>
-                          
+
                           <div className="flex items-center gap-2 text-xs text-gray-500">
                             <Calendar className="h-3 w-3" />
                             Added: {new Date(lead.date).toLocaleDateString()}
                           </div>
                         </div>
-                        
+
                         <div className="flex items-center gap-2">
                           <Button
                             onClick={() => handleStartCall(lead.id)}
@@ -406,7 +429,9 @@ export default function BusinessDevelopmentDashboard() {
                   <Target className="h-5 w-5 text-emerald-600" />
                   Deal Pipeline
                 </CardTitle>
-                <p className="text-sm text-gray-600">Active opportunities and their progress</p>
+                <p className="text-sm text-gray-600">
+                  Active opportunities and their progress
+                </p>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -419,29 +444,45 @@ export default function BusinessDevelopmentDashboard() {
                     >
                       <div className="flex items-start justify-between mb-3">
                         <div>
-                          <h4 className="font-semibold text-gray-900">{deal.title}</h4>
+                          <h4 className="font-semibold text-gray-900">
+                            {deal.title}
+                          </h4>
                           <p className="text-sm text-gray-600">{deal.client}</p>
                         </div>
                         <div className="text-right">
                           <p className="font-bold text-emerald-600">
                             ₦{(deal.value / 1000000).toFixed(1)}M
                           </p>
-                          <p className="text-xs text-gray-500">Close: {new Date(deal.closeDate).toLocaleDateString()}</p>
+                          <p className="text-xs text-gray-500">
+                            Close:{" "}
+                            {new Date(deal.closeDate).toLocaleDateString()}
+                          </p>
                         </div>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-gray-600">Probability</span>
-                          <span className="font-medium text-emerald-600">{deal.probability}%</span>
+                          <span className="font-medium text-emerald-600">
+                            {deal.probability}%
+                          </span>
                         </div>
                         <Progress value={deal.probability} className="h-2" />
                         <div className="flex items-center justify-between text-xs">
-                          <Badge variant="outline" className="border-emerald-200 text-emerald-700">
+                          <Badge
+                            variant="outline"
+                            className="border-emerald-200 text-emerald-700"
+                          >
                             {deal.stage}
                           </Badge>
                           <span className="text-gray-500">
-                            Expected: ₦{((deal.value * deal.probability / 100) / 1000000).toFixed(1)}M
+                            Expected: ₦
+                            {(
+                              (deal.value * deal.probability) /
+                              100 /
+                              1000000
+                            ).toFixed(1)}
+                            M
                           </span>
                         </div>
                       </div>
@@ -472,7 +513,12 @@ export default function BusinessDevelopmentDashboard() {
                     Add New Lead
                   </Button>
                   <Button
-                    onClick={() => startCall("bd-team-meeting", { title: "BD Team Meeting", participants: [] })}
+                    onClick={() =>
+                      startCall("bd-team-meeting", {
+                        title: "BD Team Meeting",
+                        participants: [],
+                      })
+                    }
                     disabled={isInCall}
                     variant="outline"
                     className="w-full border-blue-600 text-blue-600 hover:bg-blue-50"
@@ -480,11 +526,17 @@ export default function BusinessDevelopmentDashboard() {
                     <Video className="h-4 w-4 mr-2" />
                     {isInCall ? "In Meeting" : "Start Team Meeting"}
                   </Button>
-                  <Button variant="outline" className="w-full border-purple-600 text-purple-600 hover:bg-purple-50">
+                  <Button
+                    variant="outline"
+                    className="w-full border-purple-600 text-purple-600 hover:bg-purple-50"
+                  >
                     <FileText className="h-4 w-4 mr-2" />
                     Generate Report
                   </Button>
-                  <Button variant="outline" className="w-full border-orange-600 text-orange-600 hover:bg-orange-50">
+                  <Button
+                    variant="outline"
+                    className="w-full border-orange-600 text-orange-600 hover:bg-orange-50"
+                  >
                     <ArrowUpRight className="h-4 w-4 mr-2" />
                     View Analytics
                   </Button>
@@ -503,27 +555,37 @@ export default function BusinessDevelopmentDashboard() {
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Monthly Target</span>
+                    <span className="text-sm text-gray-600">
+                      Monthly Target
+                    </span>
                     <span className="font-semibold text-emerald-600">75%</span>
                   </div>
                   <Progress value={75} className="h-2" />
-                  
+
                   <div className="space-y-3 pt-2">
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-gray-500">Calls Made</span>
                       <span className="text-sm font-medium">24</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-gray-500">Meetings Scheduled</span>
+                      <span className="text-xs text-gray-500">
+                        Meetings Scheduled
+                      </span>
                       <span className="text-sm font-medium">8</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-gray-500">Proposals Sent</span>
+                      <span className="text-xs text-gray-500">
+                        Proposals Sent
+                      </span>
                       <span className="text-sm font-medium">5</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-gray-500">Deals Closed</span>
-                      <span className="text-sm font-medium text-green-600">3</span>
+                      <span className="text-xs text-gray-500">
+                        Deals Closed
+                      </span>
+                      <span className="text-sm font-medium text-green-600">
+                        3
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -543,38 +605,57 @@ export default function BusinessDevelopmentDashboard() {
                 <Input
                   placeholder="Contact Name"
                   value={newLead.name}
-                  onChange={(e) => setNewLead({ ...newLead, name: e.target.value })}
+                  onChange={(e) =>
+                    setNewLead({ ...newLead, name: e.target.value })
+                  }
                 />
                 <Input
                   placeholder="Company"
                   value={newLead.company}
-                  onChange={(e) => setNewLead({ ...newLead, company: e.target.value })}
+                  onChange={(e) =>
+                    setNewLead({ ...newLead, company: e.target.value })
+                  }
                 />
                 <Input
                   placeholder="Email"
                   value={newLead.email}
-                  onChange={(e) => setNewLead({ ...newLead, email: e.target.value })}
+                  onChange={(e) =>
+                    setNewLead({ ...newLead, email: e.target.value })
+                  }
                 />
                 <Input
                   placeholder="Phone"
                   value={newLead.phone}
-                  onChange={(e) => setNewLead({ ...newLead, phone: e.target.value })}
+                  onChange={(e) =>
+                    setNewLead({ ...newLead, phone: e.target.value })
+                  }
                 />
                 <Input
                   placeholder="Project Type"
                   value={newLead.projectType}
-                  onChange={(e) => setNewLead({ ...newLead, projectType: e.target.value })}
+                  onChange={(e) =>
+                    setNewLead({ ...newLead, projectType: e.target.value })
+                  }
                 />
                 <Input
                   placeholder="Estimated Value"
                   value={newLead.value}
-                  onChange={(e) => setNewLead({ ...newLead, value: e.target.value })}
+                  onChange={(e) =>
+                    setNewLead({ ...newLead, value: e.target.value })
+                  }
                 />
                 <div className="flex gap-3">
-                  <Button onClick={handleAddLead} className="flex-1 bg-emerald-600 hover:bg-emerald-700">
+                  <Button
+                    onClick={handleAddLead}
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+                  >
                     Add Lead
                   </Button>
-                  <Button onClick={() => setShowAddLead(false)} variant="outline" className="flex-1">
+                  <Button
+                    onClick={() => setShowAddLead(false)}
+                    variant="outline"
+                    className="flex-1"
+                  >
                     Cancel
                   </Button>
                 </div>

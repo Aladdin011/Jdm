@@ -11,10 +11,19 @@ interface UserPopupProps {
   onClose: () => void;
 }
 
-const UserPopup: React.FC<UserPopupProps> = ({ user, anchorRect, onCall, onChat, onClose }) => {
+const UserPopup: React.FC<UserPopupProps> = ({
+  user,
+  anchorRect,
+  onCall,
+  onChat,
+  onClose,
+}) => {
   const popupRef = useRef<HTMLDivElement>(null);
   const dragControls = useDragControls();
-  const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [position, setPosition] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
 
   useEffect(() => {
     // Position near anchor, adjust for viewport
@@ -57,7 +66,11 @@ const UserPopup: React.FC<UserPopupProps> = ({ user, anchorRect, onCall, onChat,
             {user.role} • {user.department || "—"}
           </p>
         </div>
-        <button className="p-1 rounded hover:bg-muted" onClick={onClose} aria-label="Close">
+        <button
+          className="p-1 rounded hover:bg-muted"
+          onClick={onClose}
+          aria-label="Close"
+        >
           <X className="h-4 w-4" />
         </button>
       </div>

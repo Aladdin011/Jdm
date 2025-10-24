@@ -72,23 +72,24 @@ const sectionVariants = {
 
 // Enhanced loading animation component
 const PremiumLoadingScreen = () => (
-  <motion.div 
+  <motion.div
     className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
     style={{
-      background: "linear-gradient(135deg, #051822 0%, #2D383E 50%, #7C5841 100%)"
+      background:
+        "linear-gradient(135deg, #051822 0%, #2D383E 50%, #7C5841 100%)",
     }}
     initial={{ opacity: 1 }}
     exit={{ opacity: 0 }}
     transition={{ duration: 0.8 }}
   >
     {/* Background Pattern */}
-    <div 
+    <div
       className="absolute inset-0 opacity-10"
       style={{
         backgroundImage: `
           radial-gradient(circle at 20% 20%, rgba(212,201,199,0.3) 0%, transparent 50%),
           radial-gradient(circle at 80% 80%, rgba(170,116,82,0.2) 0%, transparent 50%)
-        `
+        `,
       }}
     />
 
@@ -99,9 +100,10 @@ const PremiumLoadingScreen = () => (
           key={i}
           className="absolute w-32 h-32 rounded-full"
           style={{
-            background: i % 2 === 0 
-              ? "radial-gradient(circle, rgba(170,116,82,0.1) 0%, transparent 70%)"
-              : "radial-gradient(circle, rgba(212,201,199,0.1) 0%, transparent 70%)",
+            background:
+              i % 2 === 0
+                ? "radial-gradient(circle, rgba(170,116,82,0.1) 0%, transparent 70%)"
+                : "radial-gradient(circle, rgba(212,201,199,0.1) 0%, transparent 70%)",
             top: `${Math.random() * 100}%`,
             left: `${Math.random() * 100}%`,
           }}
@@ -136,7 +138,7 @@ const PremiumLoadingScreen = () => (
         >
           <Construction className="w-12 h-12 text-white" />
         </motion.div>
-        
+
         {/* Orbiting elements */}
         {[0, 120, 240].map((angle, i) => (
           <motion.div
@@ -234,25 +236,43 @@ export default function Home() {
       const root = document.documentElement;
 
       // Construction color system
-      root.style.setProperty('--primary-dark', '#051822');
-      root.style.setProperty('--secondary-dark', '#2D383E');
-      root.style.setProperty('--accent-warm', '#7C5841');
-      root.style.setProperty('--accent-light', '#AA7452');
-      root.style.setProperty('--neutral-mid', '#969A9E');
-      root.style.setProperty('--neutral-light', '#D4C9C7');
-      root.style.setProperty('--construction-white', '#FFFFFF');
+      root.style.setProperty("--primary-dark", "#051822");
+      root.style.setProperty("--secondary-dark", "#2D383E");
+      root.style.setProperty("--accent-warm", "#7C5841");
+      root.style.setProperty("--accent-light", "#AA7452");
+      root.style.setProperty("--neutral-mid", "#969A9E");
+      root.style.setProperty("--neutral-light", "#D4C9C7");
+      root.style.setProperty("--construction-white", "#FFFFFF");
 
       // Enhanced gradients
-      root.style.setProperty('--hero-gradient', 'linear-gradient(135deg, #051822 0%, #2D383E 50%, #7C5841 100%)');
-      root.style.setProperty('--card-gradient', 'linear-gradient(145deg, #D4C9C7 0%, rgba(212,201,199,0.8) 100%)');
-      root.style.setProperty('--accent-gradient', 'linear-gradient(90deg, #AA7452 0%, #7C5841 100%)');
+      root.style.setProperty(
+        "--hero-gradient",
+        "linear-gradient(135deg, #051822 0%, #2D383E 50%, #7C5841 100%)",
+      );
+      root.style.setProperty(
+        "--card-gradient",
+        "linear-gradient(145deg, #D4C9C7 0%, rgba(212,201,199,0.8) 100%)",
+      );
+      root.style.setProperty(
+        "--accent-gradient",
+        "linear-gradient(90deg, #AA7452 0%, #7C5841 100%)",
+      );
 
       // Premium shadows
-      root.style.setProperty('--shadow-soft', '0 8px 32px rgba(5, 24, 34, 0.12)');
-      root.style.setProperty('--shadow-medium', '0 16px 64px rgba(5, 24, 34, 0.16)');
-      root.style.setProperty('--shadow-strong', '0 24px 80px rgba(5, 24, 34, 0.24)');
+      root.style.setProperty(
+        "--shadow-soft",
+        "0 8px 32px rgba(5, 24, 34, 0.12)",
+      );
+      root.style.setProperty(
+        "--shadow-medium",
+        "0 16px 64px rgba(5, 24, 34, 0.16)",
+      );
+      root.style.setProperty(
+        "--shadow-strong",
+        "0 24px 80px rgba(5, 24, 34, 0.24)",
+      );
     } catch (error) {
-      console.warn('Failed to apply CSS variables:', error);
+      console.warn("Failed to apply CSS variables:", error);
     }
   }, []);
 
@@ -269,7 +289,7 @@ export default function Home() {
             if (setStoreMousePosition) setStoreMousePosition(position);
           });
         } catch (error) {
-          console.warn('Mouse position update failed:', error);
+          console.warn("Mouse position update failed:", error);
         }
       };
 
@@ -277,21 +297,24 @@ export default function Home() {
         try {
           if (updateUserActivity) updateUserActivity();
         } catch (error) {
-          console.warn('User activity tracking failed:', error);
+          console.warn("User activity tracking failed:", error);
         }
       };
 
       const handleScroll = () => {
         try {
-          const progress = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+          const progress =
+            window.scrollY / (document.body.scrollHeight - window.innerHeight);
           if (setScrollProgress) setScrollProgress(progress);
           if (trackUserInteraction) trackUserInteraction("scroll");
         } catch (error) {
-          console.warn('Scroll tracking failed:', error);
+          console.warn("Scroll tracking failed:", error);
         }
       };
 
-      window.addEventListener("mousemove", updateMousePosition, { passive: true });
+      window.addEventListener("mousemove", updateMousePosition, {
+        passive: true,
+      });
       window.addEventListener("click", handleUserActivity);
       window.addEventListener("keydown", handleUserActivity);
       window.addEventListener("scroll", handleScroll, { passive: true });
@@ -309,7 +332,7 @@ export default function Home() {
             trackUserInteraction("slow-page-load");
           }
         } catch (error) {
-          console.warn('Loading completion tracking failed:', error);
+          console.warn("Loading completion tracking failed:", error);
           setIsLoading(false); // Still hide loading screen
         }
       }, 2000); // Increased for better animation showcase
@@ -323,16 +346,21 @@ export default function Home() {
           if (rafId) cancelAnimationFrame(rafId);
           clearTimeout(timer);
         } catch (error) {
-          console.warn('Event listener cleanup failed:', error);
+          console.warn("Event listener cleanup failed:", error);
         }
       };
     } catch (error) {
-      console.warn('Event listener setup failed:', error);
+      console.warn("Event listener setup failed:", error);
       // Still set loading to false after timeout as fallback
       const fallbackTimer = setTimeout(() => setIsLoading(false), 3000);
       return () => clearTimeout(fallbackTimer);
     }
-  }, [setStoreMousePosition, setScrollProgress, trackUserInteraction, updateUserActivity]);
+  }, [
+    setStoreMousePosition,
+    setScrollProgress,
+    trackUserInteraction,
+    updateUserActivity,
+  ]);
 
   // Enhanced loading screen
   if (isLoading) {
@@ -427,7 +455,8 @@ export default function Home() {
               variants={sectionVariants}
               className="relative py-32"
               style={{
-                background: "linear-gradient(135deg, #051822 0%, #2D383E 50%, #7C5841 100%)"
+                background:
+                  "linear-gradient(135deg, #051822 0%, #2D383E 50%, #7C5841 100%)",
               }}
             >
               <CallToActionSection />

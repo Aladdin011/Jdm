@@ -23,37 +23,23 @@
     />
     <meta property="og:type" content="website" />
     <link rel="icon" type="image/x-icon" href="./favicon.ico" />
-    <!-- Self-hosted fonts: preload and stylesheet -->
-    <!-- Removed local font preloads and stylesheet to avoid OTS errors -->
-    <!-- Fonts are now loaded via Google Fonts in CSS and performance optimizations -->
-        <title>JD Marc</title>
-
-    <script>
-      (function() {
-        var attempts = 0; var maxAttempts = 20; // ~2s
-        function tryInit() {
-          try {
-            var er = window.eruda;
-            if (er && typeof er.init === 'function') {
-              try { er.init(); } catch(e) {}
-              return;
-            }
-          } catch (e) {}
-          if (++attempts < maxAttempts) setTimeout(tryInit, 100);
-        }
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', tryInit, { once: true });
-        }
-        tryInit();
-      })();
-    </script>
-    <script type="module" crossorigin src="./assets/index-MoUG7_D5.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-Wv4Ewx54.css">
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" />
+    <!-- Theme color -->
+    <meta name="theme-color" content="#EE690B" />
+    <title>JD Marc</title>
+    <script type="module" crossorigin src="./assets/index-Dr_Y7Wvg.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/react-vendor-D-Hxzzce.js">
+    <link rel="modulepreload" crossorigin href="./assets/ui-vendor-CSFlt9v9.js">
+    <link rel="modulepreload" crossorigin href="./assets/supabase-vendor-C7pPafuf.js">
+    <link rel="modulepreload" crossorigin href="./assets/utils-B2rm_Apj.js">
+    <link rel="modulepreload" crossorigin href="./assets/motion-vendor-P3-YPT33.js">
+    <link rel="stylesheet" crossorigin href="./assets/index-ZSusv4k4.css">
   </head>
 
   <body>
-    <div id="root"></div>
-
-
+    <div id="root"></div>
   </body>
 </html>

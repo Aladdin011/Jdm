@@ -1,8 +1,8 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
-import { useAdvancedAnalytics } from '@/lib/advancedAnalytics';
+import React, { Component, ErrorInfo, ReactNode } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { AlertTriangle, RefreshCw, Home } from "lucide-react";
+import { useAdvancedAnalytics } from "@/lib/advancedAnalytics";
 
 interface Props {
   children: ReactNode;
@@ -29,13 +29,18 @@ class DashboardErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Dashboard Error Boundary caught an error:', error, errorInfo);
-    
+    console.error(
+      "Dashboard Error Boundary caught an error:",
+      error,
+      errorInfo,
+    );
+
     // Track error in analytics
     try {
-      if (typeof window !== 'undefined') {
-        const { trackEvent } = require('@/lib/advancedAnalytics').useAdvancedAnalytics();
-        trackEvent('error', 'dashboard_error', {
+      if (typeof window !== "undefined") {
+        const { trackEvent } =
+          require("@/lib/advancedAnalytics").useAdvancedAnalytics();
+        trackEvent("error", "dashboard_error", {
           message: error.message,
           stack: error.stack,
           componentStack: errorInfo.componentStack,
@@ -43,11 +48,11 @@ class DashboardErrorBoundary extends Component<Props, State> {
         });
       }
     } catch (analyticsError) {
-      console.warn('Failed to track dashboard error:', analyticsError);
+      console.warn("Failed to track dashboard error:", analyticsError);
     }
 
     this.setState({ error, errorInfo });
-    
+
     // Call optional error handler
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
@@ -59,7 +64,7 @@ class DashboardErrorBoundary extends Component<Props, State> {
   };
 
   handleGoHome = () => {
-    window.location.href = '/';
+    window.location.href = "/";
   };
 
   render() {
@@ -85,15 +90,19 @@ class DashboardErrorBoundary extends Component<Props, State> {
               </p>
             </CardHeader>
             <CardContent className="space-y-4">
-              {process.env.NODE_ENV === 'development' && this.state.error && (
+              {process.env.NODE_ENV === "development" && this.state.error && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                  <h4 className="text-sm font-medium text-red-800 mb-2">Error Details:</h4>
+                  <h4 className="text-sm font-medium text-red-800 mb-2">
+                    Error Details:
+                  </h4>
                   <p className="text-xs text-red-700 font-mono break-all">
                     {this.state.error.message}
                   </p>
                   {this.state.error.stack && (
                     <details className="mt-2">
-                      <summary className="text-xs text-red-700 cursor-pointer">Stack Trace</summary>
+                      <summary className="text-xs text-red-700 cursor-pointer">
+                        Stack Trace
+                      </summary>
                       <pre className="text-xs text-red-700 mt-1 whitespace-pre-wrap">
                         {this.state.error.stack}
                       </pre>
@@ -101,7 +110,7 @@ class DashboardErrorBoundary extends Component<Props, State> {
                   )}
                 </div>
               )}
-              
+
               <div className="flex gap-3">
                 <Button
                   onClick={this.handleRefresh}

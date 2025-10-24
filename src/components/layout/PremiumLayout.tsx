@@ -1,11 +1,11 @@
-import { ReactNode, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import PremiumNavigation from './PremiumNavigation';
-import { useAppStore } from '@/stores/appStore';
-import { useAdvancedAnalytics } from '@/lib/advancedAnalytics';
+import { ReactNode, useEffect } from "react";
+import { motion } from "framer-motion";
+import PremiumNavigation from "./PremiumNavigation";
+import { useAppStore } from "@/stores/appStore";
+import { useAdvancedAnalytics } from "@/lib/advancedAnalytics";
 
 // Import the modern design system styles
-import '../../styles/modern-design-system.css';
+import "../../styles/modern-design-system.css";
 
 interface PremiumLayoutProps {
   children: ReactNode;
@@ -37,10 +37,10 @@ const pageVariants = {
   },
 };
 
-export default function PremiumLayout({ 
-  children, 
-  className = "", 
-  hideNavigation = false 
+export default function PremiumLayout({
+  children,
+  className = "",
+  hideNavigation = false,
 }: PremiumLayoutProps) {
   const { theme, reducedMotion } = useAppStore();
   const analytics = useAdvancedAnalytics();
@@ -48,23 +48,23 @@ export default function PremiumLayout({
   // Apply theme and accessibility preferences
   useEffect(() => {
     const html = document.documentElement;
-    
+
     // Apply theme
-    if (theme === 'dark') {
-      html.classList.add('dark');
+    if (theme === "dark") {
+      html.classList.add("dark");
     } else {
-      html.classList.remove('dark');
+      html.classList.remove("dark");
     }
 
     // Apply reduced motion preference
     if (reducedMotion) {
-      html.style.setProperty('--motion-duration', '0ms');
+      html.style.setProperty("--motion-duration", "0ms");
     } else {
-      html.style.removeProperty('--motion-duration');
+      html.style.removeProperty("--motion-duration");
     }
 
     // Track page view
-    analytics.trackEvent('page', 'view', {
+    analytics.trackEvent("page", "view", {
       url: window.location.pathname,
       title: document.title,
       timestamp: new Date(),
@@ -76,26 +76,31 @@ export default function PremiumLayout({
     const handleVisibilityChange = () => {
       try {
         if (document.hidden) {
-          analytics.trackEvent('page', 'blur', {
+          analytics.trackEvent("page", "blur", {
             duration: Date.now() - performance.now(),
           });
         } else {
-          analytics.trackEvent('page', 'focus', {
+          analytics.trackEvent("page", "focus", {
             timestamp: Date.now(),
           });
         }
       } catch (error) {
-        console.warn('Error in visibility change handler:', error);
+        console.warn("Error in visibility change handler:", error);
       }
     };
 
-    if (typeof document !== 'undefined') {
-      document.addEventListener('visibilitychange', handleVisibilityChange, { passive: true });
+    if (typeof document !== "undefined") {
+      document.addEventListener("visibilitychange", handleVisibilityChange, {
+        passive: true,
+      });
       return () => {
         try {
-          document.removeEventListener('visibilitychange', handleVisibilityChange);
+          document.removeEventListener(
+            "visibilitychange",
+            handleVisibilityChange,
+          );
         } catch (error) {
-          console.warn('Error removing visibility change listener:', error);
+          console.warn("Error removing visibility change listener:", error);
         }
       };
     }
@@ -117,7 +122,7 @@ export default function PremiumLayout({
       {/* Main Content */}
       <motion.main
         id="main-content"
-        className={`${!hideNavigation ? 'pt-20' : ''} ${className}`}
+        className={`${!hideNavigation ? "pt-20" : ""} ${className}`}
         variants={pageVariants}
         initial="initial"
         animate="animate"
@@ -129,9 +134,7 @@ export default function PremiumLayout({
       </motion.main>
 
       {/* Performance monitoring overlay (development only) */}
-      {process.env.NODE_ENV === 'development' && (
-        <PerformanceMonitor />
-      )}
+      {process.env.NODE_ENV === "development" && <PerformanceMonitor />}
     </div>
   );
 }
@@ -152,25 +155,41 @@ const PerformanceMonitor = () => {
       <div className="space-y-1">
         <div className="flex justify-between gap-4">
           <span>LCP:</span>
-          <span className={performance.lcp > 2500 ? 'text-red-400' : 'text-green-400'}>
+          <span
+            className={
+              performance.lcp > 2500 ? "text-red-400" : "text-green-400"
+            }
+          >
             {Math.round(performance.lcp)}ms
           </span>
         </div>
         <div className="flex justify-between gap-4">
           <span>FID:</span>
-          <span className={performance.fid > 100 ? 'text-red-400' : 'text-green-400'}>
+          <span
+            className={
+              performance.fid > 100 ? "text-red-400" : "text-green-400"
+            }
+          >
             {Math.round(performance.fid)}ms
           </span>
         </div>
         <div className="flex justify-between gap-4">
           <span>CLS:</span>
-          <span className={performance.cls > 0.1 ? 'text-red-400' : 'text-green-400'}>
+          <span
+            className={
+              performance.cls > 0.1 ? "text-red-400" : "text-green-400"
+            }
+          >
             {performance.cls.toFixed(3)}
           </span>
         </div>
         <div className="flex justify-between gap-4">
           <span>FCP:</span>
-          <span className={performance.fcp > 1800 ? 'text-orange-400' : 'text-green-400'}>
+          <span
+            className={
+              performance.fcp > 1800 ? "text-orange-400" : "text-green-400"
+            }
+          >
             {Math.round(performance.fcp)}ms
           </span>
         </div>
@@ -191,9 +210,12 @@ export const withPremiumLayout = (Component: React.ComponentType<any>) => {
 };
 
 // Layout variant for full-screen components
-export const FullScreenLayout = ({ children, className = "" }: { 
-  children: ReactNode; 
-  className?: string; 
+export const FullScreenLayout = ({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
 }) => (
   <motion.div
     className={`min-h-screen ${className}`}
@@ -207,20 +229,29 @@ export const FullScreenLayout = ({ children, className = "" }: {
 );
 
 // Layout variant for centered content
-export const CenteredLayout = ({ children, className = "" }: { 
-  children: ReactNode; 
-  className?: string; 
+export const CenteredLayout = ({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
 }) => (
-  <PremiumLayout className={`flex items-center justify-center min-h-screen ${className}`}>
+  <PremiumLayout
+    className={`flex items-center justify-center min-h-screen ${className}`}
+  >
     {children}
   </PremiumLayout>
 );
 
 // Layout variant for dashboard-style layouts
-export const DashboardLayout = ({ children, sidebar, className = "" }: { 
-  children: ReactNode; 
+export const DashboardLayout = ({
+  children,
+  sidebar,
+  className = "",
+}: {
+  children: ReactNode;
   sidebar?: ReactNode;
-  className?: string; 
+  className?: string;
 }) => (
   <PremiumLayout className={className}>
     <div className="flex h-screen">
@@ -234,9 +265,7 @@ export const DashboardLayout = ({ children, sidebar, className = "" }: {
           {sidebar}
         </motion.aside>
       )}
-      <main className="flex-1 overflow-auto">
-        {children}
-      </main>
+      <main className="flex-1 overflow-auto">{children}</main>
     </div>
   </PremiumLayout>
 );

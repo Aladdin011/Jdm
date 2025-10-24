@@ -1,9 +1,11 @@
-import { io, Socket } from 'socket.io-client';
-import errorLogger from '../utils/errorLogger';
+// WebSocket service now uses Supabase Realtime instead of socket.io-client
+import supabase from "../lib/supabaseClient";
+import errorLogger from "../utils/errorLogger";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 
 export interface WebSocketMessage {
   id: string;
-  type: 'call' | 'message' | 'notification' | 'system';
+  type: "call" | "message" | "notification" | "system";
   from: string;
   to: string;
   content: any;
@@ -14,7 +16,7 @@ export interface CallEvent {
   id: string;
   from: string;
   to: string;
-  type: 'incoming' | 'accepted' | 'rejected' | 'ended';
+  type: "incoming" | "accepted" | "rejected" | "ended";
   timestamp: Date;
 }
 
@@ -28,7 +30,7 @@ export interface MessageEvent {
 }
 
 class WebSocketService {
-  private socket: Socket | null = null;
+  private channel: RealtimeChannel | null = null;
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
   private reconnectDelay = 1000;
@@ -48,128 +50,111 @@ class WebSocketService {
       this.connectionTimer = setTimeout(() => {
         this.mockConnected = true;
         this.reconnectAttempts = 0;
-        this.emit('connected', true);
-        this.devInfoLog('🔗 Mock WebSocket connected (Development Mode)');
+        this.emit("connected", true);
+        this.devInfoLog("🔗 Mock WebSocket connected (Development Mode)");
       }, 1000) as unknown as number;
       return;
     }
 
     try {
-      // In production, this would be your actual WebSocket server URL
-      const wsUrl = import.meta.env.PROD 
-        ? 'wss://your-production-websocket-url.com'
-        : 'ws://localhost:3001';
-
-      this.socket = io(wsUrl, {
-        transports: ['websocket', 'polling'],
-        timeout: 5000,
-        forceNew: true,
-        autoConnect: false,
-      });
-
+      // Use Supabase Realtime
+      this.channel = supabase.channel("main-channel");
       this.setupEventListeners();
-      this.socket.connect();
+      
+      this.channel.subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          this.reconnectAttempts = 0;
+          this.emit("connected", true);
+        } else if (status === 'CLOSED' || status === 'CHANNEL_ERROR') {
+          this.emit("connected", false);
+          this.handleReconnect();
+        }
+      });
     } catch (error) {
-      errorLogger.error('WebSocketService', 'connect', 'Socket connection failed', error as Error);
+      errorLogger.error(
+        "WebSocketService",
+        "connect",
+        "Realtime connection failed",
+        error as Error,
+      );
       this.handleReconnect();
     }
   }
 
   private setupEventListeners() {
-    if (!this.socket) return;
+    if (!this.channel) return;
 
-    this.socket.on('connect', () => {
-      this.reconnectAttempts = 0;
-      this.emit('connected', true);
-    });
-
-    this.socket.on('disconnect', (reason) => {
-      this.emit('connected', false);
-      
-      if (reason === 'io server disconnect') {
-        this.handleReconnect();
-      }
-    });
-
-    this.socket.on('connect_error', (error) => {
-      errorLogger.error('WebSocketService', 'connect_error', 'WebSocket connection error', error);
-      this.handleReconnect();
-    });
-
-    // Call events
-    this.socket.on('incoming_call', (data: CallEvent) => {
-      this.emit('incoming_call', data);
-    });
-
-    this.socket.on('call_accepted', (data: CallEvent) => {
-      this.emit('call_accepted', data);
-    });
-
-    this.socket.on('call_rejected', (data: CallEvent) => {
-      this.emit('call_rejected', data);
-    });
-
-    this.socket.on('call_ended', (data: CallEvent) => {
-      this.emit('call_ended', data);
-    });
-
-    // Message events
-    this.socket.on('new_message', (data: MessageEvent) => {
-      this.emit('new_message', data);
-    });
-
-    this.socket.on('message_read', (data: { messageId: string; readBy: string }) => {
-      this.emit('message_read', data);
-    });
-
-    // Notification events
-    this.socket.on('notification', (data: any) => {
-      this.emit('notification', data);
-    });
-
-    // System events
-    this.socket.on('user_online', (data: { userId: string }) => {
-      this.emit('user_online', data);
-    });
-
-    this.socket.on('user_offline', (data: { userId: string }) => {
-      this.emit('user_offline', data);
-    });
+    // Use Supabase Realtime broadcast for events
+    this.channel
+      .on("broadcast", { event: "incoming_call" }, (payload) => {
+        this.emit("incoming_call", payload.payload);
+      })
+      .on("broadcast", { event: "call_accepted" }, (payload) => {
+        this.emit("call_accepted", payload.payload);
+      })
+      .on("broadcast", { event: "call_rejected" }, (payload) => {
+        this.emit("call_rejected", payload.payload);
+      })
+      .on("broadcast", { event: "call_ended" }, (payload) => {
+        this.emit("call_ended", payload.payload);
+      })
+      .on("broadcast", { event: "new_message" }, (payload) => {
+        this.emit("new_message", payload.payload);
+      })
+      .on("broadcast", { event: "message_read" }, (payload) => {
+        this.emit("message_read", payload.payload);
+      })
+      .on("broadcast", { event: "notification" }, (payload) => {
+        this.emit("notification", payload.payload);
+      })
+      .on("broadcast", { event: "user_online" }, (payload) => {
+        this.emit("user_online", payload.payload);
+      })
+      .on("broadcast", { event: "user_offline" }, (payload) => {
+        this.emit("user_offline", payload.payload);
+      });
   }
 
   private handleReconnect() {
     if (this.isDevMode) {
       // In dev mode, just simulate reconnection
       this.mockConnected = false;
-      this.emit('connected', false);
-      
+      this.emit("connected", false);
+
       setTimeout(() => {
         this.mockConnected = true;
-        this.emit('connected', true);
-        this.devInfoLog('🔗 Mock WebSocket reconnected (Development Mode)');
+        this.emit("connected", true);
+        this.devInfoLog("🔗 Mock WebSocket reconnected (Development Mode)");
       }, 2000);
       return;
     }
 
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++;
-      const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1);
-      
-      this.devInfoLog(`Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts})`);
-      
+      const delay =
+        this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1);
+
+      this.devInfoLog(
+        `Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts})`,
+      );
+
       setTimeout(() => {
         this.connect();
       }, delay);
     } else {
-      errorLogger.error('WebSocketService', 'reconnect_failed', 'Max reconnection attempts reached');
-      this.emit('connection_failed', true);
+      errorLogger.error(
+        "WebSocketService",
+        "reconnect_failed",
+        "Max reconnection attempts reached",
+      );
+      this.emit("connection_failed", true);
     }
   }
 
   private devInfoLog(message: string, metadata?: Record<string, any>) {
     // Limit noisy dev logs to 4 entries per session
     if (this.devLogCount < 4) {
-      errorLogger.info('WebSocketService', 'dev_info', message, metadata);
+      errorLogger.info("WebSocketService", "dev_info", message, metadata);
       this.devLogCount += 1;
     }
   }
@@ -195,7 +180,7 @@ class WebSocketService {
   private emit(event: string, data: any) {
     const eventListeners = this.listeners.get(event);
     if (eventListeners) {
-      eventListeners.forEach(callback => callback(data));
+      eventListeners.forEach((callback) => callback(data));
     }
   }
 
@@ -205,9 +190,13 @@ class WebSocketService {
       this.devInfoLog(`📍 Joined room: ${roomId} (Mock)`);
       return;
     }
-    
-    if (this.socket?.connected) {
-      this.socket.emit('join_room', { roomId });
+
+    if (this.channel) {
+      this.channel.send({
+        type: "broadcast",
+        event: "join_room",
+        payload: { roomId },
+      });
     }
   }
 
@@ -216,14 +205,20 @@ class WebSocketService {
       this.devInfoLog(`📍 Left room: ${roomId} (Mock)`);
       return;
     }
-    
-    if (this.socket?.connected) {
-      this.socket.emit('leave_room', { roomId });
+
+    if (this.channel) {
+      this.channel.send({
+        type: "broadcast",
+        event: "leave_room",
+        payload: { roomId },
+      });
     }
   }
 
   // Message handling
-  sendMessage(message: Omit<MessageEvent, 'id' | 'timestamp'> & { type?: string }) {
+  sendMessage(
+    message: Omit<MessageEvent, "id" | "timestamp"> & { type?: string },
+  ) {
     if (this.isDevMode) {
       // In dev mode, simulate message echo for testing
       setTimeout(() => {
@@ -231,104 +226,136 @@ class WebSocketService {
           ...message,
           id: this.generateId(),
           timestamp: new Date(),
-          from: 'System',
+          from: "System",
           content: `Echo: ${message.content}`,
         };
-        this.emit('new_message', echoMessage);
+        this.emit("new_message", echoMessage);
       }, 500);
       return;
     }
 
-    if (this.socket?.connected) {
-      this.socket.emit('send_message', {
-        ...message,
-        id: this.generateId(),
-        timestamp: new Date(),
+    if (this.channel) {
+      this.channel.send({
+        type: "broadcast",
+        event: "send_message",
+        payload: {
+          ...message,
+          id: this.generateId(),
+          timestamp: new Date(),
+        },
       });
     }
   }
 
   // Call handling
-  initiateCall(callData: Omit<CallEvent, 'id' | 'timestamp'>) {
+  initiateCall(callData: Omit<CallEvent, "id" | "timestamp">) {
     if (this.isDevMode) {
-      this.devInfoLog('📞 Mock call initiated:', { callData });
+      this.devInfoLog("📞 Mock call initiated:", { callData });
       return;
     }
 
-    if (this.socket?.connected) {
-      this.socket.emit('initiate_call', {
-        ...callData,
-        id: this.generateId(),
-        type: (callData as Partial<CallEvent>).type ?? 'incoming',
-        timestamp: new Date(),
+    if (this.channel) {
+      this.channel.send({
+        type: "broadcast",
+        event: "initiate_call",
+        payload: {
+          ...callData,
+          id: this.generateId(),
+          type: (callData as Partial<CallEvent>).type ?? "incoming",
+          timestamp: new Date(),
+        },
       });
     }
   }
 
   acceptCall(callId: string) {
     if (this.isDevMode) {
-      this.devInfoLog('📞 Mock call accepted:', { callId });
+      this.devInfoLog("📞 Mock call accepted:", { callId });
       return;
     }
 
-    if (this.socket?.connected) {
-      this.socket.emit('accept_call', { callId });
+    if (this.channel) {
+      this.channel.send({
+        type: "broadcast",
+        event: "accept_call",
+        payload: { callId },
+      });
     }
   }
 
   rejectCall(callId: string) {
     if (this.isDevMode) {
-      this.devInfoLog('📞 Mock call rejected:', { callId });
+      this.devInfoLog("📞 Mock call rejected:", { callId });
       return;
     }
 
-    if (this.socket?.connected) {
-      this.socket.emit('reject_call', { callId });
+    if (this.channel) {
+      this.channel.send({
+        type: "broadcast",
+        event: "reject_call",
+        payload: { callId },
+      });
     }
   }
 
   endCall(callId: string) {
     if (this.isDevMode) {
-      this.devInfoLog('📞 Mock call ended:', { callId });
+      this.devInfoLog("📞 Mock call ended:", { callId });
       return;
     }
 
-    if (this.socket?.connected) {
-      this.socket.emit('end_call', { callId });
+    if (this.channel) {
+      this.channel.send({
+        type: "broadcast",
+        event: "end_call",
+        payload: { callId },
+      });
     }
   }
 
   // Utility methods
   markMessageAsRead(messageId: string) {
     if (this.isDevMode) {
-      this.devInfoLog('✅ Mock message marked as read:', { messageId });
+      this.devInfoLog("✅ Mock message marked as read:", { messageId });
       return;
     }
 
-    if (this.socket?.connected) {
-      this.socket.emit('mark_message_read', { messageId });
+    if (this.channel) {
+      this.channel.send({
+        type: "broadcast",
+        event: "mark_message_read",
+        payload: { messageId },
+      });
     }
   }
 
   setUserOnline(userId: string) {
     if (this.isDevMode) {
-      this.devInfoLog('🟢 Mock user online:', { userId });
+      this.devInfoLog("🟢 Mock user online:", { userId });
       return;
     }
 
-    if (this.socket?.connected) {
-      this.socket.emit('user_online', { userId });
+    if (this.channel) {
+      this.channel.send({
+        type: "broadcast",
+        event: "user_online",
+        payload: { userId },
+      });
     }
   }
 
   setUserOffline(userId: string) {
     if (this.isDevMode) {
-      this.devInfoLog('🔴 Mock user offline:', { userId });
+      this.devInfoLog("🔴 Mock user offline:", { userId });
       return;
     }
 
-    if (this.socket?.connected) {
-      this.socket.emit('user_offline', { userId });
+    if (this.channel) {
+      this.channel.send({
+        type: "broadcast",
+        event: "user_offline",
+        payload: { userId },
+      });
     }
   }
 
@@ -336,7 +363,7 @@ class WebSocketService {
     if (this.isDevMode) {
       return this.mockConnected;
     }
-    return this.socket?.connected || false;
+    return this.channel !== null;
   }
 
   disconnect() {
@@ -347,14 +374,14 @@ class WebSocketService {
 
     if (this.isDevMode) {
       this.mockConnected = false;
-      this.emit('connected', false);
-      this.devInfoLog('🔗 Mock WebSocket disconnected');
+      this.emit("connected", false);
+      this.devInfoLog("🔗 Mock WebSocket disconnected");
       return;
     }
 
-    if (this.socket) {
-      this.socket.disconnect();
-      this.socket = null;
+    if (this.channel) {
+      supabase.removeChannel(this.channel);
+      this.channel = null;
     }
   }
 

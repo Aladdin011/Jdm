@@ -1,6 +1,6 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
-import { Button } from './button';
+import React, { Component, ErrorInfo, ReactNode } from "react";
+import { AlertTriangle, RefreshCw } from "lucide-react";
+import { Button } from "./button";
 
 interface Props {
   children: ReactNode;
@@ -25,8 +25,8 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
-    
+    console.error("ErrorBoundary caught an error:", error, errorInfo);
+
     this.setState({
       error,
       errorInfo,
@@ -38,16 +38,16 @@ export class ErrorBoundary extends Component<Props, State> {
     }
 
     // Track error in analytics if available
-    if (typeof window !== 'undefined' && (window as any).analytics) {
+    if (typeof window !== "undefined" && (window as any).analytics) {
       try {
-        (window as any).analytics.trackEvent('error', 'react_error_boundary', {
+        (window as any).analytics.trackEvent("error", "react_error_boundary", {
           message: error.message,
           stack: error.stack,
           componentStack: errorInfo.componentStack,
           timestamp: new Date(),
         });
       } catch (trackingError) {
-        console.warn('Error tracking failed:', trackingError);
+        console.warn("Error tracking failed:", trackingError);
       }
     }
   }
@@ -70,13 +70,14 @@ export class ErrorBoundary extends Component<Props, State> {
             <div className="mb-4">
               <AlertTriangle className="h-16 w-16 text-red-500 mx-auto" />
             </div>
-            
+
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
               Something went wrong
             </h2>
-            
+
             <p className="text-gray-600 mb-6">
-              We apologize for the inconvenience. An unexpected error occurred while loading this content.
+              We apologize for the inconvenience. An unexpected error occurred
+              while loading this content.
             </p>
 
             <div className="space-y-3">
@@ -84,9 +85,9 @@ export class ErrorBoundary extends Component<Props, State> {
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Try Again
               </Button>
-              
-              <Button 
-                variant="outline" 
+
+              <Button
+                variant="outline"
                 onClick={() => window.location.reload()}
                 className="w-full"
               >
@@ -94,15 +95,17 @@ export class ErrorBoundary extends Component<Props, State> {
               </Button>
             </div>
 
-            {process.env.NODE_ENV === 'development' && this.state.error && (
+            {process.env.NODE_ENV === "development" && this.state.error && (
               <details className="mt-6 text-left">
                 <summary className="cursor-pointer text-sm font-medium text-gray-700 mb-2">
                   Error Details (Development)
                 </summary>
                 <div className="text-xs text-red-600 bg-red-50 p-3 rounded border overflow-auto">
                   <div className="font-medium mb-2">Error:</div>
-                  <div className="mb-3 whitespace-pre-wrap">{this.state.error.message}</div>
-                  
+                  <div className="mb-3 whitespace-pre-wrap">
+                    {this.state.error.message}
+                  </div>
+
                   {this.state.error.stack && (
                     <>
                       <div className="font-medium mb-2">Stack Trace:</div>
@@ -111,10 +114,12 @@ export class ErrorBoundary extends Component<Props, State> {
                       </div>
                     </>
                   )}
-                  
+
                   {this.state.errorInfo && (
                     <>
-                      <div className="font-medium mb-2 mt-3">Component Stack:</div>
+                      <div className="font-medium mb-2 mt-3">
+                        Component Stack:
+                      </div>
                       <div className="whitespace-pre-wrap font-mono text-xs">
                         {this.state.errorInfo.componentStack}
                       </div>
@@ -140,11 +145,11 @@ interface ErrorBoundaryWrapperProps {
 }
 
 export const withErrorBoundary = <P extends object>(
-  Component: React.ComponentType<P>
+  Component: React.ComponentType<P>,
 ) => {
   const WrappedComponent = (props: P & ErrorBoundaryWrapperProps) => {
     const { fallback, onError, ...componentProps } = props;
-    
+
     return (
       <ErrorBoundary fallback={fallback} onError={onError}>
         <Component {...(componentProps as P)} />
@@ -153,7 +158,7 @@ export const withErrorBoundary = <P extends object>(
   };
 
   WrappedComponent.displayName = `withErrorBoundary(${Component.displayName || Component.name})`;
-  
+
   return WrappedComponent;
 };
 

@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, Phone, MessageSquare, X, Check, PhoneOff } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { useCall } from '@/contexts/CallContext';
-import { useWebSocket } from '@/hooks/useWebSocket';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Bell, Phone, MessageSquare, X, Check, PhoneOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useCall } from "@/contexts/CallContext";
+import { useWebSocket } from "@/hooks/useWebSocket";
 
 interface Notification {
   id: string;
-  type: 'call' | 'message' | 'system';
+  type: "call" | "message" | "system";
   title: string;
   message: string;
   timestamp: Date;
-  priority: 'low' | 'medium' | 'high';
+  priority: "low" | "medium" | "high";
   read: boolean;
   actionable?: boolean;
   callId?: string;
@@ -26,7 +26,9 @@ interface NotificationSystemProps {
   className?: string;
 }
 
-export default function NotificationSystem({ className = '' }: NotificationSystemProps) {
+export default function NotificationSystem({
+  className = "",
+}: NotificationSystemProps) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -38,82 +40,82 @@ export default function NotificationSystem({ className = '' }: NotificationSyste
       // Add message notification
       const notification: Notification = {
         id: message.id,
-        type: 'message',
-        title: 'New Message',
+        type: "message",
+        title: "New Message",
         message: `${message.from}: ${message.content}`,
         timestamp: message.timestamp,
-        priority: 'medium',
+        priority: "medium",
         read: false,
         sender: message.from,
       };
-      setNotifications(prev => [notification, ...prev]);
-      setUnreadCount(prev => prev + 1);
+      setNotifications((prev) => [notification, ...prev]);
+      setUnreadCount((prev) => prev + 1);
     },
     onCall: (call) => {
       // Add call notification
       const notification: Notification = {
         id: call.id,
-        type: 'call',
-        title: call.type === 'incoming' ? 'Incoming Call' : 'Call Update',
+        type: "call",
+        title: call.type === "incoming" ? "Incoming Call" : "Call Update",
         message: `Call from ${call.from}`,
         timestamp: call.timestamp,
-        priority: 'high',
+        priority: "high",
         read: false,
         actionable: true,
         sender: call.from,
         callId: call.id,
       };
-      setNotifications(prev => [notification, ...prev]);
-      setUnreadCount(prev => prev + 1);
+      setNotifications((prev) => [notification, ...prev]);
+      setUnreadCount((prev) => prev + 1);
     },
     onNotification: (notification) => {
       // Add system notification
-      setNotifications(prev => [notification, ...prev]);
+      setNotifications((prev) => [notification, ...prev]);
       if (!notification.read) {
-        setUnreadCount(prev => prev + 1);
+        setUnreadCount((prev) => prev + 1);
       }
-    }
+    },
   });
 
   // Mock notifications for demonstration
   useEffect(() => {
     const mockNotifications: Notification[] = [
       {
-        id: '1',
-        type: 'call',
-        title: 'Incoming Call',
-        message: 'Sarah Johnson is calling you',
+        id: "1",
+        type: "call",
+        title: "Incoming Call",
+        message: "Sarah Johnson is calling you",
         timestamp: new Date(),
-        priority: 'high',
+        priority: "high",
         read: false,
         actionable: true,
-        callId: 'call-1',
-        sender: 'Sarah Johnson',
-        avatar: 'SJ'
+        callId: "call-1",
+        sender: "Sarah Johnson",
+        avatar: "SJ",
       },
       {
-        id: '2',
-        type: 'message',
-        title: 'New Message',
-        message: 'You have 3 new messages from the HR team',
+        id: "2",
+        type: "message",
+        title: "New Message",
+        message: "You have 3 new messages from the HR team",
         timestamp: new Date(Date.now() - 5 * 60 * 1000),
-        priority: 'medium',
+        priority: "medium",
         read: false,
-        sender: 'HR Team'
+        sender: "HR Team",
       },
       {
-        id: '3',
-        type: 'system',
-        title: 'Meeting Reminder',
-        message: 'Team standup meeting starts in 15 minutes',
+        id: "3",
+        type: "system",
+        title: "Meeting Reminder",
+        message: "Team standup meeting starts in 15 minutes",
         timestamp: new Date(Date.now() - 10 * 60 * 1000),
-        priority: 'medium',
-        read: true
-      }
+        priority: "medium",
+        read: true,
+      },
     ];
 
     setNotifications(mockNotifications);
-    setUnreadCount(mockNotifications.filter(n => !n.read).length);
+    setUnreadCount(mockNotifications.filter((n) => !n.read).length);
   }, []);
 
   // Add incoming call notification
@@ -121,19 +123,19 @@ export default function NotificationSystem({ className = '' }: NotificationSyste
     if (callState.incomingCall) {
       const callNotification: Notification = {
         id: `call-${callState.incomingCall.callId}`,
-        type: 'call',
-        title: 'Incoming Call',
+        type: "call",
+        title: "Incoming Call",
         message: `${callState.incomingCall.from.name} is calling you`,
         timestamp: new Date(),
-        priority: 'high',
+        priority: "high",
         read: false,
         actionable: true,
         callId: callState.incomingCall.callId,
-        sender: callState.incomingCall.from.name
+        sender: callState.incomingCall.from.name,
       };
 
-      setNotifications(prev => [callNotification, ...prev]);
-      setUnreadCount(prev => prev + 1);
+      setNotifications((prev) => [callNotification, ...prev]);
+      setUnreadCount((prev) => prev + 1);
     }
   }, [callState.incomingCall]);
 
@@ -155,24 +157,22 @@ export default function NotificationSystem({ className = '' }: NotificationSyste
   };
 
   const markAsRead = (notificationId: string) => {
-    setNotifications(prev => 
-      prev.map(n => 
-        n.id === notificationId ? { ...n, read: true } : n
-      )
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === notificationId ? { ...n, read: true } : n)),
     );
-    setUnreadCount(prev => Math.max(0, prev - 1));
+    setUnreadCount((prev) => Math.max(0, prev - 1));
   };
 
   const removeNotification = (notificationId: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== notificationId));
-    const notification = notifications.find(n => n.id === notificationId);
+    setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
+    const notification = notifications.find((n) => n.id === notificationId);
     if (notification && !notification.read) {
-      setUnreadCount(prev => Math.max(0, prev - 1));
+      setUnreadCount((prev) => Math.max(0, prev - 1));
     }
   };
 
   const markAllAsRead = () => {
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
     setUnreadCount(0);
   };
 
@@ -183,9 +183,9 @@ export default function NotificationSystem({ className = '' }: NotificationSyste
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
-      case 'call':
+      case "call":
         return <Phone className="h-4 w-4" />;
-      case 'message':
+      case "message":
         return <MessageSquare className="h-4 w-4" />;
       default:
         return <Bell className="h-4 w-4" />;
@@ -194,12 +194,12 @@ export default function NotificationSystem({ className = '' }: NotificationSyste
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'high':
-        return 'bg-red-500';
-      case 'medium':
-        return 'bg-yellow-500';
+      case "high":
+        return "bg-red-500";
+      case "medium":
+        return "bg-yellow-500";
       default:
-        return 'bg-blue-500';
+        return "bg-blue-500";
     }
   };
 
@@ -207,8 +207,8 @@ export default function NotificationSystem({ className = '' }: NotificationSyste
     const now = new Date();
     const diff = now.getTime() - timestamp.getTime();
     const minutes = Math.floor(diff / 60000);
-    
-    if (minutes < 1) return 'Just now';
+
+    if (minutes < 1) return "Just now";
     if (minutes < 60) return `${minutes}m ago`;
     if (minutes < 1440) return `${Math.floor(minutes / 60)}h ago`;
     return timestamp.toLocaleDateString();
@@ -225,11 +225,11 @@ export default function NotificationSystem({ className = '' }: NotificationSyste
       >
         <Bell className="h-5 w-5" />
         {unreadCount > 0 && (
-          <Badge 
-            variant="destructive" 
+          <Badge
+            variant="destructive"
             className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
           >
-            {unreadCount > 99 ? '99+' : unreadCount}
+            {unreadCount > 99 ? "99+" : unreadCount}
           </Badge>
         )}
       </Button>
@@ -287,12 +287,14 @@ export default function NotificationSystem({ className = '' }: NotificationSyste
                           animate={{ opacity: 1, x: 0 }}
                           exit={{ opacity: 0, x: 20 }}
                           className={`p-4 hover:bg-gray-50 transition-colors ${
-                            !notification.read ? 'bg-blue-50/50' : ''
+                            !notification.read ? "bg-blue-50/50" : ""
                           }`}
                         >
                           <div className="flex items-start gap-3">
                             {/* Icon */}
-                            <div className={`p-2 rounded-full ${getPriorityColor(notification.priority)} text-white`}>
+                            <div
+                              className={`p-2 rounded-full ${getPriorityColor(notification.priority)} text-white`}
+                            >
                               {getNotificationIcon(notification.type)}
                             </div>
 
@@ -306,7 +308,7 @@ export default function NotificationSystem({ className = '' }: NotificationSyste
                                   <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0" />
                                 )}
                               </div>
-                              
+
                               <p className="text-xs text-gray-600 mb-2">
                                 {notification.message}
                               </p>
@@ -317,25 +319,30 @@ export default function NotificationSystem({ className = '' }: NotificationSyste
                                 </span>
 
                                 {/* Action Buttons for Calls */}
-                                {notification.actionable && notification.callId && (
-                                  <div className="flex gap-2">
-                                    <Button
-                                      size="sm"
-                                      variant="outline"
-                                      onClick={() => handleRejectCall(notification.callId!)}
-                                      className="h-6 px-2 text-xs"
-                                    >
-                                      Decline
-                                    </Button>
-                                    <Button
-                                      size="sm"
-                                      onClick={() => handleAcceptCall(notification.callId!)}
-                                      className="h-6 px-2 text-xs bg-green-600 hover:bg-green-700"
-                                    >
-                                      Accept
-                                    </Button>
-                                  </div>
-                                )}
+                                {notification.actionable &&
+                                  notification.callId && (
+                                    <div className="flex gap-2">
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={() =>
+                                          handleRejectCall(notification.callId!)
+                                        }
+                                        className="h-6 px-2 text-xs"
+                                      >
+                                        Decline
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        onClick={() =>
+                                          handleAcceptCall(notification.callId!)
+                                        }
+                                        className="h-6 px-2 text-xs bg-green-600 hover:bg-green-700"
+                                      >
+                                        Accept
+                                      </Button>
+                                    </div>
+                                  )}
                               </div>
                             </div>
 
@@ -343,7 +350,9 @@ export default function NotificationSystem({ className = '' }: NotificationSyste
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => removeNotification(notification.id)}
+                              onClick={() =>
+                                removeNotification(notification.id)
+                              }
                               className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
                             >
                               <X className="h-3 w-3" />
@@ -376,10 +385,7 @@ export default function NotificationSystem({ className = '' }: NotificationSyste
 
       {/* Click outside to close */}
       {isOpen && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setIsOpen(false)}
-        />
+        <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
       )}
     </div>
   );

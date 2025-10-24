@@ -190,7 +190,7 @@ const GlassFeatureCard = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:border-white/20 shadow-2xl hover:shadow-3xl transition-all duration-500 overflow-hidden h-full">
+      <div className="relative p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:border-white/20 shadow-2xl hover:shadow-2xl transition-all duration-500 overflow-hidden h-full">
         {/* Gradient overlay */}
         <div
           className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-5 group-hover:opacity-10 transition-opacity duration-500 rounded-2xl`}

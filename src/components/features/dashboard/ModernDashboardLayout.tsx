@@ -100,7 +100,9 @@ const MetricCard: React.FC<MetricCardProps> = ({
     <CardContent className="p-6">
       <div className="flex items-center justify-between">
         <div className="flex-1">
-          <p className="text-sm font-medium text-muted-foreground mb-1">{title}</p>
+          <p className="text-sm font-medium text-muted-foreground mb-1">
+            {title}
+          </p>
           <div className="flex items-baseline gap-2">
             <h3 className="text-2xl font-bold">{value}</h3>
             {change && (
@@ -109,8 +111,8 @@ const MetricCard: React.FC<MetricCardProps> = ({
                   changeType === "positive"
                     ? "text-green-600"
                     : changeType === "negative"
-                    ? "text-red-600"
-                    : "text-gray-600"
+                      ? "text-red-600"
+                      : "text-gray-600"
                 }`}
               >
                 {changeType === "positive" ? (
@@ -126,9 +128,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
             <p className="text-xs text-muted-foreground mt-1">{description}</p>
           )}
         </div>
-        <div className="p-3 rounded-full bg-blue-50 text-blue-600">
-          {icon}
-        </div>
+        <div className="p-3 rounded-full bg-blue-50 text-blue-600">{icon}</div>
       </div>
     </CardContent>
   </Card>
@@ -249,18 +249,18 @@ export default function ModernDashboardLayout({
   };
 
   return (
-    <div 
+    <div
       className="min-h-screen"
-      style={{ 
-        background: `linear-gradient(135deg, ${themeColors.background} 0%, ${themeColors.secondary} 100%)` 
+      style={{
+        background: `linear-gradient(135deg, ${themeColors.background} 0%, ${themeColors.secondary} 100%)`,
       }}
     >
       {/* Header */}
-      <div 
+      <div
         className="sticky top-0 z-40 border-b backdrop-blur-md"
-        style={{ 
+        style={{
           backgroundColor: `${themeColors.headerBg}CC`,
-          borderColor: `${themeColors.primary}20`
+          borderColor: `${themeColors.primary}20`,
         }}
       >
         <div className="flex items-center justify-between px-6 py-4">
@@ -297,15 +297,21 @@ export default function ModernDashboardLayout({
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-auto p-0 hover:bg-white/10">
+                <Button
+                  variant="ghost"
+                  className="h-auto p-0 hover:bg-white/10"
+                >
                   <div className="flex items-center gap-3">
                     <Avatar className="h-8 w-8">
                       <AvatarFallback className="bg-white text-gray-800">
-                        {user?.firstName?.[0]}{user?.lastName?.[0]}
+                        {user?.firstName?.[0]}
+                        {user?.lastName?.[0]}
                       </AvatarFallback>
                     </Avatar>
                     <div className="text-white text-left">
-                      <p className="text-sm font-medium">{user?.firstName} {user?.lastName}</p>
+                      <p className="text-sm font-medium">
+                        {user?.firstName} {user?.lastName}
+                      </p>
                       <p className="text-xs text-white/70">{department}</p>
                     </div>
                     <ChevronDown className="h-4 w-4 text-white/70" />
@@ -313,7 +319,10 @@ export default function ModernDashboardLayout({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem onClick={() => logout()} className="text-red-600 focus:text-red-600">
+                <DropdownMenuItem
+                  onClick={() => logout()}
+                  className="text-red-600 focus:text-red-600"
+                >
                   <LogOut className="h-4 w-4 mr-2" />
                   Sign Out
                 </DropdownMenuItem>
@@ -409,7 +418,10 @@ export default function ModernDashboardLayout({
                   <div>
                     <CardTitle className="text-lg">Active Jobs</CardTitle>
                     <p className="text-2xl font-bold text-gray-900 mt-1">
-                      {jobs.length} <span className="text-sm font-normal text-muted-foreground">Jobs</span>
+                      {jobs.length}{" "}
+                      <span className="text-sm font-normal text-muted-foreground">
+                        Jobs
+                      </span>
                     </p>
                   </div>
                   <DropdownMenu>
@@ -428,16 +440,25 @@ export default function ModernDashboardLayout({
                 <CardContent>
                   <div className="space-y-4">
                     {jobs.map((job) => (
-                      <div key={job.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div
+                        key={job.id}
+                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      >
                         <div className="flex items-center gap-3">
                           <Avatar className="h-10 w-10">
                             <AvatarFallback className="bg-blue-100 text-blue-600">
-                              {job.title.split(' ').map(word => word[0]).join('').slice(0, 2)}
+                              {job.title
+                                .split(" ")
+                                .map((word) => word[0])
+                                .join("")
+                                .slice(0, 2)}
                             </AvatarFallback>
                           </Avatar>
                           <div>
                             <h4 className="font-medium">{job.title}</h4>
-                            <p className="text-sm text-muted-foreground">{job.type}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {job.type}
+                            </p>
                           </div>
                         </div>
                         <Badge variant="secondary">{job.location}</Badge>
@@ -457,9 +478,14 @@ export default function ModernDashboardLayout({
               <Card className="border-0 bg-white/80 backdrop-blur-sm">
                 <CardHeader className="flex flex-row items-center justify-between">
                   <div>
-                    <CardTitle className="text-lg">Upcoming Interviews</CardTitle>
+                    <CardTitle className="text-lg">
+                      Upcoming Interviews
+                    </CardTitle>
                     <p className="text-2xl font-bold text-gray-900 mt-1">
-                      {interviews.length} <span className="text-sm font-normal text-muted-foreground">Interviews</span>
+                      {interviews.length}{" "}
+                      <span className="text-sm font-normal text-muted-foreground">
+                        Interviews
+                      </span>
                     </p>
                   </div>
                   <DropdownMenu>
@@ -478,21 +504,33 @@ export default function ModernDashboardLayout({
                 <CardContent>
                   <div className="space-y-4">
                     {interviews.map((interview) => (
-                      <div key={interview.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div
+                        key={interview.id}
+                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      >
                         <div className="flex items-center gap-3">
                           <Avatar className="h-10 w-10">
                             <AvatarFallback className="bg-green-100 text-green-600">
-                              {interview.name.split(' ').map(n => n[0]).join('')}
+                              {interview.name
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")}
                             </AvatarFallback>
                           </Avatar>
                           <div>
                             <h4 className="font-medium">{interview.name}</h4>
-                            <p className="text-sm text-muted-foreground">{interview.role}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {interview.role}
+                            </p>
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-sm font-medium">{interview.date}</p>
-                          <p className="text-xs text-muted-foreground">{interview.time}</p>
+                          <p className="text-sm font-medium">
+                            {interview.date}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {interview.time}
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -527,8 +565,12 @@ export default function ModernDashboardLayout({
                   <div className="space-y-4">
                     <div>
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-3xl font-bold">{averageKPI.percentage}%</span>
-                        <span className="text-sm text-muted-foreground">{averageKPI.description}</span>
+                        <span className="text-3xl font-bold">
+                          {averageKPI.percentage}%
+                        </span>
+                        <span className="text-sm text-muted-foreground">
+                          {averageKPI.description}
+                        </span>
                       </div>
                       <Progress value={averageKPI.percentage} className="h-2" />
                     </div>
@@ -564,20 +606,49 @@ export default function ModernDashboardLayout({
                 <CardContent>
                   <div className="space-y-4">
                     <div className="text-center">
-                      <p className="text-sm text-muted-foreground">Total Employees</p>
-                      <p className="text-2xl font-bold">{employmentStats.totalEmployees}</p>
+                      <p className="text-sm text-muted-foreground">
+                        Total Employees
+                      </p>
+                      <p className="text-2xl font-bold">
+                        {employmentStats.totalEmployees}
+                      </p>
                     </div>
                     <div className="space-y-3">
                       {[
-                        { label: "Permanent Employees", value: employmentStats.permanentEmployees, color: "bg-blue-500" },
-                        { label: "Contract Employees", value: employmentStats.contractEmployees, color: "bg-green-500" },
-                        { label: "Temporary Employees", value: employmentStats.temporaryEmployees, color: "bg-yellow-500" },
-                        { label: "Freelancers", value: employmentStats.freelancers, color: "bg-purple-500" },
-                        { label: "Interns", value: employmentStats.interns, color: "bg-pink-500" },
+                        {
+                          label: "Permanent Employees",
+                          value: employmentStats.permanentEmployees,
+                          color: "bg-blue-500",
+                        },
+                        {
+                          label: "Contract Employees",
+                          value: employmentStats.contractEmployees,
+                          color: "bg-green-500",
+                        },
+                        {
+                          label: "Temporary Employees",
+                          value: employmentStats.temporaryEmployees,
+                          color: "bg-yellow-500",
+                        },
+                        {
+                          label: "Freelancers",
+                          value: employmentStats.freelancers,
+                          color: "bg-purple-500",
+                        },
+                        {
+                          label: "Interns",
+                          value: employmentStats.interns,
+                          color: "bg-pink-500",
+                        },
                       ].map((item) => (
-                        <div key={item.label} className="flex items-center justify-between">
+                        <div
+                          key={item.label}
+                          className="flex items-center justify-between"
+                        >
                           <div className="flex items-center gap-2">
-                            <div className={`w-3 h-3 rounded-full ${item.color}`} />
+                            <div
+                              className={`w-3 h-3 rounded-full ${item.color}`}
+                            />
                             <span className="text-sm">{item.label}</span>
                           </div>
                           <span className="font-medium">{item.value}</span>
@@ -617,7 +688,9 @@ export default function ModernDashboardLayout({
                       <BarChart3 className="h-12 w-12 text-blue-400" />
                     </div>
                     <div className="text-center">
-                      <p className="text-sm text-muted-foreground">Monthly Attendance Rate</p>
+                      <p className="text-sm text-muted-foreground">
+                        Monthly Attendance Rate
+                      </p>
                       <p className="text-xl font-bold text-green-600">94.5%</p>
                     </div>
                   </div>

@@ -10,10 +10,19 @@ interface ChatWindowProps {
   onClose?: () => void;
 }
 
-const ChatWindow: React.FC<ChatWindowProps> = ({ anchorRect, user, onClose }) => {
+const ChatWindow: React.FC<ChatWindowProps> = ({
+  anchorRect,
+  user,
+  onClose,
+}) => {
   const { sendMessage, webSocketService } = useWebSocket();
-  const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [messages, setMessages] = useState<{ id: string; from: string; content: string; timestamp: Date }[]>([]);
+  const [position, setPosition] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
+  const [messages, setMessages] = useState<
+    { id: string; from: string; content: string; timestamp: Date }[]
+  >([]);
   const [input, setInput] = useState("");
 
   useEffect(() => {
@@ -37,17 +46,38 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ anchorRect, user, onClose }) =>
 
   useEffect(() => {
     const handleNewMessage = (msg: any) => {
-      setMessages((prev) => [...prev, { id: msg.id || Math.random().toString(36), from: msg.from, content: msg.content, timestamp: new Date(msg.timestamp || Date.now()) }]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: msg.id || Math.random().toString(36),
+          from: msg.from,
+          content: msg.content,
+          timestamp: new Date(msg.timestamp || Date.now()),
+        },
+      ]);
     };
 
-    webSocketService.on('new_message', handleNewMessage);
-    return () => webSocketService.off('new_message', handleNewMessage);
+    webSocketService.on("new_message", handleNewMessage);
+    return () => webSocketService.off("new_message", handleNewMessage);
   }, [webSocketService]);
 
   const handleSend = () => {
     if (!input.trim()) return;
-    sendMessage({ to: user.email, from: 'me', content: input, conversationId: `conv_${user.id}` });
-    setMessages((prev) => [...prev, { id: Math.random().toString(36), from: 'me', content: input, timestamp: new Date() }]);
+    sendMessage({
+      to: user.email,
+      from: "me",
+      content: input,
+      conversationId: `conv_${user.id}`,
+    });
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: Math.random().toString(36),
+        from: "me",
+        content: input,
+        timestamp: new Date(),
+      },
+    ]);
     setInput("");
   };
 
@@ -60,20 +90,31 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ anchorRect, user, onClose }) =>
       style={{ left: position.x, top: position.y }}
     >
       <div className="p-3 border-b flex items-center justify-between">
-        <p className="font-semibold text-[#142E54]">Chat with {user.firstName}</p>
-        <button className="p-1 rounded hover:bg-muted" onClick={onClose} aria-label="Close chat">
+        <p className="font-semibold text-[#142E54]">
+          Chat with {user.firstName}
+        </p>
+        <button
+          className="p-1 rounded hover:bg-muted"
+          onClick={onClose}
+          aria-label="Close chat"
+        >
           <X className="h-4 w-4" />
         </button>
       </div>
       <div className="p-3 space-y-2">
         <div className="h-40 overflow-y-auto rounded bg-muted p-2 space-y-1">
           {messages.map((m) => (
-            <div key={m.id} className={`text-sm ${m.from === 'me' ? 'text-[#142E54]' : 'text-muted-foreground'}`}>
+            <div
+              key={m.id}
+              className={`text-sm ${m.from === "me" ? "text-[#142E54]" : "text-muted-foreground"}`}
+            >
               <span className="font-medium">{m.from}:</span> {m.content}
             </div>
           ))}
           {messages.length === 0 && (
-            <p className="text-xs text-muted-foreground">No messages yet. Say hello!</p>
+            <p className="text-xs text-muted-foreground">
+              No messages yet. Say hello!
+            </p>
           )}
         </div>
         <div className="flex gap-2">

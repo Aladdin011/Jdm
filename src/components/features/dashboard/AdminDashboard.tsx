@@ -77,7 +77,7 @@ interface DepartmentPerformance {
 export default function AdminDashboard() {
   const { user } = useAuth();
   const { isInCall, startCall } = useCall();
-  
+
   const [adminTasks] = useState<AdminTask[]>([
     {
       id: "1",
@@ -258,8 +258,12 @@ export default function AdminDashboard() {
             <Card className="border-0 bg-white/90 backdrop-blur-sm shadow-lg">
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg text-gray-900">Administrative Tasks</CardTitle>
-                  <p className="text-sm text-gray-600 mt-1">System and organizational tasks requiring attention</p>
+                  <CardTitle className="text-lg text-gray-900">
+                    Administrative Tasks
+                  </CardTitle>
+                  <p className="text-sm text-gray-600 mt-1">
+                    System and organizational tasks requiring attention
+                  </p>
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -291,12 +295,16 @@ export default function AdminDashboard() {
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
-                            <h4 className="font-semibold text-gray-900">{task.title}</h4>
+                            <h4 className="font-semibold text-gray-900">
+                              {task.title}
+                            </h4>
                             <Badge className={getStatusColor(task.status)}>
                               {task.status.replace("-", " ")}
                             </Badge>
                           </div>
-                          <p className="text-sm text-gray-600 mb-3">{task.description}</p>
+                          <p className="text-sm text-gray-600 mb-3">
+                            {task.description}
+                          </p>
                           <div className="flex items-center gap-4 text-xs text-gray-500">
                             {task.assignee && (
                               <div className="flex items-center gap-1">
@@ -311,15 +319,15 @@ export default function AdminDashboard() {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Button 
-                            variant="ghost" 
+                          <Button
+                            variant="ghost"
                             size="sm"
                             onClick={() => alert(`Viewing task: ${task.title}`)}
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
-                          <Button 
-                            variant="ghost" 
+                          <Button
+                            variant="ghost"
                             size="sm"
                             onClick={() => alert(`Editing task: ${task.title}`)}
                           >
@@ -346,22 +354,34 @@ export default function AdminDashboard() {
               <CardContent>
                 <div className="space-y-4">
                   {systemMetrics.map((metric) => (
-                    <div key={metric.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div
+                      key={metric.id}
+                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                    >
                       <div>
-                        <h4 className="font-medium text-gray-900">{metric.name}</h4>
+                        <h4 className="font-medium text-gray-900">
+                          {metric.name}
+                        </h4>
                         <p className="text-xs text-gray-500">
                           Updated: {metric.lastUpdated}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className={`font-bold ${getSystemStatusColor(metric.status)}`}>
-                          {metric.value}{metric.unit}
+                        <p
+                          className={`font-bold ${getSystemStatusColor(metric.status)}`}
+                        >
+                          {metric.value}
+                          {metric.unit}
                         </p>
-                        <div className={`w-2 h-2 rounded-full inline-block ${
-                          metric.status === "good" ? "bg-green-500" :
-                          metric.status === "warning" ? "bg-yellow-500" :
-                          "bg-red-500"
-                        }`} />
+                        <div
+                          className={`w-2 h-2 rounded-full inline-block ${
+                            metric.status === "good"
+                              ? "bg-green-500"
+                              : metric.status === "warning"
+                                ? "bg-yellow-500"
+                                : "bg-red-500"
+                          }`}
+                        />
                       </div>
                     </div>
                   ))}
@@ -378,7 +398,9 @@ export default function AdminDashboard() {
               <BarChart3 className="h-5 w-5 text-blue-600" />
               Department Performance Overview
             </CardTitle>
-            <p className="text-sm text-gray-600">Real-time KPIs and metrics across all departments</p>
+            <p className="text-sm text-gray-600">
+              Real-time KPIs and metrics across all departments
+            </p>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
@@ -390,30 +412,40 @@ export default function AdminDashboard() {
                   className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200"
                 >
                   <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-semibold text-gray-900 text-sm">{dept.department}</h4>
+                    <h4 className="font-semibold text-gray-900 text-sm">
+                      {dept.department}
+                    </h4>
                     <Building className="h-4 w-4 text-blue-600" />
                   </div>
                   <div className="space-y-2">
                     <div>
                       <div className="flex items-center justify-between text-xs">
                         <span className="text-gray-600">KPI</span>
-                        <span className="font-semibold text-blue-600">{dept.kpi}%</span>
+                        <span className="font-semibold text-blue-600">
+                          {dept.kpi}%
+                        </span>
                       </div>
                       <Progress value={dept.kpi} className="h-1 mt-1" />
                     </div>
                     <div className="grid grid-cols-2 gap-2 text-xs">
                       <div>
                         <span className="text-gray-500">Staff</span>
-                        <p className="font-semibold text-gray-900">{dept.employees}</p>
+                        <p className="font-semibold text-gray-900">
+                          {dept.employees}
+                        </p>
                       </div>
                       <div>
                         <span className="text-gray-500">Projects</span>
-                        <p className="font-semibold text-gray-900">{dept.activeProjects}</p>
+                        <p className="font-semibold text-gray-900">
+                          {dept.activeProjects}
+                        </p>
                       </div>
                     </div>
                     <div className="text-xs">
                       <span className="text-gray-500">Satisfaction</span>
-                      <p className="font-semibold text-yellow-600">{dept.satisfaction}/5.0</p>
+                      <p className="font-semibold text-yellow-600">
+                        {dept.satisfaction}/5.0
+                      </p>
                     </div>
                   </div>
                 </motion.div>
@@ -429,11 +461,19 @@ export default function AdminDashboard() {
               <div className="p-3 bg-blue-100 rounded-full w-fit mx-auto mb-4">
                 <Users className="h-6 w-6 text-blue-600" />
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">User Management</h3>
-              <p className="text-sm text-gray-600 mb-4">Manage staff accounts and permissions</p>
-              <Button 
+              <h3 className="font-semibold text-gray-900 mb-2">
+                User Management
+              </h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Manage staff accounts and permissions
+              </p>
+              <Button
                 className="w-full bg-blue-600 hover:bg-blue-700"
-                onClick={() => alert('User Management functionality would be implemented here')}
+                onClick={() =>
+                  alert(
+                    "User Management functionality would be implemented here",
+                  )
+                }
               >
                 Manage Users
               </Button>
@@ -445,12 +485,20 @@ export default function AdminDashboard() {
               <div className="p-3 bg-green-100 rounded-full w-fit mx-auto mb-4">
                 <Settings className="h-6 w-6 text-green-600" />
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">System Settings</h3>
-              <p className="text-sm text-gray-600 mb-4">Configure system parameters</p>
-              <Button 
-                variant="outline" 
+              <h3 className="font-semibold text-gray-900 mb-2">
+                System Settings
+              </h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Configure system parameters
+              </p>
+              <Button
+                variant="outline"
                 className="w-full border-green-600 text-green-600 hover:bg-green-50"
-                onClick={() => alert('System Settings functionality would be implemented here')}
+                onClick={() =>
+                  alert(
+                    "System Settings functionality would be implemented here",
+                  )
+                }
               >
                 Settings
               </Button>
@@ -462,12 +510,20 @@ export default function AdminDashboard() {
               <div className="p-3 bg-purple-100 rounded-full w-fit mx-auto mb-4">
                 <Shield className="h-6 w-6 text-purple-600" />
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Security Center</h3>
-              <p className="text-sm text-gray-600 mb-4">Monitor security and access logs</p>
-              <Button 
-                variant="outline" 
+              <h3 className="font-semibold text-gray-900 mb-2">
+                Security Center
+              </h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Monitor security and access logs
+              </p>
+              <Button
+                variant="outline"
                 className="w-full border-purple-600 text-purple-600 hover:bg-purple-50"
-                onClick={() => alert('Security Center functionality would be implemented here')}
+                onClick={() =>
+                  alert(
+                    "Security Center functionality would be implemented here",
+                  )
+                }
               >
                 Security
               </Button>
@@ -480,11 +536,15 @@ export default function AdminDashboard() {
                 <BarChart3 className="h-6 w-6 text-orange-600" />
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Analytics</h3>
-              <p className="text-sm text-gray-600 mb-4">View detailed system analytics</p>
-              <Button 
-                variant="outline" 
+              <p className="text-sm text-gray-600 mb-4">
+                View detailed system analytics
+              </p>
+              <Button
+                variant="outline"
                 className="w-full border-orange-600 text-orange-600 hover:bg-orange-50"
-                onClick={() => alert('Analytics functionality would be implemented here')}
+                onClick={() =>
+                  alert("Analytics functionality would be implemented here")
+                }
               >
                 Analytics
               </Button>
@@ -497,9 +557,12 @@ export default function AdminDashboard() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-xl font-bold mb-2">System Administration Meeting</h3>
+                <h3 className="text-xl font-bold mb-2">
+                  System Administration Meeting
+                </h3>
                 <p className="text-blue-100 mb-4">
-                  Schedule a meeting to discuss system updates, security reviews, and department coordination.
+                  Schedule a meeting to discuss system updates, security
+                  reviews, and department coordination.
                 </p>
                 <div className="flex items-center gap-4">
                   <Button
@@ -510,10 +573,14 @@ export default function AdminDashboard() {
                     <Video className="h-4 w-4 mr-2" />
                     {isInCall ? "In Meeting" : "Start Meeting"}
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="border-white text-white hover:bg-white/10"
-                    onClick={() => alert('Send Announcement functionality would be implemented here')}
+                    onClick={() =>
+                      alert(
+                        "Send Announcement functionality would be implemented here",
+                      )
+                    }
                   >
                     <MessageSquare className="h-4 w-4 mr-2" />
                     Send Announcement

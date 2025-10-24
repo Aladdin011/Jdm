@@ -1,18 +1,38 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Auth Debug Test</title>
     <style>
-      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif; padding: 20px; }
-      h1 { margin-bottom: 16px; }
-      button { margin-right: 8px; margin-bottom: 8px; padding: 8px 12px; }
-      #results { margin-top: 16px; }
-      .status { font-weight: bold; }
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Inter,
+          Arial,
+          sans-serif;
+        padding: 20px;
+      }
+      h1 {
+        margin-bottom: 16px;
+      }
+      button {
+        margin-right: 8px;
+        margin-bottom: 8px;
+        padding: 8px 12px;
+      }
+      #results {
+        margin-top: 16px;
+      }
+      .status {
+        font-weight: bold;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Authentication Debug Test</h1>
     <p>Use this page to test backend connectivity for key auth endpoints.</p>
     <div>
@@ -21,71 +41,72 @@
       <button onclick="testCompleteLogin()">Test Complete Login</button>
     </div>
     <div id="results"></div>
-    
+
     <script>
-        const resultsDiv = document.getElementById('results');
-        
-        function log(message) {
-            console.log(message);
-            const p = document.createElement('p');
-            p.textContent = typeof message === 'string' ? message : JSON.stringify(message);
-            resultsDiv.appendChild(p);
+      const resultsDiv = document.getElementById("results");
+
+      function log(message) {
+        console.log(message);
+        const p = document.createElement("p");
+        p.textContent =
+          typeof message === "string" ? message : JSON.stringify(message);
+        resultsDiv.appendChild(p);
+      }
+
+      async function testHealthCheck() {
+        log("Testing health check...");
+        try {
+          const response = await fetch("/api/health");
+          const data = await response.json();
+          log({ status: response.status, data });
+        } catch (error) {
+          log({ error: error.message });
         }
-        
-        async function testHealthCheck() {
-            log('Testing health check...');
-            try {
-                const response = await fetch('/api/health');
-                const data = await response.json();
-                log({ status: response.status, data });
-            } catch (error) {
-                log({ error: error.message });
-            }
+      }
+
+      async function testVerifyCredentials() {
+        log("Testing verify credentials...");
+        try {
+          const response = await fetch("/api/auth/verify-credentials", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: "admin@jdmarcng.com",
+              password: "Admin@123",
+            }),
+          });
+          const data = await response.json();
+          log({ status: response.status, data });
+        } catch (error) {
+          log({ error: error.message });
         }
-        
-        async function testVerifyCredentials() {
-            log('Testing verify credentials...');
-            try {
-                const response = await fetch('/api/auth/verify-credentials', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        email: 'admin@jdmarcng.com',
-                        password: 'Admin@123'
-                    })
-                });
-                const data = await response.json();
-                log({ status: response.status, data });
-            } catch (error) {
-                log({ error: error.message });
-            }
+      }
+
+      async function testCompleteLogin() {
+        log("Testing complete login...");
+        try {
+          const response = await fetch("/api/auth/complete-login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: 1,
+            }),
+          });
+          const data = await response.json();
+          log({ status: response.status, data });
+        } catch (error) {
+          log({ error: error.message });
         }
-        
-        async function testCompleteLogin() {
-            log('Testing complete login...');
-            try {
-                const response = await fetch('/api/auth/complete-login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        userId: 1
-                    })
-                });
-                const data = await response.json();
-                log({ status: response.status, data });
-            } catch (error) {
-                log({ error: error.message });
-            }
-        }
-        
-        // Auto-run health check on load
-        window.onload = () => {
-            testHealthCheck();
-        };
+      }
+
+      // Auto-run health check on load
+      window.onload = () => {
+        testHealthCheck();
+      };
     </script>
-</body>
+  </body>
 </html>

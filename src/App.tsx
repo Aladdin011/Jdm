@@ -13,8 +13,9 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import PrivateRoute from "@/components/auth/PrivateRoute";
 import ErrorBoundary from "@/components/ErrorBoundary";
-
-// Lazy load components for better performance
+import AppStartupGate from "@/components/ui/AppStartupGate";
+import Loader from "@/components/ui/Loader";
+// Using premium Loader as Suspense fallback
 const Home = lazy(() => import("@/pages/Home"));
 const About = lazy(() => import("@/pages/About"));
 const Services = lazy(() => import("@/pages/Services"));
@@ -31,6 +32,8 @@ const Settings = lazy(() => import("@/pages/Settings"));
 const Security = lazy(() => import("@/pages/Security"));
 const Analytics = lazy(() => import("@/pages/Analytics"));
 const CallInterface = lazy(() => import("@/pages/CallInterface"));
+const HomepageWithLoading = lazy(() => import("@/components/HomepageWithLoading"));
+const BlogPage = lazy(() => import("@/components/BlogPage"));
 
 // Enhanced loading component
 const LoadingSpinner = () => (
@@ -55,13 +58,10 @@ const LoadingSpinner = () => (
           transition={{ duration: 2, repeat: Infinity }}
         >
           <img
-            src="/images/brand/logo.jpg"
-            alt="JD Marc Limited Logo"
-            className="w-20 h-20 object-contain rounded-lg"
-            onError={(e) => {
-              e.currentTarget.src = "./images/brand/logo.svg";
-            }}
-          />
+             src="/images/brand/3D Icon.PNG"
+             alt="JD Marc Center Icon"
+             className="w-20 h-20 object-contain rounded-lg"
+           />
         </motion.div>
 
         {/* Orbiting elements */}
@@ -246,7 +246,6 @@ function App() {
         performance.measure("app-initialization", "app-start", "app-ready");
 
         const measure = performance.getEntriesByName("app-initialization")[0];
-        console.log(`App initialization took ${measure.duration.toFixed(2)}ms`);
 
         // Send to analytics if available
         if (window.gtag) {
@@ -274,270 +273,308 @@ function App() {
             <CallProvider>
               <BrowserRouter>
                 <div className="App">
-                  <AnimatePresence mode="wait">
-                    <Suspense fallback={<LoadingSpinner />}>
-                      <Routes>
-                        <Route
-                          path="/"
-                          element={
-                            <RouteWithSEO seo={pageSEO.home}>
-                              <Home />
-                            </RouteWithSEO>
-                          }
-                        />
-                        <Route
-                          path="/about"
-                          element={
-                            <RouteWithSEO seo={pageSEO.about}>
-                              <About />
-                            </RouteWithSEO>
-                          }
-                        />
-                        <Route
-                          path="/services"
-                          element={
-                            <RouteWithSEO seo={pageSEO.services}>
-                              <Services />
-                            </RouteWithSEO>
-                          }
-                        />
-                        <Route
-                          path="/services/:category"
-                          element={
-                            <RouteWithSEO seo={pageSEO.services}>
-                              <Services />
-                            </RouteWithSEO>
-                          }
-                        />
-                        <Route
-                          path="/projects"
-                          element={
-                            <RouteWithSEO seo={pageSEO.projects}>
-                              <Projects />
-                            </RouteWithSEO>
-                          }
-                        />
-                        <Route
-                          path="/contact"
-                          element={
-                            <RouteWithSEO seo={pageSEO.contact}>
-                              <Contact />
-                            </RouteWithSEO>
-                          }
-                        />
-                        <Route
-                          path="/blog"
-                          element={
-                            <RouteWithSEO
-                              seo={{
-                                title:
-                                  "Construction Industry Blog & Insights | JD Marc Limited",
-                                description:
-                                  "Stay updated with the latest construction industry trends, project insights, and expert analysis from JD Marc Limited.",
-                                keywords:
-                                  "construction blog, industry insights, building trends, project updates, construction news Africa",
-                              }}
-                            >
-                              <Blog />
-                            </RouteWithSEO>
-                          }
-                        />
-                        <Route
-                          path="/blog/:category"
-                          element={
-                            <RouteWithSEO
-                              seo={{
-                                title:
-                                  "Construction Blog Categories | JD Marc Limited",
-                                description:
-                                  "Explore specific construction industry topics including technology, projects, industry insights, and company news.",
-                                keywords:
-                                  "construction blog categories, industry insights, project updates, construction technology, company news",
-                              }}
-                            >
-                              <Blog />
-                            </RouteWithSEO>
-                          }
-                        />
-                        <Route
-                          path="/login"
-                          element={
-                            <RouteWithSEO
-                              seo={{
-                                title: "Login - JD Marc Limited Client Portal",
-                                description:
-                                  "Access your JD Marc Limited client portal to manage projects, view progress, and communicate with our team.",
-                                keywords:
-                                  "client login, project portal, construction management, client access",
-                              }}
-                            >
-                              <Login />
-                            </RouteWithSEO>
-                          }
-                        />
-                        <Route
-                          path="/register"
-                          element={
-                            <RouteWithSEO
-                              seo={{
-                                title:
-                                  "Register - Join JD Marc Limited Client Portal",
-                                description:
-                                  "Create your JD Marc Limited client account to start your construction project and access our premium services.",
-                                keywords:
-                                  "client registration, new account, construction services, project management",
-                              }}
-                            >
-                              <Register />
-                            </RouteWithSEO>
-                          }
-                        />
-                        <Route
-                          path="/dashboard"
-                          element={
-                            <PrivateRoute>
-                              <RouteWithSEO
-                                seo={{
-                                  title: "Client Dashboard - JD Marc Limited",
-                                  description:
-                                    "Manage your construction projects, track progress, and access all project resources in your personalized dashboard.",
-                                  keywords:
-                                    "client dashboard, project management, construction progress, project portal",
-                                }}
-                              >
-                                <Dashboard />
-                              </RouteWithSEO>
-                            </PrivateRoute>
-                          }
-                        />
-                        <Route
-                          path="/admin"
-                          element={
-                            <PrivateRoute>
-                              <RouteWithSEO
-                                seo={{
-                                  title: "Admin Dashboard - JD Marc Limited",
-                                  description:
-                                    "Manage system administration, users, and team communication in the admin dashboard.",
-                                  keywords:
-                                    "admin dashboard, system administration, user management, team communication",
-                                }}
-                              >
-                                <Admin />
-                              </RouteWithSEO>
-                            </PrivateRoute>
-                          }
-                        />
-                        <Route
-                          path="/settings"
-                          element={
-                            <PrivateRoute>
-                              <RouteWithSEO
-                                seo={{
-                                  title: "Settings - JD Marc Limited",
-                                  description:
-                                    "Manage your account settings, preferences, and system configurations for your JD Marc Limited dashboard.",
-                                  keywords:
-                                    "settings, account management, preferences, configuration",
-                                }}
-                              >
-                                <Settings />
-                              </RouteWithSEO>
-                            </PrivateRoute>
-                          }
-                        />
-                        <Route
-                          path="/security"
-                          element={
-                            <PrivateRoute>
-                              <RouteWithSEO
-                                seo={{
-                                  title: "Security Center - JD Marc Limited",
-                                  description:
-                                    "Monitor security events, access logs, and manage security settings for your JD Marc Limited account.",
-                                  keywords:
-                                    "security, access logs, monitoring, threat detection",
-                                }}
-                              >
-                                <Security />
-                              </RouteWithSEO>
-                            </PrivateRoute>
-                          }
-                        />
-                        <Route
-                          path="/analytics"
-                          element={
-                            <PrivateRoute>
-                              <RouteWithSEO
-                                seo={{
-                                  title: "Analytics Dashboard - JD Marc Limited",
-                                  description:
-                                    "View business insights, performance metrics, and data visualization for your JD Marc Limited projects.",
-                                  keywords:
-                                    "analytics, business insights, metrics, data visualization",
-                                }}
-                              >
-                                <Analytics />
-                              </RouteWithSEO>
-                            </PrivateRoute>
-                          }
-                        />
-                        <Route
-                          path="/call"
-                          element={
-                            <PrivateRoute>
-                              <RouteWithSEO
-                                seo={{
-                                  title: "Call Interface - JD Marc Limited",
-                                  description:
-                                    "Join video and voice calls with your team members for seamless collaboration and communication.",
-                                  keywords:
-                                    "video call, voice call, team communication, collaboration",
-                                }}
-                              >
-                                <CallInterface />
-                              </RouteWithSEO>
-                            </PrivateRoute>
-                          }
-                        />
-                        <Route
-                          path="/forgot-password"
-                          element={
-                            <RouteWithSEO
-                              seo={{
-                                title: "Reset Password - JD Marc Limited",
-                                description:
-                                  "Reset your JD Marc Limited account password to regain access to your client portal and project management tools.",
-                                keywords:
-                                  "password reset, account recovery, client portal access",
-                              }}
-                            >
-                              <ForgotPassword />
-                            </RouteWithSEO>
-                          }
-                        />
-                        <Route
-                          path="*"
-                          element={
-                            <RouteWithSEO
-                              seo={{
-                                title: "Page Not Found - JD Marc Limited",
-                                description:
-                                  "The page you are looking for could not be found. Visit our homepage to explore JD Marc Limited construction services.",
-                                keywords:
-                                  "404, page not found, JD Marc Limited",
-                              }}
-                            >
-                              <NotFound />
-                            </RouteWithSEO>
-                          }
-                        />
-                      </Routes>
-                    </Suspense>
-                  </AnimatePresence>
+                  <AppStartupGate>
+                    <div className="App">
+                      <AnimatePresence mode="wait">
+                        <Suspense fallback={<Loader brand="JD MARC" />}> 
+                          <Routes>
+                            <Route
+                              path="/"
+                              element={
+                                <RouteWithSEO seo={pageSEO.home}>
+                                  <Home />
+                                </RouteWithSEO>
+                              }
+                            />
+                            <Route
+                              path="/welcome"
+                              element={
+                                <RouteWithSEO
+                                  seo={{
+                                    title: "Welcome - JD Marc Limited Construction",
+                                    description:
+                                      "Experience the future of construction with JD Marc Limited. Innovative designs, quality construction, and precision engineering.",
+                                    keywords:
+                                      "construction company, building services, architectural design, quality construction, Nigeria construction",
+                                  }}
+                                >
+                                  <HomepageWithLoading />
+                                </RouteWithSEO>
+                              }
+                            />
+                            <Route
+                              path="/about"
+                              element={
+                                <RouteWithSEO seo={pageSEO.about}>
+                                  <About />
+                                </RouteWithSEO>
+                              }
+                            />
+                            <Route
+                              path="/services"
+                              element={
+                                <RouteWithSEO seo={pageSEO.services}>
+                                  <Services />
+                                </RouteWithSEO>
+                              }
+                            />
+                            <Route
+                              path="/services/:category"
+                              element={
+                                <RouteWithSEO seo={pageSEO.services}>
+                                  <Services />
+                                </RouteWithSEO>
+                              }
+                            />
+                            <Route
+                              path="/projects"
+                              element={
+                                <RouteWithSEO seo={pageSEO.projects}>
+                                  <Projects />
+                                </RouteWithSEO>
+                              }
+                            />
+                            <Route
+                              path="/contact"
+                              element={
+                                <RouteWithSEO seo={pageSEO.contact}>
+                                  <Contact />
+                                </RouteWithSEO>
+                              }
+                            />
+                            <Route
+                              path="/blog"
+                              element={
+                                <RouteWithSEO
+                                  seo={{
+                                    title:
+                                      "Construction Industry Blog & Insights | JD Marc Limited",
+                                    description:
+                                      "Stay updated with the latest construction industry trends, project insights, and expert analysis from JD Marc Limited.",
+                                    keywords:
+                                      "construction blog, industry insights, building trends, project updates, construction news Africa",
+                                  }}
+                                >
+                                  <Blog />
+                                </RouteWithSEO>
+                              }
+                            />
+                            <Route
+                              path="/blog-new"
+                              element={
+                                <RouteWithSEO
+                                  seo={{
+                                    title:
+                                      "Construction Insights & Innovations | JD Marc Limited",
+                                    description:
+                                      "Explore cutting-edge construction techniques, industry trends, and expert insights from our team of professionals.",
+                                    keywords:
+                                      "construction blog, building innovation, construction technology, industry insights, project management",
+                                  }}
+                                >
+                                  <BlogPage />
+                                </RouteWithSEO>
+                              }
+                            />
+                            <Route
+                              path="/blog/:category"
+                              element={
+                                <RouteWithSEO
+                                  seo={{
+                                    title:
+                                      "Construction Blog Categories | JD Marc Limited",
+                                    description:
+                                      "Explore specific construction industry topics including technology, projects, industry insights, and company news.",
+                                    keywords:
+                                      "construction blog categories, industry insights, project updates, construction technology, company news",
+                                  }}
+                                >
+                                  <Blog />
+                                </RouteWithSEO>
+                              }
+                            />
+                            <Route
+                              path="/login"
+                              element={
+                                <RouteWithSEO
+                                  seo={{
+                                    title: "Login - JD Marc Limited Client Portal",
+                                    description:
+                                      "Access your JD Marc Limited client portal to manage projects, view progress, and communicate with our team.",
+                                    keywords:
+                                      "client login, project portal, construction management, client access",
+                                  }}
+                                >
+                                  <Login />
+                                </RouteWithSEO>
+                              }
+                            />
+                            <Route
+                              path="/register"
+                              element={
+                                <RouteWithSEO
+                                  seo={{
+                                    title:
+                                      "Register - Join JD Marc Limited Client Portal",
+                                    description:
+                                      "Create your JD Marc Limited client account to start your construction project and access our premium services.",
+                                    keywords:
+                                      "client registration, new account, construction services, project management",
+                                  }}
+                                >
+                                  <Register />
+                                </RouteWithSEO>
+                              }
+                            />
+                            <Route
+                              path="/dashboard"
+                              element={
+                                <PrivateRoute>
+                                  <RouteWithSEO
+                                    seo={{
+                                      title: "Client Dashboard - JD Marc Limited",
+                                      description:
+                                        "Manage your construction projects, track progress, and access all project resources in your personalized dashboard.",
+                                      keywords:
+                                        "client dashboard, project management, construction progress, project portal",
+                                    }}
+                                  >
+                                    <Dashboard />
+                                  </RouteWithSEO>
+                                </PrivateRoute>
+                              }
+                            />
+                            <Route
+                              path="/admin"
+                              element={
+                                <PrivateRoute>
+                                  <RouteWithSEO
+                                    seo={{
+                                      title: "Admin Dashboard - JD Marc Limited",
+                                      description:
+                                        "Manage system administration, users, and team communication in the admin dashboard.",
+                                      keywords:
+                                        "admin dashboard, system administration, user management, team communication",
+                                    }}
+                                  >
+                                    <Admin />
+                                  </RouteWithSEO>
+                                </PrivateRoute>
+                              }
+                            />
+                            <Route
+                              path="/settings"
+                              element={
+                                <PrivateRoute>
+                                  <RouteWithSEO
+                                    seo={{
+                                      title: "Settings - JD Marc Limited",
+                                      description:
+                                        "Manage your account settings, preferences, and system configurations for your JD Marc Limited dashboard.",
+                                      keywords:
+                                        "settings, account management, preferences, configuration",
+                                    }}
+                                  >
+                                    <Settings />
+                                  </RouteWithSEO>
+                                </PrivateRoute>
+                              }
+                            />
+                            <Route
+                              path="/security"
+                              element={
+                                <PrivateRoute>
+                                  <RouteWithSEO
+                                    seo={{
+                                      title: "Security Center - JD Marc Limited",
+                                      description:
+                                        "Monitor security events, access logs, and manage security settings for your JD Marc Limited account.",
+                                      keywords:
+                                        "security, access logs, monitoring, threat detection",
+                                    }}
+                                  >
+                                    <Security />
+                                  </RouteWithSEO>
+                                </PrivateRoute>
+                              }
+                            />
+                            <Route
+                              path="/analytics"
+                              element={
+                                <PrivateRoute>
+                                  <RouteWithSEO
+                                    seo={{
+                                      title:
+                                        "Analytics Dashboard - JD Marc Limited",
+                                      description:
+                                        "View business insights, performance metrics, and data visualization for your JD Marc Limited projects.",
+                                      keywords:
+                                        "analytics, business insights, metrics, data visualization",
+                                    }}
+                                  >
+                                    <Analytics />
+                                  </RouteWithSEO>
+                                </PrivateRoute>
+                              }
+                            />
+                            <Route
+                              path="/call"
+                              element={
+                                <PrivateRoute>
+                                  <RouteWithSEO
+                                    seo={{
+                                      title: "Call Interface - JD Marc Limited",
+                                      description:
+                                        "Join video and voice calls with your team members for seamless collaboration and communication.",
+                                      keywords:
+                                        "video call, voice call, team communication, collaboration",
+                                    }}
+                                  >
+                                    <CallInterface />
+                                  </RouteWithSEO>
+                                </PrivateRoute>
+                              }
+                            />
+                            <Route
+                              path="/forgot-password"
+                              element={
+                                <RouteWithSEO
+                                  seo={{
+                                    title: "Reset Password - JD Marc Limited",
+                                    description:
+                                      "Reset your JD Marc Limited account password to regain access to your client portal and project management tools.",
+                                    keywords:
+                                      "password reset, account recovery, client portal access",
+                                  }}
+                                >
+                                  <ForgotPassword />
+                                </RouteWithSEO>
+                              }
+                            />
+                            <Route
+                              path="*"
+                              element={
+                                <RouteWithSEO
+                                  seo={{
+                                    title: "Page Not Found - JD Marc Limited",
+                                    description:
+                                      "The page you are looking for could not be found. Visit our homepage to explore JD Marc Limited construction services.",
+                                    keywords:
+                                      "404, page not found, JD Marc Limited",
+                                  }}
+                                >
+                                  <NotFound />
+                                </RouteWithSEO>
+                              }
+                            />
+                          </Routes>
+                        </Suspense>
+                      </AnimatePresence>
 
-                  {/* Global toast notifications */}
-                  <Toaster />
+                      {/* Global toast notifications */}
+                      <Toaster />
+                    </div>
+                  </AppStartupGate>
                 </div>
               </BrowserRouter>
             </CallProvider>

@@ -24,7 +24,7 @@ interface CallMiniWidgetProps {
 export default function CallMiniWidget({ onClose }: CallMiniWidgetProps) {
   const navigate = useNavigate();
   const { callState, endCall, toggleLocalAudio, toggleLocalVideo } = useCall();
-  
+
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [callDuration, setCallDuration] = useState(0);
@@ -34,7 +34,7 @@ export default function CallMiniWidget({ onClose }: CallMiniWidgetProps) {
   useEffect(() => {
     if (callState.isInCall) {
       const interval = setInterval(() => {
-        setCallDuration(prev => prev + 1);
+        setCallDuration((prev) => prev + 1);
       }, 1000);
       return () => clearInterval(interval);
     }
@@ -43,7 +43,7 @@ export default function CallMiniWidget({ onClose }: CallMiniWidgetProps) {
   const formatDuration = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${minutes}:${secs.toString().padStart(2, '0')}`;
+    return `${minutes}:${secs.toString().padStart(2, "0")}`;
   };
 
   const handleEndCall = () => {
@@ -62,7 +62,7 @@ export default function CallMiniWidget({ onClose }: CallMiniWidgetProps) {
   };
 
   const handleMaximize = () => {
-    navigate('/call');
+    navigate("/call");
   };
 
   const handleMinimize = () => {
@@ -83,7 +83,7 @@ export default function CallMiniWidget({ onClose }: CallMiniWidgetProps) {
       >
         <motion.div
           className={`bg-gray-900/95 backdrop-blur-md border border-gray-700 rounded-xl shadow-2xl text-white transition-all duration-300 ${
-            isMinimized ? 'w-16 h-16' : 'w-80'
+            isMinimized ? "w-16 h-16" : "w-80"
           }`}
           layout
         >
@@ -108,7 +108,8 @@ export default function CallMiniWidget({ onClose }: CallMiniWidgetProps) {
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                   <Badge className="bg-[#F97316] text-white text-xs">
-                    {callState.department?.replace("-", " ").toUpperCase() || "CALL"}
+                    {callState.department?.replace("-", " ").toUpperCase() ||
+                      "CALL"}
                   </Badge>
                   <span className="text-xs text-gray-300">
                     {formatDuration(callDuration)}
@@ -129,16 +130,23 @@ export default function CallMiniWidget({ onClose }: CallMiniWidgetProps) {
               {/* Participants Preview */}
               <div className="flex items-center gap-2 mb-3">
                 <div className="flex -space-x-2">
-                  {callState.participants.slice(0, 3).map((participant, index) => (
-                    <Avatar key={participant.id} className="w-6 h-6 border-2 border-gray-700">
-                      <AvatarFallback className="bg-gray-600 text-white text-xs">
-                        {participant.name.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                  ))}
+                  {callState.participants
+                    .slice(0, 3)
+                    .map((participant, index) => (
+                      <Avatar
+                        key={participant.id}
+                        className="w-6 h-6 border-2 border-gray-700"
+                      >
+                        <AvatarFallback className="bg-gray-600 text-white text-xs">
+                          {participant.name.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                    ))}
                   {callState.participants.length > 3 && (
                     <div className="w-6 h-6 bg-gray-600 rounded-full border-2 border-gray-700 flex items-center justify-center">
-                      <span className="text-xs text-white">+{callState.participants.length - 3}</span>
+                      <span className="text-xs text-white">
+                        +{callState.participants.length - 3}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -156,12 +164,16 @@ export default function CallMiniWidget({ onClose }: CallMiniWidgetProps) {
                     size="sm"
                     onClick={handleToggleMute}
                     className={`h-8 w-8 p-0 rounded-full ${
-                      isMuted 
-                        ? 'bg-red-500 hover:bg-red-600 text-white' 
-                        : 'bg-gray-700 hover:bg-gray-600 text-white'
+                      isMuted
+                        ? "bg-red-500 hover:bg-red-600 text-white"
+                        : "bg-gray-700 hover:bg-gray-600 text-white"
                     }`}
                   >
-                    {isMuted ? <MicOff className="h-3 w-3" /> : <Mic className="h-3 w-3" />}
+                    {isMuted ? (
+                      <MicOff className="h-3 w-3" />
+                    ) : (
+                      <Mic className="h-3 w-3" />
+                    )}
                   </Button>
 
                   <Button
@@ -169,12 +181,16 @@ export default function CallMiniWidget({ onClose }: CallMiniWidgetProps) {
                     size="sm"
                     onClick={handleToggleVideo}
                     className={`h-8 w-8 p-0 rounded-full ${
-                      !isVideoOn 
-                        ? 'bg-red-500 hover:bg-red-600 text-white' 
-                        : 'bg-gray-700 hover:bg-gray-600 text-white'
+                      !isVideoOn
+                        ? "bg-red-500 hover:bg-red-600 text-white"
+                        : "bg-gray-700 hover:bg-gray-600 text-white"
                     }`}
                   >
-                    {isVideoOn ? <Video className="h-3 w-3" /> : <VideoOff className="h-3 w-3" />}
+                    {isVideoOn ? (
+                      <Video className="h-3 w-3" />
+                    ) : (
+                      <VideoOff className="h-3 w-3" />
+                    )}
                   </Button>
 
                   <Button

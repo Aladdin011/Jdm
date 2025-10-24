@@ -307,7 +307,9 @@ const PremiumHero = () => {
                     Leading African Construction Excellence
                   </span>
                   <div className="w-px h-6 bg-gradient-to-b from-transparent via-white/30 to-transparent"></div>
-                  <span className="text-xs text-white/70 font-medium">Since 2015</span>
+                  <span className="text-xs text-white/70 font-medium">
+                    Since 2015
+                  </span>
                 </div>
               </motion.div>
 
@@ -467,10 +469,16 @@ const PremiumHero = () => {
             <motion.div
               className="w-1.5 h-4 bg-gradient-to-b from-[var(--accent-light)] to-[var(--accent-warm)] rounded-full mt-2 shadow-lg"
               animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+              transition={{
+                duration: 2.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
             />
           </div>
-          <span className="text-xs font-semibold tracking-wider">Scroll to explore</span>
+          <span className="text-xs font-semibold tracking-wider">
+            Scroll to explore
+          </span>
           <div className="w-6 h-0.5 bg-gradient-to-r from-transparent via-white/40 to-transparent rounded-full"></div>
         </div>
       </motion.div>

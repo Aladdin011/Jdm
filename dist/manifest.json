@@ -167,7 +167,9 @@
         "application/pdf": [".pdf"],
         "image/*": [".jpg", ".jpeg", ".png", ".gif", ".webp"],
         "application/vnd.ms-excel": [".xls"],
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"]
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
+          ".xlsx"
+        ]
       },
       "icons": [
         {

@@ -2,7 +2,7 @@
 
 // Image lazy loading with Intersection Observer
 export const createImageObserver = () => {
-  if (!('IntersectionObserver' in window)) {
+  if (!("IntersectionObserver" in window)) {
     // Fallback for older browsers
     return null;
   }
@@ -14,25 +14,25 @@ export const createImageObserver = () => {
           const img = entry.target as HTMLImageElement;
           if (img.dataset.src) {
             img.src = img.dataset.src;
-            img.removeAttribute('data-src');
-            img.classList.remove('lazy');
-            img.classList.add('loaded');
+            img.removeAttribute("data-src");
+            img.classList.remove("lazy");
+            img.classList.add("loaded");
           }
         }
       });
     },
     {
       root: null,
-      rootMargin: '50px',
+      rootMargin: "50px",
       threshold: 0.1,
-    }
+    },
   );
 };
 
 // Debounce function for performance optimization
 export const debounce = <T extends (...args: any[]) => any>(
   func: T,
-  delay: number
+  delay: number,
 ): ((...args: Parameters<T>) => void) => {
   let timeoutId: NodeJS.Timeout;
   return (...args: Parameters<T>) => {
@@ -44,7 +44,7 @@ export const debounce = <T extends (...args: any[]) => any>(
 // Throttle function for scroll events
 export const throttle = <T extends (...args: any[]) => any>(
   func: T,
-  delay: number
+  delay: number,
 ): ((...args: Parameters<T>) => void) => {
   let lastCall = 0;
   return (...args: Parameters<T>) => {
@@ -58,7 +58,7 @@ export const throttle = <T extends (...args: any[]) => any>(
 
 // RequestAnimationFrame throttle for smooth animations
 export const rafThrottle = <T extends (...args: any[]) => any>(
-  func: T
+  func: T,
 ): ((...args: Parameters<T>) => void) => {
   let rafId: number | null = null;
   return (...args: Parameters<T>) => {
@@ -77,19 +77,19 @@ export const getOptimizedImageUrl = (
   width?: number,
   height?: number,
   quality: number = 80,
-  format: 'webp' | 'jpg' | 'png' = 'webp'
+  format: "webp" | "jpg" | "png" = "webp",
 ): string => {
   // Check if it's a Builder.io CDN URL
-  if (url.includes('cdn.builder.io')) {
+  if (url.includes("cdn.builder.io")) {
     const params = new URLSearchParams();
-    if (width) params.set('width', width.toString());
-    if (height) params.set('height', height.toString());
-    params.set('quality', quality.toString());
-    params.set('format', format);
-    
+    if (width) params.set("width", width.toString());
+    if (height) params.set("height", height.toString());
+    params.set("quality", quality.toString());
+    params.set("format", format);
+
     return `${url}&${params.toString()}`;
   }
-  
+
   // For other URLs, return as-is (could be extended for other CDNs)
   return url;
 };
@@ -97,44 +97,46 @@ export const getOptimizedImageUrl = (
 // Generate responsive image srcSet
 export const generateSrcSet = (
   url: string,
-  sizes: number[] = [320, 640, 960, 1280, 1920]
+  sizes: number[] = [320, 640, 960, 1280, 1920],
 ): string => {
   return sizes
     .map((size) => {
       const optimizedUrl = getOptimizedImageUrl(url, size);
       return `${optimizedUrl} ${size}w`;
     })
-    .join(', ');
+    .join(", ");
 };
 
 // Preload critical resources with usage tracking
 export const preloadResource = (
   href: string,
-  as: 'image' | 'font' | 'script' | 'style',
-  crossorigin?: boolean
+  as: "image" | "font" | "script" | "style",
+  crossorigin?: boolean,
 ) => {
   // Check if resource is already preloaded
-  const existingPreload = document.querySelector(`link[rel="preload"][href="${href}"]`);
+  const existingPreload = document.querySelector(
+    `link[rel="preload"][href="${href}"]`,
+  );
   if (existingPreload) return;
 
-  const link = document.createElement('link');
-  link.rel = 'preload';
+  const link = document.createElement("link");
+  link.rel = "preload";
   link.href = href;
   link.as = as;
-  if (crossorigin) link.crossOrigin = 'anonymous';
-  
+  if (crossorigin) link.crossOrigin = "anonymous";
+
   // Add onload handler to track usage
   link.onload = () => {
-    link.dataset.loaded = 'true';
+    link.dataset.loaded = "true";
   };
-  
+
   // Remove unused preloads after 10 seconds
   setTimeout(() => {
     if (!link.dataset.loaded && link.parentNode) {
       link.parentNode.removeChild(link);
     }
   }, 10000);
-  
+
   document.head.appendChild(link);
 };
 
@@ -142,18 +144,18 @@ export const preloadResource = (
 export const preloadCriticalImages = (imageUrls: string[]) => {
   imageUrls.forEach((url) => {
     const optimizedUrl = getOptimizedImageUrl(url, 1920);
-    preloadResource(optimizedUrl, 'image');
+    preloadResource(optimizedUrl, "image");
   });
 };
 
 // Web Vitals tracking
 export const trackWebVitals = () => {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
 
   try {
     // Check for PerformanceObserver support
-    if (!('PerformanceObserver' in window)) {
-      console.warn('PerformanceObserver not supported');
+    if (!("PerformanceObserver" in window)) {
+      console.warn("PerformanceObserver not supported");
       return;
     }
 
@@ -163,26 +165,26 @@ export const trackWebVitals = () => {
         try {
           const entries = list.getEntries();
           entries.forEach((entry) => {
-            if (entry.name === 'first-contentful-paint') {
-              console.log('FCP:', entry.startTime);
+            if (entry.name === "first-contentful-paint") {
+              console.log("FCP:", entry.startTime);
               // Send to analytics
               if (window.gtag) {
-                window.gtag('event', 'web_vitals', {
-                  event_category: 'Performance',
-                  event_label: 'First Contentful Paint',
+                window.gtag("event", "web_vitals", {
+                  event_category: "Performance",
+                  event_label: "First Contentful Paint",
                   value: Math.round(entry.startTime),
                 });
               }
             }
           });
         } catch (error) {
-          console.warn('FCP tracking error:', error);
+          console.warn("FCP tracking error:", error);
         }
       });
 
-      observer.observe({ entryTypes: ['paint'] });
+      observer.observe({ entryTypes: ["paint"] });
     } catch (error) {
-      console.warn('FCP observer setup failed:', error);
+      console.warn("FCP observer setup failed:", error);
     }
 
     // Track LCP (Largest Contentful Paint)
@@ -191,23 +193,23 @@ export const trackWebVitals = () => {
         try {
           const entries = list.getEntries();
           const lastEntry = entries[entries.length - 1];
-          console.log('LCP:', lastEntry.startTime);
+          console.log("LCP:", lastEntry.startTime);
 
           if (window.gtag) {
-            window.gtag('event', 'web_vitals', {
-              event_category: 'Performance',
-              event_label: 'Largest Contentful Paint',
+            window.gtag("event", "web_vitals", {
+              event_category: "Performance",
+              event_label: "Largest Contentful Paint",
               value: Math.round(lastEntry.startTime),
             });
           }
         } catch (error) {
-          console.warn('LCP tracking error:', error);
+          console.warn("LCP tracking error:", error);
         }
       });
 
-      lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+      lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] });
     } catch (error) {
-      console.warn('LCP observer setup failed:', error);
+      console.warn("LCP observer setup failed:", error);
     }
 
     // Track CLS (Cumulative Layout Shift)
@@ -220,23 +222,23 @@ export const trackWebVitals = () => {
               clsValue += (entry as any).value;
             }
           }
-          console.log('CLS:', clsValue);
+          console.log("CLS:", clsValue);
 
           if (window.gtag) {
-            window.gtag('event', 'web_vitals', {
-              event_category: 'Performance',
-              event_label: 'Cumulative Layout Shift',
+            window.gtag("event", "web_vitals", {
+              event_category: "Performance",
+              event_label: "Cumulative Layout Shift",
               value: Math.round(clsValue * 1000),
             });
           }
         } catch (error) {
-          console.warn('CLS tracking error:', error);
+          console.warn("CLS tracking error:", error);
         }
       });
 
-      clsObserver.observe({ entryTypes: ['layout-shift'] });
+      clsObserver.observe({ entryTypes: ["layout-shift"] });
     } catch (error) {
-      console.warn('CLS observer setup failed:', error);
+      console.warn("CLS observer setup failed:", error);
     }
 
     // Track FID (First Input Delay)
@@ -245,49 +247,56 @@ export const trackWebVitals = () => {
         try {
           const firstInput = list.getEntries()[0];
           if (firstInput) {
-            const processingTime = (firstInput as any).processingStart - firstInput.startTime;
-            console.log('FID:', processingTime);
+            const processingTime =
+              (firstInput as any).processingStart - firstInput.startTime;
+            console.log("FID:", processingTime);
 
             if (window.gtag) {
-              window.gtag('event', 'web_vitals', {
-                event_category: 'Performance',
-                event_label: 'First Input Delay',
+              window.gtag("event", "web_vitals", {
+                event_category: "Performance",
+                event_label: "First Input Delay",
                 value: Math.round(processingTime),
               });
             }
           }
         } catch (error) {
-          console.warn('FID tracking error:', error);
+          console.warn("FID tracking error:", error);
         }
       });
 
-      fidObserver.observe({ entryTypes: ['first-input'] });
+      fidObserver.observe({ entryTypes: ["first-input"] });
     } catch (error) {
-      console.warn('FID observer setup failed:', error);
+      console.warn("FID observer setup failed:", error);
     }
   } catch (error) {
-    console.warn('Web Vitals tracking initialization failed:', error);
+    console.warn("Web Vitals tracking initialization failed:", error);
   }
 };
 
 // Resource hints for better performance
 export const addResourceHints = () => {
   try {
-    const useLocalFonts = String((import.meta as any).env?.VITE_USE_LOCAL_FONTS).toLowerCase() === 'true';
+    const useLocalFonts =
+      String((import.meta as any).env?.VITE_USE_LOCAL_FONTS).toLowerCase() ===
+      "true";
     // DNS prefetch for external domains
     const dnsPrefetchDomains = [
-      ...(useLocalFonts ? [] : ['//fonts.googleapis.com', '//fonts.gstatic.com']),
-      '//cdn.builder.io',
-      '//images.unsplash.com',
+      ...(useLocalFonts
+        ? []
+        : ["//fonts.googleapis.com", "//fonts.gstatic.com"]),
+      "//cdn.builder.io",
+      "//images.unsplash.com",
     ];
 
     dnsPrefetchDomains.forEach((domain) => {
       try {
         // Check if already exists
-        const existing = document.querySelector(`link[rel="dns-prefetch"][href="${domain}"]`);
+        const existing = document.querySelector(
+          `link[rel="dns-prefetch"][href="${domain}"]`,
+        );
         if (!existing) {
-          const link = document.createElement('link');
-          link.rel = 'dns-prefetch';
+          const link = document.createElement("link");
+          link.rel = "dns-prefetch";
           link.href = domain;
           document.head.appendChild(link);
         }
@@ -298,18 +307,20 @@ export const addResourceHints = () => {
 
     // Preconnect to critical domains
     const preconnectDomains = useLocalFonts
-      ? ['https://cdn.builder.io']
-      : ['https://fonts.googleapis.com', 'https://cdn.builder.io'];
+      ? ["https://cdn.builder.io"]
+      : ["https://fonts.googleapis.com", "https://cdn.builder.io"];
 
     preconnectDomains.forEach((domain) => {
       try {
         // Check if already exists
-        const existing = document.querySelector(`link[rel="preconnect"][href="${domain}"]`);
+        const existing = document.querySelector(
+          `link[rel="preconnect"][href="${domain}"]`,
+        );
         if (!existing) {
-          const link = document.createElement('link');
-          link.rel = 'preconnect';
+          const link = document.createElement("link");
+          link.rel = "preconnect";
           link.href = domain;
-          link.crossOrigin = 'anonymous';
+          link.crossOrigin = "anonymous";
           document.head.appendChild(link);
         }
       } catch (error) {
@@ -317,13 +328,13 @@ export const addResourceHints = () => {
       }
     });
   } catch (error) {
-    console.warn('Resource hints setup failed:', error);
+    console.warn("Resource hints setup failed:", error);
   }
 };
 
 // Code splitting utilities
 export const loadComponentAsync = <T>(
-  importFunc: () => Promise<{ default: T }>
+  importFunc: () => Promise<{ default: T }>,
 ): Promise<T> => {
   return importFunc().then((module) => module.default);
 };
@@ -331,7 +342,11 @@ export const loadComponentAsync = <T>(
 // Memory management
 export const cleanupEventListeners = (
   element: Element | Window,
-  events: Array<{ type: string; listener: EventListener; options?: boolean | AddEventListenerOptions }>
+  events: Array<{
+    type: string;
+    listener: EventListener;
+    options?: boolean | AddEventListenerOptions;
+  }>,
 ) => {
   events.forEach(({ type, listener, options }) => {
     element.removeEventListener(type, listener, options);
@@ -340,49 +355,51 @@ export const cleanupEventListeners = (
 
 // Service Worker registration for PWA
 export const registerServiceWorker = async () => {
-  if ('serviceWorker' in navigator) {
+  if ("serviceWorker" in navigator) {
     try {
       const swPath = (import.meta as any).env?.BASE_URL
-        ? (import.meta as any).env.BASE_URL + 'sw.js'
+        ? (import.meta as any).env.BASE_URL + "sw.js"
         : (window as any).__vite_base__
-          ? (window as any).__vite_base__ + 'sw.js'
-          : '/sw.js';
+          ? (window as any).__vite_base__ + "sw.js"
+          : "/sw.js";
       const registration = await navigator.serviceWorker.register(swPath);
-      console.log('Service Worker registered:', registration);
-      
+      console.log("Service Worker registered:", registration);
+
       // Check for updates
-      registration.addEventListener('updatefound', () => {
+      registration.addEventListener("updatefound", () => {
         const newWorker = registration.installing;
         if (newWorker) {
-          newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed') {
+          newWorker.addEventListener("statechange", () => {
+            if (newWorker.state === "installed") {
               // Show update notification to user
-              console.log('New content available, please refresh.');
+              console.log("New content available, please refresh.");
             }
           });
         }
       });
     } catch (error) {
-      console.error('Service Worker registration failed:', error);
+      console.error("Service Worker registration failed:", error);
     }
   }
 };
 
 // Dev-only cleanup to avoid SW interference with Vite HMR and module loading
 export const unregisterDevServiceWorkers = async () => {
-  if (!import.meta.env.PROD && 'serviceWorker' in navigator) {
+  if (!import.meta.env.PROD && "serviceWorker" in navigator) {
     try {
       const registrations = await navigator.serviceWorker.getRegistrations();
       for (const reg of registrations) {
         await reg.unregister();
       }
-      if ('caches' in window) {
+      if ("caches" in window) {
         const cacheNames = await caches.keys();
         await Promise.all(cacheNames.map((name) => caches.delete(name)));
       }
-      console.log('Dev: Unregistered service workers and cleared caches to prevent module fetch issues.');
+      console.log(
+        "Dev: Unregistered service workers and cleared caches to prevent module fetch issues.",
+      );
     } catch (error) {
-      console.warn('Dev: Service worker cleanup failed:', error);
+      console.warn("Dev: Service worker cleanup failed:", error);
     }
   }
 };
@@ -390,9 +407,9 @@ export const unregisterDevServiceWorkers = async () => {
 // Cache management
 export const cacheResource = async (
   cacheName: string,
-  resources: string[]
+  resources: string[],
 ): Promise<void> => {
-  if ('caches' in window) {
+  if ("caches" in window) {
     const cache = await caches.open(cacheName);
     await cache.addAll(resources);
   }
@@ -413,10 +430,12 @@ export const optimizeFontLoading = () => {
         @font-face { font-display: swap; }
       `;
 
-      const existingFontStyle = document.querySelector('#font-display-optimization');
+      const existingFontStyle = document.querySelector(
+        "#font-display-optimization",
+      );
       if (!existingFontStyle) {
-        const style = document.createElement('style');
-        style.id = 'font-display-optimization';
+        const style = document.createElement("style");
+        style.id = "font-display-optimization";
         style.textContent = fontDisplayCSS;
         document.head.appendChild(style);
       }
@@ -424,30 +443,31 @@ export const optimizeFontLoading = () => {
     }
 
     // Fallback: inject Google Fonts stylesheet when not using local fonts
-    const fontUrl = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap';
+    const fontUrl =
+      "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap";
     const existingPreload = document.querySelector(`link[href="${fontUrl}"]`);
     if (!existingPreload) {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'style';
+      const link = document.createElement("link");
+      link.rel = "preload";
+      link.as = "style";
       link.href = fontUrl;
-      link.crossOrigin = 'anonymous';
+      link.crossOrigin = "anonymous";
       document.head.appendChild(link);
 
-      const styleLink = document.createElement('link');
-      styleLink.rel = 'stylesheet';
+      const styleLink = document.createElement("link");
+      styleLink.rel = "stylesheet";
       styleLink.href = fontUrl;
-      styleLink.crossOrigin = 'anonymous';
+      styleLink.crossOrigin = "anonymous";
       document.head.appendChild(styleLink);
     }
   } catch (error) {
-    console.warn('Font loading optimization failed:', error);
+    console.warn("Font loading optimization failed:", error);
   }
 };
 
 // Critical CSS inlining
 export const inlineCriticalCSS = (css: string) => {
-  const style = document.createElement('style');
+  const style = document.createElement("style");
   style.textContent = css;
   document.head.appendChild(style);
 };
@@ -463,7 +483,7 @@ export const measurePerformance = (name: string, fn: () => void) => {
 // Async script loading
 export const loadScript = (src: string): Promise<void> => {
   return new Promise((resolve, reject) => {
-    const script = document.createElement('script');
+    const script = document.createElement("script");
     script.src = src;
     script.async = true;
     script.onload = () => resolve();
@@ -474,8 +494,8 @@ export const loadScript = (src: string): Promise<void> => {
 
 // Bundle size analysis helper
 export const analyzeBundleSize = () => {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('Bundle analysis would be available in production build');
+  if (process.env.NODE_ENV === "development") {
+    console.log("Bundle analysis would be available in production build");
   }
 };
 
@@ -486,27 +506,27 @@ export const initializePerformanceOptimizations = () => {
     try {
       unregisterDevServiceWorkers();
     } catch (error) {
-      console.warn('Dev SW cleanup failed:', error);
+      console.warn("Dev SW cleanup failed:", error);
     }
     // Add resource hints
     try {
       addResourceHints();
     } catch (error) {
-      console.warn('Resource hints setup failed:', error);
+      console.warn("Resource hints setup failed:", error);
     }
 
     // Track web vitals
     try {
       trackWebVitals();
     } catch (error) {
-      console.warn('Web vitals tracking setup failed:', error);
+      console.warn("Web vitals tracking setup failed:", error);
     }
 
     // Optimize font loading
     try {
       optimizeFontLoading();
     } catch (error) {
-      console.warn('Font loading optimization failed:', error);
+      console.warn("Font loading optimization failed:", error);
     }
 
     // Register service worker only in production
@@ -514,23 +534,23 @@ export const initializePerformanceOptimizations = () => {
       try {
         registerServiceWorker();
       } catch (error) {
-        console.warn('Service worker registration failed:', error);
+        console.warn("Service worker registration failed:", error);
       }
     }
 
     // Preload critical images (customize based on your needs)
     try {
       const criticalImages = [
-        'https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F6fe8dede446d44e5b3f61dac8e245b53?alt=media&token=2cd3aa20-e283-42dd-ad0a-b327725825be&apiKey=751ea84be0da437c8dd3f1bf04173189',
+        "https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F6fe8dede446d44e5b3f61dac8e245b53?alt=media&token=2cd3aa20-e283-42dd-ad0a-b327725825be&apiKey=751ea84be0da437c8dd3f1bf04173189",
       ];
 
       // Disable critical images preload to reduce unused preloads
       // preloadCriticalImages(criticalImages);
     } catch (error) {
-      console.warn('Critical images preload failed:', error);
+      console.warn("Critical images preload failed:", error);
     }
   } catch (error) {
-    console.warn('Performance optimizations initialization failed:', error);
+    console.warn("Performance optimizations initialization failed:", error);
   }
 };
 

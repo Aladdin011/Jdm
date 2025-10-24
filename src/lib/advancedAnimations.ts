@@ -1,5 +1,5 @@
-import { animate, stagger } from 'motion';
-import { useAppStore } from '@/stores/appStore';
+import { animate, stagger } from "motion";
+import { useAppStore } from "@/stores/appStore";
 
 // Animation configurations based on performance and accessibility
 export interface AnimationConfig {
@@ -22,46 +22,45 @@ export const easingCurves = {
 // Advanced animation system
 export class AdvancedAnimations {
   private observers: Map<Element, IntersectionObserver> = new Map();
-  private performanceMode: 'high' | 'medium' | 'low' = 'high';
-  
+  private performanceMode: "high" | "medium" | "low" = "high";
+
   constructor() {
     this.detectPerformanceMode();
   }
-  
+
   private detectPerformanceMode() {
-    if (typeof window === 'undefined') return;
-    
+    if (typeof window === "undefined") return;
+
     const connection = (navigator as any).connection;
     const deviceMemory = (navigator as any).deviceMemory;
-    
+
     // Detect based on device capabilities
     if (deviceMemory && deviceMemory < 4) {
-      this.performanceMode = 'low';
-    } else if (connection && connection.effectiveType === '3g') {
-      this.performanceMode = 'medium';
+      this.performanceMode = "low";
+    } else if (connection && connection.effectiveType === "3g") {
+      this.performanceMode = "medium";
     }
   }
-  
+
   // Hardware-accelerated transforms only
   smoothScroll(target: number, container?: Element): Promise<void> {
     const element = container || window;
-    const config = this.getOptimizedConfig({ duration: 800, easing: easingCurves.smooth });
-    
-    return animate(
-      element,
-      { scrollTop: target },
-      config
-    ).finished;
+    const config = this.getOptimizedConfig({
+      duration: 800,
+      easing: easingCurves.smooth,
+    });
+
+    return animate(element, { scrollTop: target }, config).finished;
   }
-  
+
   // Intersection Observer + CSS transforms for reveal animations
   revealOnScroll(
-    elements: Element | Element[], 
-    config: AnimationConfig = {}
+    elements: Element | Element[],
+    config: AnimationConfig = {},
   ): () => void {
     const elementsArray = Array.isArray(elements) ? elements : [elements];
     const optimizedConfig = this.getOptimizedConfig(config);
-    
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -71,20 +70,20 @@ export class AdvancedAnimations {
           }
         });
       },
-      { 
-        threshold: 0.1, 
-        rootMargin: '50px',
-      }
+      {
+        threshold: 0.1,
+        rootMargin: "50px",
+      },
     );
-    
-    elementsArray.forEach(el => {
+
+    elementsArray.forEach((el) => {
       observer.observe(el);
       this.observers.set(el, observer);
     });
-    
+
     // Return cleanup function
     return () => {
-      elementsArray.forEach(el => {
+      elementsArray.forEach((el) => {
         const obs = this.observers.get(el);
         if (obs) {
           obs.unobserve(el);
@@ -93,37 +92,34 @@ export class AdvancedAnimations {
       });
     };
   }
-  
+
   private performRevealAnimation(element: Element, config: AnimationConfig) {
-    if (this.performanceMode === 'low') {
+    if (this.performanceMode === "low") {
       // Simple opacity fade for low-performance devices
       animate(element, { opacity: [0, 1] }, { duration: 300 });
       return;
     }
-    
+
     // Full animation for capable devices
     animate(
       element,
-      { 
-        opacity: [0, 1], 
+      {
+        opacity: [0, 1],
         y: [50, 0],
-        scale: [0.95, 1]
+        scale: [0.95, 1],
       },
       {
         duration: config.duration || 600,
         easing: config.easing || easingCurves.gentle,
         delay: config.delay || 0,
-      }
+      },
     );
   }
-  
+
   // Staggered animations for lists
-  staggerIn(
-    elements: Element[],
-    config: AnimationConfig = {}
-  ): Promise<void> {
+  staggerIn(elements: Element[], config: AnimationConfig = {}): Promise<void> {
     const optimizedConfig = this.getOptimizedConfig(config);
-    
+
     return animate(
       elements,
       { opacity: [0, 1], y: [30, 0] },
@@ -131,26 +127,26 @@ export class AdvancedAnimations {
         duration: optimizedConfig.duration || 400,
         delay: stagger(optimizedConfig.stagger || 0.1),
         easing: optimizedConfig.easing || easingCurves.gentle,
-      }
+      },
     ).finished;
   }
-  
+
   // Text reveal animation with character stagger
-  revealText(
-    element: Element,
-    config: AnimationConfig = {}
-  ): Promise<void> {
-    const text = element.textContent || '';
-    const chars = text.split('');
-    
+  revealText(element: Element, config: AnimationConfig = {}): Promise<void> {
+    const text = element.textContent || "";
+    const chars = text.split("");
+
     // Create spans for each character
     element.innerHTML = chars
-      .map(char => `<span style="display: inline-block; opacity: 0;">${char === ' ' ? '&nbsp;' : char}</span>`)
-      .join('');
-    
-    const charElements = element.querySelectorAll('span');
+      .map(
+        (char) =>
+          `<span style="display: inline-block; opacity: 0;">${char === " " ? "&nbsp;" : char}</span>`,
+      )
+      .join("");
+
+    const charElements = element.querySelectorAll("span");
     const optimizedConfig = this.getOptimizedConfig(config);
-    
+
     return animate(
       charElements,
       { opacity: [0, 1], y: [20, 0] },
@@ -158,126 +154,122 @@ export class AdvancedAnimations {
         duration: optimizedConfig.duration || 500,
         delay: stagger(optimizedConfig.stagger || 0.02),
         easing: optimizedConfig.easing || easingCurves.gentle,
-      }
+      },
     ).finished;
   }
-  
+
   // Morphing animations
   morphElement(
     element: Element,
     fromState: Record<string, any>,
     toState: Record<string, any>,
-    config: AnimationConfig = {}
+    config: AnimationConfig = {},
   ): Promise<void> {
     const optimizedConfig = this.getOptimizedConfig(config);
-    
+
     // Apply initial state
     Object.assign((element as HTMLElement).style, fromState);
-    
-    return animate(
-      element,
-      toState,
-      {
-        duration: optimizedConfig.duration || 800,
-        easing: optimizedConfig.easing || easingCurves.smooth,
-      }
-    ).finished;
+
+    return animate(element, toState, {
+      duration: optimizedConfig.duration || 800,
+      easing: optimizedConfig.easing || easingCurves.smooth,
+    }).finished;
   }
-  
+
   // Parallax scrolling with performance optimization
   createParallax(
     elements: { element: Element; speed: number }[],
-    container?: Element
+    container?: Element,
   ): () => void {
-    if (this.performanceMode === 'low') {
+    if (this.performanceMode === "low") {
       // Skip parallax on low-performance devices
       return () => {};
     }
-    
+
     let ticking = false;
-    
+
     const updateParallax = () => {
       const scrolled = container?.scrollTop || window.pageYOffset;
-      
+
       elements.forEach(({ element, speed }) => {
         const yPos = scrolled * speed;
-        (element as HTMLElement).style.transform = `translate3d(0, ${yPos}px, 0)`;
+        (element as HTMLElement).style.transform =
+          `translate3d(0, ${yPos}px, 0)`;
       });
-      
+
       ticking = false;
     };
-    
+
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(updateParallax);
         ticking = true;
       }
     };
-    
+
     const scrollContainer = container || window;
-    scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
-    
+    scrollContainer.addEventListener("scroll", handleScroll, { passive: true });
+
     return () => {
-      scrollContainer.removeEventListener('scroll', handleScroll);
+      scrollContainer.removeEventListener("scroll", handleScroll);
     };
   }
-  
+
   // Magnetic hover effect
   createMagneticHover(element: Element, strength: number = 0.3): () => void {
-    if (this.performanceMode === 'low') return () => {};
-    
+    if (this.performanceMode === "low") return () => {};
+
     const handleMouseMove = (e: MouseEvent) => {
       const rect = element.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
-      
+
       const deltaX = (e.clientX - centerX) * strength;
       const deltaY = (e.clientY - centerY) * strength;
-      
+
       animate(
         element,
         { x: deltaX, y: deltaY },
-        { duration: 400, easing: easingCurves.gentle }
+        { duration: 400, easing: easingCurves.gentle },
       );
     };
-    
+
     const handleMouseLeave = () => {
       animate(
         element,
         { x: 0, y: 0 },
-        { duration: 600, easing: easingCurves.smooth }
+        { duration: 600, easing: easingCurves.smooth },
       );
     };
-    
-    element.addEventListener('mousemove', handleMouseMove);
-    element.addEventListener('mouseleave', handleMouseLeave);
-    
+
+    element.addEventListener("mousemove", handleMouseMove);
+    element.addEventListener("mouseleave", handleMouseLeave);
+
     return () => {
-      element.removeEventListener('mousemove', handleMouseMove);
-      element.removeEventListener('mouseleave', handleMouseLeave);
+      element.removeEventListener("mousemove", handleMouseMove);
+      element.removeEventListener("mouseleave", handleMouseLeave);
     };
   }
-  
+
   // Timeline animations for complex sequences
-  async createTimeline(animations: Array<{
-    element: Element | Element[];
-    keyframes: Record<string, any>;
-    options?: AnimationConfig;
-  }>): Promise<void> {
+  async createTimeline(
+    animations: Array<{
+      element: Element | Element[];
+      keyframes: Record<string, any>;
+      options?: AnimationConfig;
+    }>,
+  ): Promise<void> {
     // Execute animations in sequence
     for (const { element, keyframes, options = {} } of animations) {
-      await animate(
-        element,
-        keyframes,
-        this.getOptimizedConfig(options)
-      ).finished;
+      await animate(element, keyframes, this.getOptimizedConfig(options))
+        .finished;
     }
   }
-  
+
   // Get optimized config based on performance mode and accessibility
   private getOptimizedConfig(config: AnimationConfig): any {
     const reducedMotion = useAppStore.getState().reducedMotion;
-    
+
     if (reducedMotion && config.respectReducedMotion !== false) {
       return {
         ...config,
@@ -286,14 +278,14 @@ export class AdvancedAnimations {
         stagger: 0,
       };
     }
-    
+
     // Adjust based on performance mode
     const performanceMultiplier = {
       high: 1,
       medium: 0.7,
       low: 0.3,
     }[this.performanceMode];
-    
+
     return {
       ...config,
       duration: (config.duration || 600) * performanceMultiplier,
@@ -301,10 +293,10 @@ export class AdvancedAnimations {
       stagger: (config.stagger || 0.1) * performanceMultiplier,
     };
   }
-  
+
   // Cleanup all observers
   cleanup(): void {
-    this.observers.forEach(observer => observer.disconnect());
+    this.observers.forEach((observer) => observer.disconnect());
     this.observers.clear();
   }
 }
@@ -319,8 +311,8 @@ export const useAdvancedAnimations = () => {
 
 // CSS-in-JS styles for hardware acceleration
 export const acceleratedStyles = {
-  willChange: 'transform, opacity',
-  transform: 'translateZ(0)',
-  backfaceVisibility: 'hidden' as const,
-  perspective: '1000px',
+  willChange: "transform, opacity",
+  transform: "translateZ(0)",
+  backfaceVisibility: "hidden" as const,
+  perspective: "1000px",
 };

@@ -16,7 +16,7 @@ import {
   TrendingUp,
   Sparkles,
   Eye,
-  Heart
+  Heart,
 } from "lucide-react";
 import { useAppStore } from "@/stores/appStore";
 
@@ -57,27 +57,31 @@ const companyValues = [
   {
     icon: <Lightbulb className="w-8 h-8" />,
     title: "Innovation",
-    description: "Pioneering sustainable construction technologies and smart city solutions across Africa.",
-    color: "from-arch-orange to-arch-rust"
+    description:
+      "Pioneering sustainable construction technologies and smart city solutions across Africa.",
+    color: "from-arch-orange to-arch-rust",
   },
   {
     icon: <CheckCircle className="w-8 h-8" />,
     title: "Quality",
-    description: "Uncompromising commitment to excellence in every project we undertake.",
-    color: "from-green-500 to-emerald-500"
+    description:
+      "Uncompromising commitment to excellence in every project we undertake.",
+    color: "from-green-500 to-emerald-500",
   },
   {
     icon: <Users className="w-8 h-8" />,
     title: "Collaboration",
-    description: "Building strong partnerships with clients, communities, and stakeholders.",
-    color: "from-blue-500 to-cyan-500"
+    description:
+      "Building strong partnerships with clients, communities, and stakeholders.",
+    color: "from-blue-500 to-cyan-500",
   },
   {
     icon: <Globe2 className="w-8 h-8" />,
     title: "Sustainability",
-    description: "Creating environmentally responsible solutions for future generations.",
-    color: "from-purple-500 to-pink-500"
-  }
+    description:
+      "Creating environmentally responsible solutions for future generations.",
+    color: "from-purple-500 to-pink-500",
+  },
 ];
 
 // Modern Stats Card Component
@@ -98,13 +102,19 @@ const ModernStatsCard = ({ stat, index }: { stat: any; index: number }) => {
     >
       <div className="relative p-8 rounded-3xl bg-white shadow-lg hover:shadow-xl border border-gray-100 group-hover:border-arch-orange/20 transition-all duration-500 text-center overflow-hidden">
         {/* Background Gradient */}
-        <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-5 group-hover:opacity-10 transition-opacity duration-500`} />
-        
+        <div
+          className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-5 group-hover:opacity-10 transition-opacity duration-500`}
+        />
+
         {/* Icon */}
         <div className="relative z-10 mb-6">
-          <div className={`w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br ${stat.color} p-0.5 group-hover:scale-110 transition-transform duration-300`}>
+          <div
+            className={`w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br ${stat.color} p-0.5 group-hover:scale-110 transition-transform duration-300`}
+          >
             <div className="w-full h-full bg-white rounded-2xl flex items-center justify-center">
-              <div className={`bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>
+              <div
+                className={`bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}
+              >
                 {stat.icon}
               </div>
             </div>
@@ -120,14 +130,12 @@ const ModernStatsCard = ({ stat, index }: { stat: any; index: number }) => {
           >
             {stat.value}
           </motion.div>
-          
+
           <h4 className="text-lg font-semibold text-gray-800 mb-2">
             {stat.label}
           </h4>
-          
-          <p className="text-sm text-gray-600">
-            {stat.description}
-          </p>
+
+          <p className="text-sm text-gray-600">{stat.description}</p>
         </div>
 
         {/* Decorative Elements */}
@@ -155,9 +163,13 @@ const ValueCard = ({ value, index }: { value: any; index: number }) => {
       <div className="relative h-full p-8 rounded-3xl bg-white shadow-lg hover:shadow-xl border border-gray-100 group-hover:border-arch-orange/20 transition-all duration-500">
         {/* Icon */}
         <div className="mb-6">
-          <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${value.color} p-0.5 group-hover:scale-110 transition-transform duration-300`}>
+          <div
+            className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${value.color} p-0.5 group-hover:scale-110 transition-transform duration-300`}
+          >
             <div className="w-full h-full bg-white rounded-2xl flex items-center justify-center">
-              <div className={`bg-gradient-to-r ${value.color} bg-clip-text text-transparent`}>
+              <div
+                className={`bg-gradient-to-r ${value.color} bg-clip-text text-transparent`}
+              >
                 {value.icon}
               </div>
             </div>
@@ -168,13 +180,13 @@ const ValueCard = ({ value, index }: { value: any; index: number }) => {
         <h3 className="text-xl font-bold text-arch-charcoal mb-4 group-hover:text-arch-orange transition-colors duration-300">
           {value.title}
         </h3>
-        
-        <p className="text-gray-600 leading-relaxed">
-          {value.description}
-        </p>
+
+        <p className="text-gray-600 leading-relaxed">{value.description}</p>
 
         {/* Hover Effect */}
-        <div className={`absolute inset-0 bg-gradient-to-br ${value.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500 rounded-3xl pointer-events-none`} />
+        <div
+          className={`absolute inset-0 bg-gradient-to-br ${value.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500 rounded-3xl pointer-events-none`}
+        />
       </div>
     </motion.div>
   );
@@ -184,17 +196,24 @@ export default function PremiumAbout() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
-  
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start end", "end start"]
+    offset: ["start end", "end start"],
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [50, -50]);
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.8, 1, 1, 0.8]);
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.3, 0.7, 1],
+    [0.8, 1, 1, 0.8],
+  );
 
   return (
-    <section ref={sectionRef} className="py-24 bg-white relative overflow-hidden">
+    <section
+      ref={sectionRef}
+      className="py-24 bg-white relative overflow-hidden"
+    >
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
@@ -274,25 +293,30 @@ export default function PremiumAbout() {
               <div className="mb-8">
                 <div className="flex items-center gap-3 mb-4">
                   <Target className="w-8 h-8 text-arch-orange" />
-                  <h3 className="text-3xl font-bold text-arch-charcoal">Our Mission</h3>
+                  <h3 className="text-3xl font-bold text-arch-charcoal">
+                    Our Mission
+                  </h3>
                 </div>
                 <p className="text-lg text-gray-700 leading-relaxed">
-                  To provide reliable, cost-effective engineering and construction
-                  services that meet international standards while solving Africa's
-                  pressing infrastructure needs with innovative solutions and
-                  sustainable practices.
+                  To provide reliable, cost-effective engineering and
+                  construction services that meet international standards while
+                  solving Africa's pressing infrastructure needs with innovative
+                  solutions and sustainable practices.
                 </p>
               </div>
 
               <div className="mb-8">
                 <div className="flex items-center gap-3 mb-4">
                   <Eye className="w-8 h-8 text-arch-orange" />
-                  <h3 className="text-3xl font-bold text-arch-charcoal">Our Vision</h3>
+                  <h3 className="text-3xl font-bold text-arch-charcoal">
+                    Our Vision
+                  </h3>
                 </div>
                 <p className="text-lg text-gray-700 leading-relaxed">
-                  To become Africa's most trusted construction partner—delivering
-                  quality, innovation, and sustainable solutions that shape smarter
-                  cities and resilient communities across the continent.
+                  To become Africa's most trusted construction
+                  partner—delivering quality, innovation, and sustainable
+                  solutions that shape smarter cities and resilient communities
+                  across the continent.
                 </p>
               </div>
 
@@ -316,7 +340,7 @@ export default function PremiumAbout() {
                   className="w-full h-96 object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-arch-charcoal/20 to-transparent" />
-                
+
                 {/* Play Button Overlay */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <motion.button

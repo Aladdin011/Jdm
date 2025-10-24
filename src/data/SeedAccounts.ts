@@ -1,6 +1,6 @@
 /**
  * SeedAccounts.ts
- * 
+ *
  * This file contains predefined test accounts for each dashboard type.
  * These accounts can be used for quick login access during development and testing.
  */
@@ -31,7 +31,7 @@ const seedAccounts: SeedAccount[] = [
     role: "admin",
     department: "Admin",
     dashboard: "AdminDashboard",
-    description: "Administrator account with full system access"
+    description: "Administrator account with full system access",
   },
   {
     id: "seed-accounts-1",
@@ -42,7 +42,7 @@ const seedAccounts: SeedAccount[] = [
     role: "staff",
     department: "Accounts",
     dashboard: "AccountsDashboard",
-    description: "Accounts department with financial management access"
+    description: "Accounts department with financial management access",
   },
   {
     id: "seed-accounting-1",
@@ -53,7 +53,7 @@ const seedAccounts: SeedAccount[] = [
     role: "staff",
     department: "Accounting",
     dashboard: "AccountsDashboard",
-    description: "Accounting department with financial reporting access"
+    description: "Accounting department with financial reporting access",
   },
   {
     id: "seed-business-1",
@@ -64,7 +64,7 @@ const seedAccounts: SeedAccount[] = [
     role: "staff",
     department: "Business Administration",
     dashboard: "BusinessAdministrationDashboard",
-    description: "Business administration with operational management access"
+    description: "Business administration with operational management access",
   },
   {
     id: "seed-executive-1",
@@ -75,7 +75,7 @@ const seedAccounts: SeedAccount[] = [
     role: "staff",
     department: "Executive Assistant",
     dashboard: "ExecutiveAssistantDashboard",
-    description: "Executive assistant with scheduling and coordination access"
+    description: "Executive assistant with scheduling and coordination access",
   },
   {
     id: "seed-marketing-1",
@@ -86,7 +86,7 @@ const seedAccounts: SeedAccount[] = [
     role: "staff",
     department: "Digital Marketing",
     dashboard: "DigitalMarketingDashboard",
-    description: "Digital marketing with campaign management access"
+    description: "Digital marketing with campaign management access",
   },
   {
     id: "seed-hr-1",
@@ -97,7 +97,7 @@ const seedAccounts: SeedAccount[] = [
     role: "staff",
     department: "HR",
     dashboard: "HRDashboard",
-    description: "Human resources with personnel management access"
+    description: "Human resources with personnel management access",
   },
   {
     id: "seed-projects-1",
@@ -108,7 +108,7 @@ const seedAccounts: SeedAccount[] = [
     role: "staff",
     department: "Projects",
     dashboard: "ProjectDashboard",
-    description: "Project management with task tracking access"
+    description: "Project management with task tracking access",
   },
   {
     id: "seed-secretariat-1",
@@ -119,7 +119,7 @@ const seedAccounts: SeedAccount[] = [
     role: "staff",
     department: "Secretariat",
     dashboard: "SecretaryDashboard",
-    description: "Secretariat with administrative support access"
+    description: "Secretariat with administrative support access",
   },
   {
     id: "seed-general-1",
@@ -130,8 +130,8 @@ const seedAccounts: SeedAccount[] = [
     role: "user",
     department: "General Users",
     dashboard: "GeneralDashboard",
-    description: "General user with basic system access"
-  }
+    description: "General user with basic system access",
+  },
 ];
 
 /**
@@ -145,11 +145,14 @@ export const getAllSeedAccounts = (): SeedAccount[] => {
  * Get a seed account by department
  * @param department The department name to find a seed account for
  */
-export const getSeedAccountByDepartment = (department: string): SeedAccount | undefined => {
+export const getSeedAccountByDepartment = (
+  department: string,
+): SeedAccount | undefined => {
   const normalizedDepartment = department.trim().toLowerCase();
-  return seedAccounts.find(account => 
-    account.department.toLowerCase() === normalizedDepartment ||
-    account.dashboard.toLowerCase().includes(normalizedDepartment)
+  return seedAccounts.find(
+    (account) =>
+      account.department.toLowerCase() === normalizedDepartment ||
+      account.dashboard.toLowerCase().includes(normalizedDepartment),
   );
 };
 
@@ -157,8 +160,10 @@ export const getSeedAccountByDepartment = (department: string): SeedAccount | un
  * Get a seed account by email
  * @param email The email to find a seed account for
  */
-export const getSeedAccountByEmail = (email: string): SeedAccount | undefined => {
-  return seedAccounts.find(account => account.email === email);
+export const getSeedAccountByEmail = (
+  email: string,
+): SeedAccount | undefined => {
+  return seedAccounts.find((account) => account.email === email);
 };
 
 /**
@@ -166,9 +171,7 @@ export const getSeedAccountByEmail = (email: string): SeedAccount | undefined =>
  * @param email The email to check
  */
 export const isSeedAccount = (email: string): boolean => {
-  return seedAccounts.some(account => account.email === email);
+  return seedAccounts.some((account) => account.email === email);
 };
-
-
 
 export default seedAccounts;

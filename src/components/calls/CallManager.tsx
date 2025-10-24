@@ -29,7 +29,7 @@ export default function CallManager({
   const handleStartCall = (
     callType: "department" | "staff" | "general",
     target: string,
-    options?: any
+    options?: any,
   ) => {
     let callId: string;
     let callOptions: any = { ...options };
@@ -47,8 +47,12 @@ export default function CallManager({
       case "staff":
         callId = `staff-${target}-${Date.now()}`;
         callOptions = {
-          title: options?.title || `Call with ${options?.targetUser?.name || "Staff Member"}`,
-          participants: options?.participants?.length ? options.participants : [target],
+          title:
+            options?.title ||
+            `Call with ${options?.targetUser?.name || "Staff Member"}`,
+          participants: options?.participants?.length
+            ? options.participants
+            : [target],
           ...options,
         };
         break;
@@ -68,7 +72,7 @@ export default function CallManager({
     }
 
     console.log("Starting call:", { callId, callType, target, callOptions });
-    
+
     // Start the call using the existing CallContext
     startCall(callId, callOptions);
   };

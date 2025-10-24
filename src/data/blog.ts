@@ -204,7 +204,8 @@ export const blogPosts = [
   },
   {
     id: 7,
-    title: "Project Showcase: Cross River State Government Complex Construction Excellence",
+    title:
+      "Project Showcase: Cross River State Government Complex Construction Excellence",
     slug: "cross-river-government-complex-construction-showcase",
     date: "2024-02-25",
     author: "Jude Onwudebe",

@@ -23,21 +23,34 @@ export default function ProfileDropdown() {
               <AvatarFallback>{initials}</AvatarFallback>
             </Avatar>
             <div className="text-left hidden sm:block">
-              <p className="text-sm font-medium">{user?.firstName} {user?.lastName}</p>
+              <p className="text-sm font-medium">
+                {user?.firstName} {user?.lastName}
+              </p>
               <p className="text-xs text-muted-foreground">Administration</p>
             </div>
           </div>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuItem onClick={() => {/* navigate to profile */}}>
+        <DropdownMenuItem
+          onClick={() => {
+            /* navigate to profile */
+          }}
+        >
           <User className="mr-2 h-4 w-4" /> Profile
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => {/* navigate to settings */}}>
+        <DropdownMenuItem
+          onClick={() => {
+            /* navigate to settings */
+          }}
+        >
           <Settings className="mr-2 h-4 w-4" /> Settings
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => logout()} className="text-red-600 focus:text-red-600">
+        <DropdownMenuItem
+          onClick={() => logout()}
+          className="text-red-600 focus:text-red-600"
+        >
           <LogOut className="mr-2 h-4 w-4" /> Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>

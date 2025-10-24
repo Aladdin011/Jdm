@@ -1,4 +1,4 @@
-import { useAppStore } from '@/stores/appStore';
+import { useAppStore } from "@/stores/appStore";
 
 // Core Web Vitals and Performance Metrics
 export interface WebVitalsMetrics {
@@ -24,7 +24,7 @@ export interface UserJourneyData {
     userAgent: string;
     screenResolution: string;
     viewport: { width: number; height: number };
-    deviceType: 'mobile' | 'tablet' | 'desktop';
+    deviceType: "mobile" | "tablet" | "desktop";
     browser: string;
     os: string;
   };
@@ -68,17 +68,17 @@ export class AdvancedAnalyticsEngine {
   private startTime: Date;
   private events: Array<any> = [];
   private performanceObserver?: PerformanceObserver;
-  
+
   constructor() {
     this.sessionId = this.generateSessionId();
     this.startTime = new Date();
     this.initializeTracking();
   }
-  
+
   private generateSessionId(): string {
     return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
-  
+
   private initializeTracking() {
     this.setupPerformanceMonitoring();
     this.setupUserInteractionTracking();
@@ -86,69 +86,86 @@ export class AdvancedAnalyticsEngine {
     this.setupErrorTracking();
     this.setupConversionTracking();
   }
-  
+
   // Performance Monitoring
   private setupPerformanceMonitoring() {
-    if ('PerformanceObserver' in window) {
+    if ("PerformanceObserver" in window) {
       // Monitor Core Web Vitals
       this.performanceObserver = new PerformanceObserver((list) => {
         list.getEntries().forEach((entry) => {
           this.trackPerformanceMetric(entry);
         });
       });
-      
-      this.performanceObserver.observe({ entryTypes: ['navigation', 'paint', 'largest-contentful-paint', 'first-input', 'layout-shift'] });
+
+      this.performanceObserver.observe({
+        entryTypes: [
+          "navigation",
+          "paint",
+          "largest-contentful-paint",
+          "first-input",
+          "layout-shift",
+        ],
+      });
     }
-    
+
     // Monitor resource loading
-    window.addEventListener('load', () => {
+    window.addEventListener("load", () => {
       this.trackResourcePerformance();
     });
   }
-  
+
   private trackPerformanceMetric(entry: PerformanceEntry) {
     const { updatePerformance } = useAppStore.getState();
-    
+
     switch (entry.entryType) {
-      case 'largest-contentful-paint':
+      case "largest-contentful-paint":
         updatePerformance({ lcp: (entry as any).startTime });
         break;
-      case 'first-input':
-        updatePerformance({ fid: (entry as any).processingStart - entry.startTime });
+      case "first-input":
+        updatePerformance({
+          fid: (entry as any).processingStart - entry.startTime,
+        });
         break;
-      case 'layout-shift':
+      case "layout-shift":
         if (!(entry as any).hadRecentInput) {
           updatePerformance({ cls: (entry as any).value });
         }
         break;
-      case 'paint':
-        if (entry.name === 'first-contentful-paint') {
+      case "paint":
+        if (entry.name === "first-contentful-paint") {
           updatePerformance({ fcp: entry.startTime });
         }
         break;
     }
   }
-  
+
   private trackResourcePerformance() {
-    const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+    const navigation = performance.getEntriesByType(
+      "navigation",
+    )[0] as PerformanceNavigationTiming;
     const { updatePerformance } = useAppStore.getState();
-    
+
     updatePerformance({
-      ttfb: navigation.responseStart - navigation.fetchStart
+      ttfb: navigation.responseStart - navigation.fetchStart,
     });
-    
+
     // Track slow resources
-    const resources = performance.getEntriesByType('resource');
-    const slowResources = resources.filter(resource => resource.duration > 1000);
-    
+    const resources = performance.getEntriesByType("resource");
+    const slowResources = resources.filter(
+      (resource) => resource.duration > 1000,
+    );
+
     if (slowResources.length > 0) {
-      this.trackEvent('performance', 'slow_resources', {
+      this.trackEvent("performance", "slow_resources", {
         count: slowResources.length,
-        resources: slowResources.map(r => ({ name: r.name, duration: r.duration }))
+        resources: slowResources.map((r) => ({
+          name: r.name,
+          duration: r.duration,
+        })),
       });
     }
   }
-  
+
   // User Interaction Tracking
   private setupUserInteractionTracking() {
     try {
@@ -157,95 +174,136 @@ export class AdvancedAnalyticsEngine {
       let lastClickElement: HTMLElement | null = null;
       const CLICK_THROTTLE_MS = 1000; // Increased throttle time
 
-      document.addEventListener('click', (event) => {
-        try {
-          const now = Date.now();
-          const target = event.target as HTMLElement;
+      document.addEventListener(
+        "click",
+        (event) => {
+          try {
+            const now = Date.now();
+            const target = event.target as HTMLElement;
 
-          // Enhanced throttling: check both time and element
-          if ((now - lastClickTime < CLICK_THROTTLE_MS) && lastClickElement === target) {
-            return; // Throttle rapid clicks on same element
-          }
+            // Enhanced throttling: check both time and element
+            if (
+              now - lastClickTime < CLICK_THROTTLE_MS &&
+              lastClickElement === target
+            ) {
+              return; // Throttle rapid clicks on same element
+            }
 
-          // Only track significant interactions
-          if (this.shouldTrackElement(target)) {
-            lastClickTime = now;
-            lastClickElement = target;
-            this.trackInteraction('click', event);
+            // Only track significant interactions
+            if (this.shouldTrackElement(target)) {
+              lastClickTime = now;
+              lastClickElement = target;
+              this.trackInteraction("click", event);
+            }
+          } catch (error) {
+            // Reduce console noise - only log severe errors
+            if (
+              error instanceof Error &&
+              error.message.includes("Cannot read")
+            ) {
+              console.warn("Click tracking error:", error.message);
+            }
           }
-        } catch (error) {
-          // Reduce console noise - only log severe errors
-          if (error instanceof Error && error.message.includes('Cannot read')) {
-            console.warn('Click tracking error:', error.message);
-          }
-        }
-      }, { passive: true });
+        },
+        { passive: true },
+      );
 
       // Scroll depth tracking - throttled
       let maxScrollDepth = 0;
       let scrollTimeout: NodeJS.Timeout | null = null;
 
-      document.addEventListener('scroll', () => {
-        if (scrollTimeout) return; // Throttle scroll events
+      document.addEventListener(
+        "scroll",
+        () => {
+          if (scrollTimeout) return; // Throttle scroll events
 
-        scrollTimeout = setTimeout(() => {
-          try {
-            const scrollHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
-            const scrollDepth = Math.round((window.scrollY / (scrollHeight - window.innerHeight)) * 100);
+          scrollTimeout = setTimeout(() => {
+            try {
+              const scrollHeight = Math.max(
+                document.body.scrollHeight,
+                document.documentElement.scrollHeight,
+              );
+              const scrollDepth = Math.round(
+                (window.scrollY / (scrollHeight - window.innerHeight)) * 100,
+              );
 
-            if (scrollDepth > maxScrollDepth && scrollDepth % 25 === 0 && scrollDepth <= 100) {
-              maxScrollDepth = scrollDepth;
-              this.trackEvent('engagement', 'scroll_depth', { depth: scrollDepth });
+              if (
+                scrollDepth > maxScrollDepth &&
+                scrollDepth % 25 === 0 &&
+                scrollDepth <= 100
+              ) {
+                maxScrollDepth = scrollDepth;
+                this.trackEvent("engagement", "scroll_depth", {
+                  depth: scrollDepth,
+                });
+              }
+            } catch (error) {
+              // Silent fail for scroll tracking
             }
-          } catch (error) {
-            // Silent fail for scroll tracking
-          }
-          scrollTimeout = null;
-        }, 250); // 250ms throttle
-      }, { passive: true });
+            scrollTimeout = null;
+          }, 250); // 250ms throttle
+        },
+        { passive: true },
+      );
 
       // Form interaction tracking
-      document.addEventListener('focus', (event) => {
-        try {
-          if ((event.target as HTMLElement).tagName === 'INPUT' || (event.target as HTMLElement).tagName === 'TEXTAREA') {
-            this.trackInteraction('form_focus', event);
+      document.addEventListener(
+        "focus",
+        (event) => {
+          try {
+            if (
+              (event.target as HTMLElement).tagName === "INPUT" ||
+              (event.target as HTMLElement).tagName === "TEXTAREA"
+            ) {
+              this.trackInteraction("form_focus", event);
+            }
+          } catch (error) {
+            console.warn("Form interaction tracking error:", error);
           }
-        } catch (error) {
-          console.warn('Form interaction tracking error:', error);
-        }
-      }, { passive: true });
+        },
+        { passive: true },
+      );
 
       // Time on page tracking
       let startTime = Date.now();
-      document.addEventListener('beforeunload', () => {
+      document.addEventListener("beforeunload", () => {
         try {
           const timeOnPage = Date.now() - startTime;
-          this.trackEvent('engagement', 'time_on_page', { duration: timeOnPage });
+          this.trackEvent("engagement", "time_on_page", {
+            duration: timeOnPage,
+          });
         } catch (error) {
-          console.warn('Time tracking error:', error);
+          console.warn("Time tracking error:", error);
         }
       });
     } catch (error) {
-      console.warn('Failed to setup user interaction tracking:', error);
+      console.warn("Failed to setup user interaction tracking:", error);
     }
   }
-  
+
   private shouldTrackElement(element: HTMLElement): boolean {
     if (!element || !element.tagName) return false;
 
     // Skip tracking for certain elements to reduce noise
-    const skipElements = ['HTML', 'BODY', 'DIV', 'SPAN', 'SVG', 'PATH'];
+    const skipElements = ["HTML", "BODY", "DIV", "SPAN", "SVG", "PATH"];
     if (skipElements.includes(element.tagName)) return false;
 
     // Only track meaningful interactions
-    const trackableElements = ['BUTTON', 'A', 'INPUT', 'SELECT', 'TEXTAREA'];
-    const hasClickHandler = !!(element as any).onclick || element.getAttribute('data-track') === 'true';
+    const trackableElements = ["BUTTON", "A", "INPUT", "SELECT", "TEXTAREA"];
+    const hasClickHandler =
+      !!(element as any).onclick ||
+      element.getAttribute("data-track") === "true";
     const isTrackableTag = trackableElements.includes(element.tagName);
-    const hasRole = element.getAttribute('role') === 'button' || element.getAttribute('role') === 'link';
-    const hasAriaLabel = !!element.getAttribute('aria-label');
+    const hasRole =
+      element.getAttribute("role") === "button" ||
+      element.getAttribute("role") === "link";
+    const hasAriaLabel = !!element.getAttribute("aria-label");
 
     // Additional check for disabled elements
-    if (element.hasAttribute('disabled') || element.getAttribute('aria-disabled') === 'true') {
+    if (
+      element.hasAttribute("disabled") ||
+      element.getAttribute("aria-disabled") === "true"
+    ) {
       return false;
     }
 
@@ -264,14 +322,17 @@ export class AdvancedAnalyticsEngine {
         type,
         element,
         timestamp: new Date(),
-        coordinates: type === 'click' && event instanceof MouseEvent ? {
-          x: event.clientX || 0,
-          y: event.clientY || 0
-        } : undefined,
+        coordinates:
+          type === "click" && event instanceof MouseEvent
+            ? {
+                x: event.clientX || 0,
+                y: event.clientY || 0,
+              }
+            : undefined,
         value: this.getSafeElementValue(target),
       };
 
-      this.trackEvent('interaction', type, interactionData);
+      this.trackEvent("interaction", type, interactionData);
 
       // Update app store safely
       try {
@@ -290,56 +351,56 @@ export class AdvancedAnalyticsEngine {
   private getSafeElementValue(element: HTMLElement): string {
     try {
       if (element instanceof HTMLInputElement) {
-        return element.value?.slice(0, 100) || '';
+        return element.value?.slice(0, 100) || "";
       }
       if (element instanceof HTMLTextAreaElement) {
-        return element.value?.slice(0, 100) || '';
+        return element.value?.slice(0, 100) || "";
       }
-      return element.textContent?.slice(0, 100) || '';
+      return element.textContent?.slice(0, 100) || "";
     } catch {
-      return '';
+      return "";
     }
   }
-  
+
   private getElementSelector(element: HTMLElement): string {
     try {
-      if (!element || !element.tagName) return 'unknown';
+      if (!element || !element.tagName) return "unknown";
 
       // Create a unique selector for the element
-      if (element.id && typeof element.id === 'string') {
+      if (element.id && typeof element.id === "string") {
         return `#${element.id}`;
       }
 
-      if (element.className && typeof element.className === 'string') {
-        const firstClass = element.className.trim().split(' ')[0];
+      if (element.className && typeof element.className === "string") {
+        const firstClass = element.className.trim().split(" ")[0];
         if (firstClass) {
           return `.${firstClass}`;
         }
       }
 
       // Check for data attributes
-      if (element.getAttribute && element.getAttribute('data-testid')) {
-        return `[data-testid="${element.getAttribute('data-testid')}"]`;
+      if (element.getAttribute && element.getAttribute("data-testid")) {
+        return `[data-testid="${element.getAttribute("data-testid")}"]`;
       }
 
       return element.tagName.toLowerCase();
     } catch {
-      return 'unknown';
+      return "unknown";
     }
   }
-  
+
   // Navigation and Page View Tracking
   private setupNavigationTracking() {
     // SPA navigation tracking
     let currentPage = window.location.pathname;
-    
+
     const trackPageView = () => {
       const newPage = window.location.pathname;
       if (newPage !== currentPage) {
-        this.trackEvent('navigation', 'page_view', {
+        this.trackEvent("navigation", "page_view", {
           from: currentPage,
           to: newPage,
-          timestamp: new Date()
+          timestamp: new Date(),
         });
         currentPage = newPage;
       }
@@ -358,77 +419,95 @@ export class AdvancedAnalyticsEngine {
         trackPageView();
       }, 200);
     };
-    
+
     // Listen for SPA navigation
-    window.addEventListener('popstate', () => scheduleTrack(), { passive: true });
-    
+    window.addEventListener("popstate", () => scheduleTrack(), {
+      passive: true,
+    });
+
     // Override history methods for SPA tracking
     const originalPushState = history.pushState;
     const originalReplaceState = history.replaceState;
-    
-    history.pushState = function(data: any, title: string, url?: string | null) {
+
+    history.pushState = function (
+      data: any,
+      title: string,
+      url?: string | null,
+    ) {
       originalPushState.call(history, data, title, url ?? null);
       scheduleTrack();
     };
-    
-    history.replaceState = function(data: any, title: string, url?: string | null) {
+
+    history.replaceState = function (
+      data: any,
+      title: string,
+      url?: string | null,
+    ) {
       originalReplaceState.call(history, data, title, url ?? null);
       scheduleTrack();
     };
   }
-  
+
   // Error Tracking
   private setupErrorTracking() {
     try {
-      window.addEventListener('error', (event) => {
-        try {
-          this.trackEvent('error', 'javascript_error', {
-            message: event.message,
-            filename: event.filename,
-            line: event.lineno,
-            column: event.colno,
-            stack: event.error?.stack,
-            timestamp: new Date()
-          });
-        } catch (trackingError) {
-          console.warn('Error tracking failed:', trackingError);
-        }
-      }, { passive: true });
+      window.addEventListener(
+        "error",
+        (event) => {
+          try {
+            this.trackEvent("error", "javascript_error", {
+              message: event.message,
+              filename: event.filename,
+              line: event.lineno,
+              column: event.colno,
+              stack: event.error?.stack,
+              timestamp: new Date(),
+            });
+          } catch (trackingError) {
+            console.warn("Error tracking failed:", trackingError);
+          }
+        },
+        { passive: true },
+      );
 
-      window.addEventListener('unhandledrejection', (event) => {
-        try {
-          this.trackEvent('error', 'promise_rejection', {
-            reason: event.reason,
-            timestamp: new Date()
-          });
-        } catch (trackingError) {
-          console.warn('Promise rejection tracking failed:', trackingError);
-        }
-      }, { passive: true });
+      window.addEventListener(
+        "unhandledrejection",
+        (event) => {
+          try {
+            this.trackEvent("error", "promise_rejection", {
+              reason: event.reason,
+              timestamp: new Date(),
+            });
+          } catch (trackingError) {
+            console.warn("Promise rejection tracking failed:", trackingError);
+          }
+        },
+        { passive: true },
+      );
     } catch (error) {
-      console.warn('Failed to setup error tracking:', error);
+      console.warn("Failed to setup error tracking:", error);
     }
   }
-  
+
   // Conversion Tracking
   private setupConversionTracking() {
     // Track specific conversion events
     const conversionEvents = [
-      'contact-form-submit',
-      'phone-click',
-      'email-click',
-      'project-inquiry',
-      'consultation-request',
-      'portfolio-download'
+      "contact-form-submit",
+      "phone-click",
+      "email-click",
+      "project-inquiry",
+      "consultation-request",
+      "portfolio-download",
     ];
-    
-    conversionEvents.forEach(eventType => {
+
+    conversionEvents.forEach((eventType) => {
       document.addEventListener(eventType, (event: any) => {
         this.trackConversion(eventType, event.detail);
       });
     });
   }
-  
+
   trackConversion(type: string, data?: any) {
     const conversionData = {
       type,
@@ -437,83 +516,90 @@ export class AdvancedAnalyticsEngine {
       userId: this.userId,
       page: window.location.pathname,
       referrer: document.referrer,
-      data
+      data,
     };
-    
-    this.trackEvent('conversion', type, conversionData);
-    
+
+    this.trackEvent("conversion", type, conversionData);
+
     // Update conversion funnel
     this.updateConversionFunnel(type);
   }
-  
+
   private updateConversionFunnel(conversionType: string) {
     const funnelSteps = [
-      'page_view',
-      'portfolio_view',
-      'service_view',
-      'contact_form_view',
-      'contact_form_submit'
+      "page_view",
+      "portfolio_view",
+      "service_view",
+      "contact_form_view",
+      "contact_form_submit",
     ];
-    
+
     const currentStepIndex = funnelSteps.indexOf(conversionType);
     if (currentStepIndex !== -1) {
       // Track progression through funnel
-      this.trackEvent('funnel', 'step_completion', {
+      this.trackEvent("funnel", "step_completion", {
         step: conversionType,
         stepIndex: currentStepIndex,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
   }
-  
+
   // A/B Testing
   assignABTestVariant(testName: string, variants: string[]): string {
     const existingVariant = localStorage.getItem(`ab_test_${testName}`);
     if (existingVariant && variants.includes(existingVariant)) {
       return existingVariant;
     }
-    
+
     const variant = variants[Math.floor(Math.random() * variants.length)];
     localStorage.setItem(`ab_test_${testName}`, variant);
-    
-    this.trackEvent('ab_test', 'variant_assigned', {
+
+    this.trackEvent("ab_test", "variant_assigned", {
       testName,
       variant,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
-    
+
     return variant;
   }
-  
-  trackABTestConversion(testName: string, variant: string, conversionType: string) {
-    this.trackEvent('ab_test', 'conversion', {
+
+  trackABTestConversion(
+    testName: string,
+    variant: string,
+    conversionType: string,
+  ) {
+    this.trackEvent("ab_test", "conversion", {
       testName,
       variant,
       conversionType,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
-  
+
   // Heat Map Data Collection
-  collectHeatMapData(element: HTMLElement, eventType: 'click' | 'hover' | 'scroll') {
+  collectHeatMapData(
+    element: HTMLElement,
+    eventType: "click" | "hover" | "scroll",
+  ) {
     const rect = element.getBoundingClientRect();
     const heatMapData = {
       element: this.getElementSelector(element),
       eventType,
       coordinates: {
         x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2
+        y: rect.top + rect.height / 2,
       },
       viewport: {
         width: window.innerWidth,
-        height: window.innerHeight
+        height: window.innerHeight,
       },
-      timestamp: new Date()
+      timestamp: new Date(),
     };
-    
-    this.trackEvent('heatmap', eventType, heatMapData);
+
+    this.trackEvent("heatmap", eventType, heatMapData);
   }
-  
+
   // Core tracking method
   trackEvent(category: string, action: string, data?: any) {
     try {
@@ -526,8 +612,8 @@ export class AdvancedAnalyticsEngine {
         timestamp: new Date(),
         sessionId: this.sessionId,
         userId: this.userId,
-        page: window.location?.pathname || '',
-        userAgent: navigator?.userAgent || '',
+        page: window.location?.pathname || "",
+        userAgent: navigator?.userAgent || "",
       };
 
       // Prevent event overflow
@@ -546,7 +632,7 @@ export class AdvancedAnalyticsEngine {
       // Silent fail for event tracking to not break the app
     }
   }
-  
+
   private sendToAnalytics(event: any) {
     try {
       // In a real implementation, send to your analytics service
@@ -554,36 +640,43 @@ export class AdvancedAnalyticsEngine {
 
       // Google Analytics 4 example:
       const g = (window as any).gtag;
-      if (typeof g === 'function') {
-        g('event', event.action, {
+      if (typeof g === "function") {
+        g("event", event.action, {
           event_category: event.category,
-          event_label: event.data?.element || '',
+          event_label: event.data?.element || "",
           value: event.data?.value || 0,
           custom_parameter_1: event.sessionId,
         });
       }
 
       // Minimal console logging for development - only critical events
-      if (process.env.NODE_ENV === 'development') {
-        const criticalCategories = ['error', 'conversion'];
-        const importantActions = ['javascript_error', 'contact_form_submit', 'phone_click'];
+      if (process.env.NODE_ENV === "development") {
+        const criticalCategories = ["error", "conversion"];
+        const importantActions = [
+          "javascript_error",
+          "contact_form_submit",
+          "phone_click",
+        ];
 
-        if (criticalCategories.includes(event.category) || importantActions.includes(event.action)) {
-          console.log('Analytics Event:', {
+        if (
+          criticalCategories.includes(event.category) ||
+          importantActions.includes(event.action)
+        ) {
+          console.log("Analytics Event:", {
             category: event.category,
             action: event.action,
-            timestamp: event.timestamp.toISOString()
+            timestamp: event.timestamp.toISOString(),
           });
         }
       }
     } catch (error) {
       // Silent fail for analytics to not break the app
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('Analytics send failed:', error);
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Analytics send failed:", error);
       }
     }
   }
-  
+
   private updateAppStore(event: any) {
     try {
       const state = useAppStore.getState();
@@ -592,74 +685,88 @@ export class AdvancedAnalyticsEngine {
       const { updateAnalytics } = state;
 
       // Update relevant analytics in app store
-      if (event.category === 'engagement') {
+      if (event.category === "engagement") {
         updateAnalytics({
-          lastInteraction: event.timestamp
+          lastInteraction: event.timestamp,
         });
       }
     } catch (error) {
       // Silent fail for app store updates
     }
   }
-  
+
   // Data Export and Reporting
-  exportData(format: 'json' | 'csv' = 'json') {
+  exportData(format: "json" | "csv" = "json") {
     const data = {
       sessionId: this.sessionId,
       userId: this.userId,
       startTime: this.startTime,
       events: this.events,
-      summary: this.generateSummary()
+      summary: this.generateSummary(),
     };
-    
-    if (format === 'csv') {
+
+    if (format === "csv") {
       return this.convertToCSV(data);
     }
-    
+
     return JSON.stringify(data, null, 2);
   }
-  
+
   private generateSummary() {
     const totalEvents = this.events.length;
-    const eventsByCategory = this.events.reduce((acc, event) => {
-      acc[event.category] = (acc[event.category] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-    
+    const eventsByCategory = this.events.reduce(
+      (acc, event) => {
+        acc[event.category] = (acc[event.category] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
+
     const sessionDuration = Date.now() - this.startTime.getTime();
-    
+
     return {
       totalEvents,
       eventsByCategory,
       sessionDuration,
-      pagesViewed: new Set(this.events.filter(e => e.category === 'navigation').map(e => e.page)).size
+      pagesViewed: new Set(
+        this.events
+          .filter((e) => e.category === "navigation")
+          .map((e) => e.page),
+      ).size,
     };
   }
-  
+
   private convertToCSV(data: any): string {
-    const headers = ['timestamp', 'category', 'action', 'page', 'element', 'value'];
+    const headers = [
+      "timestamp",
+      "category",
+      "action",
+      "page",
+      "element",
+      "value",
+    ];
     const rows = data.events.map((event: any) => [
       event.timestamp.toISOString(),
       event.category,
       event.action,
       event.page,
-      event.data?.element || '',
-      event.data?.value || ''
+      event.data?.element || "",
+      event.data?.value || "",
     ]);
-    
-    return [headers, ...rows].map(row => row.join(',')).join('\n');
+
+    return [headers, ...rows].map((row) => row.join(",")).join("\n");
   }
-  
+
   // Cleanup
   destroy() {
     if (this.performanceObserver) {
       this.performanceObserver.disconnect();
     }
-    
+
     // Send final batch of events
-    this.trackEvent('session', 'end', {
+    this.trackEvent("session", "end", {
       duration: Date.now() - this.startTime.getTime(),
-      eventCount: this.events.length
+      eventCount: this.events.length,
     });
   }
 }
@@ -672,14 +779,17 @@ export const useAdvancedAnalytics = () => {
   return {
     trackEvent: advancedAnalytics.trackEvent.bind(advancedAnalytics),
     trackConversion: advancedAnalytics.trackConversion.bind(advancedAnalytics),
-    assignABTestVariant: advancedAnalytics.assignABTestVariant.bind(advancedAnalytics),
-    trackABTestConversion: advancedAnalytics.trackABTestConversion.bind(advancedAnalytics),
-    collectHeatMapData: advancedAnalytics.collectHeatMapData.bind(advancedAnalytics),
+    assignABTestVariant:
+      advancedAnalytics.assignABTestVariant.bind(advancedAnalytics),
+    trackABTestConversion:
+      advancedAnalytics.trackABTestConversion.bind(advancedAnalytics),
+    collectHeatMapData:
+      advancedAnalytics.collectHeatMapData.bind(advancedAnalytics),
     exportData: advancedAnalytics.exportData.bind(advancedAnalytics),
   };
 };
 
 // Cleanup on page unload
-window.addEventListener('beforeunload', () => {
+window.addEventListener("beforeunload", () => {
   advancedAnalytics.destroy();
 });

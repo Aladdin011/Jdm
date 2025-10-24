@@ -1,5 +1,9 @@
-import { useEffect, useRef, useCallback } from 'react';
-import webSocketService, { WebSocketMessage, CallEvent, MessageEvent } from '../services/websocket';
+import { useEffect, useRef, useCallback } from "react";
+import webSocketService, {
+  WebSocketMessage,
+  CallEvent,
+  MessageEvent,
+} from "../services/websocket";
 
 interface UseWebSocketOptions {
   onMessage?: (message: MessageEvent) => void;
@@ -15,7 +19,7 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
     onCall,
     onNotification,
     onConnectionChange,
-    autoConnect = true
+    autoConnect = true,
   } = options;
 
   const optionsRef = useRef(options);
@@ -54,49 +58,57 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
     };
 
     // Register event listeners
-    webSocketService.on('new_message', handleMessage);
-    webSocketService.on('incoming_call', handleIncomingCall);
-    webSocketService.on('call_accepted', handleCallAccepted);
-    webSocketService.on('call_rejected', handleCallRejected);
-    webSocketService.on('call_ended', handleCallEnded);
-    webSocketService.on('notification', handleNotification);
-    webSocketService.on('connected', handleConnectionChange);
+    webSocketService.on("new_message", handleMessage);
+    webSocketService.on("incoming_call", handleIncomingCall);
+    webSocketService.on("call_accepted", handleCallAccepted);
+    webSocketService.on("call_rejected", handleCallRejected);
+    webSocketService.on("call_ended", handleCallEnded);
+    webSocketService.on("notification", handleNotification);
+    webSocketService.on("connected", handleConnectionChange);
 
     // Cleanup function
     return () => {
-      webSocketService.off('new_message', handleMessage);
-      webSocketService.off('incoming_call', handleIncomingCall);
-      webSocketService.off('call_accepted', handleCallAccepted);
-      webSocketService.off('call_rejected', handleCallRejected);
-      webSocketService.off('call_ended', handleCallEnded);
-      webSocketService.off('notification', handleNotification);
-      webSocketService.off('connected', handleConnectionChange);
+      webSocketService.off("new_message", handleMessage);
+      webSocketService.off("incoming_call", handleIncomingCall);
+      webSocketService.off("call_accepted", handleCallAccepted);
+      webSocketService.off("call_rejected", handleCallRejected);
+      webSocketService.off("call_ended", handleCallEnded);
+      webSocketService.off("notification", handleNotification);
+      webSocketService.off("connected", handleConnectionChange);
     };
   }, [autoConnect]);
 
   // Memoized functions to prevent unnecessary re-renders
-  const sendMessage = useCallback((message: Omit<MessageEvent, 'id' | 'timestamp'>) => {
-    if (!webSocketService.isConnected()) {
-      console.warn('WebSocket not connected. Message will be queued for later delivery.');
-      // In a real app, you might queue messages or show a notification
-      return false;
-    }
-    webSocketService.sendMessage(message);
-    return true;
-  }, []);
+  const sendMessage = useCallback(
+    (message: Omit<MessageEvent, "id" | "timestamp">) => {
+      if (!webSocketService.isConnected()) {
+        console.warn(
+          "WebSocket not connected. Message will be queued for later delivery.",
+        );
+        // In a real app, you might queue messages or show a notification
+        return false;
+      }
+      webSocketService.sendMessage(message);
+      return true;
+    },
+    [],
+  );
 
-  const initiateCall = useCallback((callData: Omit<CallEvent, 'id' | 'timestamp' | 'type'>) => {
-    if (!webSocketService.isConnected()) {
-      console.warn('WebSocket not connected. Cannot initiate call.');
-      return false;
-    }
-    webSocketService.initiateCall(callData);
-    return true;
-  }, []);
+  const initiateCall = useCallback(
+    (callData: Omit<CallEvent, "id" | "timestamp" | "type">) => {
+      if (!webSocketService.isConnected()) {
+        console.warn("WebSocket not connected. Cannot initiate call.");
+        return false;
+      }
+      webSocketService.initiateCall(callData);
+      return true;
+    },
+    [],
+  );
 
   const acceptCall = useCallback((callId: string) => {
     if (!webSocketService.isConnected()) {
-      console.warn('WebSocket not connected. Cannot accept call.');
+      console.warn("WebSocket not connected. Cannot accept call.");
       return false;
     }
     webSocketService.acceptCall(callId);
@@ -105,7 +117,7 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
 
   const rejectCall = useCallback((callId: string) => {
     if (!webSocketService.isConnected()) {
-      console.warn('WebSocket not connected. Cannot reject call.');
+      console.warn("WebSocket not connected. Cannot reject call.");
       return false;
     }
     webSocketService.rejectCall(callId);
@@ -114,7 +126,7 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
 
   const endCall = useCallback((callId: string) => {
     if (!webSocketService.isConnected()) {
-      console.warn('WebSocket not connected. Cannot end call.');
+      console.warn("WebSocket not connected. Cannot end call.");
       return false;
     }
     webSocketService.endCall(callId);
@@ -132,7 +144,7 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
 
   const joinRoom = useCallback((roomId: string) => {
     if (!webSocketService.isConnected()) {
-      console.warn('WebSocket not connected. Cannot join room.');
+      console.warn("WebSocket not connected. Cannot join room.");
       return false;
     }
     webSocketService.joinRoom(roomId);
@@ -141,7 +153,7 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
 
   const leaveRoom = useCallback((roomId: string) => {
     if (!webSocketService.isConnected()) {
-      console.warn('WebSocket not connected. Cannot leave room.');
+      console.warn("WebSocket not connected. Cannot leave room.");
       return false;
     }
     webSocketService.leaveRoom(roomId);
@@ -162,7 +174,7 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
     joinRoom,
     leaveRoom,
     isConnected,
-    webSocketService
+    webSocketService,
   };
 };
 

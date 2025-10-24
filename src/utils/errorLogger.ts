@@ -2,7 +2,7 @@
 interface ErrorLog {
   id: string;
   timestamp: string;
-  level: 'error' | 'warning' | 'info';
+  level: "error" | "warning" | "info";
   component: string;
   action: string;
   message: string;
@@ -23,10 +23,10 @@ class ErrorLogger {
   }
 
   private makeConsoleKey(
-    level: 'error' | 'warning' | 'info',
+    level: "error" | "warning" | "info",
     component: string,
     action: string,
-    message: string
+    message: string,
   ): string {
     return `${level}|${component}|${action}|${message}`;
   }
@@ -46,12 +46,12 @@ class ErrorLogger {
   }
 
   log(
-    level: 'error' | 'warning' | 'info',
+    level: "error" | "warning" | "info",
     component: string,
     action: string,
     message: string,
     error?: Error,
-    metadata?: Record<string, any>
+    metadata?: Record<string, any>,
   ): void {
     const errorLog: ErrorLog = {
       id: this.generateId(),
@@ -62,11 +62,11 @@ class ErrorLogger {
       message,
       stack: error?.stack,
       userId: this.getCurrentUserId(),
-      metadata
+      metadata,
     };
 
     this.logs.unshift(errorLog);
-    
+
     // Keep only the most recent logs
     if (this.logs.length > this.maxLogs) {
       this.logs = this.logs.slice(0, this.maxLogs);
@@ -75,8 +75,12 @@ class ErrorLogger {
     // Console logging for development
     const consoleKey = this.makeConsoleKey(level, component, action, message);
     if (this.shouldConsoleLog(consoleKey)) {
-      const logMethod = level === 'error' ? console.error : 
-                       level === 'warning' ? console.warn : console.info;
+      const logMethod =
+        level === "error"
+          ? console.error
+          : level === "warning"
+            ? console.warn
+            : console.info;
       logMethod(`[${component}] ${action}: ${message}`, error || metadata);
       this.devConsoleCount += 1;
       this.recordConsoleKey(consoleKey);
@@ -84,39 +88,58 @@ class ErrorLogger {
 
     // Store in localStorage for persistence
     try {
-      localStorage.setItem('dashboard_error_logs', JSON.stringify(this.logs.slice(0, 100)));
+      localStorage.setItem(
+        "dashboard_error_logs",
+        JSON.stringify(this.logs.slice(0, 100)),
+      );
     } catch (e) {
-      console.warn('Failed to store error logs in localStorage');
+      console.warn("Failed to store error logs in localStorage");
     }
   }
 
-  error(component: string, action: string, message: string, error?: Error, metadata?: Record<string, any>): void {
-    this.log('error', component, action, message, error, metadata);
+  error(
+    component: string,
+    action: string,
+    message: string,
+    error?: Error,
+    metadata?: Record<string, any>,
+  ): void {
+    this.log("error", component, action, message, error, metadata);
   }
 
-  warning(component: string, action: string, message: string, metadata?: Record<string, any>): void {
-    this.log('warning', component, action, message, undefined, metadata);
+  warning(
+    component: string,
+    action: string,
+    message: string,
+    metadata?: Record<string, any>,
+  ): void {
+    this.log("warning", component, action, message, undefined, metadata);
   }
 
-  info(component: string, action: string, message: string, metadata?: Record<string, any>): void {
-    this.log('info', component, action, message, undefined, metadata);
+  info(
+    component: string,
+    action: string,
+    message: string,
+    metadata?: Record<string, any>,
+  ): void {
+    this.log("info", component, action, message, undefined, metadata);
   }
 
-  getLogs(level?: 'error' | 'warning' | 'info'): ErrorLog[] {
-    return level ? this.logs.filter(log => log.level === level) : this.logs;
+  getLogs(level?: "error" | "warning" | "info"): ErrorLog[] {
+    return level ? this.logs.filter((log) => log.level === level) : this.logs;
   }
 
   clearLogs(): void {
     this.logs = [];
-    localStorage.removeItem('dashboard_error_logs');
+    localStorage.removeItem("dashboard_error_logs");
   }
 
   private getCurrentUserId(): string | undefined {
     try {
-      const authData = localStorage.getItem('builder_aura_auth_token');
+      const authData = localStorage.getItem("builder_aura_auth_token");
       if (authData) {
         // Extract user ID from token or auth context
-        return 'current-user'; // Placeholder - would extract from actual auth
+        return "current-user"; // Placeholder - would extract from actual auth
       }
     } catch (e) {
       // Ignore errors when getting user ID
@@ -127,12 +150,12 @@ class ErrorLogger {
   // Load persisted logs on initialization
   loadPersistedLogs(): void {
     try {
-      const stored = localStorage.getItem('dashboard_error_logs');
+      const stored = localStorage.getItem("dashboard_error_logs");
       if (stored) {
         this.logs = JSON.parse(stored);
       }
     } catch (e) {
-      console.warn('Failed to load persisted error logs');
+      console.warn("Failed to load persisted error logs");
     }
   }
 }
@@ -149,10 +172,15 @@ export const logDashboardAction = (
   action: string,
   success: boolean,
   error?: Error,
-  metadata?: Record<string, any>
+  metadata?: Record<string, any>,
 ) => {
   if (success) {
-    errorLogger.info(component, action, `${action} completed successfully`, metadata);
+    errorLogger.info(
+      component,
+      action,
+      `${action} completed successfully`,
+      metadata,
+    );
   } else {
     errorLogger.error(component, action, `${action} failed`, error, metadata);
   }

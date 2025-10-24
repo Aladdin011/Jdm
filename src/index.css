@@ -4,10 +4,191 @@
 @import "./styles/black-vision.css";
 @import "./styles/premium-navigation.css";
 @import "./styles/homepage-design-system.css";
+/* Use official Google Fonts for Inter */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Enhanced Typography System */
+@layer base {
+  :root {
+    /* Typography Scale */
+    --font-size-xs: 0.75rem;    /* 12px */
+    --font-size-sm: 0.875rem;   /* 14px */
+    --font-size-base: 1rem;     /* 16px */
+    --font-size-lg: 1.125rem;   /* 18px */
+    --font-size-xl: 1.25rem;    /* 20px */
+    --font-size-2xl: 1.5rem;    /* 24px */
+    --font-size-3xl: 1.875rem;  /* 30px */
+    --font-size-4xl: 2.25rem;   /* 36px */
+    
+    /* Line Heights */
+    --line-height-tight: 1.25;
+    --line-height-snug: 1.375;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.625;
+    --line-height-loose: 2;
+    
+    /* Letter Spacing */
+    --letter-spacing-tighter: -0.05em;
+    --letter-spacing-tight: -0.025em;
+    --letter-spacing-normal: 0em;
+    --letter-spacing-wide: 0.025em;
+    --letter-spacing-wider: 0.05em;
+    --letter-spacing-widest: 0.1em;
+  }
+
+  /* Enhanced Font Smoothing */
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Base Typography */
+  html {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  body {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+    letter-spacing: var(--letter-spacing-normal);
+  }
+}
+
+/* Enhanced Typography Utilities */
+@layer utilities {
+  /* Heading Styles */
+  .text-display-1 {
+    font-size: var(--font-size-4xl);
+    font-weight: 800;
+    line-height: var(--line-height-tight);
+    letter-spacing: var(--letter-spacing-tighter);
+  }
+  
+  .text-display-2 {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    line-height: var(--line-height-tight);
+    letter-spacing: var(--letter-spacing-tight);
+  }
+  
+  .text-heading-1 {
+    font-size: var(--font-size-2xl);
+    font-weight: 600;
+    line-height: var(--line-height-snug);
+    letter-spacing: var(--letter-spacing-tight);
+  }
+  
+  .text-heading-2 {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    line-height: var(--line-height-snug);
+    letter-spacing: var(--letter-spacing-normal);
+  }
+  
+  .text-heading-3 {
+    font-size: var(--font-size-lg);
+    font-weight: 500;
+    line-height: var(--line-height-snug);
+    letter-spacing: var(--letter-spacing-normal);
+  }
+  
+  /* Body Text Styles */
+  .text-body-large {
+    font-size: var(--font-size-lg);
+    font-weight: 400;
+    line-height: var(--line-height-relaxed);
+    letter-spacing: var(--letter-spacing-normal);
+  }
+  
+  .text-body {
+    font-size: var(--font-size-base);
+    font-weight: 400;
+    line-height: var(--line-height-normal);
+    letter-spacing: var(--letter-spacing-normal);
+  }
+  
+  .text-body-small {
+    font-size: var(--font-size-sm);
+    font-weight: 400;
+    line-height: var(--line-height-normal);
+    letter-spacing: var(--letter-spacing-normal);
+  }
+  
+  .text-caption {
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    line-height: var(--line-height-normal);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+  }
+  
+  /* Enhanced Text Shadows for Glass Morphism */
+  .text-shadow-glass {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .text-shadow-glass-strong {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 1px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .text-shadow-glow {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* Accessibility utilities */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.not-sr-only {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* Focus visible for keyboard navigation */
+.focus-visible:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  * {
+    border-color: currentColor !important;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
 
 /* Emergency CSS to ensure basic styling loads */
 * {
@@ -17,7 +198,9 @@
 }
 
 /* Prevent CLS by reserving space for common elements */
-img, video, iframe {
+img,
+video,
+iframe {
   max-width: 100%;
   height: auto;
   display: block;
@@ -31,15 +214,25 @@ img, video, iframe {
 }
 
 @keyframes loading {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
   line-height: 1.6;
   color: #051822;
-  background: linear-gradient(135deg, #051822 0%, #2D383E 100%);
+  background: linear-gradient(135deg, #051822 0%, #2d383e 100%);
   min-height: 100vh;
   /* Prevent layout shifts */
   font-display: swap;
@@ -152,5 +345,139 @@ body {
     @apply bg-background text-foreground;
   }
 }
-/* Use official Google Fonts for Inter */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+/* Enhanced Color Utilities for Better Accessibility */
+.text-arch-contrast {
+  @apply text-white drop-shadow-lg;
+}
+
+.text-arch-contrast-dark {
+  @apply text-arch-charcoal drop-shadow-sm;
+}
+
+.bg-glass-enhanced {
+  @apply bg-glass-white-strong backdrop-blur-md border border-glass-border-strong;
+}
+
+.bg-glass-subtle {
+  @apply bg-glass-white backdrop-blur-sm border border-glass-border;
+}
+
+/* Status Message Enhancements */
+.status-success {
+  @apply bg-success-bg text-success-dark border border-success/20;
+}
+
+.status-warning {
+  @apply bg-warning-bg text-warning-dark border border-warning/20;
+}
+
+.status-error {
+  @apply bg-error-bg text-error-dark border border-error/20;
+}
+
+.status-info {
+  @apply bg-info-bg text-info-dark border border-info/20;
+}
+
+/* Button Enhancements with Better Contrast */
+.btn-arch-primary {
+  @apply bg-arch-orange hover:bg-arch-orange-dark text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-xl border border-arch-orange-light/30;
+}
+
+.btn-arch-secondary {
+  @apply bg-arch-blue-gray hover:bg-arch-blue-gray-light text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-xl border border-arch-light-blue/30;
+}
+
+.btn-glass {
+  @apply bg-glass-white-strong hover:bg-glass-white backdrop-blur-md text-white font-semibold transition-all duration-200 border border-glass-border-strong hover:border-glass-border;
+}
+
+/* Enhanced Focus States for Accessibility */
+.focus-arch {
+  @apply focus:outline-none focus:ring-2 focus:ring-arch-orange focus:ring-offset-2 focus:ring-offset-transparent;
+}
+
+.focus-glass {
+  @apply focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-transparent;
+}
+
+/* Card Enhancements */
+.card-arch {
+  @apply bg-glass-white-strong backdrop-blur-md border border-glass-border-strong 
+         rounded-xl shadow-2xl;
+}
+
+.card-arch-hover {
+  @apply hover:bg-glass-white hover:border-glass-border transition-all duration-300 hover:shadow-2xl hover:scale-[1.02];
+}
+
+/* Text Contrast Utilities */
+.text-high-contrast {
+  @apply text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)];
+}
+
+.text-medium-contrast {
+  @apply text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)];
+}
+
+.text-subtle-contrast {
+  @apply text-white/80 drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)];
+}
+
+/* Enhanced Visual Polish and Micro-interactions */
+.glass-card-hover {
+  @apply transition-all duration-300 ease-out;
+  transform: translateY(0px);
+}
+
+.glass-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 0 30px rgba(255, 255, 255, 0.1);
+}
+
+.input-focus-glow {
+  @apply transition-all duration-300;
+  box-shadow: 0 0 0 0 rgba(251, 191, 36, 0);
+}
+
+.input-focus-glow:focus-within {
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.2), 0 0 20px rgba(251, 191, 36, 0.1);
+}
+
+.button-press-effect {
+  @apply transition-transform duration-150 ease-out;
+}
+
+.button-press-effect:active {
+  transform: scale(0.95);
+}
+
+.shimmer-effect {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-glow {
+  from {
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+  }
+  to {
+    box-shadow: 0 0 30px rgba(251, 191, 36, 0.4), 0 0 40px rgba(251, 191, 36, 0.1);
+  }
+}

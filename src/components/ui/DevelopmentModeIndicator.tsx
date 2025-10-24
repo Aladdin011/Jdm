@@ -9,7 +9,7 @@ export default function DevelopmentModeIndicator() {
 
   useEffect(() => {
     // Check if we're in development mode by detecting mock tokens
-    const token = localStorage.getItem("builder_aura_token");
+    const token = localStorage.getItem("builder_aura_token") || localStorage.getItem("jdmarc_token");
     const isDevMode =
       token?.startsWith("dev_token_") || token?.startsWith("mock_");
 
@@ -33,7 +33,7 @@ export default function DevelopmentModeIndicator() {
     if (supabaseUrl) {
       alert(`✅ Supabase configured: ${supabaseUrl}`);
     } else {
-      alert('❌ Supabase not configured. Set VITE_SUPABASE_URL in .env.local');
+      alert("❌ Supabase not configured. Set VITE_SUPABASE_URL in .env.local");
     }
   };
 

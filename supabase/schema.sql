@@ -85,10 +85,12 @@ alter table public.contacts enable row level security;
 alter table public.testimonials enable row level security;
 
 -- Allow authenticated users to read their own profile
+drop policy if exists "users_select_own" on public.users;
 create policy "users_select_own" on public.users
   for select using (auth.role() = 'authenticated' and auth.uid()::uuid = auth_id);
 
 -- Allow admins to manage users
+drop policy if exists "users_admin_manage" on public.users;
 create policy "users_admin_manage" on public.users
   for all using (
     (select role from public.users where auth_id = auth.uid()) = 'admin'
@@ -97,6 +99,7 @@ create policy "users_admin_manage" on public.users
   );
 
 -- Tasks: allow assigned user or admin to read/write
+drop policy if exists "tasks_read_assigned_or_admin" on public.tasks;
 create policy "tasks_read_assigned_or_admin" on public.tasks
   for select using (
     auth.role() = 'authenticated' and (
@@ -105,10 +108,12 @@ create policy "tasks_read_assigned_or_admin" on public.tasks
     )
   );
 
+drop policy if exists "tasks_insert_authenticated" on public.tasks;
 create policy "tasks_insert_authenticated" on public.tasks
   for insert with check (auth.role() = 'authenticated');
 
 -- Messages: allow sender or receiver to read
+drop policy if exists "messages_read_participants" on public.messages;
 create policy "messages_read_participants" on public.messages
   for select using (
     auth.role() = 'authenticated' and (
@@ -117,20 +122,25 @@ create policy "messages_read_participants" on public.messages
     )
   );
 
+drop policy if exists "messages_insert_authenticated" on public.messages;
 create policy "messages_insert_authenticated" on public.messages
   for insert with check (auth.role() = 'authenticated');
 
 -- Contacts: allow anyone to insert (public contact form) but only authenticated can view
+drop policy if exists "contacts_insert_public" on public.contacts;
 create policy "contacts_insert_public" on public.contacts
   for insert with check (true);
 
+drop policy if exists "contacts_select_authenticated" on public.contacts;
 create policy "contacts_select_authenticated" on public.contacts
   for select using (auth.role() = 'authenticated');
 
 -- Testimonials: allow public insert, admin moderation to update
+drop policy if exists "testimonials_insert_public" on public.testimonials;
 create policy "testimonials_insert_public" on public.testimonials
   for insert with check (true);
 
+drop policy if exists "testimonials_select_public" on public.testimonials;
 create policy "testimonials_select_public" on public.testimonials
   for select using (true);
 
@@ -144,6 +154,7 @@ create table if not exists public.analytics (
 );
 
 alter table public.analytics enable row level security;
+drop policy if exists "analytics_insert_authenticated" on public.analytics;
 create policy "analytics_insert_authenticated" on public.analytics
   for insert with check (auth.role() = 'authenticated' or auth.role() = 'anonymous');
 
@@ -159,6 +170,8 @@ create table if not exists public.notifications (
 );
 
 alter table public.notifications enable row level security;
+drop policy if exists "notifications_for_user" on public.notifications;
+drop policy if exists "notifications_insert_authenticated" on public.notifications;
 create policy "notifications_for_user" on public.notifications
   for select using (auth.role() = 'authenticated' and user_id::text = (select id::text from public.users where auth_id = auth.uid()));
 create policy "notifications_insert_authenticated" on public.notifications

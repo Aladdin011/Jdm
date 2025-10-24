@@ -42,7 +42,7 @@ export default function CallInterface() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { callState, endCall, toggleLocalAudio, toggleLocalVideo } = useCall();
-  
+
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [isSpeakerOn, setIsSpeakerOn] = useState(true);
@@ -86,7 +86,7 @@ export default function CallInterface() {
   useEffect(() => {
     if (callState.isInCall) {
       const interval = setInterval(() => {
-        setCallDuration(prev => prev + 1);
+        setCallDuration((prev) => prev + 1);
       }, 1000);
       return () => clearInterval(interval);
     }
@@ -95,7 +95,7 @@ export default function CallInterface() {
   // Redirect if not in call
   useEffect(() => {
     if (!callState.isInCall) {
-      navigate('/dashboard');
+      navigate("/dashboard");
     }
   }, [callState.isInCall, navigate]);
 
@@ -103,16 +103,16 @@ export default function CallInterface() {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    
+
     if (hours > 0) {
-      return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
     }
-    return `${minutes}:${secs.toString().padStart(2, '0')}`;
+    return `${minutes}:${secs.toString().padStart(2, "0")}`;
   };
 
   const handleEndCall = () => {
     endCall();
-    navigate('/dashboard');
+    navigate("/dashboard");
   };
 
   const handleToggleMute = () => {
@@ -134,7 +134,7 @@ export default function CallInterface() {
   };
 
   const handleLeaveCall = () => {
-    navigate('/dashboard');
+    navigate("/dashboard");
   };
 
   if (!callState.isInCall) {
@@ -165,7 +165,8 @@ export default function CallInterface() {
             Back to Dashboard
           </Button>
           <Badge className="bg-[#F97316] text-white px-3 py-1">
-            {callState.department?.replace("-", " ").toUpperCase() || "GENERAL"} CALL
+            {callState.department?.replace("-", " ").toUpperCase() || "GENERAL"}{" "}
+            CALL
           </Badge>
           <div className="flex items-center gap-2 text-gray-300">
             <Users size={16} />
@@ -199,7 +200,11 @@ export default function CallInterface() {
             onClick={handleMinimize}
             className="text-white hover:bg-white/10"
           >
-            {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
+            {isMinimized ? (
+              <Maximize2 className="h-4 w-4" />
+            ) : (
+              <Minimize2 className="h-4 w-4" />
+            )}
           </Button>
         </div>
       </motion.div>
@@ -208,7 +213,9 @@ export default function CallInterface() {
       <div className="relative z-10 flex-1 px-6 pb-6">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[calc(100vh-200px)]">
           {/* Video Grid */}
-          <div className={`${showParticipants || showChat ? 'lg:col-span-3' : 'lg:col-span-4'} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4`}>
+          <div
+            className={`${showParticipants || showChat ? "lg:col-span-3" : "lg:col-span-4"} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4`}
+          >
             {participants.map((participant) => (
               <motion.div
                 key={participant.id}
@@ -236,9 +243,13 @@ export default function CallInterface() {
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium">{participant.name}</span>
+                      <span className="text-sm font-medium">
+                        {participant.name}
+                      </span>
                       {participant.isHost && (
-                        <Badge className="bg-[#F97316] text-white text-xs">HOST</Badge>
+                        <Badge className="bg-[#F97316] text-white text-xs">
+                          HOST
+                        </Badge>
                       )}
                     </div>
                     <div className="flex items-center gap-1">
@@ -248,11 +259,15 @@ export default function CallInterface() {
                       {!participant.isVideoOn && (
                         <VideoOff className="h-4 w-4 text-red-400" />
                       )}
-                      <div className={`w-2 h-2 rounded-full ${
-                        participant.status === 'connected' ? 'bg-green-400' :
-                        participant.status === 'connecting' ? 'bg-yellow-400' :
-                        'bg-red-400'
-                      }`} />
+                      <div
+                        className={`w-2 h-2 rounded-full ${
+                          participant.status === "connected"
+                            ? "bg-green-400"
+                            : participant.status === "connecting"
+                              ? "bg-yellow-400"
+                              : "bg-red-400"
+                        }`}
+                      />
                     </div>
                   </div>
                 </div>
@@ -271,10 +286,15 @@ export default function CallInterface() {
                 <CardContent className="p-4 h-full flex flex-col">
                   {showParticipants && (
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold mb-4 text-white">Participants</h3>
+                      <h3 className="text-lg font-semibold mb-4 text-white">
+                        Participants
+                      </h3>
                       <div className="space-y-3">
                         {participants.map((participant) => (
-                          <div key={participant.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-700/50">
+                          <div
+                            key={participant.id}
+                            className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-700/50"
+                          >
                             <Avatar className="w-8 h-8">
                               <AvatarFallback className="bg-gray-600 text-white text-sm">
                                 {participant.name.charAt(0)}
@@ -286,10 +306,14 @@ export default function CallInterface() {
                                   {participant.name}
                                 </span>
                                 {participant.isHost && (
-                                  <Badge className="bg-[#F97316] text-white text-xs">HOST</Badge>
+                                  <Badge className="bg-[#F97316] text-white text-xs">
+                                    HOST
+                                  </Badge>
                                 )}
                               </div>
-                              <p className="text-xs text-gray-400 truncate">{participant.email}</p>
+                              <p className="text-xs text-gray-400 truncate">
+                                {participant.email}
+                              </p>
                             </div>
                             <div className="flex items-center gap-1">
                               {participant.isMuted && (
@@ -307,9 +331,13 @@ export default function CallInterface() {
 
                   {showChat && (
                     <div className="flex-1 flex flex-col">
-                      <h3 className="text-lg font-semibold mb-4 text-white">Chat</h3>
+                      <h3 className="text-lg font-semibold mb-4 text-white">
+                        Chat
+                      </h3>
                       <div className="flex-1 bg-gray-900/50 rounded-lg p-3 mb-4 overflow-y-auto">
-                        <p className="text-gray-400 text-sm text-center">Chat functionality coming soon...</p>
+                        <p className="text-gray-400 text-sm text-center">
+                          Chat functionality coming soon...
+                        </p>
                       </div>
                       <div className="flex gap-2">
                         <input
@@ -317,7 +345,10 @@ export default function CallInterface() {
                           placeholder="Type a message..."
                           className="flex-1 bg-gray-700 border-gray-600 text-white placeholder-gray-400 rounded-lg px-3 py-2 text-sm"
                         />
-                        <Button size="sm" className="bg-[#F97316] hover:bg-[#F97316]/80">
+                        <Button
+                          size="sm"
+                          className="bg-[#F97316] hover:bg-[#F97316]/80"
+                        >
                           Send
                         </Button>
                       </div>
@@ -342,12 +373,16 @@ export default function CallInterface() {
             size="lg"
             onClick={handleToggleMute}
             className={`rounded-full w-14 h-14 ${
-              isMuted 
-                ? 'bg-red-500 hover:bg-red-600 text-white' 
-                : 'bg-gray-700 hover:bg-gray-600 text-white'
+              isMuted
+                ? "bg-red-500 hover:bg-red-600 text-white"
+                : "bg-gray-700 hover:bg-gray-600 text-white"
             }`}
           >
-            {isMuted ? <MicOff className="h-6 w-6" /> : <Mic className="h-6 w-6" />}
+            {isMuted ? (
+              <MicOff className="h-6 w-6" />
+            ) : (
+              <Mic className="h-6 w-6" />
+            )}
           </Button>
 
           <Button
@@ -355,12 +390,16 @@ export default function CallInterface() {
             size="lg"
             onClick={handleToggleVideo}
             className={`rounded-full w-14 h-14 ${
-              !isVideoOn 
-                ? 'bg-red-500 hover:bg-red-600 text-white' 
-                : 'bg-gray-700 hover:bg-gray-600 text-white'
+              !isVideoOn
+                ? "bg-red-500 hover:bg-red-600 text-white"
+                : "bg-gray-700 hover:bg-gray-600 text-white"
             }`}
           >
-            {isVideoOn ? <Video className="h-6 w-6" /> : <VideoOff className="h-6 w-6" />}
+            {isVideoOn ? (
+              <Video className="h-6 w-6" />
+            ) : (
+              <VideoOff className="h-6 w-6" />
+            )}
           </Button>
 
           <Button
@@ -368,12 +407,16 @@ export default function CallInterface() {
             size="lg"
             onClick={handleToggleSpeaker}
             className={`rounded-full w-14 h-14 ${
-              !isSpeakerOn 
-                ? 'bg-red-500 hover:bg-red-600 text-white' 
-                : 'bg-gray-700 hover:bg-gray-600 text-white'
+              !isSpeakerOn
+                ? "bg-red-500 hover:bg-red-600 text-white"
+                : "bg-gray-700 hover:bg-gray-600 text-white"
             }`}
           >
-            {isSpeakerOn ? <Volume2 className="h-6 w-6" /> : <VolumeX className="h-6 w-6" />}
+            {isSpeakerOn ? (
+              <Volume2 className="h-6 w-6" />
+            ) : (
+              <VolumeX className="h-6 w-6" />
+            )}
           </Button>
 
           <Button

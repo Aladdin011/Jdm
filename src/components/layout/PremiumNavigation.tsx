@@ -633,7 +633,7 @@ export default function PremiumNavigation() {
           <div className="nav-cta hidden lg:flex items-center gap-6">
             {/* Notification System */}
             <NotificationSystem />
-            
+
             {/* Enhanced Theme Toggle */}
             <motion.div
               className="relative w-16 h-8 bg-black/40 border border-white/30 rounded-full p-1 cursor-pointer backdrop-blur-sm"

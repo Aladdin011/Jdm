@@ -9,8 +9,15 @@ interface CallWindowProps {
   onClose: () => void;
 }
 
-const CallWindow: React.FC<CallWindowProps> = ({ user, anchorRect, onClose }) => {
-  const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+const CallWindow: React.FC<CallWindowProps> = ({
+  user,
+  anchorRect,
+  onClose,
+}) => {
+  const [position, setPosition] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
 
   useEffect(() => {
     const margin = 8;
@@ -41,8 +48,12 @@ const CallWindow: React.FC<CallWindowProps> = ({ user, anchorRect, onClose }) =>
       style={{ left: position.x, top: position.y }}
     >
       <div className="p-3 border-b">
-        <p className="font-semibold text-[#142E54]">Calling {user.firstName} {user.lastName}</p>
-        <p className="text-xs text-muted-foreground">{user.department || "—"}</p>
+        <p className="font-semibold text-[#142E54]">
+          Calling {user.firstName} {user.lastName}
+        </p>
+        <p className="text-xs text-muted-foreground">
+          {user.department || "—"}
+        </p>
       </div>
       <div className="p-3 space-y-2">
         <div className="h-36 rounded bg-muted flex items-center justify-center text-sm text-muted-foreground">

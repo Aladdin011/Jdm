@@ -6,7 +6,11 @@ const GA_TRACKING_ID = (import.meta as any).env?.VITE_GA_TRACKING_ID || "";
 
 // Initialize Google Analytics
 export const initGA = () => {
-  if (typeof window !== "undefined" && GA_TRACKING_ID && GA_TRACKING_ID !== "G-XXXXXXXXXX") {
+  if (
+    typeof window !== "undefined" &&
+    GA_TRACKING_ID &&
+    GA_TRACKING_ID !== "G-XXXXXXXXXX"
+  ) {
     try {
       // Ensure dataLayer exists
       window.dataLayer = window.dataLayer || [];
@@ -14,7 +18,7 @@ export const initGA = () => {
       // If gtag isn't available yet, wait for it
       if (!window.gtag) {
         // Set up a minimal gtag function if script hasn't loaded yet
-        window.gtag = function(...args: any[]) {
+        window.gtag = function (...args: any[]) {
           window.dataLayer.push(args);
         };
       }

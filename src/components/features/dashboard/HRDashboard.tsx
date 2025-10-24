@@ -97,7 +97,7 @@ export default function HRDashboard() {
   const { user } = useAuth();
   const { isInCall, startCall } = useCall();
   const { trackEvent } = useAdvancedAnalytics();
-  
+
   const [employees] = useState<Employee[]>([
     {
       id: "1",
@@ -289,7 +289,9 @@ export default function HRDashboard() {
   };
 
   const handleStartHRMeeting = () => {
-    trackEvent('interaction', 'hr_meeting_start', { department: 'human-resources' });
+    trackEvent("interaction", "hr_meeting_start", {
+      department: "human-resources",
+    });
     startCall("hr-team-meeting", {
       title: "HR Team Meeting",
       participants: [],
@@ -297,36 +299,60 @@ export default function HRDashboard() {
   };
 
   const handleAddEmployee = () => {
-    trackEvent('interaction', 'add_employee_click', { department: 'human-resources' });
+    trackEvent("interaction", "add_employee_click", {
+      department: "human-resources",
+    });
     // TODO: Implement add employee functionality
   };
 
   const handlePostJob = () => {
-    trackEvent('interaction', 'post_job_click', { department: 'human-resources' });
+    trackEvent("interaction", "post_job_click", {
+      department: "human-resources",
+    });
     // TODO: Implement post job functionality
   };
 
   const handleGenerateReport = () => {
-    trackEvent('interaction', 'generate_report_click', { department: 'human-resources' });
+    trackEvent("interaction", "generate_report_click", {
+      department: "human-resources",
+    });
     // TODO: Implement report generation
   };
 
   const handleApproveLeave = (requestId: string, employeeName: string) => {
-    trackEvent('interaction', 'approve_leave', { requestId, employeeName, department: 'human-resources' });
+    trackEvent("interaction", "approve_leave", {
+      requestId,
+      employeeName,
+      department: "human-resources",
+    });
     // TODO: Implement leave approval
   };
 
   const handleRejectLeave = (requestId: string, employeeName: string) => {
-    trackEvent('interaction', 'reject_leave', { requestId, employeeName, department: 'human-resources' });
+    trackEvent("interaction", "reject_leave", {
+      requestId,
+      employeeName,
+      department: "human-resources",
+    });
     // TODO: Implement leave rejection
   };
 
   const totalEmployees = employees.length;
-  const activeEmployees = employees.filter(emp => emp.status === "active").length;
-  const onLeaveEmployees = employees.filter(emp => emp.status === "on-leave").length;
-  const pendingLeaveRequests = leaveRequests.filter(req => req.status === "pending").length;
-  const newApplications = jobApplications.filter(app => app.status === "new").length;
-  const upcomingInterviews = jobApplications.filter(app => app.status === "interview").length;
+  const activeEmployees = employees.filter(
+    (emp) => emp.status === "active",
+  ).length;
+  const onLeaveEmployees = employees.filter(
+    (emp) => emp.status === "on-leave",
+  ).length;
+  const pendingLeaveRequests = leaveRequests.filter(
+    (req) => req.status === "pending",
+  ).length;
+  const newApplications = jobApplications.filter(
+    (app) => app.status === "new",
+  ).length;
+  const upcomingInterviews = jobApplications.filter(
+    (app) => app.status === "interview",
+  ).length;
 
   return (
     <ModernDashboardLayout
@@ -341,8 +367,12 @@ export default function HRDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600 mb-1">Total Employees</p>
-                  <p className="text-3xl font-bold text-gray-900">{totalEmployees}</p>
+                  <p className="text-sm font-medium text-gray-600 mb-1">
+                    Total Employees
+                  </p>
+                  <p className="text-3xl font-bold text-gray-900">
+                    {totalEmployees}
+                  </p>
                   <p className="text-sm text-green-600 flex items-center gap-1 mt-1">
                     <TrendingUp className="h-3 w-3" />
                     +5% from last month
@@ -359,9 +389,15 @@ export default function HRDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600 mb-1">Active Employees</p>
-                  <p className="text-3xl font-bold text-gray-900">{activeEmployees}</p>
-                  <p className="text-sm text-gray-600 mt-1">{onLeaveEmployees} on leave</p>
+                  <p className="text-sm font-medium text-gray-600 mb-1">
+                    Active Employees
+                  </p>
+                  <p className="text-3xl font-bold text-gray-900">
+                    {activeEmployees}
+                  </p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {onLeaveEmployees} on leave
+                  </p>
                 </div>
                 <div className="p-3 bg-green-100 rounded-full">
                   <UserCheck className="h-6 w-6 text-green-600" />
@@ -374,9 +410,15 @@ export default function HRDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600 mb-1">Leave Requests</p>
-                  <p className="text-3xl font-bold text-gray-900">{pendingLeaveRequests}</p>
-                  <p className="text-sm text-yellow-600 mt-1">Pending approval</p>
+                  <p className="text-sm font-medium text-gray-600 mb-1">
+                    Leave Requests
+                  </p>
+                  <p className="text-3xl font-bold text-gray-900">
+                    {pendingLeaveRequests}
+                  </p>
+                  <p className="text-sm text-yellow-600 mt-1">
+                    Pending approval
+                  </p>
                 </div>
                 <div className="p-3 bg-yellow-100 rounded-full">
                   <Calendar className="h-6 w-6 text-yellow-600" />
@@ -389,9 +431,15 @@ export default function HRDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600 mb-1">New Applications</p>
-                  <p className="text-3xl font-bold text-gray-900">{newApplications}</p>
-                  <p className="text-sm text-purple-600 mt-1">{upcomingInterviews} interviews scheduled</p>
+                  <p className="text-sm font-medium text-gray-600 mb-1">
+                    New Applications
+                  </p>
+                  <p className="text-3xl font-bold text-gray-900">
+                    {newApplications}
+                  </p>
+                  <p className="text-sm text-purple-600 mt-1">
+                    {upcomingInterviews} interviews scheduled
+                  </p>
                 </div>
                 <div className="p-3 bg-purple-100 rounded-full">
                   <UserPlus className="h-6 w-6 text-purple-600" />
@@ -413,7 +461,9 @@ export default function HRDashboard() {
                     <Users className="h-5 w-5 text-blue-600" />
                     Employee Overview
                   </CardTitle>
-                  <p className="text-sm text-gray-600 mt-1">Current staff and their status</p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Current staff and their status
+                  </p>
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -449,20 +499,31 @@ export default function HRDashboard() {
                       <div className="flex items-center gap-4">
                         <Avatar className="h-12 w-12">
                           <AvatarFallback className="bg-blue-100 text-blue-600">
-                            {employee.name.split(' ').map(n => n[0]).join('')}
+                            {employee.name
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <h4 className="font-semibold text-gray-900">{employee.name}</h4>
-                          <p className="text-sm text-gray-600">{employee.role}</p>
-                          <p className="text-xs text-gray-500">{employee.department}</p>
+                          <h4 className="font-semibold text-gray-900">
+                            {employee.name}
+                          </h4>
+                          <p className="text-sm text-gray-600">
+                            {employee.role}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {employee.department}
+                          </p>
                         </div>
                       </div>
                       <div className="flex items-center gap-4">
                         <div className="text-right">
                           <div className="flex items-center gap-2 mb-1">
                             <Star className="h-4 w-4 text-yellow-500" />
-                            <span className="text-sm font-medium">{employee.performance}%</span>
+                            <span className="text-sm font-medium">
+                              {employee.performance}%
+                            </span>
                           </div>
                           <Badge className={getStatusColor(employee.status)}>
                             {employee.status.replace("-", " ")}
@@ -491,7 +552,9 @@ export default function HRDashboard() {
                     <Calendar className="h-5 w-5 text-blue-600" />
                     Leave Requests
                   </CardTitle>
-                  <p className="text-sm text-gray-600 mt-1">Pending and recent leave applications</p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Pending and recent leave applications
+                  </p>
                 </div>
                 <Button variant="outline" size="sm">
                   <Plus className="h-4 w-4 mr-2" />
@@ -508,14 +571,23 @@ export default function HRDashboard() {
                       className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
                     >
                       <div className="flex items-center gap-4">
-                        <div className={`p-2 rounded-full ${getLeaveTypeColor(request.type).replace('text-', 'bg-').replace('-600', '-100')}`}>
-                          <Calendar className={`h-4 w-4 ${getLeaveTypeColor(request.type)}`} />
+                        <div
+                          className={`p-2 rounded-full ${getLeaveTypeColor(request.type).replace("text-", "bg-").replace("-600", "-100")}`}
+                        >
+                          <Calendar
+                            className={`h-4 w-4 ${getLeaveTypeColor(request.type)}`}
+                          />
                         </div>
                         <div>
-                          <h4 className="font-semibold text-gray-900">{request.employeeName}</h4>
-                          <p className="text-sm text-gray-600 capitalize">{request.type} leave</p>
+                          <h4 className="font-semibold text-gray-900">
+                            {request.employeeName}
+                          </h4>
+                          <p className="text-sm text-gray-600 capitalize">
+                            {request.type} leave
+                          </p>
                           <p className="text-xs text-gray-500">
-                            {new Date(request.startDate).toLocaleDateString()} - {new Date(request.endDate).toLocaleDateString()}
+                            {new Date(request.startDate).toLocaleDateString()} -{" "}
+                            {new Date(request.endDate).toLocaleDateString()}
                           </p>
                         </div>
                       </div>
@@ -528,7 +600,12 @@ export default function HRDashboard() {
                             <Button
                               size="sm"
                               className="bg-green-600 hover:bg-green-700 text-white"
-                              onClick={() => handleApproveLeave(request.id, request.employeeName)}
+                              onClick={() =>
+                                handleApproveLeave(
+                                  request.id,
+                                  request.employeeName,
+                                )
+                              }
                             >
                               <CheckCircle className="h-4 w-4 mr-1" />
                               Approve
@@ -537,7 +614,12 @@ export default function HRDashboard() {
                               size="sm"
                               variant="outline"
                               className="border-red-500 text-red-500 hover:bg-red-50"
-                              onClick={() => handleRejectLeave(request.id, request.employeeName)}
+                              onClick={() =>
+                                handleRejectLeave(
+                                  request.id,
+                                  request.employeeName,
+                                )
+                              }
                             >
                               <UserX className="h-4 w-4 mr-1" />
                               Reject
@@ -565,11 +647,18 @@ export default function HRDashboard() {
               <CardContent>
                 <div className="space-y-4">
                   {jobApplications.map((application) => (
-                    <div key={application.id} className="p-3 bg-gray-50 rounded-lg">
+                    <div
+                      key={application.id}
+                      className="p-3 bg-gray-50 rounded-lg"
+                    >
                       <div className="flex items-start justify-between mb-2">
                         <div>
-                          <h4 className="font-medium text-gray-900">{application.candidateName}</h4>
-                          <p className="text-sm text-gray-600">{application.position}</p>
+                          <h4 className="font-medium text-gray-900">
+                            {application.candidateName}
+                          </h4>
+                          <p className="text-sm text-gray-600">
+                            {application.position}
+                          </p>
                         </div>
                         <Badge className={getStatusColor(application.status)}>
                           {application.status}
@@ -577,7 +666,12 @@ export default function HRDashboard() {
                       </div>
                       <div className="text-xs text-gray-500 space-y-1">
                         <p>Experience: {application.experience}</p>
-                        <p>Applied: {new Date(application.appliedDate).toLocaleDateString()}</p>
+                        <p>
+                          Applied:{" "}
+                          {new Date(
+                            application.appliedDate,
+                          ).toLocaleDateString()}
+                        </p>
                         <p>Source: {application.source}</p>
                       </div>
                     </div>
@@ -599,10 +693,14 @@ export default function HRDashboard() {
                   {performanceMetrics.map((metric) => (
                     <div key={metric.department} className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <h4 className="font-medium text-gray-900 text-sm">{metric.department}</h4>
+                        <h4 className="font-medium text-gray-900 text-sm">
+                          {metric.department}
+                        </h4>
                         <div className="flex items-center gap-1">
                           <Star className="h-3 w-3 text-yellow-500" />
-                          <span className="text-sm font-medium">{metric.averageRating}</span>
+                          <span className="text-sm font-medium">
+                            {metric.averageRating}
+                          </span>
                         </div>
                       </div>
                       <div className="space-y-1">
@@ -610,7 +708,10 @@ export default function HRDashboard() {
                           <span>Employees: {metric.employeeCount}</span>
                           <span>Top Performers: {metric.topPerformers}</span>
                         </div>
-                        <Progress value={(metric.averageRating / 5) * 100} className="h-2" />
+                        <Progress
+                          value={(metric.averageRating / 5) * 100}
+                          className="h-2"
+                        />
                         {metric.improvementNeeded > 0 && (
                           <p className="text-xs text-yellow-600">
                             {metric.improvementNeeded} need improvement

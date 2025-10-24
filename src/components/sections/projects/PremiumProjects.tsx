@@ -58,9 +58,16 @@ const smartHomeProjects = [
     duration: "12 months",
     status: "completed",
     completion: 100,
-    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
-    description: "Advanced smart home security system with AI-powered monitoring, automated access control, and real-time surveillance capabilities.",
-    features: ["AI Monitoring", "Smart Locks", "24/7 Surveillance", "Mobile Control"],
+    image:
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
+    description:
+      "Advanced smart home security system with AI-powered monitoring, automated access control, and real-time surveillance capabilities.",
+    features: [
+      "AI Monitoring",
+      "Smart Locks",
+      "24/7 Surveillance",
+      "Mobile Control",
+    ],
     stats: {
       cameras: "8 Active",
       sensors: "24 Online",
@@ -79,9 +86,24 @@ const smartHomeProjects = [
         { name: "Back Door", status: "secured", battery: 82 },
       ],
       members: [
-        { name: "John", status: "home", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" },
-        { name: "Sarah", status: "away", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80" },
-        { name: "Mike", status: "home", avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&q=80" },
+        {
+          name: "John",
+          status: "home",
+          avatar:
+            "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80",
+        },
+        {
+          name: "Sarah",
+          status: "away",
+          avatar:
+            "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80",
+        },
+        {
+          name: "Mike",
+          status: "home",
+          avatar:
+            "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&q=80",
+        },
       ],
     },
     isLive: true,
@@ -91,14 +113,21 @@ const smartHomeProjects = [
     id: 2,
     title: "Residential Complex Security",
     category: "residential-security",
-    location: "Abuja, Nigeria", 
+    location: "Abuja, Nigeria",
     value: "$1.5M",
     duration: "8 months",
     status: "in-progress",
     completion: 75,
-    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80",
-    description: "Comprehensive security solution for residential complex with perimeter monitoring and visitor management system.",
-    features: ["Perimeter Security", "Visitor Management", "Access Control", "Emergency Response"],
+    image:
+      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80",
+    description:
+      "Comprehensive security solution for residential complex with perimeter monitoring and visitor management system.",
+    features: [
+      "Perimeter Security",
+      "Visitor Management",
+      "Access Control",
+      "Emergency Response",
+    ],
     stats: {
       units: "120 Protected",
       guards: "6 Active",
@@ -113,13 +142,20 @@ const smartHomeProjects = [
     title: "Commercial Building Security",
     category: "commercial-security",
     location: "Port Harcourt, Nigeria",
-    value: "$3.2M", 
+    value: "$3.2M",
     duration: "15 months",
     status: "completed",
     completion: 100,
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80",
-    description: "Enterprise-grade security system for commercial building with biometric access and integrated fire safety.",
-    features: ["Biometric Access", "Fire Integration", "Threat Detection", "Analytics Dashboard"],
+    image:
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80",
+    description:
+      "Enterprise-grade security system for commercial building with biometric access and integrated fire safety.",
+    features: [
+      "Biometric Access",
+      "Fire Integration",
+      "Threat Detection",
+      "Analytics Dashboard",
+    ],
     stats: {
       employees: "500+ Protected",
       floors: "15 Monitored",
@@ -136,7 +172,7 @@ const SecurityCameraCard = ({ camera, isActive, onClick }: any) => {
     <motion.div
       className={cn(
         "flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-300",
-        isActive ? "bg-blue-50 border border-blue-200" : "hover:bg-gray-50"
+        isActive ? "bg-blue-50 border border-blue-200" : "hover:bg-gray-50",
       )}
       onClick={onClick}
       whileHover={{ scale: 1.02 }}
@@ -155,10 +191,12 @@ const SecurityCameraCard = ({ camera, isActive, onClick }: any) => {
           <span>{camera.signal}%</span>
         </div>
       </div>
-      <div className={cn(
-        "w-2 h-2 rounded-full",
-        camera.status === "active" ? "bg-green-500" : "bg-gray-300"
-      )} />
+      <div
+        className={cn(
+          "w-2 h-2 rounded-full",
+          camera.status === "active" ? "bg-green-500" : "bg-gray-300",
+        )}
+      />
     </motion.div>
   );
 };
@@ -174,7 +212,9 @@ const SmartHomeControls = ({ activeProject, onProjectChange }: any) => {
       transition={{ duration: 0.8, delay: 0.3 }}
     >
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">Security Control</h3>
+        <h3 className="text-lg font-semibold text-gray-900">
+          Security Control
+        </h3>
         <motion.button
           className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors"
           whileHover={{ rotate: 180 }}
@@ -191,19 +231,23 @@ const SmartHomeControls = ({ activeProject, onProjectChange }: any) => {
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
             <span className="text-sm text-gray-600">
-              {activeProject?.security?.cameras?.filter((c: any) => c.status === 'active').length || 3}
+              {activeProject?.security?.cameras?.filter(
+                (c: any) => c.status === "active",
+              ).length || 3}
             </span>
           </div>
         </div>
         <div className="space-y-2">
-          {(activeProject?.security?.cameras || []).map((camera: any, index: number) => (
-            <SecurityCameraCard
-              key={index}
-              camera={camera}
-              isActive={activeCamera === index}
-              onClick={() => setActiveCamera(index)}
-            />
-          ))}
+          {(activeProject?.security?.cameras || []).map(
+            (camera: any, index: number) => (
+              <SecurityCameraCard
+                key={index}
+                camera={camera}
+                isActive={activeCamera === index}
+                onClick={() => setActiveCamera(index)}
+              />
+            ),
+          )}
         </div>
       </div>
 
@@ -214,19 +258,24 @@ const SmartHomeControls = ({ activeProject, onProjectChange }: any) => {
           <span className="text-sm text-gray-500">All Secured</span>
         </div>
         <div className="space-y-3">
-          {(activeProject?.security?.locks || []).map((lock: any, index: number) => (
-            <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <div className="flex items-center gap-2">
-                <Lock className="w-4 h-4 text-green-600" />
-                <span className="text-sm font-medium">{lock.name}</span>
+          {(activeProject?.security?.locks || []).map(
+            (lock: any, index: number) => (
+              <div
+                key={index}
+                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+              >
+                <div className="flex items-center gap-2">
+                  <Lock className="w-4 h-4 text-green-600" />
+                  <span className="text-sm font-medium">{lock.name}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Battery className="w-4 h-4 text-gray-400" />
+                  <span className="text-xs text-gray-500">{lock.battery}%</span>
+                  <div className="w-2 h-2 bg-green-500 rounded-full" />
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Battery className="w-4 h-4 text-gray-400" />
-                <span className="text-xs text-gray-500">{lock.battery}%</span>
-                <div className="w-2 h-2 bg-green-500 rounded-full" />
-              </div>
-            </div>
-          ))}
+            ),
+          )}
         </div>
       </div>
 
@@ -234,19 +283,23 @@ const SmartHomeControls = ({ activeProject, onProjectChange }: any) => {
       <div className="border-t border-gray-100 pt-6 mt-6">
         <h4 className="font-medium text-gray-900 mb-4">Active Members</h4>
         <div className="flex items-center gap-2">
-          {(activeProject?.security?.members || []).map((member: any, index: number) => (
-            <div key={index} className="relative">
-              <img
-                src={member.avatar}
-                alt={member.name}
-                className="w-8 h-8 rounded-full object-cover"
-              />
-              <div className={cn(
-                "absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white",
-                member.status === "home" ? "bg-green-500" : "bg-gray-400"
-              )} />
-            </div>
-          ))}
+          {(activeProject?.security?.members || []).map(
+            (member: any, index: number) => (
+              <div key={index} className="relative">
+                <img
+                  src={member.avatar}
+                  alt={member.name}
+                  className="w-8 h-8 rounded-full object-cover"
+                />
+                <div
+                  className={cn(
+                    "absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white",
+                    member.status === "home" ? "bg-green-500" : "bg-gray-400",
+                  )}
+                />
+              </div>
+            ),
+          )}
           <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-xs font-medium text-gray-600">
             +2
           </div>
@@ -313,7 +366,9 @@ const SmartHomeDisplay = ({ activeProject }: any) => {
           {/* Security Indicators */}
           <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-2 bg-white/90 backdrop-blur-sm rounded-lg">
             <Shield className="w-4 h-4 text-green-500" />
-            <span className="text-sm font-medium text-gray-900">All Systems Active</span>
+            <span className="text-sm font-medium text-gray-900">
+              All Systems Active
+            </span>
           </div>
 
           {/* Live Indicators */}
@@ -334,14 +389,18 @@ const SmartHomeDisplay = ({ activeProject }: any) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
           >
-            <div className="text-sm font-semibold text-gray-900 mb-3">System Status</div>
+            <div className="text-sm font-semibold text-gray-900 mb-3">
+              System Status
+            </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">
                 <span className="flex items-center gap-1">
                   <div className="w-2 h-2 bg-green-500 rounded-full" />
                   Cameras
                 </span>
-                <span className="font-medium">{activeProject?.stats?.cameras || "8 Active"}</span>
+                <span className="font-medium">
+                  {activeProject?.stats?.cameras || "8 Active"}
+                </span>
               </div>
               <div className="flex items-center justify-between text-xs">
                 <span className="flex items-center gap-1">
@@ -355,7 +414,9 @@ const SmartHomeDisplay = ({ activeProject }: any) => {
                   <div className="w-2 h-2 bg-purple-500 rounded-full" />
                   Uptime
                 </span>
-                <span className="font-medium">{activeProject?.stats?.uptime || "99.9%"}</span>
+                <span className="font-medium">
+                  {activeProject?.stats?.uptime || "99.9%"}
+                </span>
               </div>
             </div>
           </motion.div>
@@ -416,14 +477,16 @@ const SmartHomeDisplay = ({ activeProject }: any) => {
           </p>
 
           <div className="flex flex-wrap gap-2">
-            {(activeProject?.features || []).map((feature: string, i: number) => (
-              <span
-                key={i}
-                className="px-3 py-1 bg-blue-50 text-blue-600 text-sm rounded-lg font-medium"
-              >
-                {feature}
-              </span>
-            ))}
+            {(activeProject?.features || []).map(
+              (feature: string, i: number) => (
+                <span
+                  key={i}
+                  className="px-3 py-1 bg-blue-50 text-blue-600 text-sm rounded-lg font-medium"
+                >
+                  {feature}
+                </span>
+              ),
+            )}
           </div>
 
           <div className="flex items-center justify-between pt-4 border-t border-gray-100">
@@ -464,7 +527,7 @@ const SmartHomeStats = ({ activeProject }: any) => {
     {
       label: "Response Time",
       value: activeProject?.stats?.response || "< 2sec",
-      color: "text-blue-500", 
+      color: "text-blue-500",
       bgColor: "bg-blue-500",
       icon: Activity,
     },
@@ -472,7 +535,7 @@ const SmartHomeStats = ({ activeProject }: any) => {
       label: "System Uptime",
       value: activeProject?.stats?.uptime || "99.9%",
       color: "text-purple-500",
-      bgColor: "bg-purple-500", 
+      bgColor: "bg-purple-500",
       icon: TrendingUp,
     },
     {
@@ -540,9 +603,21 @@ const SmartHomeStats = ({ activeProject }: any) => {
         </h4>
         <div className="space-y-3">
           {[
-            { time: "2min ago", action: "Security system armed", type: "system" },
-            { time: "1hr ago", action: "Motion detected - Front door", type: "motion" },
-            { time: "3hr ago", action: "Access granted - Main entrance", type: "access" },
+            {
+              time: "2min ago",
+              action: "Security system armed",
+              type: "system",
+            },
+            {
+              time: "1hr ago",
+              action: "Motion detected - Front door",
+              type: "motion",
+            },
+            {
+              time: "3hr ago",
+              action: "Access granted - Main entrance",
+              type: "access",
+            },
           ].map((activity, index) => (
             <motion.div
               key={index}
@@ -552,12 +627,19 @@ const SmartHomeStats = ({ activeProject }: any) => {
               transition={{ duration: 0.3, delay: 1 + index * 0.1 }}
             >
               <div className="text-xs text-gray-500 w-16">{activity.time}</div>
-              <div className={cn(
-                "w-2 h-2 rounded-full",
-                activity.type === "system" ? "bg-green-500" :
-                activity.type === "motion" ? "bg-yellow-500" : "bg-blue-500"
-              )} />
-              <div className="text-sm text-gray-700 flex-1">{activity.action}</div>
+              <div
+                className={cn(
+                  "w-2 h-2 rounded-full",
+                  activity.type === "system"
+                    ? "bg-green-500"
+                    : activity.type === "motion"
+                      ? "bg-yellow-500"
+                      : "bg-blue-500",
+                )}
+              />
+              <div className="text-sm text-gray-700 flex-1">
+                {activity.action}
+              </div>
             </motion.div>
           ))}
         </div>
@@ -634,9 +716,9 @@ export default function PremiumProjects() {
           </h2>
 
           <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Experience our advanced security monitoring and automation system with
-            real-time threat detection, smart access control, and comprehensive
-            home protection capabilities.
+            Experience our advanced security monitoring and automation system
+            with real-time threat detection, smart access control, and
+            comprehensive home protection capabilities.
           </p>
         </motion.div>
 

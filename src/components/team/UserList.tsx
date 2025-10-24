@@ -19,7 +19,12 @@ interface UserListProps {
   onUserClick?: (user: RegisteredUser, rect: DOMRect) => void;
 }
 
-const UserList: React.FC<UserListProps> = ({ users, isLoading, onHover, onUserClick }) => {
+const UserList: React.FC<UserListProps> = ({
+  users,
+  isLoading,
+  onHover,
+  onUserClick,
+}) => {
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -34,7 +39,9 @@ const UserList: React.FC<UserListProps> = ({ users, isLoading, onHover, onUserCl
     return (
       <div className="p-6 rounded-lg border border-[#A7967E]/20 bg-white text-center">
         <p className="text-sm text-muted-foreground">No team members found.</p>
-        <p className="text-xs text-accent mt-1">Try adjusting filters or inviting colleagues.</p>
+        <p className="text-xs text-accent mt-1">
+          Try adjusting filters or inviting colleagues.
+        </p>
       </div>
     );
   }
@@ -53,7 +60,9 @@ const UserList: React.FC<UserListProps> = ({ users, isLoading, onHover, onUserCl
           }}
           onMouseLeave={() => onHover?.(null)}
           onClick={(e) => {
-            const rect = (e.currentTarget as HTMLButtonElement).getBoundingClientRect();
+            const rect = (
+              e.currentTarget as HTMLButtonElement
+            ).getBoundingClientRect();
             onUserClick?.(user, rect);
           }}
         >

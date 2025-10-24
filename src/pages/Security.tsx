@@ -188,7 +188,8 @@ export default function Security() {
       type: "suspicious",
       severity: "medium",
       title: "Unusual Login Pattern",
-      description: "Multiple login attempts from different locations within short timeframe",
+      description:
+        "Multiple login attempts from different locations within short timeframe",
       timestamp: new Date(Date.now() - 1000 * 60 * 20).toISOString(),
       resolved: false,
       affectedSystems: ["Authentication System"],
@@ -213,7 +214,7 @@ export default function Security() {
     setIsLoading(true);
     try {
       // Simulate API call to load security data
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       toast.success("Security data loaded successfully");
     } catch (error) {
       toast.error("Failed to load security data");
@@ -228,10 +229,10 @@ export default function Security() {
 
   const handleResolveAlert = async (alertId: string) => {
     try {
-      setThreatAlerts(prev =>
-        prev.map(alert =>
-          alert.id === alertId ? { ...alert, resolved: true } : alert
-        )
+      setThreatAlerts((prev) =>
+        prev.map((alert) =>
+          alert.id === alertId ? { ...alert, resolved: true } : alert,
+        ),
       );
       toast.success("Alert resolved successfully");
     } catch (error) {
@@ -269,10 +270,11 @@ export default function Security() {
     }
   };
 
-  const filteredLogs = securityLogs.filter(log => {
-    const matchesSearch = log.event.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         log.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         log.ipAddress.includes(searchQuery);
+  const filteredLogs = securityLogs.filter((log) => {
+    const matchesSearch =
+      log.event.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      log.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      log.ipAddress.includes(searchQuery);
     const matchesFilter = filterStatus === "all" || log.status === filterStatus;
     return matchesSearch && matchesFilter;
   });
@@ -350,15 +352,28 @@ export default function Security() {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6"
         >
           {securityMetrics.map((metric) => (
-            <Card key={metric.id} className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+            <Card
+              key={metric.id}
+              className="border-0 shadow-lg bg-white/90 backdrop-blur-sm"
+            >
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    {metric.name === "Active Sessions" && <Users className="h-5 w-5 text-[#A7967E]" />}
-                    {metric.name === "Failed Login Attempts" && <XCircle className="h-5 w-5 text-[#A7967E]" />}
-                    {metric.name === "Security Score" && <Shield className="h-5 w-5 text-[#A7967E]" />}
-                    {metric.name === "Threats Blocked" && <AlertTriangle className="h-5 w-5 text-[#A7967E]" />}
-                    <h3 className="font-medium text-gray-900 text-sm">{metric.name}</h3>
+                    {metric.name === "Active Sessions" && (
+                      <Users className="h-5 w-5 text-[#A7967E]" />
+                    )}
+                    {metric.name === "Failed Login Attempts" && (
+                      <XCircle className="h-5 w-5 text-[#A7967E]" />
+                    )}
+                    {metric.name === "Security Score" && (
+                      <Shield className="h-5 w-5 text-[#A7967E]" />
+                    )}
+                    {metric.name === "Threats Blocked" && (
+                      <AlertTriangle className="h-5 w-5 text-[#A7967E]" />
+                    )}
+                    <h3 className="font-medium text-gray-900 text-sm">
+                      {metric.name}
+                    </h3>
                   </div>
                   <Badge className={getStatusColor(metric.status)}>
                     {metric.status}
@@ -374,9 +389,15 @@ export default function Security() {
                     </p>
                   </div>
                   <div className="flex items-center gap-1">
-                    {metric.trend === "up" && <TrendingUp className="h-4 w-4 text-green-600" />}
-                    {metric.trend === "down" && <TrendingDown className="h-4 w-4 text-red-600" />}
-                    {metric.trend === "stable" && <Activity className="h-4 w-4 text-gray-600" />}
+                    {metric.trend === "up" && (
+                      <TrendingUp className="h-4 w-4 text-green-600" />
+                    )}
+                    {metric.trend === "down" && (
+                      <TrendingDown className="h-4 w-4 text-red-600" />
+                    )}
+                    {metric.trend === "stable" && (
+                      <Activity className="h-4 w-4 text-gray-600" />
+                    )}
                   </div>
                 </div>
               </CardContent>
@@ -394,7 +415,10 @@ export default function Security() {
             <CardContent className="p-6">
               <Tabs value={activeTab} onValueChange={setActiveTab}>
                 <TabsList className="grid w-full grid-cols-4">
-                  <TabsTrigger value="overview" className="flex items-center gap-2">
+                  <TabsTrigger
+                    value="overview"
+                    className="flex items-center gap-2"
+                  >
                     <Shield className="h-4 w-4" />
                     Overview
                   </TabsTrigger>
@@ -402,11 +426,17 @@ export default function Security() {
                     <FileText className="h-4 w-4" />
                     Access Logs
                   </TabsTrigger>
-                  <TabsTrigger value="threats" className="flex items-center gap-2">
+                  <TabsTrigger
+                    value="threats"
+                    className="flex items-center gap-2"
+                  >
                     <AlertTriangle className="h-4 w-4" />
                     Threat Alerts
                   </TabsTrigger>
-                  <TabsTrigger value="monitoring" className="flex items-center gap-2">
+                  <TabsTrigger
+                    value="monitoring"
+                    className="flex items-center gap-2"
+                  >
                     <Activity className="h-4 w-4" />
                     Monitoring
                   </TabsTrigger>
@@ -461,14 +491,21 @@ export default function Security() {
                       <CardContent>
                         <div className="space-y-3">
                           {securityLogs.slice(0, 4).map((log) => (
-                            <div key={log.id} className="flex items-center justify-between p-2 rounded border">
+                            <div
+                              key={log.id}
+                              className="flex items-center justify-between p-2 rounded border"
+                            >
                               <div className="flex items-center gap-3">
                                 <Badge className={getStatusColor(log.status)}>
                                   {log.status}
                                 </Badge>
                                 <div>
-                                  <p className="font-medium text-sm">{log.event}</p>
-                                  <p className="text-xs text-gray-600">{log.user}</p>
+                                  <p className="font-medium text-sm">
+                                    {log.event}
+                                  </p>
+                                  <p className="text-xs text-gray-600">
+                                    {log.user}
+                                  </p>
                                 </div>
                               </div>
                               <span className="text-xs text-gray-500">
@@ -494,7 +531,10 @@ export default function Security() {
                         className="pl-10"
                       />
                     </div>
-                    <Select value={filterStatus} onValueChange={setFilterStatus}>
+                    <Select
+                      value={filterStatus}
+                      onValueChange={setFilterStatus}
+                    >
                       <SelectTrigger className="w-40">
                         <SelectValue />
                       </SelectTrigger>
@@ -530,16 +570,23 @@ export default function Security() {
                             <TableCell className="font-mono text-sm">
                               {new Date(log.timestamp).toLocaleString()}
                             </TableCell>
-                            <TableCell className="font-medium">{log.event}</TableCell>
+                            <TableCell className="font-medium">
+                              {log.event}
+                            </TableCell>
                             <TableCell>{log.user}</TableCell>
-                            <TableCell className="font-mono">{log.ipAddress}</TableCell>
+                            <TableCell className="font-mono">
+                              {log.ipAddress}
+                            </TableCell>
                             <TableCell>{log.location}</TableCell>
                             <TableCell>
                               <Badge className={getStatusColor(log.status)}>
                                 {log.status}
                               </Badge>
                             </TableCell>
-                            <TableCell className="max-w-xs truncate" title={log.details}>
+                            <TableCell
+                              className="max-w-xs truncate"
+                              title={log.details}
+                            >
                               {log.details}
                             </TableCell>
                           </TableRow>
@@ -553,22 +600,28 @@ export default function Security() {
                 <TabsContent value="threats" className="space-y-6 mt-6">
                   <div className="space-y-4">
                     {threatAlerts.map((alert) => (
-                      <Card key={alert.id} className={`border-l-4 ${
-                        alert.severity === "critical" ? "border-l-red-500" :
-                        alert.severity === "high" ? "border-l-orange-500" :
-                        alert.severity === "medium" ? "border-l-yellow-500" :
-                        "border-l-blue-500"
-                      }`}>
+                      <Card
+                        key={alert.id}
+                        className={`border-l-4 ${
+                          alert.severity === "critical"
+                            ? "border-l-red-500"
+                            : alert.severity === "high"
+                              ? "border-l-orange-500"
+                              : alert.severity === "medium"
+                                ? "border-l-yellow-500"
+                                : "border-l-blue-500"
+                        }`}
+                      >
                         <CardContent className="p-4">
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
                               <div className="flex items-center gap-3 mb-2">
-                                <Badge className={getSeverityColor(alert.severity)}>
+                                <Badge
+                                  className={getSeverityColor(alert.severity)}
+                                >
                                   {alert.severity.toUpperCase()}
                                 </Badge>
-                                <Badge variant="outline">
-                                  {alert.type}
-                                </Badge>
+                                <Badge variant="outline">{alert.type}</Badge>
                                 {alert.resolved && (
                                   <Badge className="text-green-600 bg-green-100">
                                     <CheckCircle className="h-3 w-3 mr-1" />
@@ -576,8 +629,12 @@ export default function Security() {
                                   </Badge>
                                 )}
                               </div>
-                              <h3 className="font-semibold text-[#142E54] mb-1">{alert.title}</h3>
-                              <p className="text-gray-600 text-sm mb-2">{alert.description}</p>
+                              <h3 className="font-semibold text-[#142E54] mb-1">
+                                {alert.title}
+                              </h3>
+                              <p className="text-gray-600 text-sm mb-2">
+                                {alert.description}
+                              </p>
                               <div className="flex items-center gap-4 text-xs text-gray-500">
                                 <span className="flex items-center gap-1">
                                   <Clock className="h-3 w-3" />
@@ -619,15 +676,21 @@ export default function Security() {
                         <div className="space-y-4">
                           <div className="flex items-center justify-between">
                             <span>Firewall Status</span>
-                            <Badge className="text-green-600 bg-green-100">Active</Badge>
+                            <Badge className="text-green-600 bg-green-100">
+                              Active
+                            </Badge>
                           </div>
                           <div className="flex items-center justify-between">
                             <span>DDoS Protection</span>
-                            <Badge className="text-green-600 bg-green-100">Enabled</Badge>
+                            <Badge className="text-green-600 bg-green-100">
+                              Enabled
+                            </Badge>
                           </div>
                           <div className="flex items-center justify-between">
                             <span>SSL Certificate</span>
-                            <Badge className="text-green-600 bg-green-100">Valid</Badge>
+                            <Badge className="text-green-600 bg-green-100">
+                              Valid
+                            </Badge>
                           </div>
                           <div className="flex items-center justify-between">
                             <span>VPN Connections</span>
@@ -648,15 +711,21 @@ export default function Security() {
                         <div className="space-y-4">
                           <div className="flex items-center justify-between">
                             <span>Encryption Status</span>
-                            <Badge className="text-green-600 bg-green-100">AES-256</Badge>
+                            <Badge className="text-green-600 bg-green-100">
+                              AES-256
+                            </Badge>
                           </div>
                           <div className="flex items-center justify-between">
                             <span>Backup Status</span>
-                            <Badge className="text-green-600 bg-green-100">Current</Badge>
+                            <Badge className="text-green-600 bg-green-100">
+                              Current
+                            </Badge>
                           </div>
                           <div className="flex items-center justify-between">
                             <span>Data Integrity</span>
-                            <Badge className="text-green-600 bg-green-100">Verified</Badge>
+                            <Badge className="text-green-600 bg-green-100">
+                              Verified
+                            </Badge>
                           </div>
                           <div className="flex items-center justify-between">
                             <span>Last Backup</span>
@@ -685,7 +754,8 @@ export default function Security() {
                 <div className="flex items-center gap-2 text-amber-800">
                   <AlertTriangle className="h-5 w-5" />
                   <p className="text-sm">
-                    You have read-only access to security information. Contact an administrator for security management actions.
+                    You have read-only access to security information. Contact
+                    an administrator for security management actions.
                   </p>
                 </div>
               </CardContent>

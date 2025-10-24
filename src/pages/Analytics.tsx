@@ -211,7 +211,7 @@ export default function Analytics() {
     setIsLoading(true);
     try {
       // Simulate API call to load analytics data
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       toast.success("Analytics data loaded successfully");
     } catch (error) {
       toast.error("Failed to load analytics data");
@@ -243,15 +243,15 @@ export default function Analytics() {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-NG', {
-      style: 'currency',
-      currency: 'NGN',
+    return new Intl.NumberFormat("en-NG", {
+      style: "currency",
+      currency: "NGN",
       minimumFractionDigits: 0,
     }).format(amount);
   };
 
   const formatNumber = (num: number) => {
-    return new Intl.NumberFormat('en-US').format(num);
+    return new Intl.NumberFormat("en-US").format(num);
   };
 
   if (isLoading) {
@@ -259,7 +259,9 @@ export default function Analytics() {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#EAE6DF] to-[#C2CCC5]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#A7967E] mx-auto mb-4"></div>
-          <p className="text-[#142E54] font-medium">Loading analytics data...</p>
+          <p className="text-[#142E54] font-medium">
+            Loading analytics data...
+          </p>
         </div>
       </div>
     );
@@ -335,23 +337,38 @@ export default function Analytics() {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6"
         >
           {metrics.map((metric) => (
-            <Card key={metric.id} className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+            <Card
+              key={metric.id}
+              className="border-0 shadow-lg bg-white/90 backdrop-blur-sm"
+            >
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    {metric.icon === "dollar" && <DollarSign className="h-5 w-5 text-[#A7967E]" />}
-                    {metric.icon === "briefcase" && <Briefcase className="h-5 w-5 text-[#A7967E]" />}
-                    {metric.icon === "users" && <Users className="h-5 w-5 text-[#A7967E]" />}
-                    {metric.icon === "target" && <Target className="h-5 w-5 text-[#A7967E]" />}
-                    <h3 className="font-medium text-gray-900 text-sm">{metric.name}</h3>
+                    {metric.icon === "dollar" && (
+                      <DollarSign className="h-5 w-5 text-[#A7967E]" />
+                    )}
+                    {metric.icon === "briefcase" && (
+                      <Briefcase className="h-5 w-5 text-[#A7967E]" />
+                    )}
+                    {metric.icon === "users" && (
+                      <Users className="h-5 w-5 text-[#A7967E]" />
+                    )}
+                    {metric.icon === "target" && (
+                      <Target className="h-5 w-5 text-[#A7967E]" />
+                    )}
+                    <h3 className="font-medium text-gray-900 text-sm">
+                      {metric.name}
+                    </h3>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-2xl font-bold text-[#142E54]">
-                      {metric.unit === "₦" ? formatCurrency(metric.value) : 
-                       metric.unit === "%" ? `${metric.value}%` :
-                       `${formatNumber(metric.value)} ${metric.unit}`}
+                      {metric.unit === "₦"
+                        ? formatCurrency(metric.value)
+                        : metric.unit === "%"
+                          ? `${metric.value}%`
+                          : `${formatNumber(metric.value)} ${metric.unit}`}
                     </p>
                   </div>
                   <div className="flex items-center gap-1">
@@ -360,10 +377,15 @@ export default function Analytics() {
                     ) : (
                       <TrendingDown className="h-4 w-4 text-red-600" />
                     )}
-                    <span className={`text-sm font-medium ${
-                      metric.changeType === "increase" ? "text-green-600" : "text-red-600"
-                    }`}>
-                      {metric.changeType === "increase" ? "+" : "-"}{metric.change}%
+                    <span
+                      className={`text-sm font-medium ${
+                        metric.changeType === "increase"
+                          ? "text-green-600"
+                          : "text-red-600"
+                      }`}
+                    >
+                      {metric.changeType === "increase" ? "+" : "-"}
+                      {metric.change}%
                     </span>
                   </div>
                 </div>
@@ -383,15 +405,24 @@ export default function Analytics() {
             <CardContent className="p-6">
               <Tabs value={activeTab} onValueChange={setActiveTab}>
                 <TabsList className="grid w-full grid-cols-5">
-                  <TabsTrigger value="overview" className="flex items-center gap-2">
+                  <TabsTrigger
+                    value="overview"
+                    className="flex items-center gap-2"
+                  >
                     <BarChart3 className="h-4 w-4" />
                     Overview
                   </TabsTrigger>
-                  <TabsTrigger value="projects" className="flex items-center gap-2">
+                  <TabsTrigger
+                    value="projects"
+                    className="flex items-center gap-2"
+                  >
                     <Building className="h-4 w-4" />
                     Projects
                   </TabsTrigger>
-                  <TabsTrigger value="revenue" className="flex items-center gap-2">
+                  <TabsTrigger
+                    value="revenue"
+                    className="flex items-center gap-2"
+                  >
                     <DollarSign className="h-4 w-4" />
                     Revenue
                   </TabsTrigger>
@@ -399,7 +430,10 @@ export default function Analytics() {
                     <Users className="h-4 w-4" />
                     Team
                   </TabsTrigger>
-                  <TabsTrigger value="performance" className="flex items-center gap-2">
+                  <TabsTrigger
+                    value="performance"
+                    className="flex items-center gap-2"
+                  >
                     <Activity className="h-4 w-4" />
                     Performance
                   </TabsTrigger>
@@ -414,19 +448,26 @@ export default function Analytics() {
                           <LineChart className="h-5 w-5" />
                           Revenue Trend
                         </CardTitle>
-                        <CardDescription>Monthly revenue over the last 6 months</CardDescription>
+                        <CardDescription>
+                          Monthly revenue over the last 6 months
+                        </CardDescription>
                       </CardHeader>
                       <CardContent>
                         <div className="h-64 flex items-end justify-between gap-2">
                           {revenueData.map((item, index) => (
-                            <div key={index} className="flex flex-col items-center flex-1">
+                            <div
+                              key={index}
+                              className="flex flex-col items-center flex-1"
+                            >
                               <div
                                 className="bg-[#142E54] rounded-t w-full transition-all duration-300 hover:bg-[#A7967E]"
                                 style={{
-                                  height: `${(item.value / Math.max(...revenueData.map(d => d.value))) * 200}px`
+                                  height: `${(item.value / Math.max(...revenueData.map((d) => d.value))) * 200}px`,
                                 }}
                               />
-                              <span className="text-xs text-gray-600 mt-2">{item.name}</span>
+                              <span className="text-xs text-gray-600 mt-2">
+                                {item.name}
+                              </span>
                               <span className="text-xs font-medium text-[#142E54]">
                                 {formatCurrency(item.value)}
                               </span>
@@ -447,7 +488,10 @@ export default function Analytics() {
                       <CardContent>
                         <div className="space-y-4">
                           {projectData.map((item, index) => (
-                            <div key={index} className="flex items-center justify-between">
+                            <div
+                              key={index}
+                              className="flex items-center justify-between"
+                            >
                               <div className="flex items-center gap-3">
                                 <div
                                   className="w-4 h-4 rounded"
@@ -461,11 +505,13 @@ export default function Analytics() {
                                     className="h-2 rounded-full"
                                     style={{
                                       width: `${item.value}%`,
-                                      backgroundColor: item.color
+                                      backgroundColor: item.color,
                                     }}
                                   />
                                 </div>
-                                <span className="text-sm font-medium w-8">{item.value}%</span>
+                                <span className="text-sm font-medium w-8">
+                                  {item.value}%
+                                </span>
                               </div>
                             </div>
                           ))}
@@ -485,14 +531,25 @@ export default function Analytics() {
                       <CardContent>
                         <div className="space-y-3">
                           {trafficData.map((item, index) => (
-                            <div key={index} className="flex items-center justify-between">
+                            <div
+                              key={index}
+                              className="flex items-center justify-between"
+                            >
                               <div className="flex items-center gap-2">
-                                {item.name === "Desktop" && <Monitor className="h-4 w-4" />}
-                                {item.name === "Mobile" && <Smartphone className="h-4 w-4" />}
-                                {item.name === "Tablet" && <Monitor className="h-4 w-4" />}
+                                {item.name === "Desktop" && (
+                                  <Monitor className="h-4 w-4" />
+                                )}
+                                {item.name === "Mobile" && (
+                                  <Smartphone className="h-4 w-4" />
+                                )}
+                                {item.name === "Tablet" && (
+                                  <Monitor className="h-4 w-4" />
+                                )}
                                 <span className="text-sm">{item.name}</span>
                               </div>
-                              <span className="font-semibold">{item.value}%</span>
+                              <span className="font-semibold">
+                                {item.value}%
+                              </span>
                             </div>
                           ))}
                         </div>
@@ -509,9 +566,14 @@ export default function Analytics() {
                       <CardContent>
                         <div className="space-y-3">
                           {locationData.slice(0, 5).map((item, index) => (
-                            <div key={index} className="flex items-center justify-between">
+                            <div
+                              key={index}
+                              className="flex items-center justify-between"
+                            >
                               <span className="text-sm">{item.name}</span>
-                              <span className="font-semibold">{item.value}%</span>
+                              <span className="font-semibold">
+                                {item.value}%
+                              </span>
                             </div>
                           ))}
                         </div>
@@ -528,7 +590,9 @@ export default function Analytics() {
                       <CardContent>
                         <div className="space-y-3">
                           <div className="flex items-center justify-between">
-                            <span className="text-sm">Avg. Project Duration</span>
+                            <span className="text-sm">
+                              Avg. Project Duration
+                            </span>
                             <span className="font-semibold">8.5 months</span>
                           </div>
                           <div className="flex items-center justify-between">
@@ -557,42 +621,71 @@ export default function Analytics() {
                         <CardContent className="p-6">
                           <div className="flex items-start justify-between mb-4">
                             <div>
-                              <h3 className="font-semibold text-[#142E54] text-lg">{project.name}</h3>
+                              <h3 className="font-semibold text-[#142E54] text-lg">
+                                {project.name}
+                              </h3>
                               <p className="text-gray-600 text-sm">
-                                Deadline: {new Date(project.deadline).toLocaleDateString()}
+                                Deadline:{" "}
+                                {new Date(
+                                  project.deadline,
+                                ).toLocaleDateString()}
                               </p>
                             </div>
                             <Badge className={getStatusColor(project.status)}>
                               {project.status.replace("-", " ")}
                             </Badge>
                           </div>
-                          
+
                           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                             <div>
                               <p className="text-sm text-gray-600">Progress</p>
                               <div className="flex items-center gap-2">
-                                <Progress value={project.progress} className="flex-1" />
-                                <span className="text-sm font-medium">{project.progress}%</span>
+                                <Progress
+                                  value={project.progress}
+                                  className="flex-1"
+                                />
+                                <span className="text-sm font-medium">
+                                  {project.progress}%
+                                </span>
                               </div>
                             </div>
                             <div>
                               <p className="text-sm text-gray-600">Budget</p>
-                              <p className="font-semibold">{formatCurrency(project.budget)}</p>
+                              <p className="font-semibold">
+                                {formatCurrency(project.budget)}
+                              </p>
                             </div>
                             <div>
                               <p className="text-sm text-gray-600">Spent</p>
-                              <p className="font-semibold">{formatCurrency(project.spent)}</p>
+                              <p className="font-semibold">
+                                {formatCurrency(project.spent)}
+                              </p>
                             </div>
                             <div>
                               <p className="text-sm text-gray-600">Team Size</p>
-                              <p className="font-semibold">{project.team} members</p>
+                              <p className="font-semibold">
+                                {project.team} members
+                              </p>
                             </div>
                           </div>
 
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4 text-sm text-gray-600">
-                              <span>Budget Utilization: {Math.round((project.spent / project.budget) * 100)}%</span>
-                              <span>Days Remaining: {Math.ceil((new Date(project.deadline).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))}</span>
+                              <span>
+                                Budget Utilization:{" "}
+                                {Math.round(
+                                  (project.spent / project.budget) * 100,
+                                )}
+                                %
+                              </span>
+                              <span>
+                                Days Remaining:{" "}
+                                {Math.ceil(
+                                  (new Date(project.deadline).getTime() -
+                                    new Date().getTime()) /
+                                    (1000 * 60 * 60 * 24),
+                                )}
+                              </span>
                             </div>
                             <Button variant="outline" size="sm">
                               <Eye className="h-4 w-4 mr-2" />
@@ -611,25 +704,35 @@ export default function Analytics() {
                     <Card>
                       <CardHeader>
                         <CardTitle>Revenue Breakdown</CardTitle>
-                        <CardDescription>Revenue by project category</CardDescription>
+                        <CardDescription>
+                          Revenue by project category
+                        </CardDescription>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-4">
                           <div className="flex items-center justify-between">
                             <span>Residential Projects</span>
-                            <span className="font-semibold">{formatCurrency(1102500)}</span>
+                            <span className="font-semibold">
+                              {formatCurrency(1102500)}
+                            </span>
                           </div>
                           <div className="flex items-center justify-between">
                             <span>Commercial Projects</span>
-                            <span className="font-semibold">{formatCurrency(735000)}</span>
+                            <span className="font-semibold">
+                              {formatCurrency(735000)}
+                            </span>
                           </div>
                           <div className="flex items-center justify-between">
                             <span>Infrastructure</span>
-                            <span className="font-semibold">{formatCurrency(367500)}</span>
+                            <span className="font-semibold">
+                              {formatCurrency(367500)}
+                            </span>
                           </div>
                           <div className="flex items-center justify-between">
                             <span>Renovation</span>
-                            <span className="font-semibold">{formatCurrency(245000)}</span>
+                            <span className="font-semibold">
+                              {formatCurrency(245000)}
+                            </span>
                           </div>
                         </div>
                       </CardContent>
@@ -638,7 +741,9 @@ export default function Analytics() {
                     <Card>
                       <CardHeader>
                         <CardTitle>Payment Status</CardTitle>
-                        <CardDescription>Current payment status overview</CardDescription>
+                        <CardDescription>
+                          Current payment status overview
+                        </CardDescription>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-4">
@@ -647,21 +752,27 @@ export default function Analytics() {
                               <CheckCircle className="h-4 w-4 text-green-600" />
                               <span>Paid</span>
                             </div>
-                            <span className="font-semibold">{formatCurrency(2100000)}</span>
+                            <span className="font-semibold">
+                              {formatCurrency(2100000)}
+                            </span>
                           </div>
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <Clock className="h-4 w-4 text-yellow-600" />
                               <span>Pending</span>
                             </div>
-                            <span className="font-semibold">{formatCurrency(280000)}</span>
+                            <span className="font-semibold">
+                              {formatCurrency(280000)}
+                            </span>
                           </div>
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <AlertCircle className="h-4 w-4 text-red-600" />
                               <span>Overdue</span>
                             </div>
-                            <span className="font-semibold">{formatCurrency(70000)}</span>
+                            <span className="font-semibold">
+                              {formatCurrency(70000)}
+                            </span>
                           </div>
                         </div>
                       </CardContent>
@@ -806,29 +917,39 @@ export default function Analytics() {
                           <div className="flex items-center justify-between">
                             <span>Revenue Target</span>
                             <div className="text-right">
-                              <p className="font-semibold">{formatCurrency(2800000)}</p>
-                              <p className="text-sm text-gray-600">87% achieved</p>
+                              <p className="font-semibold">
+                                {formatCurrency(2800000)}
+                              </p>
+                              <p className="text-sm text-gray-600">
+                                87% achieved
+                              </p>
                             </div>
                           </div>
                           <div className="flex items-center justify-between">
                             <span>Project Milestones</span>
                             <div className="text-right">
                               <p className="font-semibold">24 / 28</p>
-                              <p className="text-sm text-gray-600">86% achieved</p>
+                              <p className="text-sm text-gray-600">
+                                86% achieved
+                              </p>
                             </div>
                           </div>
                           <div className="flex items-center justify-between">
                             <span>Team Utilization</span>
                             <div className="text-right">
                               <p className="font-semibold">87%</p>
-                              <p className="text-sm text-gray-600">Target: 85%</p>
+                              <p className="text-sm text-gray-600">
+                                Target: 85%
+                              </p>
                             </div>
                           </div>
                           <div className="flex items-center justify-between">
                             <span>Quality Score</span>
                             <div className="text-right">
                               <p className="font-semibold">89%</p>
-                              <p className="text-sm text-gray-600">Target: 90%</p>
+                              <p className="text-sm text-gray-600">
+                                Target: 90%
+                              </p>
                             </div>
                           </div>
                         </div>
@@ -854,7 +975,8 @@ export default function Analytics() {
                 <div className="flex items-center gap-2 text-amber-800">
                   <AlertCircle className="h-5 w-5" />
                   <p className="text-sm">
-                    You have read-only access to analytics data. Contact an administrator for advanced analytics features.
+                    You have read-only access to analytics data. Contact an
+                    administrator for advanced analytics features.
                   </p>
                 </div>
               </CardContent>

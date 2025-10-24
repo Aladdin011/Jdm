@@ -1,133 +1,169 @@
-# Builder Aura Field
+# JD Marc Construction - Modern Construction Management Platform
 
-A comprehensive dashboard application with role-based access control and department-specific dashboards.
+A comprehensive, modern web application built for JD Marc Construction, featuring advanced dashboard management, real-time communication, and streamlined project workflows.
 
-## Features
+## 🏗️ Tech Stack
 
-- **Multi-Department Support**: Specialized dashboards for different departments
-- **Role-Based Access Control**: Admin, staff, and user roles with appropriate permissions
-- **Secure Authentication**: Two-step authentication with department code verification
-- **Enhanced Session Management**: Secure session handling with encryption and expiry
-- **Responsive Design**: Modern UI that works across devices
-- **Seed Accounts**: Pre-configured test accounts for quick dashboard access
+- **Frontend**: React 18 + TypeScript + Vite
+- **Styling**: Tailwind CSS + Framer Motion
+- **Backend**: Supabase (Database + Authentication + Real-time)
+- **UI Components**: Radix UI + Custom Components
+- **State Management**: Zustand + React Context
+- **Deployment**: Hostinger (Frontend) + Supabase (Backend)
 
-## Getting Started
+## 📁 Project Structure
+
+```
+src/
+├── components/
+│   ├── admin/           # Dashboard components for different departments
+│   ├── auth/            # Authentication components
+│   ├── calls/           # Video call and communication features
+│   ├── features/        # Feature-specific components
+│   ├── layout/          # Layout and navigation components
+│   ├── sections/        # Page sections and content blocks
+│   ├── team/            # Team collaboration components
+│   └── ui/              # Reusable UI components
+├── contexts/            # React contexts for global state
+├── hooks/               # Custom React hooks
+├── lib/                 # Utility libraries and configurations
+├── pages/               # Main application pages
+├── services/            # API services and external integrations
+├── stores/              # Zustand state stores
+├── styles/              # Global styles and themes
+└── utils/               # Utility functions
+```
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js (v14 or higher)
+- Node.js 18+ 
 - npm or yarn
+- Supabase account
 
 ### Installation
 
+1. **Clone the repository**
 ```bash
-# Clone the repository
 git clone <repository-url>
+   cd jd-marc-construction
+   ```
 
-# Navigate to the project directory
-cd Builder-aura-field
-
-# Install dependencies
+2. **Install dependencies**
+   ```bash
 npm install
+   ```
 
-# Start the development server
+3. **Environment Setup**
+   Create a `.env` file in the root directory:
+   ```env
+   VITE_SUPABASE_URL=your_supabase_url_here
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+   ```
+
+4. **Start development server**
+   ```bash
 npm run dev
 ```
 
-## Deployment (Render Static Site)
+5. **Build for production**
+   ```bash
+   npm run build
+   ```
 
-- Ensure `vite.config.ts` has `base: "/"` and `plugins: [react()]`.
-- Build locally to verify:
-  - `npm install && npm run build` (outputs to `dist/`)
-- Push latest code to GitHub on the `main` branch.
-- On Render: New → Static Site → connect your GitHub repo.
-- Configure:
-  - Branch: `main`
-  - Build Command: `npm install && npm run build`
-  - Publish Directory: `dist`
-- Environment variables (build-time for Vite):
-  - Set `VITE_API_URL` to your backend API, e.g. `https://api.jdmarcng.com`
+## 🎯 Features
 
-### Optional: render.yaml auto-config
+### Department Dashboards
+- **Admin Dashboard**: System administration and user management
+- **Accounts Dashboard**: Financial management and accounting
+- **Business Administration**: Business development and operations
+- **Executive Assistant**: Executive support and coordination
+- **Digital Marketing**: Marketing campaigns and analytics
+- **HR Dashboard**: Human resources and employee management
+- **Project Dashboard**: Project management and tracking
+- **Secretariat Dashboard**: Administrative support and documentation
 
-This repo includes a root `render.yaml` to auto-configure the static site:
+### Core Functionality
+- **Authentication**: Secure login with department-based access
+- **Real-time Communication**: Video calls and team collaboration
+- **Responsive Design**: Mobile-first approach with modern UI
+- **Theme Support**: Light/dark mode with custom themes
+- **Analytics**: Business intelligence and performance tracking
+- **File Management**: Document upload and management via Supabase
 
-```
-services:
-  - type: web
-    name: jdmarc-frontend
-    env: static
-    buildCommand: npm install && npm run build
-    staticPublishPath: dist
-    autoDeploy: true
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
-```
+## 🛠️ Development
 
-### Verify Deployment
+### Available Scripts
 
-- After deploy, open the Render URL (e.g., `https://jdmarc-frontend.onrender.com`).
-- Confirm routes load correctly (client-side SPA rewrite is configured).
-- Validate API calls use `VITE_API_URL` or fallback logic in `src/services/api.ts`.
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run format` - Format code with Prettier
+- `npm run lint` - Run ESLint
 
-### Post-Deployment
+### Code Standards
 
-- Enable Automatic Deploys from GitHub.
-- Keep `.gitignore` excluding `node_modules`, `.vite`, and `dist`.
+- **TypeScript**: Strict type checking enabled
+- **Prettier**: Consistent code formatting
+- **ESLint**: Code quality and best practices
+- **Import Aliases**: Use `@/` for src directory imports
 
-## Deployment (Hostinger via FTP)
+## 🌐 Deployment
 
-- Ensure `vite.config.ts` has `base: "./"` for relative assets.
-- Confirm SPA rewrites via `public/_redirects` and `public/.htaccess` (included).
-- Build locally to verify:
-  - `npm install && npm run build` (outputs to `dist/`)
-- Configure FTP credentials:
-  - Copy `.env.ftp.example` to `.env.ftp` and fill `FTP_HOST`, `FTP_USER`, `FTP_PASSWORD`, `FTP_REMOTE_DIR`.
-- Deploy via FTP:
-  - `npm run deploy:ftp`
-- What it does:
-  - Builds if `dist/` is missing
-  - Uploads `dist/` to `FTP_REMOTE_DIR`
-  - Uploads `public/.htaccess` to enable SPA routing and headers
-- Verify:
-  - Open your Hostinger site URL and test routes (client-side navigation)
-  - Check Console for 404s on assets; relative base and SPA redirects should prevent these
+### Frontend (Hostinger)
+1. Build the project: `npm run build`
+2. Upload the `dist/` folder to your Hostinger hosting
+3. Configure domain and SSL settings
 
-### Hostinger Production Cautions
+### Backend (Supabase)
+1. Set up Supabase project
+2. Configure database schema
+3. Set up authentication policies
+4. Deploy edge functions if needed
 
-- Set `VITE_API_URL` in `.env.production` to your backend (e.g., `https://api.jdmarcng.com`).
-- Ensure `VITE_ENABLE_SEED_ACCOUNTS=false` in `.env.production` to hide test accounts.
-- Confirm `dist/` contains `index.html`, `_redirects`, and `.htaccess` after build.
-- In production, console and debugger statements are stripped for cleaner logs.
-- If fonts from Google fail to load due to network policies, the app still functions; consider self-hosting fonts under `public/` for strict environments.
-- Private routes use `src/components/auth/PrivateRoute.tsx`; unauthenticated users are redirected to `/login`.
+## 🔧 Configuration
 
-### Backend API Connectivity
+### Supabase Setup
+1. Create a new Supabase project
+2. Run the schema migration from `supabase/schema.sql`
+3. Configure authentication settings
+4. Set up storage buckets for file uploads
 
-- In development, API calls default to the Vite proxy at `/api`; configure the proxy in `vite.config.ts`.
-- In production, API calls require `VITE_API_URL`; there is no fallback to external Render URLs.
-- Token storage keys align between frontend and API service: `builder_aura_auth_token` and `builder_aura_refresh_token` (override via env).
+### Environment Variables
+- `VITE_SUPABASE_URL`: Your Supabase project URL
+- `VITE_SUPABASE_ANON_KEY`: Your Supabase anonymous key
 
-## Seed Accounts Feature
+## 📱 Browser Support
 
-The application includes a seed account feature that provides quick and easy login access to different dashboard types. This is particularly useful for development, testing, and demonstration purposes.
+- Chrome 90+
+- Firefox 88+
+- Safari 14+
+- Edge 90+
 
-### How to Use Seed Accounts
+## 🤝 Contributing
 
-1. Navigate to the login page
-2. Click on the "Test Accounts" dropdown button
-3. Select an account from the list and click "Use"
-4. The system will automatically log you in with the selected account
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests and linting
+5. Submit a pull request
 
-For detailed information about available seed accounts and their credentials, refer to the [Seed Accounts Guide](./SEED_ACCOUNTS_GUIDE.md).
+## 📄 License
 
-## Documentation
+This project is proprietary software developed for JD Marc Construction.
 
-- [User Login Guide](./USER_LOGIN_GUIDE.md)
-- [Seed Accounts Guide](./SEED_ACCOUNTS_GUIDE.md)
+## 👥 Team
 
-## License
+**JD Marc Construction Team**
+- Development: Modern React/TypeScript stack
+- Design: Custom UI components with Tailwind CSS
+- Backend: Supabase integration for scalability
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+## 📞 Support
+
+For technical support or questions, please contact the development team.
+
+---
+
+**Built with ❤️ for JD Marc Construction**

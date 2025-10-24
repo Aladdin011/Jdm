@@ -12,7 +12,11 @@ export default function ThemeToggle() {
       onClick={() => setTheme(isDark ? "light" : "dark")}
       className="w-full justify-start"
     >
-      {isDark ? <Sun className="mr-2 h-4 w-4" /> : <Moon className="mr-2 h-4 w-4" />}
+      {isDark ? (
+        <Sun className="mr-2 h-4 w-4" />
+      ) : (
+        <Moon className="mr-2 h-4 w-4" />
+      )}
       {isDark ? "Light Mode" : "Dark Mode"}
     </Button>
   );

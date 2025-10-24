@@ -77,7 +77,7 @@ export default function ForgotPassword() {
   const handleSendResetEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    
+
     if (!resetData.email) {
       setError("Please enter your email address");
       return;
@@ -92,7 +92,7 @@ export default function ForgotPassword() {
 
     try {
       const result = await forgotPassword(resetData.email);
-      
+
       if (result.success) {
         setSuccess("Password reset code sent to your email");
         setCurrentStep("code");
@@ -125,8 +125,8 @@ export default function ForgotPassword() {
 
     try {
       // Simulate API call to verify code
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       // For demo purposes, accept any 6-digit code
       if (resetData.code.length === 6) {
         setSuccess("Code verified successfully");
@@ -167,7 +167,7 @@ export default function ForgotPassword() {
       const result = await resetPassword(
         resetData.email,
         resetData.code,
-        resetData.newPassword
+        resetData.newPassword,
       );
 
       if (result.success) {
@@ -217,7 +217,8 @@ export default function ForgotPassword() {
                     alt="JD Marc Limited Logo"
                     className="h-16 w-auto mx-auto object-contain"
                     onError={(e) => {
-                      e.currentTarget.src = "https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F6982878bae124d2589b95f89b1a5cf5b?format=webp&width=200";
+                      e.currentTarget.src =
+                        "https://cdn.builder.io/api/v1/image/assets%2F751ea84be0da437c8dd3f1bf04173189%2F6982878bae124d2589b95f89b1a5cf5b?format=webp&width=200";
                     }}
                   />
                 </Link>
@@ -225,7 +226,8 @@ export default function ForgotPassword() {
                   Reset Password
                 </CardTitle>
                 <CardDescription className="text-arch-light-blue">
-                  {currentStep === "email" && "Enter your email to reset your password"}
+                  {currentStep === "email" &&
+                    "Enter your email to reset your password"}
                   {currentStep === "code" && "Enter the verification code"}
                   {currentStep === "password" && "Create a new password"}
                   {currentStep === "success" && "Password reset successful"}
@@ -338,7 +340,8 @@ export default function ForgotPassword() {
                         Enter Verification Code
                       </h3>
                       <p className="text-arch-blue-gray text-sm mt-1">
-                        We've sent a 6-digit code to <strong>{resetData.email}</strong>
+                        We've sent a 6-digit code to{" "}
+                        <strong>{resetData.email}</strong>
                       </p>
                     </div>
 
@@ -355,7 +358,9 @@ export default function ForgotPassword() {
                         className="h-12 text-center text-2xl tracking-widest border-arch-light-blue/50 focus:border-arch-orange focus:ring-arch-orange/20"
                         value={resetData.code}
                         onChange={(e) => {
-                          const value = e.target.value.replace(/\D/g, "").slice(0, 6);
+                          const value = e.target.value
+                            .replace(/\D/g, "")
+                            .slice(0, 6);
                           handleInputChange("code", value);
                         }}
                         maxLength={6}
@@ -469,7 +474,10 @@ export default function ForgotPassword() {
                             }`}
                             value={resetData.confirmPassword}
                             onChange={(e) =>
-                              handleInputChange("confirmPassword", e.target.value)
+                              handleInputChange(
+                                "confirmPassword",
+                                e.target.value,
+                              )
                             }
                             required
                           />
@@ -483,7 +491,9 @@ export default function ForgotPassword() {
                           </div>
                           <button
                             type="button"
-                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            onClick={() =>
+                              setShowConfirmPassword(!showConfirmPassword)
+                            }
                             className="absolute right-3 top-3 text-arch-blue-gray hover:text-arch-orange transition-colors"
                           >
                             {showConfirmPassword ? (
@@ -509,7 +519,9 @@ export default function ForgotPassword() {
                         <li className="flex items-center gap-2">
                           <div
                             className={`w-1.5 h-1.5 rounded-full ${
-                              resetData.newPassword.length >= 8 ? "bg-green-500" : "bg-gray-300"
+                              resetData.newPassword.length >= 8
+                                ? "bg-green-500"
+                                : "bg-gray-300"
                             }`}
                           />
                           At least 8 characters long
@@ -517,7 +529,9 @@ export default function ForgotPassword() {
                         <li className="flex items-center gap-2">
                           <div
                             className={`w-1.5 h-1.5 rounded-full ${
-                              /[A-Z]/.test(resetData.newPassword) ? "bg-green-500" : "bg-gray-300"
+                              /[A-Z]/.test(resetData.newPassword)
+                                ? "bg-green-500"
+                                : "bg-gray-300"
                             }`}
                           />
                           One uppercase letter
@@ -525,7 +539,9 @@ export default function ForgotPassword() {
                         <li className="flex items-center gap-2">
                           <div
                             className={`w-1.5 h-1.5 rounded-full ${
-                              /[0-9]/.test(resetData.newPassword) ? "bg-green-500" : "bg-gray-300"
+                              /[0-9]/.test(resetData.newPassword)
+                                ? "bg-green-500"
+                                : "bg-gray-300"
                             }`}
                           />
                           One number
@@ -560,13 +576,14 @@ export default function ForgotPassword() {
                     <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                       <CheckCircle className="h-8 w-8 text-green-500" />
                     </div>
-                    
+
                     <div>
                       <h3 className="text-xl font-semibold text-arch-charcoal mb-2">
                         Password Reset Successful!
                       </h3>
                       <p className="text-arch-blue-gray">
-                        Your password has been successfully reset. You can now log in with your new password.
+                        Your password has been successfully reset. You can now
+                        log in with your new password.
                       </p>
                     </div>
 
