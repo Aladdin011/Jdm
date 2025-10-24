@@ -1,19 +1,30 @@
 import { PropsWithChildren } from "react";
-import Loader from "@/components/ui/Loader";
 import { useAuth } from "@/contexts/AuthContext";
+import MinimalDots from "@/components/ui/loaders/MinimalDots";
+import ProgressBarSplash from "@/components/ui/loaders/ProgressBarSplash";
+import LogoReveal from "@/components/ui/loaders/LogoReveal";
 
 /**
- * Displays the premium loader until the app is ready.
- * Adjust readiness criteria to your app: auth initialized, routes ready, initial data fetched, etc.
+ * Displays a minimalist startup loader until the app is ready.
+ * Readiness criteria: auth initialized (extend if needed with data prefetch signals).
  */
 export default function AppStartupGate({ children }: PropsWithChildren) {
   const { isLoading } = useAuth();
-  // Refine this to your exact boot signal if needed
   const isAppReady = !isLoading;
+
+  // Select loader via env or fallback
+  const variant = (import.meta.env.VITE_STARTUP_LOADER as string) || "dots";
+  const brand = "JD MARC";
 
   return (
     <>
-      <Loader isReady={isAppReady} brand="JD MARC" />
+      {variant === "bar" && (
+        <ProgressBarSplash isReady={isAppReady} brand={brand} />
+      )}
+      {variant === "logo" && <LogoReveal isReady={isAppReady} brand={brand} />}
+      {variant !== "bar" && variant !== "logo" && (
+        <MinimalDots isReady={isAppReady} brand={brand} />
+      )}
       {isAppReady ? children : null}
     </>
   );

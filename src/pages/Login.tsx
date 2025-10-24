@@ -49,12 +49,12 @@ export default function Login() {
   const enableSeedAccounts =
     import.meta.env.VITE_ENABLE_SEED_ACCOUNTS === "true";
 
-  // Redirect if already authenticated
+  // Redirect if already authenticated (after auth bootstrap)
   useEffect(() => {
-    if (isAuthenticated) {
+    if (!isLoading && isAuthenticated) {
       navigate(from, { replace: true });
     }
-  }, [isAuthenticated, navigate, from]);
+  }, [isAuthenticated, isLoading, navigate, from]);
 
   // Pre-fill admin credentials in development mode
   useEffect(() => {

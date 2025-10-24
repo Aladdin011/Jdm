@@ -201,48 +201,82 @@ const REFRESH_TOKEN_STORAGE_KEY =
 // Auth Provider Component
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Initialize auth state from localStorage with security checks (runs only once on mount)
+  // Bootstrap from Supabase session and subscribe to changes
   useEffect(() => {
-    const initializeAuth = () => {
+    let unsub: (() => void) | undefined;
+    (async () => {
       try {
-        const storedUser = localStorage.getItem(USER_STORAGE_KEY);
-        const storedToken = localStorage.getItem(TOKEN_STORAGE_KEY);
-
-        if (storedUser && storedToken) {
-          // Access token present; rely on server-side expiry/refresh
-
-          // Decrypt and parse user data
-          let parsedUser;
+        const { data } = await (await import("@/lib/supabaseClient")).supabase.auth.getSession();
+        const session = data?.session ?? null;
+        console.log("Session:", session);
+        console.log("User:", session?.user);
+        if (session?.user) {
+          const u: User = {
+            id: session.user.id,
+            email: session.user.email || "",
+            role: "user",
+            isVerified: true,
+            lastLoginAt: new Date().toISOString(),
+            createdAt: (session.user as any).created_at || new Date().toISOString(),
+            department: (session.user as any).user_metadata?.department,
+            firstName: (session.user as any).user_metadata?.firstName,
+            lastName: (session.user as any).user_metadata?.lastName,
+          } as any;
+          setUser(u);
+        } else {
+          // Fallback to legacy localStorage bootstrap
           try {
-            // Handle both encrypted and non-encrypted formats for backward compatibility
-            const decryptedData = atob(storedUser);
-            parsedUser = JSON.parse(decryptedData);
-          } catch (decryptError) {
-            // If decryption fails, try parsing directly (old format)
-            parsedUser = JSON.parse(storedUser);
-          }
-
-          // Update last active timestamp
-          parsedUser.lastActive = new Date().toISOString();
-
-          // Re-encrypt and store updated user data
-          const encryptedUserData = btoa(JSON.stringify(parsedUser));
-          localStorage.setItem(USER_STORAGE_KEY, encryptedUserData);
-
-          setUser(parsedUser);
+            const storedUser = localStorage.getItem(USER_STORAGE_KEY);
+            if (storedUser) {
+              let parsedUser;
+              try {
+                parsedUser = JSON.parse(atob(storedUser));
+              } catch {
+                parsedUser = JSON.parse(storedUser);
+              }
+              setUser(parsedUser);
+            }
+          } catch {}
         }
-      } catch (error) {
-        console.error("Failed to initialize auth:", error);
-        // Clear invalid stored data
-        localStorage.removeItem(USER_STORAGE_KEY);
-        localStorage.removeItem(TOKEN_STORAGE_KEY);
+      } catch (e) {
+        console.warn("Failed to get Supabase session", e);
+      } finally {
+        setIsLoading(false);
       }
-    };
 
-    initializeAuth();
-  }, []); // Empty dependency array - runs only once on mount
+      const { data: sub } = (await import("@/lib/supabaseClient")).supabase.auth.onAuthStateChange((_event, session) => {
+        console.log("Auth change event:", _event);
+        console.log("Session:", session);
+        console.log("User:", session?.user);
+        if (session?.user) {
+          const u: User = {
+            id: session.user.id,
+            email: session.user.email || "",
+            role: "user",
+            isVerified: true,
+            lastLoginAt: new Date().toISOString(),
+            createdAt: (session.user as any).created_at || new Date().toISOString(),
+            department: (session.user as any).user_metadata?.department,
+            firstName: (session.user as any).user_metadata?.firstName,
+            lastName: (session.user as any).user_metadata?.lastName,
+          } as any;
+          setUser(u);
+        } else {
+          setUser(null);
+          localStorage.removeItem(USER_STORAGE_KEY);
+          localStorage.removeItem(TOKEN_STORAGE_KEY);
+          localStorage.removeItem(REFRESH_TOKEN_STORAGE_KEY);
+        }
+      });
+      unsub = () => sub?.subscription?.unsubscribe();
+    })();
+
+    return () => {
+      try { unsub?.(); } catch {}
+    };
+  }, []);
 
   // Set up session activity tracker (depends on user state)
   useEffect(() => {
@@ -1162,8 +1196,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Logout function
-  const logout = () => {
+  const logout = async () => {
     try {
+      try {
+        await (await import("@/lib/supabaseClient")).supabase.auth.signOut();
+      } catch {}
       clearUserData();
     } catch (error: any) {
       handleError(error, 'Logout');
@@ -1213,7 +1250,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const value = {
     user,
     isLoading,
-    isAuthenticated: !!user && isSessionValid(),
+    isAuthenticated: !!user,
     isAdmin: user?.role === "admin",
     login,
     loginWithSeedAccount,

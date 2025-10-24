@@ -498,11 +498,13 @@ export const initializeSecurity = (): void => {
 
   // Set up global error handling for security events
   window.addEventListener("error", (event) => {
-    if (event.message.includes("Content Security Policy")) {
+    const errEvent = event as ErrorEvent;
+    const msg = typeof errEvent.message === "string" ? errEvent.message : "";
+    if (msg.includes("Content Security Policy")) {
       securityLogger.logEvent("csrf_violation", {
-        message: event.message,
-        source: event.filename,
-        line: event.lineno,
+        message: msg,
+        source: errEvent.filename as any,
+        line: (errEvent as any).lineno,
       });
     }
   });

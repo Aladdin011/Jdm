@@ -13,6 +13,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import PrivateRoute from "@/components/auth/PrivateRoute";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import MinimalDots from "@/components/ui/loaders/MinimalDots";
 import AppStartupGate from "@/components/ui/AppStartupGate";
 import Loader from "@/components/ui/Loader";
 // Using premium Loader as Suspense fallback
@@ -276,7 +277,7 @@ function App() {
                   <AppStartupGate>
                     <div className="App">
                       <AnimatePresence mode="wait">
-                        <Suspense fallback={<Loader brand="JD MARC" />}> 
+                        <Suspense fallback={<MinimalDots isReady={false} brand="JD MARC" />}> 
                           <Routes>
                             <Route
                               path="/"

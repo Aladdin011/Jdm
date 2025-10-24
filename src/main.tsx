@@ -27,19 +27,40 @@ if (import.meta.env.DEV) {
     (window as any).__recentErrors = recentErrors;
   };
 
-  // Global error handler (script/resource errors)
+  // Global error handler with resource diagnostics
   window.addEventListener(
     "error",
     (ev: ErrorEvent) => {
+      const isExtensionUrl = (u: any) => {
+        const s = String(u || "");
+        return s.startsWith("chrome-extension://") || s.startsWith("moz-extension://");
+      };
+
+      // Resource loading errors (img, script, link, etc.)
+      const target = (ev as any).target as Element | null;
+      if (target && target !== window) {
+        const tag = (target as any).tagName?.toLowerCase?.() || "unknown";
+        const url = (target as any).src || (target as any).href || "";
+        if (isExtensionUrl(url)) return;
+        if (/favicon\.ico$/i.test(String(url))) return; // ignore favicon noise
+        pushErr("resource", `${tag}:${url || "(inline)"}`);
+        console.warn("[dev] Resource load error:", { tag, url });
+        return;
+      }
+
       const msg = ev.message || "Script/resource error";
-      // Treat aborted module loads in Vite dev as informational
-      if (typeof msg === "string" && msg.includes("Abort")) {
+      if (typeof msg === "string" && /Abort|ERR_ABORTED/i.test(msg)) {
         console.info("[dev] Aborted load detected:", msg);
         pushErr("abort", msg);
         return;
       }
       pushErr("error", msg);
-      console.error("[dev] Global error:", msg);
+      console.error("[dev] Global error:", {
+        message: msg,
+        filename: (ev as any).filename,
+        lineno: (ev as any).lineno,
+        colno: (ev as any).colno,
+      });
     },
     true,
   );
@@ -61,61 +82,7 @@ if (import.meta.env.DEV) {
 
 createRoot(document.getElementById("root")!).render(<App />);
 
-// DEV-ONLY diagnostics (previously added)
-if (import.meta.env.DEV && 'serviceWorker' in navigator) {
-  (async () => {
-    try {
-      const regs = await navigator.serviceWorker.getRegistrations();
-      for (const r of regs) {
-        await r.unregister();
-      }
-      console.info('[DEV] Unregistered any existing service workers');
-    } catch (err) {
-      console.warn('[DEV] Failed to unregister SWs', err);
-    }
-  })();
-}
 
-// Global error diagnostics (previously added)
-(function attachGlobalErrorHandlers() {
-  const isAbortLike = (err) =>
-    !!err && (
-      err.name === 'AbortError' ||
-      /ERR_ABORTED|fetch aborted|navigation canceled/i.test(String(err))
-    );
-  (function extendDiagnosticsToIgnoreExtensions() {
-    const IGNORE = import.meta.env.VITE_IGNORE_EXTENSIONS === 'true';
-    if (!IGNORE) return;
-    const isExtensionUrl = (u: any) => {
-      const s = String(u || '');
-      return s.includes('chrome-extension://') || s.includes('moz-extension://');
-    };
-    window.addEventListener('error', (e: any) => {
-      const src = e?.filename || e?.error?.stack || e?.message;
-      if (isExtensionUrl(src)) {
-        // swallow extension-origin errors
-        return;
-      }
-    }, true);
-    window.addEventListener('unhandledrejection', (e: any) => {
-      const src = e?.reason?.stack || e?.reason || '';
-      if (isExtensionUrl(src)) {
-        // swallow extension-origin rejections
-        return;
-      }
-    });
-  })();
-  window.addEventListener('error', (e) => {
-    const err = e.error || e.message || e;
-    if (isAbortLike(err)) return; // suppress noisy dev cancellations
-    console.error('[GlobalError]', err);
-  });
-  window.addEventListener('unhandledrejection', (e) => {
-    const reason = e.reason;
-    if (isAbortLike(reason)) return;
-    console.error('[UnhandledRejection]', reason);
-  });
-})();
 
 // Runtime SVG attribute sanitizer to prevent preserveAspectRatio errors
 (function sanitizeSvgPreserveAspectRatio() {

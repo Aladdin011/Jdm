@@ -91,12 +91,12 @@ export default function Register() {
   const { trackBusinessEvent } = useAnalytics();
   const navigate = useNavigate();
 
-  // Redirect if already authenticated
+  // Redirect if already authenticated (after auth bootstrap)
   useEffect(() => {
-    if (isAuthenticated) {
+    if (!isLoading && isAuthenticated) {
       navigate("/dashboard", { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, isLoading, navigate]);
 
   const handleInputChange = (field: keyof FormData, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
