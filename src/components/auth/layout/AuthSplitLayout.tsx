@@ -43,7 +43,9 @@ export default function AuthSplitLayout({
                   <div className="mb-auto" />
                   <div className="space-y-4">
                     <div className="text-sm text-white/80">{brand}</div>
-                    <h2 className="text-3xl font-semibold leading-tight">Get Started with Us</h2>
+                    <h2 className="text-3xl font-semibold leading-tight">
+                      Get Started with Us
+                    </h2>
                     <p className="text-white/70 text-sm max-w-sm">
                       Complete these easy steps to register your account.
                     </p>
@@ -52,7 +54,9 @@ export default function AuthSplitLayout({
                         <div
                           key={idx}
                           className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm ${
-                            s.active ? "bg-white text-black" : "bg-white/10 text-white/80"
+                            s.active
+                              ? "bg-white text-black"
+                              : "bg-white/10 text-white/80"
                           }`}
                         >
                           <div
