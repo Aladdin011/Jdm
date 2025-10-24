@@ -276,7 +276,7 @@ function App() {
                   <AppStartupGate>
                     <div className="App">
                       <AnimatePresence mode="wait">
-                        <Suspense fallback={<Loader brand="JD MARC" />}> 
+                        <Suspense fallback={<MinimalDots isReady={false} brand="JD MARC" />}> 
                           <Routes>
                             <Route
                               path="/"
